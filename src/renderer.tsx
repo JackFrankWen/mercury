@@ -27,5 +27,9 @@
  */
 
 import './index.css';
+import {render} from 'react-dom';
+import App from './page/app';
+import React from 'react';
 
-console.log('👋 This message is being logged by "renderer.ts", included via Vite');
+render(<App />, document.getElementById('root'));
+
