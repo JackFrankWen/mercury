@@ -29,14 +29,16 @@
     "eslint": "^8.57.1",
     "eslint-plugin-import": "^2.30.0",
     "react": "^18.3.1",
+    "react-activation": "^0.12.4",
+    "react-router-dom": "^6.26.2",
     "ts-node": "^10.9.2",
     "typescript": "~4.5.4",
     "vite": "^5.4.8"
   },
   "keywords": [],
   "author": {
-    "name": "baiqiu.wsn",
-    "email": "baiqiu.wsn@raycloud.com"
+    "name": "wensuneng",
+    "email": "vinceng1990@gmail.com"
   },
   "license": "MIT",
   "dependencies": {

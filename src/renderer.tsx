@@ -26,10 +26,29 @@
  * ```
  */
 
-import './index.css';
 import {render} from 'react-dom';
-import App from './page/app';
 import React from 'react';
+import {
+    createHashRouter,
+    RouterProvider,
+} from "react-router-dom";
 
-render(<App />, document.getElementById('root'));
+import Home from './page/home';
+import App from "./page/app";
+import './index.css';
+const router = createHashRouter([
+    {
+        path: "/",
+        element: <App />,
+        children: [
+            {
+                path: "/home",
+                element: <Home />,
+            },
+        ],
+
+    },
+]);
+render(
+    <RouterProvider router={router} />, document.getElementById('root'));
 
