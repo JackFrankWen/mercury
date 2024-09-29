@@ -1,25 +1,23 @@
 import React   from "react";
-import {Layout} from "antd";
+import {Layout, Menu} from "antd";
 import {Navigate, Outlet} from "react-router-dom";
 
 import {
-    AppstoreOutlined,
-    ContainerOutlined,
-    DesktopOutlined,
-    MailOutlined,
-    MenuFoldOutlined,
-    MenuUnfoldOutlined,
-    PieChartOutlined,
+    AccountBookOutlined,
+SettingOutlined,
+FormOutlined,
+    CloudUploadOutlined,
+    HomeOutlined,
 } from '@ant-design/icons';
-import { Menu } from 'antd';
 import type { MenuProps } from 'antd';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 const items: MenuItem[] = [
-    { key: '1', icon: <PieChartOutlined />, label: 'Option 1' },
-    { key: '2', icon: <DesktopOutlined />, label: 'Option 2' },
-    { key: '3', icon: <ContainerOutlined />, label: 'Option 3' },
+    { key: '1', icon: <HomeOutlined />, label: '首页' },
+    { key: '2', icon: <FormOutlined /> , label: '记账' },
+    { key: '3', icon: <CloudUploadOutlined />, label: '导入' },
+    { key: '4', icon: <SettingOutlined />, label: '设置' },
 
 ];
 const { Header, Content, Footer, Sider } = Layout;
