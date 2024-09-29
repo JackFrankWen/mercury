@@ -33,8 +33,8 @@ import {
     RouterProvider,
 } from "react-router-dom";
 
-import Home from './page/home';
-import App from "./page/app";
+import Home from './UI/page/home';
+import App from "./UI/page/app";
 import './index.css';
 const router = createHashRouter([
     {

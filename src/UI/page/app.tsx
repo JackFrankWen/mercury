@@ -24,10 +24,13 @@ const { Header, Content, Footer, Sider } = Layout;
 
 function App(props: any): JSX.Element {
     return (
-        <Layout>
+        <Layout
+            style={{
+                minHeight: '100%',
+            }}>
             <Navigate to="/home" />
 
-            <Sider collapsed={true}>
+            <Sider >
                 <Menu
                     defaultSelectedKeys={['1']}
                     mode="inline"
