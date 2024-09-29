@@ -2,7 +2,7 @@ import React   from "react";
 import {Button} from "antd";
 import { Navigate } from "react-router-dom";
 
-function Home(): JSX.Element {
+function Index(): JSX.Element {
     return (
         <div>
             <h1>💖 Hello World!</h1>
@@ -12,4 +12,4 @@ function Home(): JSX.Element {
     );
 }
 
-export default Home;
+export default Index;

@@ -34,8 +34,13 @@ import {
 } from "react-router-dom";
 
 import Home from './UI/page/home';
+import Setting from './UI/page/setting'
+import Upload from "./UI/page/upload";
+import Accounting from "./UI/page/accounting";
 import App from "./UI/page/app";
+
 import './index.css';
+
 const router = createHashRouter([
     {
         path: "/",
@@ -45,10 +50,23 @@ const router = createHashRouter([
                 path: "/home",
                 element: <Home />,
             },
+            {
+                path: "/accounting",
+                element: <Accounting />,
+
+            },
+            {
+                path: '/upload',
+                element: <Upload />,
+            },
+            {
+                path: '/setting',
+                element: <Setting />,
+            }
         ],
 
     },
 ]);
-render(
-    <RouterProvider router={router} />, document.getElementById('root'));
+
+render(<RouterProvider router={router} />, document.getElementById('root'));
 
