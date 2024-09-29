@@ -29,7 +29,7 @@
 import {render} from 'react-dom';
 import React from 'react';
 import {
-    createHashRouter,
+    createBrowserRouter,
     RouterProvider,
 } from "react-router-dom";
 
@@ -41,13 +41,13 @@ import App from "./UI/page/app";
 
 import './index.css';
 
-const router = createHashRouter([
+const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
         children: [
             {
-                path: "/home",
+                index: true,
                 element: <Home />,
             },
             {
