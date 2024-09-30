@@ -36,13 +36,13 @@ function App(props: any): JSX.Element {
                     onClick={({key})=>{
                         jumpTo(key)
                     }}
-                    defaultSelectedKeys={['1']}
+                    defaultSelectedKeys={['/']}
                     mode="inline"
                     theme="dark"
                     items={items}
                 />
             </Sider>
-            <Content>
+            <Content className="mercury-content">
               <Outlet />
             </Content>
         </Layout>
