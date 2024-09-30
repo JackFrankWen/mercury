@@ -1,10 +1,12 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain} from 'electron';
 import path from 'path';
+import startCrawler from "./core/crawler";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
+const windows = {}; // 存储所有窗口的引用
 
 const createWindow = () => {
   // Create the browser window.
@@ -40,12 +42,42 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+let newWindow: BrowserWindow | null = null;
+
+const getNewWindow = () => {
+
+    return newWindow;
+}
+app.whenReady().then(()=>{
+
+  ipcMain.handle('crawler', (param,web) => {
+    const windowId = Date.now(); // 使用时间戳作为唯一 ID
+
+    let newWindow = new BrowserWindow({
+      width: 400,
+      height: 600
+    });
+    windows[windowId] = newWindow; // 存储窗口引用
+    newWindow.loadURL('https://mobile.pinduoduo.com');
+    return Promise.resolve(windowId);
+  });
+  ipcMain.handle('get-webpage-content', async (event,id) => {
+    const newWindow = windows[id];
+    if (newWindow) {
+      // const content = await newWindow.webContents.executeJavaScript('document.documentElement.outerHTML');
+      const content = await newWindow.webContents.executeJavaScript('window.rawData');
+      return content; // 返回网页内容
+    }
+    return '没有打开的网页';
+  });
+});
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
+
   }
 });
 

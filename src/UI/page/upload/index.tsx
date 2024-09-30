@@ -1,9 +1,45 @@
-import React  from "react";
+import React , {useState}from "react";
+import {Button, Input} from "antd";
+import PinduoduoModal from "./modalPinduoduo";
+
 function UploadCenter(): JSX.Element {
+    const [text, setText] = useState("https://mobile.pinduoduo.com");
+    const [openPinduodou, setOpenPinduoduo] = useState(false);
+    const [dataSource, setDataSource] = useState([]);
     return (
         <div>
-            <h1>上传中心</h1>
-            <p>这是上传中心页面</p>
+            <Button onClick={()=>{
+                window.mercury.crawler({
+                    web: 'pinduoduo',
+                    action: 'open',
+                }).then((res)=>{
+                    console.log(res)
+                    setText(res);
+                });
+            }}> 拼多多</Button>
+            <Button onClick={()=>{
+                window.mercury.getWebpageContent(text).then((res)=>{
+                    console.log(res);
+                    setText(res);
+                    const {ordersStore = {}} = res;
+                    const {orders = []} = ordersStore;
+                    setDataSource(orders)
+                    setOpenPinduoduo(true);
+                });
+            }}>获取列表</Button>
+            <Input.TextArea value={text}/>
+            {
+                openPinduodou && <PinduoduoModal
+                    visible={openPinduodou}
+                    dataSource={dataSource}
+                    onOk={()=>{
+                        setOpenPinduoduo(false);
+                    }}
+                    onCancel={()=>{
+                        setOpenPinduoduo(false);
+                    }}
+                />
+            }
         </div>
     );
 }
