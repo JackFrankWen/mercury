@@ -29,9 +29,10 @@
 import {render} from 'react-dom';
 import React from 'react';
 import {
-    createBrowserRouter,
+    createHashRouter,
     RouterProvider,
 } from "react-router-dom";
+import { createRoot } from "react-dom/client";
 
 import Home from './UI/page/home';
 import Setting from './UI/page/setting'
@@ -41,7 +42,7 @@ import App from "./UI/page/app";
 
 import './index.css';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
     {
         path: "/",
         element: <App />,
@@ -68,5 +69,6 @@ const router = createBrowserRouter([
     },
 ]);
 
-render(<RouterProvider router={router} />, document.getElementById('root'));
+const root = createRoot(document.getElementById('root'))
+    root.render(<RouterProvider router={router} />)
 

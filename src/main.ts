@@ -1,11 +1,14 @@
 import { app, BrowserWindow, ipcMain} from 'electron';
 import path from 'path';
-import startCrawler from "./core/crawler";
+import start from 'electron-squirrel-startup'
+// import startCrawler from "./core/crawler";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-  app.quit();
-}
+  if (start) {
+    app.quit();
+  }
+
+
 const windows = {}; // 存储所有窗口的引用
 
 const createWindow = () => {
