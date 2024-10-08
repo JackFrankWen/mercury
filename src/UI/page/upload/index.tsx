@@ -1,7 +1,9 @@
 import React , {useState}from "react";
 import {Button, Input} from "antd";
 import PinduoduoModal from "./modalPinduoduo";
-
+/*
+* https://api.m.jd.com/client.action 京东订单
+* */
 function UploadCenter(): JSX.Element {
     const [text, setText] = useState("https://mobile.pinduoduo.com");
     const [openPinduodou, setOpenPinduoduo] = useState(false);
