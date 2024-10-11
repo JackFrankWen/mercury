@@ -47,10 +47,7 @@ app.on('window-all-closed', () => {
 });
 let newWindow: BrowserWindow | null = null;
 
-const getNewWindow = () => {
 
-    return newWindow;
-}
 app.whenReady().then(()=>{
 
   ipcMain.handle('crawler', (param,web) => {
