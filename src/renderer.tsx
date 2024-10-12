@@ -26,49 +26,14 @@
  * ```
  */
 
-import {render} from 'react-dom';
 import React from 'react';
-import {
-    createHashRouter,
-    RouterProvider,
-} from "react-router-dom";
+
 import { createRoot } from "react-dom/client";
 
-import Home from './UI/page/home';
-import Setting from './UI/page/setting'
-import Upload from "./UI/page/upload";
-import Accounting from "./UI/page/accounting";
+
 import App from "./UI/page/app";
 
 import './index.css';
-
-const router = createHashRouter([
-    {
-        path: "/",
-        element: <App />,
-        children: [
-            {
-                index: true,
-                element: <Home />,
-            },
-            {
-                path: "/accounting",
-                element: <Accounting />,
-
-            },
-            {
-                path: '/upload',
-                element: <Upload />,
-            },
-            {
-                path: '/setting',
-                element: <Setting />,
-            }
-        ],
-
-    },
-]);
-
 const root = createRoot(document.getElementById('root'))
-    root.render(<RouterProvider router={router} />)
+    root.render( <App />)
 

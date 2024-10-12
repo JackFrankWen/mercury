@@ -1,7 +1,11 @@
 import React   from "react";
-import {Layout, Menu} from "antd";
-import {Navigate, Outlet} from "react-router-dom";
+import {Layout, Menu, Tabs} from "antd";
+import KeepAlive, {AliveScope} from "react-activation";
 import { useNavigate } from "react-router-dom";
+import Home from "./home";
+import Accounting from "./accounting";
+import Setting from "./setting";
+import Upload from "./upload";
 
 import {
     AccountBookOutlined,
@@ -15,36 +19,56 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 
 const items: MenuItem[] = [
-    { key: '/', icon: <HomeOutlined />, label: '首页' },
-    { key: '/accounting', icon: <FormOutlined /> , label: '记账' },
-    { key: '/upload', icon: <CloudUploadOutlined />, label: '导入' },
-    { key: '/setting', icon: <SettingOutlined />, label: '设置' },
+    { key: 'home', icon: <HomeOutlined />, label: '首页' },
+    { key: 'accounting', icon: <FormOutlined /> , label: '记账' },
+    { key: 'upload', icon: <CloudUploadOutlined />, label: '导入' },
+    { key: 'setting', icon: <SettingOutlined />, label: '设置' },
 ];
 const { Header, Content, Footer, Sider } = Layout;
 
 function App(props: any): JSX.Element {
-    const jumpTo = useNavigate()
+    const [activeKey, setActiveKey] = React.useState('home');
     return (
         <Layout
             style={{
                 minHeight: '100%',
             }}>
-            {/*<Navigate to="/home" />*/}
 
             <Sider >
                 <Menu
                     onClick={({key})=>{
-                        jumpTo(key)
+                        setActiveKey(key)
                     }}
-                    defaultSelectedKeys={['/']}
+                    defaultSelectedKeys={['home']}
                     mode="inline"
                     theme="dark"
                     items={items}
                 />
             </Sider>
+            <AliveScope>
             <Content className="mercury-content">
-              <Outlet />
-            </Content>
+                {
+                    activeKey === 'home' && <KeepAlive>
+                        <Home/>
+                    </KeepAlive>
+
+                }
+                {
+                    activeKey === 'accounting' && <KeepAlive>
+                        <Accounting/>
+                    </KeepAlive>
+                }
+                {
+                    activeKey === 'upload' && <KeepAlive>
+                        <Upload/>
+                    </KeepAlive>
+                }
+                {
+                    activeKey === 'setting' && <KeepAlive>
+                        <Setting/>
+                    </KeepAlive>
+                }
+            </Content></AliveScope>
         </Layout>
     );
 }
