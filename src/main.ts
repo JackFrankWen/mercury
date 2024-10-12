@@ -59,16 +59,25 @@ app.whenReady().then(()=>{
     });
     windows[windowId] = newWindow; // 存储窗口引用
     newWindow.loadURL('https://mobile.pinduoduo.com');
+    newWindow.webContents.openDevTools();
     return Promise.resolve(windowId);
   });
   ipcMain.handle('get-webpage-content', async (event,id) => {
     const newWindow = windows[id];
+    console.log(id,)
     if (newWindow) {
       // const content = await newWindow.webContents.executeJavaScript('document.documentElement.outerHTML');
-      const content = await newWindow.webContents.executeJavaScript('window.rawData');
-      return content; // 返回网页内容
+      let content = '';
+      try{
+        content = await newWindow.webContents.executeJavaScript('window');
+        return content;
+      }catch (e){
+        console.log(e)
+        return e
+      }
+
     }
-    return '没有打开的网页';
+    return `${id}没有打开的网页`;
   });
 });
 
