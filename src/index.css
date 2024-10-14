@@ -7,3 +7,6 @@ body {
     align-items: center;
     height: 100vh;
 }
+.mercury-content {
+    padding: 8px;
+}

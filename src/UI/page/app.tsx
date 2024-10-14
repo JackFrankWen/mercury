@@ -34,7 +34,10 @@ function App(props: any): JSX.Element {
                 minHeight: '100%',
             }}>
 
-            <Sider >
+            <Sider
+                collapsed={true}
+
+            >
                 <Menu
                     onClick={({key})=>{
                         setActiveKey(key)
