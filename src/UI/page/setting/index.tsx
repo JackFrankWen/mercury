@@ -1,5 +1,6 @@
 import React   from "react";
 import {Card, Tabs} from "antd";
+import BasicContent from "./basicContent";
 
 function Setting(): JSX.Element {
     return (
@@ -10,8 +11,8 @@ function Setting(): JSX.Element {
                     defaultActiveKey="1"
                     tabPosition="left"
                 >
-                    <Tabs.TabPane tab="备份" key="1">
-                        Content of Tab Pane 1
+                    <Tabs.TabPane tab="基础设置" key="1">
+                        <BasicContent />
                     </Tabs.TabPane>
                     <Tabs.TabPane tab="Tab 2" key="2">
                         Content of Tab Pane 2
