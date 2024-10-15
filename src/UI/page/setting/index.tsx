@@ -1,11 +1,13 @@
 import React   from "react";
-import {Card, Tabs} from "antd";
+import {Card, Tabs, Breadcrumb} from "antd";
 import BasicContent from "./basicContent";
 
 function Setting(): JSX.Element {
     return (
         <div>
-            <h1>设置</h1>
+           <Breadcrumb items={[{
+               title: '设置',
+           }]} />
             <Card>
                 <Tabs
                     defaultActiveKey="1"

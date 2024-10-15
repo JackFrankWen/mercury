@@ -7,6 +7,20 @@ body {
     align-items: center;
     height: 100vh;
 }
+.mt16 {
+    margin-top: 16px;
+}
+.mt8 {
+    margin-top: 8px;
+}
+.plr8 {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+.overflow-scroll {
+    overflow: scroll;
+}
 .mercury-content {
     padding: 8px;
+    position: relative;
 }

@@ -1,44 +1,17 @@
 import React from "react";
-
-import {Card, Table} from "antd";
+import {Card} from "antd";
 import {AdvancedSearchForm} from "./advancedSearchForm";
-function AdvancedTable(props: any): JSX.Element {
-   return (
-       <Table
-           columns={[
-               {
-                   title: '姓名',
-                   dataIndex: 'name',
-                   key: 'name',
-               },
-               {
-                   title: '年龄',
-                   dataIndex: 'age',
-                   key: 'age',
-               },
-           ]}
-           dataSource={[
-               {
-                   name: '张三',
-                   age: 18,
-               },
-               {
-                   name: '李四',
-                   age: 19,
-               },
-           ]}
-       />
-   )
-}
+import {AdvancedTable} from "./advancedTable";
+import './index.css'
 
 function Accounting(): JSX.Element {
     return (
-        <div>
-            <h1>记账</h1>
-            <Card>
+        <div className='p-accounting'>
+           <h1>记账</h1>
+            <Card className='plr8' >
                <AdvancedSearchForm />
             </Card>
-            <Card>
+            <Card className='mt16 plr8'>
                 <AdvancedTable />
             </Card>
         </div>
