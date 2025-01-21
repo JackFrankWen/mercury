@@ -49,29 +49,30 @@ function App(props: any): JSX.Element {
                 />
             </Sider>
             <AliveScope>
-            <Content className="mercury-content">
-                {
-                    activeKey === 'home' && <KeepAlive>
-                        <Home/>
-                    </KeepAlive>
+                <Content className="mercury-content">
+                    {
+                        activeKey === 'home' && <KeepAlive>
+                            <Home/>
+                        </KeepAlive>
 
-                }
-                {
-                    activeKey === 'accounting' && <KeepAlive>
-                        <Accounting/>
-                    </KeepAlive>
-                }
-                {
-                    activeKey === 'upload' && <KeepAlive>
-                        <Upload/>
-                    </KeepAlive>
-                }
-                {
-                    activeKey === 'setting' && <KeepAlive>
-                        <Setting/>
-                    </KeepAlive>
-                }
-            </Content></AliveScope>
+                    }
+                    {
+                        activeKey === 'accounting' && <KeepAlive>
+                            <Accounting/>
+                        </KeepAlive>
+                    }
+                    {
+                        activeKey === 'upload' && <KeepAlive>
+                            <Upload/>
+                        </KeepAlive>
+                    }
+                    {
+                        activeKey === 'setting' && <KeepAlive>
+                            <Setting/>
+                        </KeepAlive>
+                    }
+                </Content>
+            </AliveScope>
         </Layout>
     );
 }

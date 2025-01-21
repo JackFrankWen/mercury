@@ -1105,6 +1105,13 @@
   "resolved" "https://mirrors.cloud.tencent.com/npm/@types/semver/-/semver-7.5.8.tgz"
   "version" "7.5.8"
 
+"@types/sqlite3@^3.1.11":
+  "integrity" "sha512-KYF+QgxAnnAh7DWPdNDroxkDI3/MspH1NMx6m/N/6fT1G6+jvsw4/ZePt8R8cr7ta58aboeTfYFBDxTJ5yv15w=="
+  "resolved" "https://registry.npmmirror.com/@types/sqlite3/-/sqlite3-3.1.11.tgz"
+  "version" "3.1.11"
+  dependencies:
+    "@types/node" "*"
+
 "@types/yauzl@^2.9.1":
   "integrity" "sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/@types/yauzl/-/yauzl-2.10.3.tgz"
@@ -2593,6 +2600,11 @@
   "resolved" "https://mirrors.cloud.tencent.com/npm/etag/-/etag-1.8.1.tgz"
   "version" "1.8.1"
 
+"eventemitter3@^4.0.0":
+  "integrity" "sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw=="
+  "resolved" "https://registry.npmmirror.com/eventemitter3/-/eventemitter3-4.0.7.tgz"
+  "version" "4.0.7"
+
 "eventemitter3@^5.0.1":
   "integrity" "sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/eventemitter3/-/eventemitter3-5.0.1.tgz"
@@ -2813,6 +2825,11 @@
   dependencies:
     "debug" "^4.3.4"
     "fs-extra" "^10.1.0"
+
+"follow-redirects@^1.0.0":
+  "integrity" "sha512-gew4GsXizNgdoRyqmyfMHyAmXsZDk6mHkSxZFCzW9gwlbtOW44CDtYavM+y+72qD/Vq2l550kMF52DT8fOLJqQ=="
+  "resolved" "https://registry.npmmirror.com/follow-redirects/-/follow-redirects-1.15.9.tgz"
+  "version" "1.15.9"
 
 "for-each@^0.3.3":
   "integrity" "sha512-jqYfLp7mo9vIyQf8ykW2v7A+2N4QjeCeI5+Dz9XraiO1ign81wjiH7Fb9vSOWvQfNtmSa4H2RoQTrrXivdUZmw=="
@@ -3304,6 +3321,15 @@
     "@tootallnate/once" "2"
     "agent-base" "6"
     "debug" "4"
+
+"http-proxy@^1.18.1":
+  "integrity" "sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ=="
+  "resolved" "https://registry.npmmirror.com/http-proxy/-/http-proxy-1.18.1.tgz"
+  "version" "1.18.1"
+  dependencies:
+    "eventemitter3" "^4.0.0"
+    "follow-redirects" "^1.0.0"
+    "requires-port" "^1.0.0"
 
 "http2-wrapper@^1.0.0-beta.5.2":
   "integrity" "sha512-V+23sDMr12Wnz7iTcDeJr3O6AIxlnvT/bmaAAAP/Xda35C90p9599p0F1eHR/N1KILWSoWVAiOMFjBBXaXSMxg=="
@@ -5131,6 +5157,11 @@
   "integrity" "sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/require-directory/-/require-directory-2.1.1.tgz"
   "version" "2.1.1"
+
+"requires-port@^1.0.0":
+  "integrity" "sha512-KigOCHcocU3XODJxsu8i/j8T9tzT4adHiecwORRQ0ZZFcp7ahwXuRU1m+yuO90C5ZUyGeGfocHDI14M3L3yDAQ=="
+  "resolved" "https://registry.npmmirror.com/requires-port/-/requires-port-1.0.0.tgz"
+  "version" "1.0.0"
 
 "resedit@^2.0.0":
   "integrity" "sha512-UKTnq602iVe+W5SyRAQx/WdWMnlDiONfXBLFg/ur4QE4EQQ8eP7Jgm5mNXdK12kKawk1vvXPja2iXKqZiGDW6Q=="

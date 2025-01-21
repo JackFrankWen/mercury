@@ -1,6 +1,8 @@
-import { app, BrowserWindow, ipcMain} from 'electron';
+import { app, BrowserWindow, session} from 'electron';
 import path from 'path';
+import {sqlite3} from "sqlite3";
 import start from 'electron-squirrel-startup'
+import {handleClaw} from "./core/process";
 // import startCrawler from "./core/crawler";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -8,8 +10,9 @@ import start from 'electron-squirrel-startup'
     app.quit();
   }
 
-
-const windows = {}; // 存储所有窗口的引用
+const filter = {
+  urls: ['*://mobile.pinduoduo.com/proxy/api/api/aristotle/*'],
+};
 
 const createWindow = () => {
   // Create the browser window.
@@ -18,6 +21,7 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+
     },
   });
 
@@ -27,6 +31,7 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
+
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
@@ -45,40 +50,10 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-let newWindow: BrowserWindow | null = null;
 
 
 app.whenReady().then(()=>{
-
-  ipcMain.handle('crawler', (param,web) => {
-    const windowId = Date.now(); // 使用时间戳作为唯一 ID
-
-    let newWindow = new BrowserWindow({
-      width: 400,
-      height: 600
-    });
-    windows[windowId] = newWindow; // 存储窗口引用
-    newWindow.loadURL('https://mobile.pinduoduo.com');
-    newWindow.webContents.openDevTools();
-    return Promise.resolve(windowId);
-  });
-  ipcMain.handle('get-webpage-content', async (event,id) => {
-    const newWindow = windows[id];
-    console.log(id,)
-    if (newWindow) {
-      // const content = await newWindow.webContents.executeJavaScript('document.documentElement.outerHTML');
-      let content = '';
-      try{
-        content = await newWindow.webContents.executeJavaScript('window');
-        return content;
-      }catch (e){
-        console.log(e)
-        return e
-      }
-
-    }
-    return `${id}没有打开的网页`;
-  });
+    handleClaw()
 });
 
 app.on('activate', () => {
