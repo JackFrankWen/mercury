@@ -1,0 +1,21 @@
+.setting-page {
+    padding: 10px;
+
+}
+.ant-card-body {
+    height: 100%;
+    overflow: hidden;
+}
+.setting-tabs {
+    height: 100%;
+}
+.match-content {
+    height: 100%;
+    overflow: scroll;
+}
+.single-line {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    max-width: 200px;
+}

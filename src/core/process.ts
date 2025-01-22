@@ -1,42 +1,52 @@
-import {app, BrowserWindow, ipcMain} from "electron";
+import {  ipcMain} from "electron";
+import { getAllMatchRules, addMatchRule, updateMatchRule, deleteMatchRule } from "../sqlite3/match-rules";
 
-const windows = {}; // 存储所有窗口的引用
-let newWindow: BrowserWindow | null = null;
 
-export function handleClaw(){
+export function handleMatchRules(){
 
-        ipcMain.handle('crawler', (param,web) => {
-            const windowId = Date.now(); // 使用时间戳作为唯一 ID
+    // Match rules API handlers
+    ipcMain.handle('match-rules:getAll', async () => {
+        try {
+            const rules = await getAllMatchRules();
+            return rules;
+        } catch (error) {
+            console.error('Error getting match rules:', error);
+            throw error;
+        }
+    });
 
-            newWindow = new BrowserWindow({
-                width: 400,
-                height: 600,
-                webPreferences: {
-                    nodeIntegration: true,
-                },
-            });
-            windows[windowId] = newWindow; // 存储窗口引用
-            newWindow.loadURL('https://mobile.pinduoduo.com');
+    ipcMain.handle('match-rules:add', async (event, rule) => {
+        try {
+            await addMatchRule(rule);
+            return {code: 200}
+        } catch (error) {
+            console.error('Error adding match rule:', error);
+            throw error;
+            return {code: 500, error: error}
+        }
+    });
 
-            // newWindow.webContents.openDevTools();
-            return Promise.resolve(windowId);
-        });
-        ipcMain.handle('get-webpage-content', async (event,id) => {
-            newWindow = windows[id];
-            console.log(id,)
-            if (newWindow) {
-                // const content = await newWindow.webContents.executeJavaScript('document.documentElement.outerHTML');
-                let content = '';
-                try{
-                    content = await newWindow.webContents.executeJavaScript('window');
-                    return content;
-                }catch (e){
-                    console.log(e)
-                    return e
-                }
+    ipcMain.handle('match-rules:update', async (event, id, rule) => {
+        try {
+            await updateMatchRule(id, rule);
+            return {code: 200}
+        } catch (error) {
+            console.error('Error updating match rule:', error);
+            throw error;
+            return {code: 500, error: error}
 
-            }
-            return `${id}没有打开的网页`;
-        });
+        }
+    });
 
+    ipcMain.handle('match-rules:delete', async (event, id) => {
+        try {
+            await deleteMatchRule(id);
+            return {code: 200}
+        } catch (error) {
+            console.error('Error deleting match rule:', error);
+            throw error;
+            return {code: 500, error: error}
+
+        }
+    });
 }

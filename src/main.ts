@@ -1,8 +1,7 @@
 import { app, BrowserWindow, session} from 'electron';
 import path from 'path';
-import {sqlite3} from "sqlite3";
 import start from 'electron-squirrel-startup'
-import {handleClaw} from "./core/process";
+import {handleMatchRules} from "./core/process";
 // import startCrawler from "./core/crawler";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -10,9 +9,7 @@ import {handleClaw} from "./core/process";
     app.quit();
   }
 
-const filter = {
-  urls: ['*://mobile.pinduoduo.com/proxy/api/api/aristotle/*'],
-};
+
 
 const createWindow = () => {
   // Create the browser window.
@@ -53,7 +50,7 @@ app.on('window-all-closed', () => {
 
 
 app.whenReady().then(()=>{
-    handleClaw()
+    handleMatchRules()
 });
 
 app.on('activate', () => {

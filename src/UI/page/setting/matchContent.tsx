@@ -4,6 +4,10 @@ import React, { useEffect, useState } from 'react'
 import { getCategoryString } from '../../const/categroy'
 import useLoadingButton from '../../components/useButton'
 import { abc_type, cost_type, tag_type } from '../../const/web'
+import MatchContentDraw from './matchContentDraw'
+// Add type declarations at the top
+type TypeMap = { [key: string]: string }
+
 interface DataType {
   key: string
   name: string
@@ -17,6 +21,12 @@ const RuleTable = () => {
   const [isUpdate, setIsUpdate] = useState<boolean>()
   const { LoadingBtn, setLoadingFalse } = useLoadingButton()
   const getRuleData = async () => {
+    window.mercury.api.getALlMatchRule().then((res: any) => {
+      console.log(res, '====rule')
+      if (res) {
+        setRuleData(res)
+      }
+    })
     // try {
     //   const res = await $api.getALlMatchRule()
     //   console.log(res, 'rule')
@@ -41,6 +51,8 @@ const RuleTable = () => {
     {
       title: '规则',
       dataIndex: 'rule',
+      width: 200,
+      className:'single-line',
       render: (ru: string) => {
         if (ru && ru.includes('|')) {
           const arr = ru.split('|')
@@ -57,7 +69,7 @@ const RuleTable = () => {
       dataIndex: 'consumer',
       key: 'consumer',
       render: (val: number) => {
-        const consumer_type = {
+        const consumer_type: { [key: number]: string } = {
           1: '老公',
           2: '老婆',
           3: '家庭',
@@ -79,19 +91,19 @@ const RuleTable = () => {
       title: '标签',
       dataIndex: 'tag',
       width: 90,
-      render: (val: string) => (val ? tag_type[val] : ''),
+      render: (val: string) => (val ? (tag_type as TypeMap)[val] : ''),
     },
     {
       title: 'ABC类',
       dataIndex: 'abc_type',
       width: 100,
-      render: (val: number) => (val ? abc_type[val] : ''),
+      render: (val: number) => (val ? (abc_type as TypeMap)[val] : ''),
     },
     {
       title: '消费方式',
       dataIndex: 'cost_type',
       width: 100,
-      render: (val: number) => (val ? cost_type[val] : ''),
+      render: (val: number) => (val ? (cost_type as TypeMap)[val] : ''),
     },
     {
       title: 'Action',
@@ -103,7 +115,7 @@ const RuleTable = () => {
             onClick={() => {
               setVisiable(true)
               setIsUpdate(false)
-              setRecord(record)
+              setRecord({})
               console.log(record)
             }}
           >
@@ -156,7 +168,7 @@ const RuleTable = () => {
     getRuleData()
   }
   return (
-    <>
+    <div className="match-content">
       <Table
         columns={columns}
         dataSource={ruleData}
@@ -167,36 +179,17 @@ const RuleTable = () => {
         // }}
         pagination={false}
       />
-      {/* {visiable && (
+      {visiable && (
         <Drawer
           title="Basic Drawer"
           placement="right"
           open={visiable}
           onClose={() => setVisiable(false)}
         >
-          {isUpdate ? (
-            <RuleForm data={record} refresh={refresh} />
-          ) : (
-            <Form>
-              <Form.Item>
-                <Input
-                  placeholder="输入规则"
-                  value={input}
-                  onChange={(e) => {
-                    setInput(e.target.value)
-                  }}
-                />
-              </Form.Item>
-              <Form.Item>
-                <LoadingBtn type="primary" onClick={onSubmit}>
-                  提交
-                </LoadingBtn>
-              </Form.Item>
-            </Form>
-          )}
+         <MatchContentDraw data={record} refresh={refresh} />
         </Drawer>
-      )} */}
-    </>
+      )}
+    </div>
   )
 }
 export default RuleTable
