@@ -4,7 +4,7 @@
 }
 .ant-card-body {
     height: 100%;
-    overflow: hidden;
+    overflow-y: auto;
 }
 .setting-tabs {
     height: 100%;
@@ -13,9 +13,9 @@
     height: 100%;
     overflow: scroll;
 }
+
 .single-line {
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 100%;
-    max-width: 200px;
+    white-space: nowrap;
 }

@@ -64,6 +64,7 @@ export const updateMatchRule = async (id: number, rule: MatchRule): Promise<{cod
 // Delete match rule
 export const deleteMatchRule = async (id: number): Promise<void> => {
   try {
+    const db = await getDbInstance()
     await db.run('DELETE FROM match_rules WHERE id = ?', [id])
   } catch (error) {
     console.error('Error deleting match rule:', error)

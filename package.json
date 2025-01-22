@@ -16,7 +16,8 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
-    "import": "node src/sqlite3/import.js"
+    "import": "node src/sqlite3/import.js",
+    "import-trans": "node src/sqlite3/import-trans.js"
   },
   "dependencies": {
     "@types/sqlite3": "^3.1.11",

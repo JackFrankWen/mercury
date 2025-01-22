@@ -21,8 +21,8 @@ export function handleMatchRules(){
             return {code: 200}
         } catch (error) {
             console.error('Error adding match rule:', error);
-            throw error;
             return {code: 500, error: error}
+            throw error;
         }
     });
 

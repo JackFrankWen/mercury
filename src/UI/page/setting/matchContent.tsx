@@ -1,4 +1,4 @@
-import { Drawer, Form, Input, message, Space, Table, Tag, Button } from 'antd'
+import { Drawer, Form, Input, message, Space, Table, Tag, Modal } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import React, { useEffect, useState } from 'react'
 import { getCategoryString } from '../../const/categroy'
@@ -14,6 +14,7 @@ interface DataType {
   age: number
   address: string
   tags: string[]
+  id: number
 }
 
 const RuleTable = () => {
@@ -41,7 +42,8 @@ const RuleTable = () => {
     {
       title: '分类',
       dataIndex: 'category',
-      width: 120,
+      width: 150,
+      fixed: 'left',
       render: (val: string) => {
         const list = val ? JSON.parse(val) : []
 
@@ -51,7 +53,6 @@ const RuleTable = () => {
     {
       title: '规则',
       dataIndex: 'rule',
-      width: 200,
       className:'single-line',
       render: (ru: string) => {
         if (ru && ru.includes('|')) {
@@ -108,7 +109,8 @@ const RuleTable = () => {
     {
       title: 'Action',
       key: 'action',
-      width: 120,
+      fixed: 'right',
+      width: 200,
       render: (_, record) => (
         <Space size="middle">
           <a
@@ -130,6 +132,24 @@ const RuleTable = () => {
             }}
           >
             修改
+          </a>
+          <a
+            onClick={() => {
+                Modal.confirm({
+                    title: '确定要删除吗？',
+                    onOk: () => {
+                        window.mercury.api.deleteMatchRule(record.id).then((res: any) => {
+                            if (res.code === 200) {
+                                message.success('删除成功')
+                                getRuleData()
+                            }
+                        })
+                    }
+
+              })
+            }}
+          >
+            删除
           </a>
         </Space>
       ),
