@@ -27,6 +27,21 @@ contextBridge.exposeInMainWorld('mercury', {
         }) => ipcRenderer.invoke('match-rules:update', id, rule),
         // 删除匹配规则
         deleteMatchRule: (id: number) => ipcRenderer.invoke('match-rules:delete', id),
+        // 根据条件获取所有交易
+        getTransactions: (params: {
+            description?: string,
+            account_type?: string,
+            payment_type?: string, 
+            consumer?: string,
+            tag?: string,
+            abc_type?: string,
+            cost_type?: string,
+            trans_time?: [string, string],
+            createdAt?: [string, string],
+            min_money?: number,
+            max_money?: number,
+            is_unclassified?: boolean,
+        }) => ipcRenderer.invoke('transactions:getAll', params),
     },
 
     crawler: (param: {

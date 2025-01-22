@@ -1,17 +1,25 @@
-import React from "react";
+import React , { useState }from "react";
 import {Card} from "antd";
 import {AdvancedSearchForm} from "./advancedSearchForm";
 import {AdvancedTable} from "./advancedTable";
+import { Params_Transaction } from "src/global";
 import './index.css'
 
 function Accounting(): JSX.Element {
+    const [transactions, setTransactions] = useState([]);
+    const getTransactions = (params: Params_Transaction) => {
+
+        window.mercury.api.getTransactions(params).then((res) => {
+            console.log('res', res);
+            
+        })
+    }
     return (
         <div className='p-accounting'>
-           <h1>记账</h1>
             <Card className='plr8' >
-               <AdvancedSearchForm />
+               <AdvancedSearchForm getTransactions={getTransactions}/>
             </Card>
-            <Card className='mt16 plr8'>
+            <Card className='mt8 plr8'>
                 <AdvancedTable />
             </Card>
         </div>

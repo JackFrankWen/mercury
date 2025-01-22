@@ -3,8 +3,11 @@ import React, {useState} from "react";
 import RangePickerWrap from "../../components/rangePickerWrap";
 import {cpt_const} from "../../const/web";
 import {DownOutlined} from "@ant-design/icons";
-
-export const AdvancedSearchForm = () => {
+import { Params_Transaction } from "src/global";
+import dayjs from "dayjs";
+export const AdvancedSearchForm = (props: {
+    getTransactions: (params: Params_Transaction) => void
+}) => {
     const {token} = theme.useToken();
     const [form] = Form.useForm();
     const [expand, setExpand] = useState(false);
@@ -18,20 +21,34 @@ export const AdvancedSearchForm = () => {
 
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
+        const params = {
+            ...values,
+            is_unclassified: values.is_unclassified === 'unclassified',
+            trans_time: values.trans_time?.map((date: any) => dayjs(date).format('YYYY-MM-DD HH:mm:ss')),
+            createdAt: values.createdAt?.map((date: any) => dayjs(date).format('YYYY-MM-DD HH:mm:ss'))
+        }
+        
+        console.log('params', params);
+        
+        props.getTransactions(params)
     };
 
     return (
-        <Form form={form} name="advanced_search" style={formStyle} onFinish={onFinish}>
+        <Form form={form} 
+        initialValues={{
+            is_unclassified: 'unclassified',
+        }}
+        name="advanced_search" style={formStyle} onFinish={onFinish}>
             <Row gutter={24}>
                 <Col span={8}>
 
                     <Form.Item
-                        name={`exs`}
-                        label="描述"
+                        name={`is_unclassified`}
+                        label="分类"
                     >
                         <Radio.Group>
-                            <Radio value="1">正常</Radio>
-                            <Radio value="2">未分类</Radio>
+                            <Radio value="normal">正常</Radio>
+                            <Radio value="unclassified">未分类</Radio>
                         </Radio.Group>
                     </Form.Item>
                 </Col>
@@ -40,7 +57,7 @@ export const AdvancedSearchForm = () => {
                         <Col span={8}>
 
                             <Form.Item
-                                name={`exs`}
+                                name={`createdAt`}
                                 label="创建时间"
                             >
                                 <RangePickerWrap bordered placeholder="placeholder"/>
@@ -49,7 +66,15 @@ export const AdvancedSearchForm = () => {
                     )
 
                 }
+                <Col span={8}>
+                    <Form.Item
+                        name={`trans_time`}
+                        label="交易时间"
 
+                    >
+                        <RangePickerWrap bordered placeholder="placeholder"/>
+                    </Form.Item>
+                </Col>
                 <Col span={8}>
                     <Form.Item name="payment_type" label="付款方式">
                         <Select
@@ -59,28 +84,21 @@ export const AdvancedSearchForm = () => {
                         />
                     </Form.Item>
                 </Col>
-                <Col span={8}>
-
-                    <Form.Item
-                        name={`date`}
-                        label="交易时间"
-
-                    >
-                        <RangePickerWrap bordered placeholder="placeholder"/>
-                    </Form.Item>
-                </Col>
+                
                 {
                     expand && (
                         <Col span={8}>
                             <Form.Item
-                                name={`exs`}
                                 label="金额"
-
                             >
-                                <Form.Item style={{display: 'inline-block'}}>
+                                <Form.Item 
+                                name={`min_money`}
+                                style={{display: 'inline-block'}}>
                                     <InputNumber style={{width: 'calc(40% - 12px)'}}/>
                                 </Form.Item>
-                                <Form.Item style={{display: 'inline-block'}}>
+                                <Form.Item 
+                                name={`max_money`}
+                                style={{display: 'inline-block'}}>
 
                                     <InputNumber style={{width: 'calc(40% - 12px)'}}/>
                                 </Form.Item>

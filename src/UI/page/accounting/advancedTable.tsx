@@ -161,14 +161,11 @@ export function AdvancedTable(props: any): JSX.Element {
     return (
         <>
             <Row justify={'space-between'}>
-                <Breadcrumb items={[{
+                {/* <Breadcrumb items={[{
                     title: '记账',
-                }]}/>
+                }]}/> */}
                 <Space>
                     <Button icon={<PlusOutlined/>} type="primary">新增</Button>
-                    <Tooltip title="分类">
-                        <ControlOutlined/>
-                    </Tooltip>
                 </Space>
             </Row>
 
