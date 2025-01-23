@@ -1,5 +1,5 @@
-import { Transaction } from "electron"
 import { getDbInstance } from "./connect"
+import { Params_Transaction } from "src/global"
 
 export interface I_Transaction {
     amount: number
@@ -17,20 +17,7 @@ export interface I_Transaction {
     updatedAt: Date
   }
 // 获取所有交易 根据preload.ts 的getTransactions
-export const getAllTransactions = async (params: {
-    description?: string,
-    account_type?: string,
-    payment_type?: string, 
-    consumer?: string,
-    tag?: string,
-    abc_type?: string,
-    cost_type?: string,
-    trans_time?: [string, string],
-    createdAt?: [string, string],
-    min_money?: number,
-    max_money?: number,
-    is_unclassified?: boolean,
-}): Promise<I_Transaction[]> => {
+export const getAllTransactions = async (params: Params_Transaction): Promise<I_Transaction[]> => {
   try {
     const db = await getDbInstance()
     let sqlWithValues = 'SELECT * FROM transactions'
@@ -95,7 +82,13 @@ export const getAllTransactions = async (params: {
 
     sqlWithValues += ' ORDER BY trans_time DESC'
 
-    console.log('========Final SQL Query:', sqlWithValues)
+    // Add pagination
+    if (params.page !== undefined && params.page_size !== undefined) {
+      const offset = (params.page - 1) * params.page_size
+      sqlWithValues += ` LIMIT ${params.page_size} OFFSET ${offset}`
+    }
+
+    console.log('==========Final SQL Query:', sqlWithValues)
     
     const rows = await new Promise<I_Transaction[]>((resolve, reject) => {
       db.all(sqlWithValues, (err, rows: I_Transaction[]) => {
