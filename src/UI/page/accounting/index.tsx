@@ -15,7 +15,7 @@ function Accounting(): JSX.Element {
     })
     useEffect(() => {
         getTransactions(formValue)
-    }, [formValue])
+    }, [])
     const getTransactions = (params: Params_Transaction) => {
 
         window.mercury.api.getTransactions(params).then((res) => {
