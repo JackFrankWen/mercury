@@ -25,3 +25,7 @@ body {
     position: relative;
     overflow: hidden;
 }
+.no-margin {
+    margin: 0 !important;
+    margin-inline-end: 0 !important;
+}

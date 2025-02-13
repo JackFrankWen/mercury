@@ -1,21 +1,39 @@
-import { Button, Row, Space } from 'antd';
-import React from 'react';
-
+import { Button, Col, Row, Space } from 'antd';
+import React, { useState } from 'react';
+import { I_Transaction } from 'src/sqlite3/transactions';
+import BatchUpdateArea from 'src/UI/components/batchForm';
 interface SelectionFooterProps {
     selectedCount: number;
     onCancel: () => void;
     onDelete: () => void;
+    onUpdate: ( params: Partial<I_Transaction>) => void;
 }
 
-export function SelectionFooter({ selectedCount, onCancel, onDelete }: SelectionFooterProps) {
+export function SelectionFooter({ selectedCount, onCancel, onDelete, onUpdate }: SelectionFooterProps) {
+const [formValues, setFormValues] = useState<any>({})
+const removeUndefined = (obj: any) => {
+    return Object.fromEntries(
+        Object.entries(obj).filter(([_, value]) => value !== undefined)
+    );
+}
     return (
-        <Row justify='space-between' align='middle' className='table-footer'>
-            <div>选择 {selectedCount}个</div>
-            <Space>
-                <Button onClick={onCancel}>取消</Button>
-                <Button danger onClick={onDelete}>批量删除</Button>
-                <Button type="primary">批量修改</Button>
-            </Space>
+        <Row  className='table-footer'>
+            <Col span={24}>
+                <BatchUpdateArea 
+                    formValues={formValues}
+                    setFormValues={setFormValues}
+                />
+            </Col>
+            <Col span={24} className='mt8'>
+                <Row justify='space-between' >
+                    <div>选择 {selectedCount}个</div>
+                    <Space>
+                        <Button onClick={onCancel}>取消</Button>
+                        <Button danger onClick={onDelete}>批量删除</Button>
+                        <Button type="primary" onClick={() => onUpdate(removeUndefined(formValues))}>批量修改</Button>
+                    </Space>
+                </Row>
+            </Col>
         </Row>
     );
 } 

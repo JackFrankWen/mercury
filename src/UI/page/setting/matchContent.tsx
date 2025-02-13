@@ -45,9 +45,8 @@ const RuleTable = () => {
       width: 150,
       fixed: 'left',
       render: (val: string) => {
-        const list = val ? JSON.parse(val) : []
 
-        return list.length > 0 ? getCategoryString(list) : ''
+        return <div>{getCategoryString(val)}</div>
       },
     },
     {

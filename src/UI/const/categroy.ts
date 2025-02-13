@@ -572,8 +572,20 @@ export const getCategoryObj = () => {
   return obj
 }
 
-export const getCategoryString = (arr: string[]): string => {
-  const obj = getCategoryObj()
+export const getCategoryString = (str: string | undefined, type?: number): string => {
+  try {
+    if (!str) {
+      return ''
+    }
+    const obj = getCategoryObj()
+    const arr = JSON.parse(str)
+    if (type === 1) {
+      return `${obj[arr[1]]}`
+    }
+    return `${obj[arr[0]]}\\${obj[arr[1]]}`
+    
 
-  return `${obj[arr[0]]}\\${obj[arr[1]]}`
+  } catch (error) {
+    return ''
+  }
 }

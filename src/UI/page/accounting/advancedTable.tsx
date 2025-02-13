@@ -10,7 +10,7 @@ import type { TableColumnsType, TableProps } from 'antd';
 import { I_Transaction,  } from "src/sqlite3/transactions";
 import dayjs from "dayjs";
 import { SelectionFooter } from './SelectionFooter';
-
+import { getCategoryString } from "../../const/categroy";
 interface DataType {
     trans_time_formate: string
     amount: string
@@ -48,6 +48,9 @@ const renderBoldPrice = (txt: string, record: I_Transaction) => {
         <Typography.Text type="danger">{txt}</Typography.Text>
     ) : txt;
 };
+const renderTime = (trans_time: Date) => {
+    return <div className="ellipsis">{dayjs(trans_time).format('YYYY-MM-DD HH:mm:ss')}</div>
+}
 
 const columns: ColumnsType<I_Transaction> = [
     {
@@ -55,10 +58,22 @@ const columns: ColumnsType<I_Transaction> = [
         width: 200,
         dataIndex: 'trans_time',
         key: 'trans_time',
-        render: (trans_time: Date) => (
-            <div className="ellipsis">{dayjs(trans_time).format('YYYY-MM-DD HH:mm:ss')}</div>
-        )
+        render: renderTime,
 
+    },
+    {
+        title: '分类',
+        dataIndex: 'category',
+        key: 'category',
+        width: 200,
+        render: (category: string) => getCategoryString(category, 1),
+    },
+     {
+        title: '金额',
+        dataIndex: 'amount',
+        render: renderBoldPrice,
+        key: 'amount',
+        width: 120,
     },
     {
         title: '交易对方',
@@ -83,14 +98,7 @@ const columns: ColumnsType<I_Transaction> = [
             </Tooltip>
         ),
     },
-    { title: '分类', dataIndex: 'name', key: 'name', width: 120 },
-    {
-        title: '金额',
-        dataIndex: 'amount',
-        render: renderBoldPrice,
-        key: 'amount',
-        width: 120,
-    },
+    
 
     {
         title: '消费者',
@@ -131,18 +139,20 @@ const columns: ColumnsType<I_Transaction> = [
     // },
     {
         title: '创建日期',
-        dataIndex: 'creation_time_formate',
+        dataIndex: 'creation_time',
         // render: formatTime,
         key: 'creation_time',
         ellipsis: true,
+        render: renderTime,
     },
     {
         title: '最后修改',
-        dataIndex: 'modification_time_formate',
+        dataIndex: 'modification_time',
         // render: formatTime,
 
         key: 'modification_time',
-        ellipsis: true,
+        ellipsis: true, 
+        render: renderTime,
     },
 ]
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
@@ -208,6 +218,29 @@ export function AdvancedTable(props: {
                                 message.error('删除失败');
                             });
                     }}
+                    onUpdate={( params: Partial<I_Transaction>) => {
+                        console.log('===params', params);
+                        const obj = {
+                            ...params,
+                        }
+                        if (params.category) {
+                            obj.category = JSON.stringify(params.category)
+                        }
+                        console.log('===obj', obj);
+                        
+                        window.mercury.api.updateTransactions(
+                             selectedRowKeys as number[],
+                            obj
+                        ).then(() => {
+                            setSelectedRowKeys([]);
+                            message.success('修改成功');
+                            fresh();
+                        })
+                        .catch((error: any) => {
+                            console.error('修改失败:', error);
+                            message.error('修改失败');
+                        });
+                    }}  
                     selectedCount={selectedRowKeys.length} />)
 
             }
