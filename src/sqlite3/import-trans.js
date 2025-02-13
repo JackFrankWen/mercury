@@ -19,6 +19,7 @@ function createTable() {
         CREATE TABLE IF NOT EXISTS "transactions" (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             amount DECIMAL(10,2),
+            payee TEXT,
             category TEXT,
             description TEXT, 
             account_type TEXT,

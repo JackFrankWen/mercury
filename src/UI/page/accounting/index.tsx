@@ -12,6 +12,9 @@ function Accounting(): JSX.Element {
         window.mercury.api.getTransactions(params).then((res) => {
             console.log('res', res);
             
+            if(res) {
+                setTransactions(res)
+            }
         })
     }
     return (

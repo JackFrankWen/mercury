@@ -5,6 +5,7 @@ export interface I_Transaction {
     amount: number
     category: string
     description: string
+    payee: string // trading partner
     account_type: string
     payment_type: string
     consumer: string

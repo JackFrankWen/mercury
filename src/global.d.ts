@@ -4,11 +4,6 @@ export {};
 declare global {
     interface Window {
         mercury: {
-            crawler: (param: {
-                web: 'pinduoduo';
-                action: 'open' | 'getList';
-            }) => Promise<any>;
-            getWebpageContent: (a: string) => Promise<any>;
             api: {
                 getALlMatchRule: () => Promise<any>;
                 addMatchRule: (rule: {
@@ -34,7 +29,7 @@ declare global {
     }
 
 }
-export interface Params_Transaction {
+export interface Params_Transaction extends page_size {
     description?: string;
     account_type?: string;
     payment_type?: string; 
@@ -47,6 +42,10 @@ export interface Params_Transaction {
     min_money?: number;
     max_money?: number;
     is_unclassified?: boolean;
+
+}
+
+export interface page_size {
     page?: number;
     page_size?: number;
 }
