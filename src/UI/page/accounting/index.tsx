@@ -18,12 +18,12 @@ function Accounting(): JSX.Element {
         })
     }
     return (
-        <div className='p-accounting'>
-            <Card className='plr8' >
+        <div className='p-accounting' style={{height: '100vh', overflow: 'hidden'}}>
+            <Card className='plr8 ' >
                <AdvancedSearchForm getTransactions={getTransactions}/>
             </Card>
             <Card className='mt8 plr8'>
-                <AdvancedTable />
+                <AdvancedTable data ={transactions}/>
             </Card>
         </div>
     );

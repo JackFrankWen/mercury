@@ -32,6 +32,7 @@ function App(props: any): JSX.Element {
         <Layout
             style={{
                 minHeight: '100%',
+                overflow: 'hidden',
             }}>
 
             <Sider
@@ -49,7 +50,7 @@ function App(props: any): JSX.Element {
                 />
             </Sider>
             <AliveScope>
-                <Content className="mercury-content">
+                <Content className="mercury-content" style={{height: '100%'}}>
                     {
                         activeKey === 'home' && <KeepAlive>
                             <Home/>

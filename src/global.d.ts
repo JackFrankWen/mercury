@@ -29,7 +29,7 @@ declare global {
     }
 
 }
-export interface Params_Transaction extends page_size {
+export interface Params_Transaction  {
     description?: string;
     account_type?: string;
     payment_type?: string; 
@@ -42,10 +42,12 @@ export interface Params_Transaction extends page_size {
     min_money?: number;
     max_money?: number;
     is_unclassified?: boolean;
+    page?: Page_size[page]
+    page_size?: Page_size[page_size]
 
 }
 
-export interface page_size {
-    page?: number;
-    page_size?: number;
+export interface Page_size {
+    page: number;
+    page_size: number;
 }

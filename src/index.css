@@ -23,4 +23,5 @@ body {
 .mercury-content {
     padding: 8px;
     position: relative;
+    overflow: hidden;
 }

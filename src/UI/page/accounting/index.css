@@ -1,4 +1,13 @@
 .p-accounting {
+    height: 100%;
+    min-height: 100vh;
+    padding: 10px;
+
+    .ellipsis {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 
     .table-footer {
         position: fixed;
