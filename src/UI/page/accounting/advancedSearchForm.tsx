@@ -5,9 +5,14 @@ import {cpt_const} from "../../const/web";
 import {DownOutlined} from "@ant-design/icons";
 import { Params_Transaction } from "src/global";
 import dayjs from "dayjs";
+import { I_FormValue } from "./index";
+
 export const AdvancedSearchForm = (props: {
-    getTransactions: (params: Params_Transaction) => void
+    getTransactions: (params: Params_Transaction) => void,
+    setFormValue: (formValue: I_FormValue) => void,
+    formValue: I_FormValue
 }) => {
+    const {formValue} = props;
     const {token} = theme.useToken();
     const [form] = Form.useForm();
     const [expand, setExpand] = useState(false);
@@ -23,7 +28,7 @@ export const AdvancedSearchForm = (props: {
         console.log('Received values of form: ', values);
         const params = {
             ...values,
-            is_unclassified: values.is_unclassified === 'unclassified',
+            is_unclassified: values.chose_unclassified === 'unclassified',
             trans_time: values.trans_time?.map((date: any) => dayjs(date).format('YYYY-MM-DD HH:mm:ss')),
             createdAt: values.createdAt?.map((date: any) => dayjs(date).format('YYYY-MM-DD HH:mm:ss'))
         }
@@ -34,16 +39,18 @@ export const AdvancedSearchForm = (props: {
     };
 
     return (
-        <Form form={form} 
-        initialValues={{
-            is_unclassified: 'unclassified',
+        <Form 
+        form={form} 
+        initialValues={formValue}
+        onValuesChange={(changedValues, allValues) => {
+            props.setFormValue(allValues)
         }}
         name="advanced_search" style={formStyle} onFinish={onFinish}>
             <Row gutter={24}>
                 <Col span={8}>
 
                     <Form.Item
-                        name={`is_unclassified`}
+                        name={`chose_unclassified`}
                         label="分类"
                     >
                         <Radio.Group>

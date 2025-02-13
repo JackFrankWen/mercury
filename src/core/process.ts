@@ -1,6 +1,6 @@
 import {  ipcMain} from "electron";
 import { getAllMatchRules, addMatchRule, updateMatchRule, deleteMatchRule } from "../sqlite3/match-rules";
-import { getAllTransactions } from "../sqlite3/transactions";
+import { getAllTransactions, deleteTransactions } from "../sqlite3/transactions";
 
 
 export function handleMatchRules(){
@@ -54,5 +54,10 @@ export function handleMatchRules(){
     ipcMain.handle('transactions:getAll', async (event, params) => {
         const transactions = await getAllTransactions(params);
         return transactions;
+    });
+
+    ipcMain.handle('transactions:delete', async (event, ids) => {
+        await deleteTransactions(ids);
+        return {code: 200}
     });
 }

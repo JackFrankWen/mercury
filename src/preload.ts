@@ -30,6 +30,10 @@ contextBridge.exposeInMainWorld('mercury', {
         deleteMatchRule: (id: number) => ipcRenderer.invoke('match-rules:delete', id),
         // 根据条件获取所有交易
         getTransactions: (params:    Params_Transaction) => ipcRenderer.invoke('transactions:getAll', params),
+        // 删除交易
+        deleteTransactions: (ids: number[]) => ipcRenderer.invoke('transactions:delete', ids),
+        // 批量修改
+        updateTransactions: (ids: number[], params: Params_Transaction) => ipcRenderer.invoke('transactions:update', ids, params),
     },
 
     crawler: (param: {

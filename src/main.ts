@@ -2,7 +2,6 @@ import { app, BrowserWindow, session} from 'electron';
 import path from 'path';
 import start from 'electron-squirrel-startup'
 import {handleMatchRules} from "./core/process";
-// import startCrawler from "./core/crawler";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
   if (start) {

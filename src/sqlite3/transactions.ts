@@ -2,6 +2,7 @@ import { getDbInstance } from "./connect"
 import { Params_Transaction } from "src/global"
 
 export interface I_Transaction {
+    id: number
     amount: number
     category: string
     description: string
@@ -108,4 +109,57 @@ export const getAllTransactions = async (params: Params_Transaction): Promise<I_
     console.error('Error getting transactions:', error)
     throw error
   }
-}   
+}
+
+
+// 删除交易
+export async function deleteTransactions(ids: number[]): Promise<void> {
+  try {
+    const db = await getDbInstance()
+
+    // Create a string of placeholders for the SQL query
+    const placeholders = ids.map(() => '?').join(',');
+    const sql = `DELETE FROM transactions WHERE id IN (${placeholders})`;
+
+    // Execute the SQL query to delete the transactions
+    await new Promise<void>((resolve, reject) => {
+      db.run(sql, ids, (err) => {
+        if (err) {
+          console.error('Error deleting transactions:', err);
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  } catch (error) {
+    console.error('Error deleting transactions:', error);
+    throw error;
+  }
+}
+
+// 批量修改
+export async function updateTransactions(ids: number[], params: Params_Transaction): Promise<void> {
+  try {
+    const db = await getDbInstance()
+
+    // Create a string of placeholders for the SQL query
+    const placeholders = ids.map(() => '?').join(',');
+    const sql = `UPDATE transactions SET ${Object.keys(params).map(key => `${key} = ?`).join(',')} WHERE id IN (${placeholders})`;
+
+    // Execute the SQL query to update the transactions
+    await new Promise<void>((resolve, reject) => {
+      db.run(sql, [...Object.values(params), ...ids], (err) => {
+        if (err) {
+          console.error('Error updating transactions:', err);
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+  } catch (error) {
+    console.error('Error updating transactions:', error);
+    throw error;
+  }
+}

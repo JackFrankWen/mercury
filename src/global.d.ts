@@ -24,6 +24,7 @@ declare global {
                 }) => Promise<any>;
                 deleteMatchRule: (id: number) => Promise<any>;
                 getTransactions: (params:Params_Transaction) => Promise<any>;
+                deleteTransactions: (ids: number[]) => Promise<any>;
             };
         };
     }

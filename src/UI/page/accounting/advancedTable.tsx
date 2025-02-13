@@ -1,13 +1,15 @@
 import {Breadcrumb, Button, Row, Space, Table, Tag, Tooltip,
-    Typography, Card
+    Typography, Card,
+    message
 } from "antd";
 import { ColumnsType } from 'antd/es/table/interface'
 import {ControlOutlined, PlusOutlined} from "@ant-design/icons";
-import React from "react";
+import React, {useState} from "react";
 import {account_type, cost_type, payment_type, tag_type} from "../../const/web";
 import type { TableColumnsType, TableProps } from 'antd';
 import { I_Transaction,  } from "src/sqlite3/transactions";
 import dayjs from "dayjs";
+import { SelectionFooter } from './SelectionFooter';
 
 interface DataType {
     trans_time_formate: string
@@ -144,23 +146,13 @@ const columns: ColumnsType<I_Transaction> = [
     },
 ]
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
-function SelectionFooter({ selectedCount, onCancel }: { selectedCount: number, onCancel: () => void }) {
-    return (
-        <Row justify='space-between' align='middle' className='table-footer'>
-            <div>选择 {selectedCount}个</div>
-            <Space>
-                <Button onClick={onCancel} >取消</Button>
-                <Button danger>批量删除</Button>
-                <Button type="primary">批量修改</Button>
-            </Space>
-        </Row>
-    );
-}
+
 export function AdvancedTable(props: {
     data: I_Transaction[],
+    fresh: () => void
 }): JSX.Element {
-    const {data} = props;
-    const [selectedRowKeys, setSelectedRowKeys] = React.useState<React.Key[]>([]);
+    const {data, fresh} = props;
+    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
 
 
@@ -203,6 +195,18 @@ export function AdvancedTable(props: {
                 selectedRowKeys.length > 0 && (<SelectionFooter 
                     onCancel={() => {
                         setSelectedRowKeys([]);
+                    }}
+                    onDelete={() => {
+                        window.mercury.api.deleteTransactions(selectedRowKeys as number[])
+                            .then(() => {
+                                setSelectedRowKeys([]);
+                                message.success('删除成功');
+                                fresh();
+                            })
+                            .catch((error: any) => {
+                                console.error('删除失败:', error);
+                                message.error('删除失败');
+                            });
                     }}
                     selectedCount={selectedRowKeys.length} />)
 
