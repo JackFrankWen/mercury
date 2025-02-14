@@ -98,17 +98,22 @@ export const AdvancedSearchForm = (props: {
                             <Form.Item
                                 label="金额"
                             >
-                                <Form.Item 
+                                <Space.Compact>
+
+                                <Form.Item
+                                className="no-margin"
                                 name={`min_money`}
                                 style={{display: 'inline-block'}}>
-                                    <InputNumber style={{width: 'calc(40% - 12px)'}}/>
+                                    <InputNumber />
                                 </Form.Item>
                                 <Form.Item 
+                                className="no-margin"
                                 name={`max_money`}
                                 style={{display: 'inline-block'}}>
 
-                                    <InputNumber style={{width: 'calc(40% - 12px)'}}/>
+                                    <InputNumber />
                                 </Form.Item>
+                                </Space.Compact>
                             </Form.Item>
                         </Col>
                     )
@@ -164,15 +169,15 @@ export const AdvancedSearchForm = (props: {
                 <Col span={8}>
                     <Space size="small">
                         <Button type="primary" htmlType="submit">
-                            Search
+                            搜索
                         </Button>
-                        <Button
+                        {/* <Button
                             onClick={() => {
                                 form.resetFields();
                             }}
                         >
                             AI分类
-                        </Button>
+                        </Button> */}
                         <a
                             style={{fontSize: 12}}
                             onClick={() => {
