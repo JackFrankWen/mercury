@@ -1,4 +1,5 @@
 import { I_Transaction } from "src/sqlite3/transactions"
+import { category_type } from "src/UI/const/categroy"
 
 export interface tableHeaderI {
     name: string
@@ -16,8 +17,8 @@ export interface tableDataI {
     amount: string
     description: string
 }
-
-  export function formateToTableAlipayMobileHeader(arr: any): tableHeaderI {
+// 支付宝手机端
+export function formateToTableAlipayMobileHeader(arr: any): tableHeaderI {
 //   1. ["------------------------------------------------------------------------------------"],
 //   2. ["导出信息："],
 //   3. ["姓名：文素能"],
@@ -68,32 +69,53 @@ return {
     titleIncomeLabel: arr[4][0],
 }
 }
-
-export function mobileFormateToTableDataAlipay(
+// 支付宝手机端
+export function formateToTableDataAlipayMobile(
   arr: string[][],
   account_type: number,
   payment_type: number
 ) : any{
-    let costArr = arr.filter((subArr: string[]) => /交易成功/.test(subArr[11]))
-  costArr = costArr.filter((subArr: string[]) => !/不计收支/.test(subArr[10]))
-  costArr = costArr.filter((subArr: string[]) => !/资金转移/.test(subArr[15]))
+    let costArr = arr.filter((subArr: string[]) => !/不计收支/.test(subArr[5]))
+  costArr = costArr.filter((subArr: string[]) => /支付成功/.test(subArr[8]) || /交易成功/.test(subArr[8]))
+    // 0: (12) ['交易时间', '交易分类', '交易对方', '对方账号', '商品说明', '收/支', '金额', '收/付款方式', '交易状态', '交易订单号', '商家订单号', '备注']
+  console.log(arr,'====aaaa');
+  
   return costArr.map((subArr) => {
-    // 0: "交易号"
-    // 1: "商家订单号"
-    // 2: "交易创建时间"
-    // 3: "付款时间"
-    // 4: "最近修改时间"
-    // 5: "交易来源地"      
-    const amount = subArr[9] || ''
-    const description = `${subArr[14]};${subArr[8]};${subArr[14]}`
+      // 0: "交易时间"
+      // 1: "交易分类" 
+      // 2: "交易对方"
+      // 3: "对方账号"
+      // 4: "商品说明"
+      // 5: "收/支"
+      // 6: "金额"
+      // 7: "收/付款方式"
+      // 8: "交易状态"
+      // 9: "交易订单号"
+      // 10: "商家订单号"
+      // 11: "备注"
+
     return {
-      amount: amount.trim(),
-      description: description,
+      amount: subArr[6].trim(),
+      description: `${subArr[4]};${subArr[11]}`,
+      account_type: account_type,
+      payment_type: payment_type,
+      flow_type: /支出/.test(subArr[5]) ? 1 : 2,
+      category: undefined,
+      payee: subArr[2],
+      consumer: account_type,
+      tag: 2,
+      cost_type: 3,
+      abc_type: 2,
+      creation_time: undefined,
+      trans_time: (subArr[0] || '').trim().replace(/\n/g, ''),
+      modification_time: undefined,
+      categoryLabel: subArr[1],
     }
   })    
     
 
 }
+// 微信
 export function formateToTableDataWechat(
   arr: string[][],
   account_type: number,
@@ -132,7 +154,7 @@ export function formateToTableDataWechat(
     }
   })
 }
-
+// 微信
 export function formateToTableWechatHeader(arr: any): tableHeaderI {
   // 0: (9) ['微信支付账单明细', '', '', '', '', '', '', '', '']
   // 1: (9) ['微信昵称：[Jack Frank]', '', '', '', '', '', '', '', '']
@@ -172,7 +194,7 @@ export function trimString(str: unknown) {
   }
   return str.trim() // If the input is a string, trim it and return the result
 }
-
+// 支付宝电脑端
 export function formateToTableAlipay(
   arr: string[][],
   account_type: number,
@@ -221,7 +243,7 @@ export function formateToTableAlipay(
     }
   })
 }
-
+// 支付宝电脑端
 export function formateToTableAlipayHeader(arr: any): tableHeaderI {
   // 0: ['支付宝交易记录明细查询']
   // 1: ['账号:[79071077@qq.com]']
