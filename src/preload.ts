@@ -34,6 +34,8 @@ contextBridge.exposeInMainWorld('mercury', {
         deleteTransactions: (ids: number[]) => ipcRenderer.invoke('transactions:delete', ids),
         // 批量修改
         updateTransactions: (ids: number[], params: Params_Transaction) => ipcRenderer.invoke('transactions:update', ids, params),
+        // 批量插入
+        batchInsertTransactions: (list: Params_Transaction[]) => ipcRenderer.invoke('transactions:batchInsert', list),
     },
 
     crawler: (param: {

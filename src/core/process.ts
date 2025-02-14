@@ -1,6 +1,6 @@
 import {  ipcMain} from "electron";
 import { getAllMatchRules, addMatchRule, updateMatchRule, deleteMatchRule } from "../sqlite3/match-rules";
-import { getAllTransactions, deleteTransactions, updateTransactions } from "../sqlite3/transactions";
+import { getAllTransactions, deleteTransactions, updateTransactions, batchInsertTransactions } from "../sqlite3/transactions";
 
 
 export function handleMatchRules(){
@@ -52,17 +52,42 @@ export function handleMatchRules(){
     });
 
     ipcMain.handle('transactions:getAll', async (event, params) => {
-        const transactions = await getAllTransactions(params);
-        return transactions;
+        try {
+            const transactions = await getAllTransactions(params);
+            return transactions;
+        } catch (error) {
+            console.error('Error getting transactions:', error);
+            throw error;
+        }
     });
 
     ipcMain.handle('transactions:delete', async (event, ids) => {
-        await deleteTransactions(ids);
-        return {code: 200}
+        try {
+            await deleteTransactions(ids);
+            return {code: 200}
+        } catch (error) {
+            console.error('Error deleting transactions:', error);
+            throw error;
+        }
     });
 
     ipcMain.handle('transactions:update', async (event, ids, params) => {
-        await updateTransactions(ids, params);
-        return {code: 200}
+        try {
+            await updateTransactions(ids, params);
+            return {code: 200}
+        } catch (error) {
+            console.error('Error updating transactions:', error);
+            throw error;
+        }
+    });
+
+    ipcMain.handle('transactions:batchInsert', async (event, list) => {
+        try {
+            await batchInsertTransactions(list);
+            return {code: 200}
+        } catch (error) {
+            console.error('Error batch inserting transactions:', error);
+            throw error;
+        }
     });
 }

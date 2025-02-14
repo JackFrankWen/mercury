@@ -26,6 +26,7 @@ declare global {
                 getTransactions: (params:Params_Transaction) => Promise<any>;
                 deleteTransactions: (ids: number[]) => Promise<any>;
                 updateTransactions: (ids: number[], params: Partial<Params_Transaction>) => Promise<any>;
+                batchInsertTransactions: (list: Params_Transaction[]) => Promise<any>;
             };
         };
     }

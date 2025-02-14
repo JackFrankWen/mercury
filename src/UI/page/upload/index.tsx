@@ -12,6 +12,11 @@ const { Dragger } = Upload
 
 function UploadCenter(): JSX.Element {
     const [uploadVisable, setUploadVisiable] = useState(true)
+    const uploadToDatabase = (tableData: any) => {
+        window.mercury.api.batchInsertTransactions(tableData).then((res: any) => {
+            console.log(res, 'res')
+        })  
+    }
     const uploadProps: UploadProps = {
         name: 'file',
         fileList: [],
@@ -28,6 +33,7 @@ function UploadCenter(): JSX.Element {
             console.log(JSON.stringify(csvHeader), 'csvHeader')
             const {tableHeader, tableData} = handleToTable(csvData)
             console.log(tableHeader, tableData, 'tableHeader, tableData')
+            uploadToDatabase(tableData)
             //   if (/微信/.test(csvData[0][0] || '')) {
             //     const csvHeader = csvData.slice(0, 17)
             //     const csvContent = csvData.slice(17)

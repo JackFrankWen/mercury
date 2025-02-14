@@ -163,3 +163,39 @@ export async function updateTransactions(ids: number[], params: Params_Transacti
     throw error;
   }
 }
+
+export async function batchInsertTransactions(list: I_Transaction[]): Promise<void> {
+  try {
+    const db = await getDbInstance();
+    const sql = `INSERT INTO transactions (
+      amount, category, description, payee, account_type, 
+      payment_type, consumer, flow_type, tag, abc_type, 
+      cost_type, trans_time
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    for (const transaction of list) {
+      await new Promise<void>((resolve, reject) => {
+        db.run(sql, [
+          transaction.amount,
+          transaction.category,
+          transaction.description,
+          transaction.payee,
+          transaction.account_type,
+          transaction.payment_type,
+          transaction.consumer,
+          transaction.flow_type,
+          transaction.tag,
+          transaction.abc_type,
+          transaction.cost_type,
+          transaction.trans_time
+        ], (err) => {
+          if (err) reject(err);
+          else resolve();
+        });
+      });
+    }
+  } catch (error) {
+    console.error('Error inserting transactions:', error);
+    throw error;
+  }
+}
