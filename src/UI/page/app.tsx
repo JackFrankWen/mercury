@@ -31,13 +31,12 @@ function App(props: any): JSX.Element {
     return (
         <Layout
             style={{
-                minHeight: '100%',
-                overflow: 'hidden',
+                height: '100vh',
             }}>
 
             <Sider
                 collapsed={true}
-
+                className="mercury-sider"
             >
                 <Menu
                     onClick={({key})=>{

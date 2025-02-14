@@ -7,6 +7,17 @@ body {
     align-items: center;
     height: 100vh;
 }
+.mercury-sider {
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+}
+.ant-layout-sider-children{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
 .mt16 {
     margin-top: 16px;
 }

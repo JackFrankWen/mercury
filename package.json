@@ -20,11 +20,13 @@
     "import-trans": "node src/sqlite3/import-trans.js"
   },
   "dependencies": {
+    "@types/papaparse": "^5.3.15",
     "@types/sqlite3": "^3.1.11",
     "antd": "^5.21.1",
     "csv-parser": "^3.1.0",
     "dayjs": "^1.11.13",
     "http-proxy": "^1.18.1",
+    "papaparse": "^5.5.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.2",
