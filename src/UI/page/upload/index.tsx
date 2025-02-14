@@ -1,6 +1,7 @@
 import React , {useState}from "react";
-import {Button, Input, Upload} from "antd";
+import {Button, Input, Upload, UploadProps} from "antd";
 import Papa from 'papaparse'
+import {  handleToTable } from './classification'
 const { Dragger } = Upload
 // 上传中心
 // 第一步上传文件
@@ -25,6 +26,8 @@ function UploadCenter(): JSX.Element {
               console.log(csvData, 'csvfirs')
             const csvHeader = csvData.slice(0, 22)
             console.log(JSON.stringify(csvHeader), 'csvHeader')
+            const {tableHeader, tableData} = handleToTable(csvData)
+            console.log(tableHeader, tableData, 'tableHeader, tableData')
             //   if (/微信/.test(csvData[0][0] || '')) {
             //     const csvHeader = csvData.slice(0, 17)
             //     const csvContent = csvData.slice(17)
@@ -104,6 +107,11 @@ function UploadCenter(): JSX.Element {
               </div>
               <p
                 className="ant-upload-text"
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  marginTop: '60px',
+                }}
               >
                 点击或拖拽上传支付宝csv文件
               </p>

@@ -133,7 +133,7 @@ const AlipayUpload = (props: { ruleData: any }) => {
             const csvContent = csvData.slice(5, csvData.length - 7)
             try {
               const tableProps = formateToTableAlipayHeader(csvHeader)
-              let tableData: any = formateToTableAlipay(
+              let tableData = formateToTableAlipay(
                 csvContent,
                 tableProps.account_type,
                 ALIPAY

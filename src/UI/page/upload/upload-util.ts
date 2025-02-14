@@ -1,3 +1,5 @@
+import { I_Transaction } from "src/sqlite3/transactions"
+
 export interface tableHeaderI {
     name: string
     date: string
@@ -7,12 +9,96 @@ export interface tableHeaderI {
     titleCost: string
     titleIncome: string
     titleIncomeLabel: string
-  }
+}
+
+export interface tableDataI {
+    id: string
+    amount: string
+    description: string
+}
+
+  export function formateToTableAlipayMobileHeader(arr: any): tableHeaderI {
+//   1. ["------------------------------------------------------------------------------------"],
+//   2. ["导出信息："],
+//   3. ["姓名：文素能"],
+//   4. ["支付宝账户：79071077@qq.com"],
+//   5. ["起始时间：[2024-11-12 00:00:00]    终止时间：[2025-02-12 23:59:59]"],
+//   6. ["导出交易类型：[全部]"],
+//   7. ["导出时间：[2025-02-12 17:23:13]"],
+//   8. ["共252笔记录"],
+//   9. ["收入：0笔 0.00元"],
+//   10. ["支出：224笔 7292.83元"],
+//   11. ["不计收支：28笔 644.22元"],
+//   12. ["特别提示："],
+//   13. [ "1.本回单内容可表明支付宝受理了相应支付交易申请，因系统原因或通讯故障等偶发因素导致本回单与实际交易结果不符时，以实际交易情况为准；"],
+//   14. [
+//     "2.请勿将本回单作为收款方发货的凭据使用，请查证账户实际到账情况后再进行发货操作；"
+//   ],
+//   15. [
+//     "3.支付宝快捷支付等非余额支付方式可能既产生支付宝交易也同步产生银行交易，因此请勿使用本回单进行重复记账；"
+//   ],
+//   16. [
+//     "4.本回单如经任何涂改、编造，均立即失去效力；"
+//   ],
+//   17. [
+//     "5.部分账单如：充值提现、账户转存或者个人设置收支等不计入为收入或者支出，记为不计收支类；"
+//   ],
+//   18. [
+//     "6.因统计逻辑不同，明细金额直接累加后，可能会和下方统计金额不一致，请以实际交易金额为准；"
+//   ],
+//   19. [
+//     "7.禁止将本回单用于非法用途；"
+//   ],
+//   20. [
+//     "8.本明细仅展示当前账单中的交易，不包括已删除的记录；"
+//   ],
+//   21. [
+//     "9.本明细仅供个人对账使用。"
+//   ],
+//   22["------------------------支付宝（中国）网络技术有限公司  电子客户回单------------------------"]
+
+return {
+    fileName: arr[21][0],
+    name: arr[2][0],
+    account_type: arr[2][0].includes('文素能') ? 1 : 2,
+    date: arr[4][0],
+    titleCostLabel: arr[6][0],
+    titleCost: arr[6][1],
+    titleIncome: arr[7][1],
+    titleIncomeLabel: arr[4][0],
+}
+}
+
+export function mobileFormateToTableDataAlipay(
+  arr: string[][],
+  account_type: number,
+  payment_type: number
+) : any{
+    let costArr = arr.filter((subArr: string[]) => /交易成功/.test(subArr[11]))
+  costArr = costArr.filter((subArr: string[]) => !/不计收支/.test(subArr[10]))
+  costArr = costArr.filter((subArr: string[]) => !/资金转移/.test(subArr[15]))
+  return costArr.map((subArr) => {
+    // 0: "交易号"
+    // 1: "商家订单号"
+    // 2: "交易创建时间"
+    // 3: "付款时间"
+    // 4: "最近修改时间"
+    // 5: "交易来源地"      
+    const amount = subArr[9] || ''
+    const description = `${subArr[14]};${subArr[8]};${subArr[14]}`
+    return {
+      amount: amount.trim(),
+      description: description,
+    }
+  })    
+    
+
+}
 export function formateToTableDataWechat(
   arr: string[][],
   account_type: number,
   payment_type: number
-) {
+) :any{
   const costArr = arr.filter((subArr: string[]) => !/零钱通/.test(subArr[11]))
   return costArr.map((subArr) => {
     // 0: "交易时间"
@@ -27,10 +113,10 @@ export function formateToTableDataWechat(
     // 9: "商户单号"
     // 10: "备注"
     const amount = subArr[5] || ''
-    const description = `${subArr[3]};${subArr[2]};${subArr[10]}`
+    const description = `${subArr[10]};${subArr[3]}`
     return {
-      id: subArr[8],
       amount: amount.replace('¥', ''),
+      payee: subArr[2],
       description: description.replace('[^\u0000-\uFFFF]', ''),
       account_type: account_type,
       payment_type: payment_type,
@@ -91,7 +177,7 @@ export function formateToTableAlipay(
   arr: string[][],
   account_type: number,
   payment_type: number
-) {
+) : any[] {
   let costArr = arr.filter((subArr: string[]) => /交易成功/.test(subArr[11]))
   costArr = costArr.filter((subArr: string[]) => !/不计收支/.test(subArr[10]))
   costArr = costArr.filter((subArr: string[]) => !/资金转移/.test(subArr[15]))
@@ -113,7 +199,7 @@ export function formateToTableAlipay(
     // 14: "备注                  "
     // 15: "资金状态 "
     const amount = subArr[9] || ''
-    const description = `${trimString(subArr[7])};${trimString(
+    const description = `${trimString(subArr[14])};${trimString(
       subArr[8]
     )};${trimString(subArr[14])}`
     return {
@@ -124,6 +210,7 @@ export function formateToTableAlipay(
       payment_type: payment_type,
       flow_type: /支出/.test(subArr[10]) ? 1 : 2,
       category: undefined,
+      payee: subArr[7],
       consumer: account_type,
       tag: 2,
       cost_type: 3,
