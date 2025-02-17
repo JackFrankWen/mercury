@@ -21,9 +21,9 @@ export default function useLoadingButton() {
     )
   }
 
-  return {
+  return[ 
     LoadingBtn,
     setBtnLoading,
     setLoadingFalse,
-  }
+  ]
 }

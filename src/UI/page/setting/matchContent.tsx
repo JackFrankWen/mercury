@@ -20,7 +20,7 @@ interface DataType {
 const RuleTable = () => {
   const [ruleData, setRuleData] = useState<any>()
   const [isUpdate, setIsUpdate] = useState<boolean>()
-  const { LoadingBtn, setLoadingFalse } = useLoadingButton()
+  const [LoadingBtn,, setLoadingFalse ] = useLoadingButton()
   const getRuleData = async () => {
     window.mercury.api.getALlMatchRule().then((res: any) => {
       console.log(res, '====rule')

@@ -71,7 +71,7 @@ const BasicTable = (props: {
   const { tableData, tableHeader, onCancel, onSubmitSuccess } = props
   const [form] = Form.useForm()
   const [data, setData] = useState(tableData)
-  const { LoadingBtn } = useLoadingButton()
+  const [LoadingBtn, setBtnLoading, setLoadingFalse ] = useLoadingButton()
   const [modalVisible, setModalVisible] = useState(false)
 
   const edit = (record: DataType) => {
@@ -83,6 +83,7 @@ const BasicTable = (props: {
   }
 
   const cancel = () => {
+    setLoadingFalse()
   }
 
   const save = async (key: string) => {
@@ -213,6 +214,7 @@ const BasicTable = (props: {
     if (isJingdong) {
       // 替换为拼多多-订单编号  
       setModalVisible(true)
+      setLoadingFalse()
     }
   }
   const tableSummary = (pageData: any) => {
@@ -340,7 +342,10 @@ const BasicTable = (props: {
         modalVisible && (
           <UploadModal
             visible={modalVisible}
-            onCancel={() => setModalVisible(false)}
+            onCancel={() => {
+              setModalVisible(false)
+              setLoadingFalse()
+            }}
           />
         )
       }
