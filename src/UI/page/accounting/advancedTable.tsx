@@ -48,8 +48,11 @@ const renderBoldPrice = (txt: string, record: I_Transaction) => {
         <Typography.Text type="danger">{txt}</Typography.Text>
     ) : txt;
 };
-const renderTime = (trans_time: Date) => {
-    return <div className="ellipsis">{dayjs(trans_time).format('YYYY-MM-DD HH:mm:ss')}</div>
+const renderTime = (txt: Date) => {
+    return <div className="ellipsis">{dayjs(txt).format('YYYY-MM-DD HH:mm:ss')}</div>
+}
+const renderTimeSqlite = (txt: Date) => {
+    return <div className="ellipsis">{dayjs(txt).add(8, 'hours').format('YYYY-MM-DD HH:mm:ss')}</div>
 }
 
 const columns: ColumnsType<I_Transaction> = [
@@ -141,18 +144,19 @@ const columns: ColumnsType<I_Transaction> = [
         title: '创建日期',
         dataIndex: 'creation_time',
         // render: formatTime,
+        width: 200,
         key: 'creation_time',
         ellipsis: true,
-        render: renderTime,
+        render: renderTimeSqlite,
     },
     {
         title: '最后修改',
         dataIndex: 'modification_time',
         // render: formatTime,
-
+        width: 200,
         key: 'modification_time',
         ellipsis: true, 
-        render: renderTime,
+        render: renderTimeSqlite,
     },
 ]
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
@@ -188,12 +192,13 @@ export function AdvancedTable(props: {
             </Row>
 
             <Table
-                style={{maxHeight: 400}}
+                style={{maxHeight: 400, overflow: 'auto'}}
+                
                 className={'mt8'}
                 rowKey={'id'}
                 columns={columns}
                 rowSelection={{  ...rowSelection }}
-                scroll={{ x: 1300 }}
+                scroll={{ x: 1300, y: window.innerHeight - 400 }}
                 dataSource={data}
                 pagination={{
                     defaultPageSize: 10,

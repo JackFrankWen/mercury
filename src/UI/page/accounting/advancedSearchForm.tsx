@@ -30,7 +30,6 @@ export const AdvancedSearchForm = (props: {
             ...values,
             is_unclassified: values.chose_unclassified === 'unclassified',
             trans_time: values.trans_time?.map((date: any) => dayjs(date).format('YYYY-MM-DD HH:mm:ss')),
-            createdAt: values.createdAt?.map((date: any) => dayjs(date).format('YYYY-MM-DD HH:mm:ss'))
         }
         
         console.log('params', params);
@@ -64,7 +63,7 @@ export const AdvancedSearchForm = (props: {
                         <Col span={8}>
 
                             <Form.Item
-                                name={`createdAt`}
+                                name={`creation_time`}
                                 label="创建时间"
                             >
                                 <RangePickerWrap bordered placeholder="placeholder"/>

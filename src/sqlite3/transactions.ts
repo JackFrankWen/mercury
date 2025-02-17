@@ -1,6 +1,5 @@
 import { getDbInstance } from "./connect"
 import { Params_Transaction } from "src/global"
-
 export interface I_Transaction {
     id: number
     amount: number
@@ -55,7 +54,10 @@ export const getAllTransactions = async (params: Params_Transaction): Promise<I_
     }
 
     if (params.createdAt && params.createdAt[0] && params.createdAt[1]) {
-      conditions.push(`createdAt BETWEEN '${params.createdAt[0]}' AND '${params.createdAt[1]}'`)
+      conditions.push(`creation_time  BETWEEN '${params.createdAt[0]}' AND '${params.createdAt[1]}'`)
+    }
+    if (params.updatedAt && params.updatedAt[0] && params.updatedAt[1]) {
+      conditions.push(`modification_time BETWEEN '${params.updatedAt[0]}' AND '${params.updatedAt[1]}'`)
     }
 
     if (params.account_type) {
@@ -99,8 +101,6 @@ export const getAllTransactions = async (params: Params_Transaction): Promise<I_
           reject(err)
           return
         }
-        console.log('Query results count:', rows?.length)
-        console.log('First few results:', rows?.slice(0, 3))
         resolve(rows || [])
       })
     })
@@ -137,15 +137,18 @@ export async function deleteTransactions(ids: number[]): Promise<void> {
     throw error;
   }
 }
-
+type Params_Update = Params_Transaction & {
+  modification_time?: string
+}
 // 批量修改
-export async function updateTransactions(ids: number[], params: Params_Transaction): Promise<void> {
+export async function updateTransactions(ids: number[], params: Params_Update): Promise<void> {
   try {
     const db = await getDbInstance()
 
     // Create a string of placeholders for the SQL query
     const placeholders = ids.map(() => '?').join(',');
-    const sql = `UPDATE transactions SET ${Object.keys(params).map(key => `${key} = ?`).join(',')} WHERE id IN (${placeholders})`;
+    // Add modification_time to track when the record was last updated
+    const sql = `UPDATE transactions SET ${Object.keys(params).map(key => `${key} = ?`).join(',')}, modification_time = CURRENT_TIMESTAMP WHERE id IN (${placeholders})`;
 
     // Execute the SQL query to update the transactions
     await new Promise<void>((resolve, reject) => {
@@ -170,8 +173,8 @@ export async function batchInsertTransactions(list: I_Transaction[]): Promise<vo
     const sql = `INSERT INTO transactions (
       amount, category, description, payee, account_type, 
       payment_type, consumer, flow_type, tag, abc_type, 
-      cost_type, trans_time
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      cost_type, trans_time, creation_time, modification_time
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
 
     for (const transaction of list) {
       await new Promise<void>((resolve, reject) => {

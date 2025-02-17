@@ -2,6 +2,7 @@ import React , {useState}from "react";
 import {Button, Input, Upload, UploadProps} from "antd";
 import Papa from 'papaparse'
 import {  handleToTable } from './classification'
+import './index.css'
 const { Dragger } = Upload
 // 上传中心
 // 第一步上传文件
@@ -20,6 +21,7 @@ function UploadCenter(): JSX.Element {
     const uploadProps: UploadProps = {
         name: 'file',
         fileList: [],
+        className: 'upload-cus',
         beforeUpload: (file) => {
           Papa.parse(file, {
             header: false,
