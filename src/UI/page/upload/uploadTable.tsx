@@ -25,6 +25,7 @@ import {
 import useLoadingButton from 'src/UI/components/useButton'
 import { roundToTwoDecimalPlaces } from 'src/UI/components/utils'
 import { DeleteOutlined } from '@ant-design/icons'
+import UploadModal from './uploadModal'
 export interface DataType {
   id: string
   amount: string
@@ -71,6 +72,7 @@ const BasicTable = (props: {
   const [form] = Form.useForm()
   const [data, setData] = useState(tableData)
   const { LoadingBtn } = useLoadingButton()
+  const [modalVisible, setModalVisible] = useState(false)
 
   const edit = (record: DataType) => {
     form.setFieldsValue({ name: '', age: '', address: '', ...record })
@@ -209,10 +211,10 @@ const BasicTable = (props: {
     // 判断 描述中是否包含京东-订单编号
     const isJingdong = data.some((obj: any) => obj.description?.includes('京东-订单编号'))
     if (isJingdong) {
-      // 替换为拼多多-订单编号
-      
+      // 替换为拼多多-订单编号  
+      setModalVisible(true)
     }
-
+  }
   const tableSummary = (pageData: any) => {
     let totalCost = 0
     let totalIncome = 0
@@ -260,6 +262,7 @@ const BasicTable = (props: {
             ]}
           />
         </Row>
+        
         <Row align="middle" justify="center">
           <Col span={24} style={{ textAlign: 'center' }}>
             <span style={{ fontSize: '24px' }}>
@@ -333,6 +336,14 @@ const BasicTable = (props: {
           </Space>
         </Row>
       </Card>
+      {
+        modalVisible && (
+          <UploadModal
+            visible={modalVisible}
+            onCancel={() => setModalVisible(false)}
+          />
+        )
+      }
     </div>
   )
 }
