@@ -59,11 +59,16 @@ export function formateToTableAlipayMobileHeader(arr: any): tableHeaderI {
 //   22["------------------------支付宝（中国）网络技术有限公司  电子客户回单------------------------"]
 
 return {
-    fileName: arr[21][0],
+    fileName:'支付宝app导入账单',
+    // 姓名
     name: arr[2][0],
+    // 账户类型
     account_type: arr[2][0].includes('文素能') ? 1 : 2,
+    // 日期
     date: arr[4][0],
+    // 支出
     titleCostLabel: arr[6][0],
+    // 支出金额
     titleCost: arr[6][1],
     titleIncome: arr[7][1],
     titleIncomeLabel: arr[4][0],
