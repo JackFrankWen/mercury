@@ -95,6 +95,7 @@ export function formateToTableDataAlipayMobile(
       // 11: "备注"
 
     return {
+      id: subArr[9],
       amount: subArr[6].trim(),
       description: `${subArr[4]};${subArr[11]}`,
       account_type: account_type,
@@ -137,6 +138,7 @@ export function formateToTableDataWechat(
     const amount = subArr[5] || ''
     const description = `${subArr[10]};${subArr[3]}`
     return {
+      id: subArr[8],
       amount: amount.replace('¥', ''),
       payee: subArr[2],
       description: description.replace('[^\u0000-\uFFFF]', ''),
