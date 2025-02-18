@@ -288,19 +288,25 @@ type JdData = {
   description: string
   trans_time: string
 }
-export function formateToTableJd(arr: string[][]): JdData[] {
+export function formateToTableJd(arr: string[][], type: 'jd' | 'pdd'): JdData[] {
       // 0: "订单号",
       // 1: "下单时间", 
       // 2: "订单总价",
       // 3: "订单状态",
       // 4: "商品名称"
       console.log(arr,'arr');
-      
-  return arr.map((subArr) => {
+  
+  let newArr = []
+  if (type === 'jd') {
+    newArr = arr.filter((subArr) => subArr[3] === '已完成')
+  } else if (type === 'pdd') {
+    newArr = arr.filter((subArr) => subArr[3] === '交易成功')
+  }
+  return newArr.map((subArr) => {
     
     return {
       id: subArr[0],
-      amount: subArr[2],
+      amount: subArr[2].replace(/[^0-9.]/g, ''),
       description: subArr[4],
       trans_time: subArr[1],
     }

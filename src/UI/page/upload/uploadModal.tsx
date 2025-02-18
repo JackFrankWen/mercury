@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Modal, Upload, UploadProps } from 'antd'
+import { Alert, message, Modal, Upload, UploadProps } from 'antd'
 import Papa from 'papaparse'
 import { formateToTableJd } from './upload-util'
 const { Dragger } = Upload;
@@ -15,7 +15,6 @@ const UploadModal = (props: {
 }) => {
     const { visible, onCancel, onOk, needTransferData } = props
     const [fileList, setFileList] = useState([])
-    const [tableData, setTableData] = useState([])
     const uploadProps: UploadProps = {
         name: 'file',
         fileList: fileList,
@@ -34,16 +33,25 @@ const UploadModal = (props: {
                         console.log(csvData, 'csvData');
                         const { name, } = file
                         // 如果文件名包含jd_，则认为是京东的文件
-                        const data = formateToTableJd(csvContent)
-                        console.log(data,'formateToTableJd');
+                        let data 
                     
-                    setTableData(data)
                     if (name.includes('jd')) {
-                        onOk('jd', tableData)
-                        //jd
+                        data = formateToTableJd(csvContent, 'jd')
+                        if (needTransferData.hasJingdong) {
+                            onOk('jd', data)
+
+                        }  else {
+                            message.error('上传错误文件')
+                        }
+                       //jd
                     } else if (name.includes('pdd')) {
+                        if (needTransferData.hasPdd) {
+                            data = formateToTableJd(csvContent, 'pdd')
+                            onOk('pdd', data)
+                        } else {
+                            message.error('上传错误文件')
+                        }
                         // pdd
-                        onOk('pdd', tableData)
                     }
 
                         setFileList([file])

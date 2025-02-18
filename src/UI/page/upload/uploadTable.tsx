@@ -392,19 +392,20 @@ const BasicTable = (props: {
               } else if (type === 'pdd') {
                 console.log(transferData,'pdd');
                 
-                // const newData = data.map((obj: any, index: number) => {
-                //   if (!obj.description?.includes('商户单号')) {
-                //     return obj
-                //   }
-                //   transferData.forEach((item: any) => {
-                //     if (dayjs(obj.trans_time).format('YYYY-MM-DD') === dayjs(item.trans_time).format('YYYY-MM-DD') && obj.amount === item.amount) {
-                //       obj.description = item.description
-                //       message.success(`替换成功第: ${index + 1} 条数据`)
-                //       console.log(item,'item');
+                const newData = data.map((obj: any, index: number) => {
+                  if (!obj.description?.includes('商户单号')) {
+                    return obj
+                  }
+                  transferData.forEach((item: any) => {
+                    if ( obj.amount === item.amount) {
+                      obj.description = item.description
+                      message.success(`替换成功第: ${index + 1} 条数据`)
+                      console.log(item,'item');
                       
-                //     }
-                //   })
-                // })
+                    }
+                  })
+                  
+                })
                 // setData(newData)
               }
               const canCloseModal = checkNeedTransferData()
