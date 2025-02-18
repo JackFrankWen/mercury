@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Input, Upload, UploadProps } from "antd";
+import { Button, Input, Upload, UploadProps, Spin } from "antd";
 import Papa from 'papaparse'
 import { handleToTable } from './classification'
 import UploadTable from './uploadTable'
@@ -16,6 +16,8 @@ function UploadCenter(): JSX.Element {
   const [tableVisable, setTableVisable] = useState(false)
   const [tableData, setTableData] = useState([])
   const [tableHeader, setTableHeader] = useState({})
+  const [loading, setLoading] = useState(false)
+
   const uploadToDatabase = (tableData: any) => {
     window.mercury.api.batchInsertTransactions(tableData).then((res: any) => {
       console.log(res, 'res')
@@ -23,13 +25,16 @@ function UploadCenter(): JSX.Element {
   }
   
   return (
-    <>
-      {uploadVisable && <UploadSection onUploadSuccess={(obj)=>{
-         setUploadVisiable(false)
-         setTableVisable(true)
-         setTableData(obj.tableData)
-         setTableHeader(obj.tableHeader)
-      }} />}
+    <Spin spinning={loading} tip="正在解析文件...">
+      {uploadVisable && <UploadSection 
+        setLoading={setLoading}
+        onUploadSuccess={(obj)=>{
+          setUploadVisiable(false)
+          setTableVisable(true)
+          setTableData(obj.tableData)
+          setTableHeader(obj.tableHeader)
+        }} 
+      />}
       {tableVisable && (
         <UploadTable 
           tableData={tableData} 
@@ -42,7 +47,7 @@ function UploadCenter(): JSX.Element {
           onSubmitSuccess={() => setTableVisable(false)} 
         />
       )}
-    </>
+    </Spin>
   );
 }
 export default UploadCenter;
