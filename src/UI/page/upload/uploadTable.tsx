@@ -215,8 +215,7 @@ const BasicTable = (props: {
       hasPdd,
     }
   }
-  const submit = async () => {
-    // 判断 描述中是否包含京东-订单编号
+  const step2 = () => {
     const {hasJingdong, hasPdd} = checkNeedTransferData()
     if (hasJingdong) {
       setModalVisible(true)
@@ -224,6 +223,7 @@ const BasicTable = (props: {
       // 替换为京东-订单编号
       setModalVisible(true)
     } else {
+      setStep(2)
       setModalVisible(false)
     }
     console.log(hasJingdong, hasPdd, 'hasJingdong, hasPdd');
@@ -232,6 +232,15 @@ const BasicTable = (props: {
       hasJingdong,
       hasPdd,
     })
+  }
+  const submit = async () => {
+    // 判断 描述中是否包含京东-订单编号
+    if(step === 1) {
+      step2()
+    } else if (step === 2) {
+      // 分类
+      setStep(3)
+    }
   }
   const tableSummary = (pageData: any) => {
     let totalCost = 0
@@ -408,18 +417,8 @@ const BasicTable = (props: {
                 })
                 // setData(newData)
               }
-              const canCloseModal = checkNeedTransferData()
-              setNeedTransferData({
-                hasJingdong: canCloseModal.hasJingdong,
-                hasPdd: canCloseModal.hasPdd,
-              })
-              console.log(canCloseModal, 'canCloseModal');
-              
-              if (!canCloseModal.hasJingdong && !canCloseModal.hasPdd) {
-                setModalVisible(false)
-                setLoadingFalse()
-                setStep(2)
-              }
+              setModalVisible(false)
+              setLoadingFalse()
             }}
           />
         )
