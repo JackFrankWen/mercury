@@ -21,7 +21,7 @@ const RuleForm = (props: {
   refresh: () => void
 }) => {
   const [form] = Form.useForm()
-  const   [LoadingBtn, setBtnLoading, setLoadingFalse ] = useLoadingButton()
+  const   [LoadingBtn, , setLoadingFalse ] = useLoadingButton()
 
   const { data } = props
   const onFormLayoutChange = ({ category }: { category: [number, number] }) => {

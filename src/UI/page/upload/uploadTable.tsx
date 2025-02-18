@@ -5,6 +5,7 @@ import {
   Form,
   Input,
   InputNumber,
+  message,
   Popconfirm,
   Row,
   Space,
@@ -26,6 +27,7 @@ import useLoadingButton from 'src/UI/components/useButton'
 import { roundToTwoDecimalPlaces } from 'src/UI/components/utils'
 import { DeleteOutlined } from '@ant-design/icons'
 import UploadModal from './uploadModal'
+import dayjs from 'dayjs'
 export interface DataType {
   id: string
   amount: string
@@ -71,9 +73,13 @@ const BasicTable = (props: {
   const { tableData, tableHeader, onCancel, onSubmitSuccess } = props
   const [form] = Form.useForm()
   const [data, setData] = useState(tableData)
-  const [LoadingBtn, setBtnLoading, setLoadingFalse ] = useLoadingButton()
+  const [LoadingBtn, setBtnLoading, setLoadingFalse] = useLoadingButton()
   const [modalVisible, setModalVisible] = useState(false)
-
+  const [step, setStep] = useState(1)
+  const [needTransferData, setNeedTransferData] = useState({
+    hasJingdong: false,
+    hasPdd: false,
+  })
   const edit = (record: DataType) => {
     form.setFieldsValue({ name: '', age: '', address: '', ...record })
   }
@@ -82,13 +88,7 @@ const BasicTable = (props: {
     setData(newData)
   }
 
-  const cancel = () => {
-    setLoadingFalse()
-  }
-
-  const save = async (key: string) => {
-
-  }
+  
 
   const columns = [
     {
@@ -207,23 +207,39 @@ const BasicTable = (props: {
     },
   ]
 
-
+  const checkNeedTransferData = () => {
+    const hasJingdong = data.some((obj: any) => obj.payee?.includes('京东') && obj.description?.includes('京东-订单编号'))
+    const hasPdd = data.some((obj: any) => obj.payee?.includes('拼多多') && obj.description?.includes('商户单号'))
+    return {
+      hasJingdong,
+      hasPdd,
+    }
+  }
   const submit = async () => {
     // 判断 描述中是否包含京东-订单编号
-    const isJingdong = data.some((obj: any) => obj.description?.includes('京东-订单编号'))
-    if (isJingdong) {
-      // 替换为拼多多-订单编号  
+    const {hasJingdong, hasPdd} = checkNeedTransferData()
+    if (hasJingdong) {
       setModalVisible(true)
-      setLoadingFalse()
+    } else if (hasPdd) {
+      // 替换为京东-订单编号
+      setModalVisible(true)
+    } else {
+      setModalVisible(false)
     }
+    console.log(hasJingdong, hasPdd, 'hasJingdong, hasPdd');
+    
+    setNeedTransferData({
+      hasJingdong,
+      hasPdd,
+    })
   }
   const tableSummary = (pageData: any) => {
     let totalCost = 0
     let totalIncome = 0
     pageData.forEach((obj: any) => {
-      if (obj.flow_type === 1) {
+      if (obj?.flow_type === 1) {
         totalCost += Number(obj.amount)
-      } else {
+      } else if (obj?.flow_type === 2) {
         totalIncome += Number(obj.amount)
       }
     })
@@ -247,15 +263,15 @@ const BasicTable = (props: {
       <Card bordered={false}>
         <Row>
           <Steps
-            current={1}
-            items={[
+            current={step}
+             items={[
               {
                 title: '上传',
                 description: '上传账单',
               },
               {
                 title: '替换',
-                description: '替换拼多多',
+                description: '替换京东拼多多订单编号',
               },
               {
                 title: '分类',
@@ -264,36 +280,39 @@ const BasicTable = (props: {
             ]}
           />
         </Row>
-        
+
         <Row align="middle" justify="center">
           <Col span={24} style={{ textAlign: 'center' }}>
+            <span style={{ fontSize: '24px', marginRight: '12px' }}>
+              支出：
+              <Typography.Text type="danger">
+                {tableHeader.titleCost}
+              </Typography.Text>
+            </span>
             <span style={{ fontSize: '24px' }}>
               收入：
               <Typography.Text type="success">
                 {tableHeader?.titleIncome}
               </Typography.Text>
             </span>
-            <span style={{ fontSize: '24px', marginLeft: '12px' }}>
-              支出：
-              <Typography.Text type="danger">
-                {tableHeader.titleCost}
-              </Typography.Text>
-            </span>
+            
           </Col>
           <Col span={24} style={{ textAlign: 'center' }}>
-            <span>
+            
+            
+            <span style={{ marginRight: '12px' }}>
               <Typography.Text type="secondary">
                 {tableHeader.titleCostLabel}
               </Typography.Text>
             </span>
-            <span style={{ marginLeft: '12px' }}>
+            <span  >
               <Typography.Text type="secondary">
                 {tableHeader.titleIncomeLabel}
               </Typography.Text>
             </span>
           </Col>
         </Row>
-        
+
         <Form form={form} component={false}>
           <Table
             rowKey="id"
@@ -316,10 +335,10 @@ const BasicTable = (props: {
             summary={tableSummary}
             scroll={{ x: 1500, y: 300 }}
             pagination={false}
-         
+
           />
         </Form>
-<Row
+        <Row
           justify="space-between"
           align="middle"
           style={{ marginBottom: '10px' }}
@@ -345,6 +364,61 @@ const BasicTable = (props: {
             onCancel={() => {
               setModalVisible(false)
               setLoadingFalse()
+            }}
+            needTransferData={needTransferData}
+            onOk={(type: string, transferData: []) => {
+              if (type === 'jd') {
+                console.log('jjjjjjjjjjjjjjd');
+                
+                // 当时间trans_time时间用day jsformat 年月日匹配和金额，替换data中的description
+                const newData = data.map((obj: any, index: number) => {
+                
+                  if (!obj.description?.includes('订单编号')) {
+                    return obj
+                  }
+                  transferData.forEach((item: any) => {
+                    if (dayjs(obj.trans_time).format('YYYY-MM-DD') === dayjs(item.trans_time).format('YYYY-MM-DD') && obj.amount === item.amount) {
+                      obj.description = item.description
+                      message.success(`替换成功第: ${index + 1} 条数据`)
+                      console.log(item,'item');
+                      
+                    }
+                  })
+                  
+                  return obj
+                })
+                setData(newData)
+                
+              } else if (type === 'pdd') {
+                console.log(transferData,'pdd');
+                
+                // const newData = data.map((obj: any, index: number) => {
+                //   if (!obj.description?.includes('商户单号')) {
+                //     return obj
+                //   }
+                //   transferData.forEach((item: any) => {
+                //     if (dayjs(obj.trans_time).format('YYYY-MM-DD') === dayjs(item.trans_time).format('YYYY-MM-DD') && obj.amount === item.amount) {
+                //       obj.description = item.description
+                //       message.success(`替换成功第: ${index + 1} 条数据`)
+                //       console.log(item,'item');
+                      
+                //     }
+                //   })
+                // })
+                // setData(newData)
+              }
+              const canCloseModal = checkNeedTransferData()
+              setNeedTransferData({
+                hasJingdong: canCloseModal.hasJingdong,
+                hasPdd: canCloseModal.hasPdd,
+              })
+              console.log(canCloseModal, 'canCloseModal');
+              
+              if (!canCloseModal.hasJingdong && !canCloseModal.hasPdd) {
+                setModalVisible(false)
+                setLoadingFalse()
+                setStep(2)
+              }
             }}
           />
         )

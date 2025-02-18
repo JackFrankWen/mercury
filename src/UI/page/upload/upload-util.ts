@@ -58,6 +58,8 @@ export function formateToTableAlipayMobileHeader(arr: any): tableHeaderI {
 //   ],
 //   22["------------------------支付宝（中国）网络技术有限公司  电子客户回单------------------------"]
 
+console.log(arr,'mobile----arr');
+
 return {
     fileName:'支付宝app导入账单',
     // 姓名
@@ -67,11 +69,11 @@ return {
     // 日期
     date: arr[4][0],
     // 支出
-    titleCostLabel: arr[6][0],
+    titleCostLabel: arr[9][0].split(' ')[0],
     // 支出金额
-    titleCost: arr[6][1],
-    titleIncome: arr[7][1],
-    titleIncomeLabel: arr[4][0],
+    titleCost: arr[9][0].split(' ')[1],
+    titleIncome: arr[8][0].split(' ')[1],
+    titleIncomeLabel: arr[8][0].split(' ')[0],
 }
 }
 // 支付宝手机端
@@ -100,7 +102,7 @@ export function formateToTableDataAlipayMobile(
       // 11: "备注"
 
     return {
-      id: subArr[9],
+      id: subArr[9].replace(/[^0-9]/g, ''),
       amount: subArr[6].trim(),
       description: `${subArr[4]};${subArr[11]}`,
       account_type: account_type,
@@ -279,4 +281,28 @@ export function formateToTableAlipayHeader(arr: any): tableHeaderI {
     titleIncome: arr[7][1],
     titleIncomeLabel: arr[7][0],
   }
+}
+type JdData = {
+  id: string
+  amount: string
+  description: string
+  trans_time: string
+}
+export function formateToTableJd(arr: string[][]): JdData[] {
+      // 0: "订单号",
+      // 1: "下单时间", 
+      // 2: "订单总价",
+      // 3: "订单状态",
+      // 4: "商品名称"
+      console.log(arr,'arr');
+      
+  return arr.map((subArr) => {
+    
+    return {
+      id: subArr[0],
+      amount: subArr[2],
+      description: subArr[4],
+      trans_time: subArr[1],
+    }
+  })
 }
