@@ -1,6 +1,7 @@
 import {  ipcMain} from "electron";
 import { getAllMatchRules, addMatchRule, updateMatchRule, deleteMatchRule } from "../sqlite3/match-rules";
-import { getAllTransactions, deleteTransactions, updateTransactions, batchInsertTransactions } from "../sqlite3/transactions";
+import { getAllTransactions, deleteTransactions, updateTransactions, batchInsertTransactions, get_category_total_by_date } from "../sqlite3/transactions";
+import { transferCategory, sortByValue } from "./controller/transController";
 
 
 export function handleMatchRules(){
@@ -90,4 +91,14 @@ export function handleMatchRules(){
             throw error;
         }
     });
-}
+
+    ipcMain.handle('transactions:getCategoryTotalByDate', async (event, params) => {
+        try {
+            const result = await get_category_total_by_date(params);
+            return sortByValue(transferCategory(result));
+        } catch (error) {
+            console.error('Error getting category total by date:', error);
+            throw error;
+        }
+    });
+}   

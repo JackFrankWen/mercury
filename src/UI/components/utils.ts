@@ -10,11 +10,22 @@ export function getDateTostring(obj: any): { start: string; end: string } {
 
 export function roundToTwoDecimalPlaces(number: any): string {
   // 判断参数是否为数字类型或可转化为数字类型
-  if (isNaN(Number(number))) {
+  if (number === null || number === undefined) {
     return 'NaN'
   }
 
-  return Number(number).toFixed(2)
+  const num = Number(number)
+  if (isNaN(num)) {
+    return 'NaN'
+  }
+
+  // 处理特殊值
+  if (!isFinite(num)) {
+    return 'NaN'
+  }
+
+  // 使用Math.round确保四舍五入的准确性
+  return (Math.round(num * 100) / 100).toFixed(2)
 }
 export function toNumberOrUndefiend(number: any): number | undefined {
   if (!number) {

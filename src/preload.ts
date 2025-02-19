@@ -35,7 +35,9 @@ contextBridge.exposeInMainWorld('mercury', {
         // 批量修改
         updateTransactions: (ids: number[], params: Params_Transaction) => ipcRenderer.invoke('transactions:update', ids, params),
         // 批量插入
-        batchInsertTransactions: (list: Params_Transaction[]) => ipcRenderer.invoke('transactions:batchInsert', list),
+        batchInsertTransactions: (list: Params_Transaction[]) => ipcRenderer.invoke('transactions:batchInsert', list), 
+        // 获取category 
+        getCategoryTotalByDate: (params: {start_date: string, end_date: string}) => ipcRenderer.invoke('transactions:getCategoryTotalByDate', params),
     },
 
     crawler: (param: {

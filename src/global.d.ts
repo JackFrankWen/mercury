@@ -27,11 +27,24 @@ declare global {
                 deleteTransactions: (ids: number[]) => Promise<any>;
                 updateTransactions: (ids: number[], params: Partial<Params_Transaction>) => Promise<any>;
                 batchInsertTransactions: (list: Params_Transaction[]) => Promise<any>;
-            };
+                getCategoryTotalByDate: (params: {start_date: string, end_date: string}) => Promise<CategoryReturnType>;
         };
     }
 
 }
+export type CategoryReturnType = {
+    value: string
+    id: string
+    name: string
+    avg: string
+    child: {
+      avg: string
+      category: string
+      id: string
+      value: string
+      name: string
+    }[]
+  }[]
 export interface Params_Transaction  {
     description?: string;
     account_type?: string;

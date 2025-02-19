@@ -560,9 +560,12 @@ export const category_type = [
     ],
   },
 ]
-
-export const getCategoryObj = () => {
-  const obj = {}
+// 获取分类对象
+type CategoryObjType = {
+  [key: number]: string
+}
+export const getCategoryObj = (): CategoryObjType => {
+  const obj: CategoryObjType = {}
   category_type.forEach((item) => {
     obj[item.value] = item.label
     item.children.forEach((item) => {
@@ -570,6 +573,11 @@ export const getCategoryObj = () => {
     })
   })
   return obj
+}
+// 获取分类名字
+export const getCategoryName = (id: number): string => {
+  const obj = getCategoryObj()
+  return obj[id]
 }
 
 export const getCategoryString = (str: string | undefined, type?: number): string => {

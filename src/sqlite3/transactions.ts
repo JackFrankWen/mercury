@@ -166,7 +166,7 @@ export async function updateTransactions(ids: number[], params: Params_Update): 
     throw error;
   }
 }
-
+// 批量插入
 export async function batchInsertTransactions(list: I_Transaction[]): Promise<void> {
   try {
     const db = await getDbInstance();
@@ -199,6 +199,29 @@ export async function batchInsertTransactions(list: I_Transaction[]): Promise<vo
     }
   } catch (error) {
     console.error('Error inserting transactions:', error);
+    throw error;
+  }
+}
+
+// 获取category 的 group by 
+export async function get_category_total_by_date(params: {start_date: string, end_date: string}): Promise<{category: string, total: number, avg: number}[]> {
+  try {
+    const db = await getDbInstance()
+    // Calculate months difference between start and end date
+    const startDate = new Date(params.start_date);
+    const endDate = new Date(params.end_date);
+    // const monthsDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 + 
+    //                   (endDate.getMonth() - startDate.getMonth()) + 1;
+    const sql = `SELECT category, SUM(amount) as total, AVG(amount) as avg FROM transactions WHERE trans_time BETWEEN '${params.start_date}' AND '${params.end_date}' GROUP BY category`
+    const rows = await new Promise<{category: string, total: number, avg: number}[]>((resolve, reject) => {
+      db.all(sql, (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      })
+    })
+    return rows
+  } catch (error) {
+    console.error('Error getting category total by date:', error);
     throw error;
   }
 }
