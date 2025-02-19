@@ -28,7 +28,7 @@ export const getAllTransactions = async (params: Params_Transaction): Promise<I_
     console.log('Search params:', params)
 
     if (params.is_unclassified) {
-        conditions.push('(category IS NULL OR category = "")')
+        conditions.push('(category IS NULL OR category = "" OR category = "[100000,100003]")')
     }
 
     if (params.description) {

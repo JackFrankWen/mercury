@@ -37,7 +37,7 @@ function createTransactionTable() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             amount DECIMAL(10,2),
             payee TEXT,
-            category TEXT,
+            category TEXT DEFAULT '[100000,100003]',
             description TEXT, 
             account_type TEXT,
             payment_type TEXT,

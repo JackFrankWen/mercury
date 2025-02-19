@@ -53,7 +53,7 @@ export const AdvancedSearchForm = (props: {
                         label="分类"
                     >
                         <Radio.Group>
-                            <Radio value="normal">正常</Radio>
+                            <Radio value="normal">全部</Radio>
                             <Radio value="unclassified">未分类</Radio>
                         </Radio.Group>
                     </Form.Item>
