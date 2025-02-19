@@ -44,7 +44,7 @@ export type CategoryReturnType = {
       value: string
       name: string
     }[]
-  }[]
+}[]
 export interface Params_Transaction  {
     description?: string;
     account_type?: string;
@@ -53,18 +53,10 @@ export interface Params_Transaction  {
     tag?: string;
     abc_type?: string;
     cost_type?: string;
-    trans_time?: [string, string];
+    trans_time: [string, string];
     creation_time?: [string, string];
     modification_time?: [string, string];
     min_money?: number;
     max_money?: number;
     is_unclassified?: boolean;
-    page?: Page_size[page]
-    page_size?: Page_size[page_size]
-
-}
-
-export interface Page_size {
-    page: number;
-    page_size: number;
 }
