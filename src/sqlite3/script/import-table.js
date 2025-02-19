@@ -4,7 +4,7 @@ const path = require('path');
 /* eslint-enable */
 
 // 连接到SQLite数据库
-const db = new sqlite3.Database(path.join(__dirname, '../../data/database.db'), (err) => {
+const db = new sqlite3.Database(path.join(__dirname, '../../../data/database.db'), (err) => {
     if (err) {
         console.error('Error opening database:', err);
     } else {
