@@ -16,8 +16,9 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
-    "import": "node src/sqlite3/import.js",
-    "import-trans": "node src/sqlite3/import-trans.js"
+    "create-table": "node src/sqlite3/script/create-table.js",
+    "import-rules": "node src/sqlite3/script/import-rules.js",
+    "import-trans": "node src/sqlite3/script/import-trans.js"
   },
   "dependencies": {
     "@types/papaparse": "^5.3.15",
