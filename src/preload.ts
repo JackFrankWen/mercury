@@ -7,7 +7,7 @@ import { Params_Transaction } from './global';
 contextBridge.exposeInMainWorld('mercury', {
     api: {
         // 获取所有匹配规则
-        getALlMatchRule: () => ipcRenderer.invoke('match-rules:getAll'),
+        getAllMatchRule: () => ipcRenderer.invoke('match-rules:getAll'),
         // 添加匹配规则
         addMatchRule: (rule: {
             category: string,

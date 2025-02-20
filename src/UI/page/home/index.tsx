@@ -7,12 +7,18 @@ function Index(): JSX.Element {
     const [data, setData] = useState<any>([])
     useEffect(() => {
         const fetchData = async () => {
-            const result = await window.mercury.api.getCategoryTotalByDate({start_date: '2024-01-01', end_date: '2024-12-31'})
-            console.log(result)
+            const {trans_time} = formData
+            const start_date = trans_time?.[0]?.format('YYYY-MM-DD 00:00:00')
+            const end_date = trans_time?.[1]?.format('YYYY-MM-DD 23:59:59')
+            
+            const result = await window.mercury.api.getCategoryTotalByDate({
+                trans_time: [start_date, end_date]
+            })
+            console.log(formData)
             setData(result)
         }
         fetchData()
-    }, [])
+    }, [formData])
     return (
         <div>
             

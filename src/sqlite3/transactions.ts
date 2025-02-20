@@ -1,3 +1,4 @@
+import { log } from "node:console"
 import { getDbInstance } from "./connect"
 import { Params_Transaction } from "src/global"
 export interface I_Transaction {
@@ -210,16 +211,20 @@ export async function batchInsertTransactions(list: I_Transaction[]): Promise<vo
 export async function getCategoryTotal(params: Params_Transaction): Promise<{category: string, total: number, avg: number}[]> {
   try {
     const db = await getDbInstance()
+    if(!params.trans_time) {
+      return []
+    }
     // Calculate months difference between start and end date
-    const startDate = new Date(params.start_date);
-    const endDate = new Date(params.end_date);
+    const startDate = new Date(params.trans_time[0])
+    const endDate = new Date(params.trans_time[1])
     const monthsDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 + 
                       (endDate.getMonth() - startDate.getMonth()) + 1;
     
     const conditions: string[] = [];
     
-    if (params.start_date && params.end_date) {
-      conditions.push(`trans_time BETWEEN '${params.start_date}' AND '${params.end_date}'`);
+    
+    if (params.trans_time && params.trans_time[0] && params.trans_time[1]) {
+      conditions.push(`trans_time BETWEEN '${params.trans_time[0]}' AND '${params.trans_time[1]}'`);
     }
 
     if (params.account_type) {
@@ -257,6 +262,7 @@ export async function getCategoryTotal(params: Params_Transaction): Promise<{cat
       ${whereClause}
       GROUP BY category
     `;
+    console.log(sql,'===aa')
 
     const rows = await new Promise<{category: string, total: number, avg: number}[]>((resolve, reject) => {
       db.all(sql, (err, rows) => {

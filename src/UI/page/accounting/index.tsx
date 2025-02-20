@@ -27,7 +27,7 @@ function Accounting(): JSX.Element {
         })
     }
     return (
-        <div className='p-accounting' style={{height: '100vh', overflow: 'hidden'}}>
+        <div className='p-accounting' style={{height: '100vh'}}>
             <Card className='plr8' >
                 <AdvancedSearchForm getTransactions={getTransactions}
                     setFormValue={setFormValue}

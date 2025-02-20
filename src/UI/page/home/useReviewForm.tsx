@@ -5,11 +5,11 @@ import dayjs from 'dayjs'
 
 const useReviewForm = (): [any, React.ReactNode] => {
   const [form] = Form.useForm()
-  const now = dayjs().subtract(1, 'month') // get the current date/time in Day.js format
+  const now = dayjs().subtract(1, 'year') // get the current date/time in Day.js format
 
   const firstDayOfYear = now.clone().startOf('month') // get the first day of the current month
-  const lastDayOfYear = now.clone().endOf('month') // get the last day of the current month
-  const initialValues = { type: 'month', date: [firstDayOfYear, lastDayOfYear] }
+  const lastDayOfYear = now.clone().endOf('year') // get the last day of the current month
+  const initialValues = {  trans_time: [firstDayOfYear, lastDayOfYear] }
   const [formData, setFormData] = useState(initialValues)
 
   const onFormLayoutChange = (val: any) => {
@@ -27,7 +27,7 @@ const useReviewForm = (): [any, React.ReactNode] => {
       onValuesChange={onFormLayoutChange}
       style={{ maxWidth: 600 }}
     >
-      <Form.Item label="时间" name="date">
+      <Form.Item label="时间" name="trans_time">
         <RangePickerWrap bordered />
       </Form.Item>
       <Form.Item>

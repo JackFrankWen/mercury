@@ -22,7 +22,7 @@ const RuleTable = () => {
   const [isUpdate, setIsUpdate] = useState<boolean>()
   const [LoadingBtn,, setLoadingFalse ] = useLoadingButton()
   const getRuleData = async () => {
-    window.mercury.api.getALlMatchRule().then((res: any) => {
+    window.mercury.api.getAllMatchRule().then((res: any) => {
       console.log(res, '====rule')
       if (res) {
         setRuleData(res)
