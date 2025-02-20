@@ -42,17 +42,18 @@ export function toNumberOrUndefiend(number: any): number | undefined {
 /**
  * 格式化金额为中文货币格式字符串
  * @param amount - 要格式化的金额，可以是数字或字符串
- * @returns 格式化后的金额字符串，保留2位小数，使用千分位分隔符
+ * @returns 格式化后的金额字符串，整数不显示小数点，小数最多保留2位，使用千分位分隔符
  * @example
  * formatMoney(1234.56) // "1,234.56"
- * formatMoney("1234.56") // "1,234.56"
+ * formatMoney("1234") // "1,234"
  */
 export function formatMoney(amount: number | string): string {
   if (typeof amount === 'string') {
     amount = parseFloat(amount);
   }
+  const hasDecimal = amount % 1 !== 0;
   return amount.toLocaleString('zh-CN', {
-    minimumFractionDigits: 2,
+    minimumFractionDigits: hasDecimal ? 2 : 0,
     maximumFractionDigits: 2
   });
 }

@@ -5,6 +5,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { ColumnsType } from 'antd/es/table/interface'
 import useModal from '../../components/useModal'
 import { abc_type, cost_type, tag_type } from '../../const/web'
+import dayjs from 'dayjs'
 // import BatchUpdateArea from '../views/accounting/batch-update'
 
 interface ExpandedDataType {
@@ -45,15 +46,25 @@ const columns: ColumnsType<DataType> = [
     ),
   },
 ]
-const columns2 = [
+const modalTableCol = [
   {
     title: '交易时间',
     width: 200,
-    dataIndex: 'trans_time_formate',
-    key: 'trans_time_formate',
+    dataIndex: 'trans_time',
+    key: 'trans_time',
+    render: (val: string) => {
+      return dayjs(val).format('YYYY-MM-DD HH:mm:ss')
+    },
   },
   {
-    title: '内容',
+    title: '交易对象',
+    dataIndex: 'payee',
+    width: 80,
+    render: (val: string) => (val ? val : ''),
+  },
+
+  {
+    title: '交易描述',
     dataIndex: 'description',
     render: (description: string) => (
       <Tooltip placement="topLeft" title={description}>
@@ -162,22 +173,33 @@ const CategoryTable = (props: {
   const [show, toggle] = useModal()
   const [cate, setCate] = useState<string>('')
   const [modalData, setModaldata] = useState()
-//   const getCategory = async (data: any, category: string) => {
-//     try {
-//       console.log(category, 'category')
-//       const p = getDateTostring(data)
-//       const res = await $api.getCost({ ...p, category })
-//       if (res) {
-//         console.log(res, 'modalta')
-//         setModaldata(res)
-//       }
-//     } catch (error) {
-//       console.log(error)
-//     }
-//   }
-//   useEffect(() => {
-//     getCategory(formValue, cate)
-//   }, [formValue, cate])
+  const getCategory = async (data: any, category: string) => {
+    try {
+      const {trans_time} = data
+        const start_date = trans_time?.[0]?.format('YYYY-MM-DD 00:00:00')
+        const end_date = trans_time?.[1]?.format('YYYY-MM-DD 23:59:59')
+        console.log(start_date, end_date, 'start_date, end_date');
+      const params = {
+        ...data,
+        category,
+        trans_time: [start_date, end_date],
+        
+      }
+      window.mercury.api.getTransactions(params).then((res) => {
+        console.log('res', res);
+        
+        if(res) {
+          setModaldata(res)
+        }
+    })
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    getCategory(formValue, cate)
+  }, [formValue, cate])
 
   const onRowClick = (val: string) => {
     toggle()
@@ -204,7 +226,7 @@ const CategoryTable = (props: {
   }
   const refresh = useCallback(() => {
     refreshTable()
-    // getCategory(formValue, cate)
+    getCategory(formValue, cate)
   }, [formValue, cate])
   return (
     <>
@@ -304,8 +326,8 @@ function ModalContent(props: { modalData: any; refresh: () => void }) {
           },
         })}
         rowSelection={rowSelection}
-        rowKey="m_id"
-        columns={columns2}
+        rowKey="id"
+        columns={modalTableCol}
         dataSource={modalData}
         size="small"
         scroll={{ y: 400 }}
