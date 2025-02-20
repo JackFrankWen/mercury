@@ -1,6 +1,8 @@
 import React from 'react';
-import { Drawer, Form, Input, Button, Space, Select, DatePicker, message } from 'antd';
+import { Drawer, Form, Input, Button, Space, Select, DatePicker, message, Cascader } from 'antd';
 import { account_type, payment_type, tag_type } from "../../const/web";
+import { category_type } from 'src/UI/const/categroy';
+import { toNumberOrUndefiend } from 'src/UI/components/utils';
 
 // 定义消费者类型映射
 const CONSUMER_TYPE_MAP = {
@@ -24,7 +26,25 @@ function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDra
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      await window.mercury.api.insertTransaction(values);
+      if (!values.amount) {
+        message.error('请输入金额');
+        return;
+      }
+      if (!values.consumer) {
+        message.error('请选择消费者');
+        return;
+      }
+      if (!values.account_type) {
+        message.error('请选择账户');
+        return;
+      }
+
+      const formattedValues = {
+        ...values,
+        category: JSON.stringify(values.category),
+        trans_time: values.trans_time ? values.trans_time.format('YYYY-MM-DD HH:mm:ss') : undefined
+      };
+      await window.mercury.api.insertTransaction(formattedValues);
       message.success('添加成功');
       form.resetFields();
       onSuccess();
@@ -51,7 +71,36 @@ function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDra
       }
     >
       <Form form={form} layout="vertical">
-        <Form.Item name="amount" label="金额" rules={[{ required: true }]}>
+      <Form.Item name="category" label="分类">
+        <Cascader
+          options={category_type}
+          allowClear
+          placeholder="请选择分类"
+          onChange={(category) => {
+            if (category && category[0]) {
+              const found = category_type.find(
+                (val) => val.value === category[0]
+              )
+              if (found) {
+                // @ts-ignore
+                const obj: any = found?.children.find(
+                  (val: any) => val.value === category[1]
+                )
+
+                form.setFieldsValue({
+                  account_type: undefined,
+                  payment_type: undefined,
+                  tag: toNumberOrUndefiend(obj?.tag),
+                  abc_type: toNumberOrUndefiend(obj?.abc_type),
+                  consumer: toNumberOrUndefiend(obj?.consumer),
+                  cost_type: toNumberOrUndefiend(obj?.cost_type),
+                })
+              }
+            }
+          }}
+        />
+      </Form.Item> 
+        <Form.Item name="amount" label="金额" rules={[{ required: true, message: '请输入金额' }]}>
           <Input type="number" />
         </Form.Item>
         <Form.Item name="description" label="描述">
@@ -60,7 +109,7 @@ function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDra
         <Form.Item name="payee" label="交易对方">
           <Input />
         </Form.Item>
-        <Form.Item name="consumer" label="消费者">
+        <Form.Item name="consumer" label="消费者" rules={[{ required: true, message: '请选择消费者' }]}>
           <Select options={Object.entries(CONSUMER_TYPE_MAP).map(([key, value]) => ({
             value: Number(key),
             label: value.label
@@ -72,7 +121,7 @@ function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDra
             label: value
           }))} />
         </Form.Item>
-        <Form.Item name="account_type" label="账户">
+        <Form.Item name="account_type" label="账户" rules={[{ required: true, message: '请选择账户' }]}>
           <Select options={Object.entries(account_type).map(([key, value]) => ({
             value: Number(key),
             label: value
@@ -84,7 +133,7 @@ function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDra
             label: value
           }))} />
         </Form.Item>
-        <Form.Item name="trans_time" label="交易时间">
+        <Form.Item name="trans_time" label="交易时间" rules={[{ required: true, message: '请选择交易时间' }]}>
           <DatePicker showTime />
         </Form.Item>
       </Form>
