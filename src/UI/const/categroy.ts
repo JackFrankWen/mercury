@@ -4,7 +4,8 @@ const general_cost = 1, // 日常
 const husband = 1,
   wife = 2,
   family = 3,
-  son = 4
+  son = 4,
+  grandPa = 5
 // 1: '生存开销',
 // 2: '发展开销',
 // 3: '享受开销',
@@ -114,7 +115,7 @@ export const category_type = [
       },
       {
         value: 50005,
-        label: '化妆美容品', // 护肤品 金额太大
+        label: '化妆护肤', // 护肤品 金额太大
         tag: variable_cost,
         cost_type: basic,
         abc_type: a,
@@ -130,7 +131,7 @@ export const category_type = [
       },
       {
         value: 50007,
-        label: '汽车用品',
+        label: '宝宝尿不湿',
         tag: variable_cost,
         cost_type: fix_cost,
         abc_type: a,
@@ -155,7 +156,7 @@ export const category_type = [
   },
   {
     value: 20000,
-    label: '家庭杂费',
+    label: '家庭杂费及服务费',
     children: [
       {
         value: 20001,
@@ -213,7 +214,7 @@ export const category_type = [
       },
       {
         value: 20008,
-        label: 'VPN年费以及会员费',
+        label: 'VPN',
         tag: fix_cost,
         consumer: family,
         cost_type: develop,
@@ -229,76 +230,86 @@ export const category_type = [
       },
       {
         value: 20010,
-        label: '税费',
+        label: '宽带',
         tag: fix_cost,
+        consumer: family,
+        cost_type: basic,
+        abc_type: a,
+      },
+      {
+        value: 20011,
+        label: '其他杂费',
+        tag: general_cost,
         consumer: family,
         cost_type: basic,
         abc_type: a,
       },
     ],
   },
-  {
-    value: 40000,
-    label: '宝宝费用',
-    children: [
-      {
-        value: 40001,
-        label: '宝宝尿不湿',
-        tag: fix_cost,
-        consumer: son,
-        cost_type: basic,
-        abc_type: a,
-      },
-      {
-        value: 40002,
-        label: '宝宝娱乐（玩具）',
-        tag: variable_cost,
-        consumer: son,
-        cost_type: chill,
-        abc_type: b,
-      },
-      {
-        value: 40003,
-        label: '宝宝教育',
-        tag: fix_cost,
-        consumer: son,
-        cost_type: develop,
-        abc_type: a,
-      },
-      {
-        value: 40004,
-        label: '宝宝医疗',
-        tag: variable_cost,
-        consumer: son,
-        cost_type: basic,
-        abc_type: a,
-      },
-      {
-        value: 40005,
-        label: '宝宝生活用品',
-        tag: fix_cost,
-        consumer: son,
-        cost_type: basic,
-        abc_type: a,
-      },
-      {
-        value: 40006,
-        label: '宝宝衣物',
-        tag: variable_cost,
-        consumer: son,
-        cost_type: basic,
-        abc_type: a,
-      },
-      {
-        value: 40007,
-        label: '宝宝食品',
-        tag: variable_cost,
-        consumer: son,
-        cost_type: basic,
-        abc_type: a,
-      },
-    ],
-  },
+  // {
+  //   value: 40000,
+  //   label: '宝宝费用',
+  //   disabled: true,
+  //   children: [
+  //     {
+  //       value: 40001,
+  //       label: '宝宝尿不湿',
+  //       tag: fix_cost,
+  //       consumer: son,
+  //       cost_type: basic,
+  //
+  //       abc_type: a,
+  //     },
+  //     {
+  //       value: 40002,
+  //       label: '宝宝娱乐（玩具）',
+  //       tag: variable_cost,
+  //       consumer: son,
+  //       cost_type: chill,
+  //       abc_type: b,
+  //     },
+  //     {
+  //       value: 40003,
+  //       label: '宝宝教育',
+  //       tag: fix_cost,
+  //       consumer: son,
+  //       cost_type: develop,
+  //       abc_type: a,
+  //     },
+  //     {
+  //       value: 40004,
+  //       label: '宝宝医疗',
+  //       tag: variable_cost,
+  //       consumer: son,
+  //       cost_type: basic,
+  //       abc_type: a,
+  //     },
+  //     {
+  //       value: 40005,
+  //       label: '宝宝生活用品',
+  //       tag: fix_cost,
+  //       consumer: son,
+  //       cost_type: basic,
+  //       abc_type: a,
+  //     },
+  //     {
+  //       value: 40006,
+  //       label: '宝宝衣物',
+  //       tag: variable_cost,
+  //       consumer: son,
+  //       cost_type: basic,
+  //       abc_type: a,
+  //     },
+  //     {
+  //       value: 40007,
+  //       label: '宝宝食品',
+  //       tag: variable_cost,
+  //       consumer: son,
+  //       cost_type: basic,
+  //       abc_type: a,
+  //     },
+  //   ],
+  // },
   {
     value: 30000,
     label: '行车交通',
@@ -342,6 +353,13 @@ export const category_type = [
         cost_type: basic,
         abc_type: a,
       },
+      {
+        value: 30007,
+        label: '汽车用品及服务',
+        tag: variable_cost,
+        cost_type: basic,
+        abc_type: b,
+      },
     ],
   },
   {
@@ -367,7 +385,6 @@ export const category_type = [
         value: 60003,
         label: '孝敬长辈',
         tag: fix_cost,
-        consumer: family,
         cost_type: basic,
         abc_type: a,
       },
@@ -380,6 +397,7 @@ export const category_type = [
       {
         value: 70001,
         label: '聚会(用其他娱乐)',
+        disabled: true,
         tag: variable_cost,
         abc_type: b,
       },
@@ -387,6 +405,7 @@ export const category_type = [
         value: 70002,
         label: '游戏（用其他娱乐）',
         tag: variable_cost,
+        disabled: true,
         cost_type: chill,
         abc_type: b,
       },
@@ -430,7 +449,7 @@ export const category_type = [
   },
   {
     value: 90000,
-    label: '个人投资',
+    label: '教育文化',
     children: [
       {
         value: 90001,
@@ -448,8 +467,22 @@ export const category_type = [
         abc_type: b,
       },
       {
+        value: 90004,
+        label: '教育培训',
+        tag: variable_cost,
+        cost_type: develop,
+        abc_type: b,
+      },
+      {
         value: 90003,
         label: '个人投资',
+        tag: variable_cost,
+        cost_type: develop,
+        abc_type: b,
+      },
+      {
+        value: 90005,
+        label: '仪式文化',
         tag: variable_cost,
         cost_type: develop,
         abc_type: b,
