@@ -2,7 +2,7 @@ import { Card, Col, Row, Space } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import CategoryTable from './categoryTable'
 import { useSelect } from '../../components/useSelect'
-import { cpt_const } from 'src/UI/const/web'
+import { cpt_const, payment_type } from 'src/UI/const/web'
 
 function TableSection(props: { formValue: any }) {
     const { formValue } = props
@@ -46,7 +46,7 @@ function TableSection(props: { formValue: any }) {
             ...formValue,
             consumer: consumerVal,
             account_type: accountTypeVal,
-            payment: paymentVal,
+            payment_type: paymentVal,
         })
     }, [
         formValue,
@@ -68,7 +68,7 @@ function TableSection(props: { formValue: any }) {
             ...formValue,
             consumer: consumerVal,
             account_type: accountTypeVal,
-            payment: paymentVal,
+            payment_type: paymentVal,
         })
     }, [formValue, consumerVal])
     return (
@@ -82,7 +82,7 @@ function TableSection(props: { formValue: any }) {
                             ...formValue,
                             consumer: consumerVal,
                             account_type: accountTypeVal,
-                            payment: paymentVal,
+                            payment_type: paymentVal,
                         }}
                     />
                 </Card>

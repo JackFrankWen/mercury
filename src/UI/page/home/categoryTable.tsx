@@ -1,6 +1,6 @@
 import { message, Modal, Table, Tag, Tooltip, Typography } from 'antd'
 import type { TableColumnsType, TableRowSelection } from 'antd'
-import { getDateTostring, roundToTwoDecimalPlaces } from '../../components/utils'
+import { getDateTostring, roundToTwoDecimalPlaces, formatMoney } from '../../components/utils'
 import React, { useCallback, useEffect, useState } from 'react'
 import { ColumnsType } from 'antd/es/table/interface'
 import useModal from '../../components/useModal'
@@ -37,9 +37,9 @@ const columns: ColumnsType<DataType> = [
     key: 'value',
     render: (val, obj) => (
       <Typography.Text>
-        {roundToTwoDecimalPlaces(val)}
+        {formatMoney(val)}
         <Typography.Text type="secondary" style={{ marginLeft: '2px' }}>
-          (平均: {roundToTwoDecimalPlaces(obj.avg)})
+          (平均: {formatMoney(obj.avg)})
         </Typography.Text>
       </Typography.Text>
     ),
@@ -67,9 +67,9 @@ const columns2 = [
     width: 80,
     render: (txt: string) => {
       if (Number(txt) > 100) {
-        return <Typography.Text type="danger">{txt}</Typography.Text>
+        return <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>
       }
-      return txt
+      return formatMoney(txt)
     },
   },
   {
@@ -120,9 +120,9 @@ const expandedRowRender = (toggle: any) => (record: DataType) => {
       key: 'value',
       render: (val, obj) => (
         <Typography.Text>
-          {roundToTwoDecimalPlaces(val)}
+          {formatMoney(val)}
           <Typography.Text type="secondary" style={{ marginLeft: '2px' }}>
-            (平均: {roundToTwoDecimalPlaces(obj.avg)})
+            (平均: {formatMoney(obj.avg)})
           </Typography.Text>
         </Typography.Text>
       ),
@@ -196,7 +196,7 @@ const CategoryTable = (props: {
             汇总
           </Table.Summary.Cell>
           <Table.Summary.Cell index={2}>
-            <a>{roundToTwoDecimalPlaces(totalCost)}</a>
+            <a>{formatMoney(totalCost)}</a>
           </Table.Summary.Cell>
         </Table.Summary.Row>
       </>

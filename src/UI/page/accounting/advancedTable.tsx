@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import { SelectionFooter } from './SelectionFooter';
 import { getCategoryString } from "../../const/categroy";
 import AddTransactionDrawer from './AddTransactionDrawer';
+import { formatMoney } from "../../components/utils";
 
 interface DataType {
     trans_time_formate: string
@@ -43,12 +44,12 @@ const CONSUMER_TYPE_MAP = {
 // 优化渲染价格的函数
 const renderBoldPrice = (txt: string, record: I_Transaction) => {
     if (record?.children) {
-        return <span style={{ fontWeight: 'bold' }}>{txt}</span>;
+        return <span style={{ fontWeight: 'bold' }}>{formatMoney(txt)}</span>;
     }
     const amount = Number(txt);
     return amount > 100 ? (
-        <Typography.Text type="danger">{txt}</Typography.Text>
-    ) : txt;
+        <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>
+    ) : formatMoney(txt);
 };
 const renderTime = (txt: Date) => {
     return <div className="ellipsis">{dayjs(txt).format('YYYY-MM-DD HH:mm:ss')}</div>
