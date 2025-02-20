@@ -38,6 +38,20 @@ contextBridge.exposeInMainWorld('mercury', {
         batchInsertTransactions: (list: Params_Transaction[]) => ipcRenderer.invoke('transactions:batchInsert', list), 
         // 获取category 
         getCategoryTotalByDate: (params: {start_date: string, end_date: string}) => ipcRenderer.invoke('transactions:getCategoryTotalByDate', params),
+        insertTransaction: (transaction: {
+            amount: number;
+            category?: string;
+            description?: string;
+            payee?: string;
+            account_type?: string;
+            payment_type?: string;
+            consumer?: string;
+            flow_type?: string;
+            tag?: string;
+            abc_type?: string;
+            cost_type?: string;
+            trans_time?: string;
+        }) => ipcRenderer.invoke('transactions:insert', transaction),
     },
 
     crawler: (param: {

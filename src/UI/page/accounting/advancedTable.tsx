@@ -1,6 +1,6 @@
 import {Breadcrumb, Button, Row, Space, Table, Tag, Tooltip,
     Typography, Card,
-    message
+    message, Drawer, Form, DatePicker, Input, Select
 } from "antd";
 import { ColumnsType } from 'antd/es/table/interface'
 import {ControlOutlined, PlusOutlined} from "@ant-design/icons";
@@ -11,6 +11,8 @@ import { I_Transaction,  } from "src/sqlite3/transactions";
 import dayjs from "dayjs";
 import { SelectionFooter } from './SelectionFooter';
 import { getCategoryString } from "../../const/categroy";
+import AddTransactionDrawer from './AddTransactionDrawer';
+
 interface DataType {
     trans_time_formate: string
     amount: string
@@ -167,8 +169,7 @@ export function AdvancedTable(props: {
 }): JSX.Element {
     const {data, fresh} = props;
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-
-
+    const [addDrawerVisible, setAddDrawerVisible] = useState(false);
 
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         console.log('selectedRowKeys changed: ', newSelectedRowKeys);
@@ -187,7 +188,13 @@ export function AdvancedTable(props: {
                     title: '记账',
                 }]}/> */}
                 <Space>
-                    <Button icon={<PlusOutlined/>} type="primary">新增</Button>
+                    <Button 
+                        icon={<PlusOutlined/>} 
+                        type="primary" 
+                        onClick={() => setAddDrawerVisible(true)}
+                    >
+                        新增
+                    </Button>
                 </Space>
             </Row>
 
@@ -205,6 +212,13 @@ export function AdvancedTable(props: {
                     pageSizeOptions: [10, 20, 50],
                     showSizeChanger: true,
                   }}
+            />
+            <AddTransactionDrawer 
+                visible={addDrawerVisible}
+                onClose={() => setAddDrawerVisible(false)}
+                onSuccess={() => {
+                    props.fresh();
+                }}
             />
             {
                 selectedRowKeys.length > 0 && (<SelectionFooter 

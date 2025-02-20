@@ -206,7 +206,7 @@ export async function batchInsertTransactions(list: I_Transaction[]): Promise<vo
     throw error;
   }
 }
-// 帮我写个方法，计算‘2001-11-1‘到‘2002-12-1’ 之间的月份差
+// 帮我写个方法，计算'2001-11-1'到'2002-12-1' 之间的月份差
 export function getMonthsDiff(startDate: string, endDate: string): number {
   const start = new Date(startDate)
   const end = new Date(endDate)
@@ -277,6 +277,41 @@ export async function getCategoryTotal(params: Params_Transaction): Promise<{cat
     return rows
   } catch (error) {
     console.error('Error getting category total by date:', error);
+    throw error;
+  }
+}
+
+// 新增单条交易记录
+export async function insertTransaction(transaction: Partial<I_Transaction>): Promise<void> {
+  try {
+    const db = await getDbInstance();
+    const sql = `INSERT INTO transactions (
+      amount, category, description, payee, account_type, 
+      payment_type, consumer, flow_type, tag, abc_type, 
+      cost_type, trans_time, creation_time, modification_time
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
+
+    await new Promise<void>((resolve, reject) => {
+      db.run(sql, [
+        transaction.amount,
+        transaction.category || '[100000,100003]',
+        transaction.description,
+        transaction.payee,
+        transaction.account_type,
+        transaction.payment_type,
+        transaction.consumer,
+        transaction.flow_type,
+        transaction.tag,
+        transaction.abc_type,
+        transaction.cost_type,
+        transaction.trans_time || new Date().toISOString()
+      ], (err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
+  } catch (error) {
+    console.error('Error inserting transaction:', error);
     throw error;
   }
 }
