@@ -80,6 +80,10 @@ export const getAllTransactions = async (params: Params_Transaction): Promise<I_
     if (params.cost_type) {
       conditions.push(`cost_type = '${params.cost_type}'`)
     }
+    // category 
+    if (params.category) {
+      conditions.push(`category = '${params.category}'`)
+    }
 
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
     
