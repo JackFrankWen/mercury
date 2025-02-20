@@ -143,11 +143,14 @@ export function formateToTableDataWechat(
     // 9: "商户单号"
     // 10: "备注"
     const amount = subArr[5] || ''
-    const description = `${subArr[10]};${subArr[3]}`
+    const description = `${subArr[3]}`
+    let payeeName = `${subArr[1]};${subArr[2]}`.replace('[^\u0000-\uFFFF]', '')
+    payeeName = payeeName.replace(/商户消费;/g, '')
+    payeeName = payeeName.replace(/扫二维码付款;/g, '')
     return {
       id: subArr[8],
       amount: amount.replace('¥', ''),
-      payee: subArr[2],
+      payee: payeeName,
       description: description.replace('[^\u0000-\uFFFF]', ''),
       account_type: account_type,
       payment_type: payment_type,

@@ -68,7 +68,7 @@ const columns: ColumnsType<I_Transaction> = [
         title: '分类',
         dataIndex: 'category',
         key: 'category',
-        width: 200,
+        width: 140,
         render: (category: string) => getCategoryString(category, 1),
     },
      {

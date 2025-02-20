@@ -11,7 +11,7 @@ import isSameOrAfter from 'dayjs/plugin/isSameOrAfter'
 dayjs.extend(advancedFormat)
 dayjs.extend(isSameOrBefore)
 dayjs.extend(isSameOrAfter)
-function getFirstDayAndLastDay(month: number, type: 'year' | 'month') {
+function getFirstDayAndLastDay(month: number, type: 'year' | 'month' | 'quarter') {
     const now = dayjs() // 获取当前日期时间
 
     const lastYear = now.subtract(month, 'year') // 回到一年前
@@ -23,8 +23,29 @@ function getFirstDayAndLastDay(month: number, type: 'year' | 'month') {
     if (type === 'month') {
         return [firstDateOfLastMonth, lastDayOfLastMonth]
     }
+   
     return [firstDayOfLastYear, lastDayOfLastYear]
 }
+// 获取季度第一天和最后一天 入参 几个季度 0是当前季度 1是上季度 2是上上季度
+// 例如: 当前是2023Q4, 传入1返回2023Q3的起止时间, 传入2返回2023Q2的起止时间
+function getFirstDayAndLastDayOfQuarter(quarter: number) {
+    const now = dayjs()
+    const currentQuarter = Math.floor(now.month() / 3)
+    const targetQuarter = currentQuarter - quarter
+    const targetYear = now.year() + Math.floor(targetQuarter / 4)
+    const finalQuarter = ((targetQuarter % 4) + 4) % 4
+    
+    const firstMonth = finalQuarter * 3
+    // Get first day of the quarter
+    const firstDayOfQuarter = dayjs().year(targetYear).month(firstMonth).startOf('month')
+    // Get last day of the quarter (end of the last month in the quarter)
+    const lastDayOfQuarter = dayjs()
+        .year(targetYear)
+        .month(firstMonth + 2)
+        .endOf('month')
+    
+    return [firstDayOfQuarter, lastDayOfQuarter]
+}   
 const RangePickerWrap = (props: {
     placeholder?: string
     bordered?: boolean
@@ -47,6 +68,10 @@ const RangePickerWrap = (props: {
         const thisYear = getFirstDayAndLastDay(0, 'year')
         const lastYear = getFirstDayAndLastDay(1, 'year')
         const lastTwoyear = getFirstDayAndLastDay(2, 'year')
+        // 当前季度
+        const curQuarter = getFirstDayAndLastDayOfQuarter(0)
+        const lastQuarter = getFirstDayAndLastDayOfQuarter(1)
+        const lastTwoQuarter = getFirstDayAndLastDayOfQuarter(2)
         return (
             <Space>
                 <a onClick={() => setClickDate(curMonth)}>当月</a>
@@ -55,6 +80,9 @@ const RangePickerWrap = (props: {
                 <a onClick={() => setClickDate(thisYear)}>今年</a>
                 <a onClick={() => setClickDate(lastYear)}>去年</a>
                 <a onClick={() => setClickDate(lastTwoyear)}>前年</a>
+                <a onClick={() => setClickDate(curQuarter)}>当前季度</a>
+                <a onClick={() => setClickDate(lastQuarter)}>上季度</a>
+                <a onClick={() => setClickDate(lastTwoQuarter)}>上上季度</a>
             </Space>
         )
     }

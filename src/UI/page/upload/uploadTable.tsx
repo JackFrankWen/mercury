@@ -12,6 +12,7 @@ import {
   Steps,
   Table,
   Tag,
+  Tooltip,
   Typography,
 } from 'antd'
 import React, { useEffect, useState } from 'react'
@@ -95,6 +96,7 @@ const BasicTable = (props: {
       title: '序号',
       dataIndex: 'index',
       width: 50,
+      fixed: 'left',
       render: (val: number, ctn: any, index: number) => index + 1,
     },
     {
@@ -107,16 +109,22 @@ const BasicTable = (props: {
     {
       title: '金额',
       dataIndex: 'amount',
+      
       render: (val: string, { flow_type }: { flow_type: number }) => {
+        if (!val) return ''
+        if (!flow_type) return 'flow_type 为空'
         // 金额如果包含中文，则返回警告
         if (/[\u4e00-\u9fa5]/.test(val)) {
           return <Typography.Text type="warning">这条数据有问题</Typography.Text>
         }
+        const child =  flow_type === 1 ? '支：' : '收：'
         const type = flow_type === 1 ? 'danger' : 'success'
+        return <Space>
+          <Typography.Text type={type}>{child} ¥{val}</Typography.Text>
+        </Space>
 
-        return val ? <Typography.Text type={type}>¥{val}</Typography.Text> : ''
       },
-      width: 100,
+      width: 140,
       defaultCheck: true,
     },
     {
@@ -134,13 +142,21 @@ const BasicTable = (props: {
       dataIndex: 'payee',
       ellipsis: true,
       width: 120,
-      defaultCheck: false,
+      render: (val: string) => (
+        <Tooltip title={val}>
+          <span>{val}</span>
+        </Tooltip>
+      )
     },
     {
       title: '描述',
       dataIndex: 'description',
       ellipsis: true,
-      defaultCheck: true,
+      render: (val: string) => (
+        <Tooltip title={val}>
+          <span>{val}</span>
+        </Tooltip>
+      )
     },
     {
       title: '消费成员',
@@ -166,18 +182,7 @@ const BasicTable = (props: {
         }
       },
     },
-    {
-      title: '类型',
-      dataIndex: 'flow_type',
-      width: 80,
-      defaultCheck: false,
-      render: (val: number) =>
-        val === 1 ? (
-          <Typography.Text type="danger">支出</Typography.Text>
-        ) : (
-          <Typography.Text type="success">收入</Typography.Text>
-        ),
-    },
+   
     {
       title: '账户',
       dataIndex: 'account_type',
@@ -342,7 +347,7 @@ const BasicTable = (props: {
             size="small"
             columns={columns}
             summary={tableSummary}
-            scroll={{ x: 1500, y: 300 }}
+            scroll={{ x: 1200, y: 300 }}
             pagination={false}
 
           />

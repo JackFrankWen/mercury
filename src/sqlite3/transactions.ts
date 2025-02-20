@@ -206,6 +206,12 @@ export async function batchInsertTransactions(list: I_Transaction[]): Promise<vo
     throw error;
   }
 }
+// 帮我写个方法，计算‘2001-11-1‘到‘2002-12-1’ 之间的月份差
+export function getMonthsDiff(startDate: string, endDate: string): number {
+  const start = new Date(startDate)
+  const end = new Date(endDate)
+  return (end.getFullYear() - start.getFullYear()) * 12 + (end.getMonth() - start.getMonth()) + 1
+}
 
 // 获取category 的 group by 
 export async function getCategoryTotal(params: Params_Transaction): Promise<{category: string, total: number, avg: number}[]> {
@@ -215,10 +221,8 @@ export async function getCategoryTotal(params: Params_Transaction): Promise<{cat
       return []
     }
     // Calculate months difference between start and end date
-    const startDate = new Date(params.trans_time[0])
-    const endDate = new Date(params.trans_time[1])
-    const monthsDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 + 
-                      (endDate.getMonth() - startDate.getMonth()) + 1;
+   
+    const monthsDiff = getMonthsDiff(params.trans_time[0], params.trans_time[1])
     
     const conditions: string[] = [];
     
