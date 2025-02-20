@@ -34,7 +34,7 @@ body {
 .mercury-content {
     padding: 8px;
     position: relative;
-    overflow: hidden;
+    overflow: scroll;
 }
 .no-margin {
     margin: 0 !important;
