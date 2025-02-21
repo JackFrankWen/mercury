@@ -381,52 +381,38 @@ const BasicTable = (props: {
             }}
             needTransferData={needTransferData}
             onOk={(type: string, transferData: []) => {
-              if (type === 'jd') {
-                console.log('jjjjjjjjjjjjjjd');
-                
-                // 当时间trans_time时间用day jsformat 年月日匹配和金额，替换data中的description
-                const newData = data.map((obj: any, index: number) => {
-                
-                  if (!obj.description?.includes('订单编号')) {
-                    return obj
-                  }
-                  transferData.forEach((item: any) => {
-                    if (
-                      dayjs(obj.trans_time).format('YYYY-MM-DD') === dayjs(item.trans_time).format('YYYY-MM-DD') 
-                      && Math.round(Number(obj.amount)) === Math.round(Number(item.amount))) {
-                      obj.description = item.description
-                      message.success(`替换成功第: ${index + 1} 条数据`)
-                      console.log(item,'item');
-                      
-                    }
-                  })
+              const newData = data.map((obj: any, index: number) => {
+                // Skip if no description or wrong description format
+                if (type === 'jd' && !obj.description?.includes('订单编号')) {
+                  return obj;
+                }
+                if (type === 'pdd' && !obj.description?.includes('商户单号')) {
+                  return obj;
+                }
+
+                // Find matching transfer data
+                const matchingItem = transferData.find((item: any) => {
+                  const timeFormat = type === 'jd' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm';
+                  const isSameTime = dayjs(obj.trans_time).format(timeFormat) === dayjs(item.trans_time).format(timeFormat);
+                  const isSameAmount = Math.round(Number(obj.amount)) === Math.round(Number(item.amount))
                   
-                  return obj
-                })
-                setData(newData)
-                
-              } else if (type === 'pdd') {
-                console.log(transferData,'pdd');
-                
-                const newData = data.map((obj: any, index: number) => {
-                  if (!obj.description?.includes('商户单号')) {
-                    return obj
-                  }
-                  transferData.forEach((item: any) => {
-                    // Round both amounts to nearest integer for comparison
-                    if (dayjs(obj.trans_time).format('YYYY-MM-DD HH:mm') === dayjs(item.trans_time).format('YYYY-MM-DD HH:mm') 
-                      && Math.round(Number(obj.amount)) === Math.round(Number(item.amount))) {                    
-                      obj.description = item.description
-                      message.success(`替换成功第: ${index + 1} 条数据`)
-                      console.log(item,'item');
-                    }
-                  })
-                  return obj
-                })
-                setData(newData)
-              }
-              setModalVisible(false)
-              setLoadingFalse()
+                  return isSameTime && isSameAmount;
+                });
+
+                if (matchingItem) {
+                  message.success(`替换成功第: ${index + 1} 条数据`);
+                  return {
+                    ...obj,
+                    description: matchingItem.description
+                  };
+                }
+
+                return obj;
+              });
+
+              setData(newData);
+              setModalVisible(false);
+              setLoadingFalse();
             }}
           />
         )
