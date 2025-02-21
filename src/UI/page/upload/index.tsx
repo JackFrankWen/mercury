@@ -31,7 +31,8 @@ function UploadCenter(): JSX.Element {
         onUploadSuccess={(obj)=>{
           setUploadVisiable(false)
           setTableVisable(true)
-          setTableData(obj.tableData)
+          
+          setTableData(obj.tableData.filter((item: any) => item.payee.includes('京东') || item.payee.includes('拼多多')))
           setTableHeader(obj.tableHeader)
         }} 
       />}

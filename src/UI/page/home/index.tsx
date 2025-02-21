@@ -2,6 +2,7 @@ import React, { useEffect, useState }   from "react";
 import {Button, Card} from "antd";
 import useReviewForm from "./useReviewForm";
 import TableSection from "./reviewTable";
+import Summarize from "./review-sum";
 function Index(): JSX.Element {
     const [formValue, cpt] = useReviewForm()
     // const fetchData = async (data?: Params_Transaction) => {
@@ -29,7 +30,13 @@ function Index(): JSX.Element {
             <Card bordered={false} hoverable>
               {cpt}
             </Card>
-            <TableSection formValue={formValue} />
+            <div className="mt8">
+                <Summarize formValue={formValue} />
+            </div>
+            
+            <div className='mt8'>
+                <TableSection formValue={formValue} />
+            </div>
         </div>
     );
 }

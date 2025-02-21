@@ -391,7 +391,9 @@ const BasicTable = (props: {
                     return obj
                   }
                   transferData.forEach((item: any) => {
-                    if (dayjs(obj.trans_time).format('YYYY-MM-DD') === dayjs(item.trans_time).format('YYYY-MM-DD') && obj.amount === item.amount) {
+                    if (
+                      dayjs(obj.trans_time).format('YYYY-MM-DD') === dayjs(item.trans_time).format('YYYY-MM-DD') 
+                      && Math.round(Number(obj.amount)) === Math.round(Number(item.amount))) {
                       obj.description = item.description
                       message.success(`替换成功第: ${index + 1} 条数据`)
                       console.log(item,'item');
@@ -411,16 +413,17 @@ const BasicTable = (props: {
                     return obj
                   }
                   transferData.forEach((item: any) => {
-                    if ( obj.amount === item.amount) {
+                    // Round both amounts to nearest integer for comparison
+                    if (dayjs(obj.trans_time).format('YYYY-MM-DD HH:mm') === dayjs(item.trans_time).format('YYYY-MM-DD HH:mm') 
+                      && Math.round(Number(obj.amount)) === Math.round(Number(item.amount))) {                    
                       obj.description = item.description
                       message.success(`替换成功第: ${index + 1} 条数据`)
                       console.log(item,'item');
-                      
                     }
                   })
-                  
+                  return obj
                 })
-                // setData(newData)
+                setData(newData)
               }
               setModalVisible(false)
               setLoadingFalse()
