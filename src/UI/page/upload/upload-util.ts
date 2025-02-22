@@ -1,4 +1,5 @@
 import { I_Transaction } from "src/sqlite3/transactions"
+import { getMatchCategory } from "src/UI/const/alipayMatch"
 import { category_type } from "src/UI/const/categroy"
 
 export interface tableHeaderI {
@@ -100,7 +101,7 @@ export function formateToTableDataAlipayMobile(
       // 9: "交易订单号"
       // 10: "商家订单号"
       // 11: "备注"
-
+    
     return {
       id: subArr[9].replace(/[^0-9]/g, ''),
       amount: subArr[6].trim(),
@@ -108,7 +109,8 @@ export function formateToTableDataAlipayMobile(
       account_type: account_type,
       payment_type: payment_type,
       flow_type: /支出/.test(subArr[5]) ? 1 : 2,
-      category: undefined,
+      // 根据alipayMatch.ts 获取category
+      category: getMatchCategory(subArr[1]),
       payee: subArr[2],
       consumer: account_type,
       tag: 2,

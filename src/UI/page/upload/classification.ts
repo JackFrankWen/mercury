@@ -97,7 +97,21 @@ export function handleToTable(csvData: any): {
                     csvContent,
                     tableHeader.account_type,
                     ALIPAY
-                )   
+                )  
+                console.log(tableData, 'tableDatamobile');
+                
+                // 
+                // const categoryLabelS = tableData.map((item) => {
+                //     return item.categoryLabel
+                // })
+                // // 去重
+                // const categoryLabelSet = new Set(categoryLabelS)
+                // // 转换为数组
+                // const categoryLabelArray = Array.from(categoryLabelSet)
+                // // 
+                // console.log(JSON.stringify(categoryLabelArray), 'categoryLabelArray')
+
+                 
                 return {
                     tableHeader: tableHeader,
                     tableData: tableData

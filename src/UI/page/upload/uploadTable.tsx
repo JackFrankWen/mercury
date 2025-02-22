@@ -133,8 +133,7 @@ const BasicTable = (props: {
       width: 120,
       defaultCheck: false,
       render: (val: string) => {
-        const list = val ? JSON.parse(val) : []
-        return list.length > 0 ? getCategoryString(list) : ''
+        return  getCategoryString(val) 
       },
     },
     {

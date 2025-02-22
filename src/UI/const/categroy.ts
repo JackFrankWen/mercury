@@ -26,7 +26,7 @@ export const category_type = [
     children: [
       {
         value: 10001,
-        label: '买菜',
+        label: '买菜(废)',
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -44,7 +44,7 @@ export const category_type = [
       },
       {
         value: 10003,
-        label: '水果',
+        label: '水果(废)',
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -70,7 +70,7 @@ export const category_type = [
       },
       {
         value: 10006,
-        label: '下馆子',
+        label: '餐饮美食',
         tag: variable_cost,
         consumer: family,
         cost_type: chill,
@@ -107,7 +107,7 @@ export const category_type = [
       },
       {
         value: 50004,
-        label: '厨房用品',
+        label: '厨房用品(废)',
         tag: fix_cost,
         consumer: family,
         cost_type: basic,
@@ -131,7 +131,7 @@ export const category_type = [
       },
       {
         value: 50007,
-        label: '宝宝尿不湿',
+        label: '母婴用品',
         tag: variable_cost,
         cost_type: fix_cost,
         abc_type: a,
@@ -256,21 +256,21 @@ export const category_type = [
       },
       {
         value: 30002,
-        label: '地铁公交',
+        label: '地铁公交（废）',
         tag: general_cost,
         cost_type: basic,
         abc_type: a,
       },
       {
         value: 30003,
-        label: '打车',
+        label: '打车(废)',
         tag: general_cost,
         cost_type: basic,
         abc_type: a,
       },
       {
         value: 30004,
-        label: '火车飞机等',
+        label: '交通通行',
         tag: variable_cost,
         cost_type: basic,
         abc_type: b,
@@ -563,6 +563,8 @@ export const getCategoryString = (str: string | undefined, type?: number): strin
     
 
   } catch (error) {
+    console.log(error, 'error');
+    
     return ''
   }
 }
