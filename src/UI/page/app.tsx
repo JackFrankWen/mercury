@@ -48,8 +48,9 @@ function App(props: any): JSX.Element {
                     items={items}
                 />
             </Sider>
-            <AliveScope>
+
                 <Content className="mercury-content" style={{height: '100%'}}>
+            <AliveScope>
                     {
                         activeKey === 'home' && <KeepAlive>
                             <Home/>
@@ -61,18 +62,19 @@ function App(props: any): JSX.Element {
                             <Accounting/>
                         </KeepAlive>
                     }
-                    {
-                        activeKey === 'upload' && <KeepAlive>
-                            <Upload/>
-                        </KeepAlive>
-                    }
+                   
                     {
                         activeKey === 'setting' && <KeepAlive>
                             <Setting/>
                         </KeepAlive>
                     }
-                </Content>
-            </AliveScope>
+            </AliveScope> 
+            {
+                        activeKey === 'upload' && <KeepAlive>
+                            <Upload/>
+                        </KeepAlive>
+            }
+            </Content>
         </Layout>
     );
 }
