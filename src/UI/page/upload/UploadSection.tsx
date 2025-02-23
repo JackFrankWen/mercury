@@ -18,17 +18,21 @@ function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
     className: 'upload-cus',
     beforeUpload: (file) => {
       setLoading(true);
-      Papa.parse(file, {
-        header: false,
-        encoding: 'gb18030',
-        skipEmptyLines: true,
-        complete: function (results: any) {
-          const csvData = results.data || [];
-          const { tableHeader, tableData } = handleToTable(csvData);
-          onUploadSuccess({ tableHeader, tableData });
-          setLoading(false);
-        },
-      });
+      
+      setTimeout(() => {
+        Papa.parse(file, {
+          header: false,
+          encoding: 'gb18030',
+          skipEmptyLines: true,
+          complete: function (results: any) {
+            const csvData = results.data || [];
+            const { tableHeader, tableData } = handleToTable(csvData);
+            onUploadSuccess({ tableHeader, tableData });
+            setLoading(false);
+          },
+        });
+      }, 0);
+
       return false;
     },
   };

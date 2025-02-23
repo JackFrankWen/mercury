@@ -23,17 +23,20 @@ function UploadCenter(): JSX.Element {
       console.log(res, 'res')
     })
   }
+  console.log(loading, 'loading');
   
   return (
-    <Spin spinning={loading} tip="正在解析文件...">
+    <Spin spinning={loading} tip="正在上传文件...">
       {uploadVisable && <UploadSection 
         setLoading={setLoading}
+        loading={loading}
         onUploadSuccess={(obj)=>{
           setUploadVisiable(false)
-          setTableVisable(true)
-          
-          setTableData(obj.tableData.filter((item: any) => item.payee.includes('京东') || item.payee.includes('拼多多')))
+          setTableData(obj.tableData)
+          // setTableData(obj.tableData.filter((item: any) => item.payee.includes('京东') || item.payee.includes('拼多多')))
           setTableHeader(obj.tableHeader)
+          setTableVisable(true)
+
         }} 
       />}
       {tableVisable && (

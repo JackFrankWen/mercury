@@ -284,7 +284,7 @@ const BasicTable = (props: {
               },
               {
                 title: '替换',
-                description: '替换京东拼多多订单编号',
+                description: '替换订单编号',
               },
               {
                 title: '分类',
