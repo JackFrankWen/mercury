@@ -347,7 +347,7 @@ export const category_type = [
       },
       {
         value: 70003,
-        label: '其他娱乐',
+        label: '休闲娱乐',
         tag: variable_cost,
         cost_type: chill,
         abc_type: c,

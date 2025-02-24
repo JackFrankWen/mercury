@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Button, Input, Upload, UploadProps, Spin } from "antd";
+import {  Spin, message } from "antd";
 import UploadTable from './uploadTable'
 import UploadFile from './uploadFile'
+import Done from './done'
 
 import './index.css'
 // 上传中心
@@ -16,10 +17,14 @@ function UploadCenter(): JSX.Element {
   const [tableData, setTableData] = useState([])
   const [tableHeader, setTableHeader] = useState({})
   const [loading, setLoading] = useState(false)
-
+  const [doneVisable, setDoneVisable] = useState(false)
   const uploadToDatabase = (tableData: any) => {
     window.mercury.api.batchInsertTransactions(tableData).then((res: any) => {
       console.log(res, 'res')
+      message.success('上传成功')
+      setDoneVisable(true)
+      setLoading(false)
+      setTableVisable(false)
     })
   }
   console.log(loading, 'loading');
@@ -47,9 +52,20 @@ function UploadCenter(): JSX.Element {
             setUploadVisiable(true)
             setTableData([])
           }} 
-          onSubmitSuccess={() => setTableVisable(false)} 
+          onSubmitSuccess={(arr: any) => {
+            uploadToDatabase(arr)
+          }} 
         />
       )}
+      {doneVisable && <Done
+        reSubmit={() => {
+          setDoneVisable(false)
+          setUploadVisiable(true)
+          setTableData([])
+          setTableHeader({})
+          setTableVisable(false)
+        }}
+       />}
     </Spin>
   );
 }

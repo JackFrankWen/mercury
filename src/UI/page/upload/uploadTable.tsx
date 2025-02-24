@@ -15,7 +15,7 @@ import {
   Tooltip,
   Typography,
 } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { getCategoryString } from 'src/UI/const/categroy'
 import {
   abc_type,
@@ -29,7 +29,16 @@ import { roundToTwoDecimalPlaces, formatMoney } from 'src/UI/components/utils'
 import { DeleteOutlined } from '@ant-design/icons'
 import UploadModal from './uploadModal'
 import dayjs from 'dayjs'
-import { log } from 'node:console'
+
+function checkNeedTransferData(data: any) {
+  const hasJingdong = data.some((obj: any) => obj.payee?.includes('京东') && obj.description?.includes('京东-订单编号'))
+  const hasPdd = data.some((obj: any) => obj.payee?.includes('拼多多') && obj.description?.includes('商户单号'))
+  return {
+    hasJingdong,
+    hasPdd,
+  }
+}
+
 export interface DataType {
   id: string
   amount: string
@@ -70,7 +79,7 @@ const BasicTable = (props: {
   tableData: any
   tableHeader: tableHeaderI
   onCancel: () => void
-  onSubmitSuccess: () => void
+  onSubmitSuccess: (arr: any) => void
 }) => {
   const { tableData, tableHeader, onCancel, onSubmitSuccess } = props
   const [form] = Form.useForm()
@@ -78,10 +87,18 @@ const BasicTable = (props: {
   const [LoadingBtn, setBtnLoading, setLoadingFalse] = useLoadingButton()
   const [modalVisible, setModalVisible] = useState(false)
   const [step, setStep] = useState(1)
-  const [needTransferData, setNeedTransferData] = useState({
-    hasJingdong: false,
-    hasPdd: false,
-  })
+  // const [needTransferData, setNeedTransferData] = useState({
+  //   hasJingdong: false,
+  //   hasPdd: false,
+  // })
+  // 写一个方法缓存needTransferData，根据data
+  const needTransferData = useMemo(() => {
+    const {hasJingdong, hasPdd} = checkNeedTransferData(data)
+    return {
+      hasJingdong,
+      hasPdd,
+    }
+  }, [data])
   const edit = (record: DataType) => {
     form.setFieldsValue({ name: '', age: '', address: '', ...record })
   }
@@ -212,16 +229,7 @@ const BasicTable = (props: {
     },
   ]
 
-  const checkNeedTransferData = () => {
-    const hasJingdong = data.some((obj: any) => obj.payee?.includes('京东') && obj.description?.includes('京东-订单编号'))
-    const hasPdd = data.some((obj: any) => obj.payee?.includes('拼多多') && obj.description?.includes('商户单号'))
-    return {
-      hasJingdong,
-      hasPdd,
-    }
-  }
-  const step2 = () => {
-    const {hasJingdong, hasPdd} = checkNeedTransferData()
+  const goStep2 = ({hasJingdong, hasPdd}: {hasJingdong: boolean, hasPdd: boolean}) => {
     if (hasJingdong) {
       setModalVisible(true)
     } else if (hasPdd) {
@@ -230,14 +238,10 @@ const BasicTable = (props: {
     } else {
       setStep(2)
       setModalVisible(false)
-      step3()
+      goStep3()
     }
     console.log(hasJingdong, hasPdd, 'hasJingdong, hasPdd');
     
-    setNeedTransferData({
-      hasJingdong,
-      hasPdd,
-    })
   }
   // 根据用户规则分类
   const ruleByUser = async(arr) => {
@@ -265,22 +269,27 @@ const BasicTable = (props: {
       return obj
     })
   }
-  const step3 = async() => {
+  const goStep3 = async() => {
     // 根据用户规则分类
     // 根据ai 分类
     // 根据规则分类
     const newData = await ruleByUser(data)
 
     setData(newData)
+    setStep(3)
+    setLoadingFalse()
     
   }
   const submit = async () => {
     // 判断 描述中是否包含京东-订单编号
     if(step === 1) {
-      step2()
+      goStep2(needTransferData)
     } else if (step === 2) {
       // 分类
-      step3()
+      goStep3()
+    } else if (step === 3) {
+      // 上传
+      onSubmitSuccess(data)
     }
   }
   const tableSummary = (pageData: any) => {
@@ -415,6 +424,10 @@ const BasicTable = (props: {
               setModalVisible(false)
               setLoadingFalse()
             }}
+            goStep3={()=>{
+              setModalVisible(false)
+              goStep3()
+            }}
             needTransferData={needTransferData}
             onOk={(type: string, transferData: []) => {
               const newData = data.map((obj: any, index: number) => {
@@ -445,6 +458,7 @@ const BasicTable = (props: {
 
                 return obj;
               });
+              
 
               setData(newData);
               setModalVisible(false);

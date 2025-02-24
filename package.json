@@ -18,7 +18,8 @@
     "lint": "eslint --ext .ts,.tsx .",
     "create-table": "node src/sqlite3/script/create-table.js",
     "import-rules": "node src/sqlite3/script/import-rules.js",
-    "import-trans": "node src/sqlite3/script/import-trans.js"
+    "import-trans": "node src/sqlite3/script/import-trans.js",
+    "remove-trans": "node src/sqlite3/script/del-all-trans.js"
   },
   "dependencies": {
     "@types/papaparse": "^5.3.15",

@@ -6,6 +6,7 @@ const { Dragger } = Upload;
 
 const UploadModal = (props: {
     visible: boolean
+    goStep3: () => void
     onCancel: () => void
     onOk: (type: string, data: any) => void
     needTransferData: {
@@ -13,7 +14,7 @@ const UploadModal = (props: {
         hasPdd: boolean
     }
 }) => {
-    const { visible, onCancel, onOk, needTransferData } = props
+    const { visible, onCancel, onOk, needTransferData, goStep3 } = props
     const [fileList, setFileList] = useState([])
     const uploadProps: UploadProps = {
         name: 'file',
@@ -66,7 +67,7 @@ const UploadModal = (props: {
         },
     };
     const handleOk = () => {
-
+        goStep3()
     }
 
     return (<Modal
