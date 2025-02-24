@@ -9,7 +9,7 @@ import {account_type, cost_type, payment_type, tag_type} from "../../const/web";
 import type { TableColumnsType, TableProps } from 'antd';
 import { I_Transaction,  } from "src/sqlite3/transactions";
 import dayjs from "dayjs";
-import { SelectionFooter } from './SelectionFooter';
+import { SelectionFooter } from '../../components/SelectionFooter';
 import { getCategoryString } from "../../const/categroy";
 import AddTransactionDrawer from './AddTransactionDrawer';
 import { formatMoney } from "../../components/utils";

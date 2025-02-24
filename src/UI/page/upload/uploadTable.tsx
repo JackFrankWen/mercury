@@ -410,7 +410,9 @@ const BasicTable = (props: {
           <Space>
             <Button onClick={onCancel}>取消</Button>
             <LoadingBtn type="primary" onClick={submit}>
-              下一步
+              {
+                step !== 3 ? '下一步' : '提交'
+              }
             </LoadingBtn>
 
           </Space>

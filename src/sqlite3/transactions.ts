@@ -32,7 +32,8 @@ export const getAllTransactions = async (params: Params_Transaction): Promise<I_
     }
 
     if (params.description) {
-      conditions.push(`description LIKE '%${params.description}%'`)
+      // description 或者payee 包含params.description
+      conditions.push(`description LIKE '%${params.description}%' OR payee LIKE '%${params.description}%'`)
     }
 
     if (params.consumer) {

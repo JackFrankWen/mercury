@@ -6,6 +6,8 @@ import { ColumnsType } from 'antd/es/table/interface'
 import useModal from '../../components/useModal'
 import { abc_type, cost_type, tag_type } from '../../const/web'
 import dayjs from 'dayjs'
+import { SelectionFooter } from 'src/UI/components/SelectionFooter'
+import { I_Transaction } from 'src/sqlite3/transactions'
 // import BatchUpdateArea from '../views/accounting/batch-update'
 
 interface ExpandedDataType {
@@ -251,68 +253,65 @@ const CategoryTable = (props: {
   )
 }
 function ModalContent(props: { modalData: any; refresh: () => void }) {
-  const [selectedRows, setSelectedRows] = useState<any>([])
   const { modalData, refresh } = props
-  const rowSelection: TableRowSelection<DataType> = {
-    selectedRowKeys: selectedRows,
-    onChange: (selectedRowKeys: React.Key[]) => {
-      setSelectedRows(selectedRowKeys)
-    },
-  }
-  const onBatchUpdate = async (val: any) => {
-    try {
-      const res = await $api.updateMany({
-        filter: {
-          ids: selectedRows.filter((val: string) => val.length !== 10),
-        },
-        data: {
-          ...val,
-          category: val?.category ? JSON.stringify(val.category) : undefined,
-        },
-      })
-      if (res.modifiedCount) {
-        refresh()
-        setSelectedRows([])
-        message.success(`成功${res.modifiedCount}记录`)
-      }
-      console.log(res, 'update sucess')
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  const onBatchDelete = async () => {
-    try {
-      const res = await $api.deleteMany({
-        filter: {
-          ids: selectedRows.filter((val: string) => val.length !== 10),
-        },
-      })
-      if (res.deletedCount) {
-        refresh()
-        setSelectedRows([])
-        message.success(`成功删除${res.deletedCount}记录`)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-  const selectRow = (record: any) => {
-    const selectedRowKeys = [...selectedRows]
-    console.log(record, 'record')
-    if (selectedRowKeys.indexOf(record.m_id) >= 0) {
-      selectedRowKeys.splice(selectedRowKeys.indexOf(record.m_id), 1)
-    } else {
-      selectedRowKeys.push(record.m_id)
-    }
-    setSelectedRows(selectedRowKeys)
-  }
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  
+  
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    setSelectedRowKeys(newSelectedRowKeys);
+};
+
+const rowSelection: TableRowSelection<I_Transaction> = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+};
   return (
     <>
       <div style={{ padding: '8px 0' }}>
-        {/* <BatchUpdateArea
-          onBatchUpdate={onBatchUpdate}
-          onBatchDelete={onBatchDelete}
-        /> */}
+      {
+                selectedRowKeys.length > 0 && (<SelectionFooter 
+                    onCancel={() => {
+                        setSelectedRowKeys([]);
+                    }}
+                    onDelete={() => {
+                        window.mercury.api.deleteTransactions(selectedRowKeys as number[])
+                            .then(() => {
+                                setSelectedRowKeys([]);
+                                message.success('删除成功');
+                                refresh();
+                            })
+                            .catch((error: any) => {
+                                console.error('删除失败:', error);
+                                message.error('删除失败');
+                            });
+                    }}
+                    onUpdate={( params: Partial<I_Transaction>) => {
+                        console.log('===params', params);
+                        const obj = {
+                            ...params,
+                        }
+                        if (params.category) {
+                            obj.category = JSON.stringify(params.category)
+                        }
+                        console.log('===obj', obj,selectedRowKeys);
+                        
+                        window.mercury.api.updateTransactions(
+                             selectedRowKeys as number[],
+                            obj
+                        ).then(() => {
+                            setSelectedRowKeys([]);
+                            message.success('修改成功');
+                            refresh();
+                        })
+                        .catch((error: any) => {
+                            console.error('修改失败:', error);
+                            message.error('修改失败');
+                        });
+                    }}  
+                    selectedCount={selectedRowKeys.length} />)
+
+            }
       </div>
       <Table
         pagination={{
@@ -320,11 +319,6 @@ function ModalContent(props: { modalData: any; refresh: () => void }) {
           pageSizeOptions: [ 50, 300],
           showSizeChanger: true,
         }}
-        onRow={(record) => ({
-          onClick: () => {
-            selectRow(record)
-          },
-        })}
         rowSelection={rowSelection}
         rowKey="id"
         columns={modalTableCol}

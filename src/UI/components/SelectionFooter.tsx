@@ -27,11 +27,11 @@ const removeUndefined = (obj: any) => {
             <Col span={24} className='mt8'>
                 <Row justify='space-between' >
                     <div>选择 {selectedCount}个</div>
-                    <Space>
+                    <Space.Compact >
                         <Button onClick={onCancel}>取消</Button>
                         <Button danger onClick={onDelete}>批量删除</Button>
                         <Button type="primary" onClick={() => onUpdate(removeUndefined(formValues))}>批量修改</Button>
-                    </Space>
+                    </Space.Compact>
                 </Row>
             </Col>
         </Row>
