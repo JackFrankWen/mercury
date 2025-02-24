@@ -19,7 +19,8 @@
     "create-table": "node src/sqlite3/script/create-table.js",
     "import-rules": "node src/sqlite3/script/import-rules.js",
     "import-trans": "node src/sqlite3/script/import-trans.js",
-    "remove-trans": "node src/sqlite3/script/del-all-trans.js"
+    "remove": "node src/sqlite3/script/del-all-trans.js",
+    "export": "node src/sqlite3/script/export-trans.js"
   },
   "dependencies": {
     "@types/papaparse": "^5.3.15",
@@ -28,6 +29,7 @@
     "csv-parser": "^3.1.0",
     "dayjs": "^1.11.13",
     "http-proxy": "^1.18.1",
+    "nodejieba": "^3.4.4",
     "papaparse": "^5.5.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
