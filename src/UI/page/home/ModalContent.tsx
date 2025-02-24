@@ -1,12 +1,46 @@
-import { message, Table, Tag, Tooltip, Typography } from 'antd'
+import { Button, message, Space, Table, Tag, Tooltip, Typography, Input} from 'antd'
 import type { TableRowSelection } from 'antd'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import dayjs from 'dayjs'
 import { SelectionFooter } from 'src/UI/components/SelectionFooter'
 import { I_Transaction } from 'src/sqlite3/transactions'
 import { tag_type } from '../../const/web'
 import { formatMoney } from '../../components/utils'
+import { FilterDropdownProps } from 'antd/es/table/interface'
 
+interface ModalContentProps {
+  modalData: any
+  refresh: () => void
+}
+
+export function ModalContent({ modalData, refresh }: ModalContentProps) {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  const [searchText, setSearchText] = useState('');
+
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
+    setSelectedRowKeys(newSelectedRowKeys)
+  }
+
+  const rowSelection: TableRowSelection<I_Transaction> = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  }
+  const [searchedColumn, setSearchedColumn] = useState('');
+  const searchInput = useRef<InputRef>(null);
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: FilterDropdownProps['confirm'],
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText('');
+  };
 const modalTableCol = [
     {
       title: '交易时间',
@@ -28,11 +62,72 @@ const modalTableCol = [
         </Tooltip>
       ),
     },
-  
     {
       title: '交易描述',
       dataIndex: 'description',
       ellipsis: true,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+        <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+          <Input
+            ref={searchInput}
+            placeholder={`Search`}
+            value={selectedKeys[0]}
+            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
+            style={{ marginBottom: 8, display: 'block' }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(selectedKeys as string[], confirm)}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Search
+            </Button>
+            <Button
+              onClick={() => clearFilters && handleReset(clearFilters)}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Reset
+            </Button>
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                confirm({ closeDropdown: false });
+                setSearchText((selectedKeys as string[])[0]);
+                setSearchedColumn();
+              }}
+            >
+              Filter
+            </Button>
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                close();
+              }}
+            >
+              close
+            </Button>
+          </Space>
+        </div>
+      ),
+      filterSearch: true,
+      onFilter: (value, record) =>
+        record.description
+          .toString()
+          .toLowerCase()
+          .includes((value as string).toLowerCase()),
+      filterDropdownProps: {
+        onOpenChange(open) {
+          if (open) {
+            setTimeout(() => searchInput.current?.select(), 100);
+          }
+        },
+      },
       render: (description: string) => (
         <Tooltip placement="topLeft" title={description}>
           {description}
@@ -43,6 +138,7 @@ const modalTableCol = [
       title: '金额',
       dataIndex: 'amount',
       width: 80,
+      sorter: (a, b) => Number(a.amount) - Number(b.amount),
       render: (txt: string) => {
         if (Number(txt) > 100) {
           return <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>
@@ -80,7 +176,6 @@ const modalTableCol = [
         return <Tag color="orange">{consumer_type[val]}</Tag>
       },
     },
-  
     {
       title: '标签',
       dataIndex: 'tag',
@@ -89,23 +184,7 @@ const modalTableCol = [
     },
   ]
 
-interface ModalContentProps {
-  modalData: any
-  refresh: () => void
-}
 
-export function ModalContent({ modalData, refresh }: ModalContentProps) {
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
-
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
-    setSelectedRowKeys(newSelectedRowKeys)
-  }
-
-  const rowSelection: TableRowSelection<I_Transaction> = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-  }
 
   return (
     <>
