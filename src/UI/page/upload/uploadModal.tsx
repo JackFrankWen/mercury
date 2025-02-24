@@ -75,6 +75,7 @@ const UploadModal = (props: {
         width={500}
         onCancel={onCancel}
         onOk={handleOk}
+        okText="开始AI分类"
     >
         <div>
             {

@@ -14,6 +14,14 @@ const db = new sqlite3.Database(path.join(__dirname, '../../../data/database.db'
 
 // 创建规则表
 function createRuleTable() {
+    /*
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    rule TEXT, // 规则
+    category TEXT,
+    consumer TEXT,
+    abc_type TEXT,
+    cost_type TEXT,
+    */ 
     const sql = `
         CREATE TABLE IF NOT EXISTS match_rules (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

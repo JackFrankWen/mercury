@@ -5,7 +5,7 @@ declare global {
     interface Window {
         mercury: {
             api: {
-                getALlMatchRule: () => Promise<any>;
+                getALlMatchRule: () => Promise<MatchRule[]>;
                 addMatchRule: (rule: {
                     category: string,
                     rule: string,

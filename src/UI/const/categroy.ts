@@ -548,8 +548,8 @@ export const getCategoryName = (id: number): string => {
   const obj = getCategoryObj()
   return obj[id]
 }
-
-export const getCategoryString = (str: string | undefined, type?: number): string => {
+// type默认是1 
+export const getCategoryString = (str: string | undefined, type: number = 1): string => {
   try {
     if (!str) {
       return ''

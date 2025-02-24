@@ -42,7 +42,7 @@ const RuleTable = () => {
     {
       title: '分类',
       dataIndex: 'category',
-      width: 150,
+      width: 200,
       fixed: 'left',
       render: (val: string) => {
 
@@ -52,14 +52,9 @@ const RuleTable = () => {
     {
       title: '规则',
       dataIndex: 'rule',
-      className:'single-line',
+      width: 200,
+      ellipsis: true,
       render: (ru: string) => {
-        if (ru && ru.includes('|')) {
-          const arr = ru.split('|')
-          return arr.map((str: string, key: number) => {
-            return <Tag key={key}>{str}</Tag>
-          })
-        }
         return ru
       },
     },
@@ -98,12 +93,6 @@ const RuleTable = () => {
       dataIndex: 'abc_type',
       width: 100,
       render: (val: number) => (val ? (abc_type as TypeMap)[val] : ''),
-    },
-    {
-      title: '消费方式',
-      dataIndex: 'cost_type',
-      width: 100,
-      render: (val: number) => (val ? (cost_type as TypeMap)[val] : ''),
     },
     {
       title: 'Action',

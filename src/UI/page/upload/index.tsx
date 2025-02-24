@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Button, Input, Upload, UploadProps, Spin } from "antd";
-import Papa from 'papaparse'
-import { handleToTable } from './classification'
 import UploadTable from './uploadTable'
+import UploadFile from './uploadFile'
+
 import './index.css'
-import UploadSection from './UploadSection'
 // 上传中心
 // 第一步上传文件
 // 第二步
@@ -27,7 +26,7 @@ function UploadCenter(): JSX.Element {
   
   return (
     <Spin spinning={loading} tip="正在上传文件...">
-      {uploadVisable && <UploadSection 
+      {uploadVisable && <UploadFile 
         setLoading={setLoading}
         loading={loading}
         onUploadSuccess={(obj)=>{

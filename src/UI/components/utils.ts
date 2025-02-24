@@ -40,7 +40,7 @@ export function toNumberOrUndefiend(number: any): number | undefined {
 }
 
 /**
- * 格式化金额为中文货币格式字符串
+ * 格式化金额为中文货币格式字符串, 整数不显示小数点，小数最多保留2位，使用千分位分隔符
  * @param amount - 要格式化的金额，可以是数字或字符串
  * @returns 格式化后的金额字符串，整数不显示小数点，小数最多保留2位，使用千分位分隔符
  * @example

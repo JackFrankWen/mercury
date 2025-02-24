@@ -84,9 +84,10 @@ export function formateToTableDataAlipayMobile(
   payment_type: number
 ) : any{
     let costArr = arr.filter((subArr: string[]) => !/不计收支/.test(subArr[5]))
+    // 过滤交易关闭
+    // costArr = costArr.filter((subArr: string[]) => !/交易关闭/.test(subArr[8]))
   costArr = costArr.filter((subArr: string[]) => /支付成功/.test(subArr[8]) || /交易成功/.test(subArr[8]))
     // 0: (12) ['交易时间', '交易分类', '交易对方', '对方账号', '商品说明', '收/支', '金额', '收/付款方式', '交易状态', '交易订单号', '商家订单号', '备注']
-  console.log(arr,'====aaaa');
   
   return costArr.map((subArr) => {
       // 0: "交易时间"
@@ -120,6 +121,7 @@ export function formateToTableDataAlipayMobile(
       trans_time: (subArr[0] || '').trim().replace(/\n/g, ''),
       modification_time: undefined,
       categoryLabel: subArr[1],
+      // 交易状态
     }
   })    
     

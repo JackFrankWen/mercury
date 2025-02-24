@@ -98,6 +98,14 @@ export function handleToTable(csvData: any): {
                     tableHeader.account_type,
                     ALIPAY
                 )  
+                // 获取statusLIst 所有status
+                let statusList = tableData.map((item) => {
+                    return item.status
+                })
+                // 去重复   
+                let statusSet = new Set(statusList)
+                console.log(statusSet, 'statusSet')
+                
                 console.log(tableData, 'tableDatamobile');
                 
                 // 

@@ -25,10 +25,11 @@ import {
   tag_type,
 } from 'src/UI/const/web'
 import useLoadingButton from 'src/UI/components/useButton'
-import { roundToTwoDecimalPlaces } from 'src/UI/components/utils'
+import { roundToTwoDecimalPlaces, formatMoney } from 'src/UI/components/utils'
 import { DeleteOutlined } from '@ant-design/icons'
 import UploadModal from './uploadModal'
 import dayjs from 'dayjs'
+import { log } from 'node:console'
 export interface DataType {
   id: string
   amount: string
@@ -229,6 +230,7 @@ const BasicTable = (props: {
     } else {
       setStep(2)
       setModalVisible(false)
+      step3()
     }
     console.log(hasJingdong, hasPdd, 'hasJingdong, hasPdd');
     
@@ -237,13 +239,48 @@ const BasicTable = (props: {
       hasPdd,
     })
   }
+  // 根据用户规则分类
+  const ruleByUser = async(arr) => {
+    const rules = await window.mercury.api.getAllMatchRule()
+    
+    return arr.map((obj, index) => {
+      // Get the text to match against (description or payee)
+      const matchText = `${obj.description || ''} ${obj.payee || ''}`.trim()
+      
+      // Find the first matching rule
+      const matchingRule = rules.find(element => {
+        const reg = new RegExp(element.rule)
+        return reg.test(matchText)
+      })
+
+      // If a rule matches, update the category and notify
+      if (matchingRule) {
+        message.info(`修改第${index + 1}条数据`)
+        return {
+          ...obj,
+          category: matchingRule.category
+        }
+      }
+
+      return obj
+    })
+  }
+  const step3 = async() => {
+    // 根据用户规则分类
+    // 根据ai 分类
+    // 根据规则分类
+    const newData = await ruleByUser(data)
+
+    setData(newData)
+    
+  }
   const submit = async () => {
     // 判断 描述中是否包含京东-订单编号
     if(step === 1) {
       step2()
     } else if (step === 2) {
       // 分类
-      setStep(3)
+      step3()
     }
   }
   const tableSummary = (pageData: any) => {
@@ -261,11 +298,11 @@ const BasicTable = (props: {
         <Table.Summary.Row>
           <Table.Summary.Cell index={0}>支出</Table.Summary.Cell>
           <Table.Summary.Cell index={1}>
-            <a>{roundToTwoDecimalPlaces(totalCost)}</a>
+            <a>{formatMoney(totalCost)}</a>
           </Table.Summary.Cell>
           <Table.Summary.Cell index={2}>收入</Table.Summary.Cell>
           <Table.Summary.Cell index={3}>
-            <a>{roundToTwoDecimalPlaces(totalIncome)}</a>
+            <a>{formatMoney(totalIncome)}</a>
           </Table.Summary.Cell>
         </Table.Summary.Row>
       </>
@@ -299,13 +336,13 @@ const BasicTable = (props: {
             <span style={{ fontSize: '24px', marginRight: '12px' }}>
               支出：
               <Typography.Text type="danger">
-                {tableHeader.titleCost}
+                {formatMoney(tableHeader.titleCost)}元
               </Typography.Text>
             </span>
             <span style={{ fontSize: '24px' }}>
               收入：
               <Typography.Text type="success">
-                {tableHeader?.titleIncome}
+                {formatMoney(tableHeader?.titleIncome)}元
               </Typography.Text>
             </span>
             
