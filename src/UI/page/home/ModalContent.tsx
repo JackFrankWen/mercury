@@ -1,0 +1,170 @@
+import { message, Table, Tag, Tooltip, Typography } from 'antd'
+import type { TableRowSelection } from 'antd'
+import React, { useState } from 'react'
+import dayjs from 'dayjs'
+import { SelectionFooter } from 'src/UI/components/SelectionFooter'
+import { I_Transaction } from 'src/sqlite3/transactions'
+import { tag_type } from '../../const/web'
+import { formatMoney } from '../../components/utils'
+
+const modalTableCol = [
+    {
+      title: '交易时间',
+      width: 200,
+      dataIndex: 'trans_time',
+      key: 'trans_time',
+      render: (val: string) => {
+        return dayjs(val).format('YYYY-MM-DD HH:mm:ss')
+      },
+    },
+    {
+      title: '交易对象',
+      dataIndex: 'payee',
+      width: 120,
+      ellipsis: true,
+      render: (val: string) => (
+        <Tooltip placement="topLeft" title={val}>
+          {val}
+        </Tooltip>
+      ),
+    },
+  
+    {
+      title: '交易描述',
+      dataIndex: 'description',
+      ellipsis: true,
+      render: (description: string) => (
+        <Tooltip placement="topLeft" title={description}>
+          {description}
+        </Tooltip>
+      ),
+    },
+    {
+      title: '金额',
+      dataIndex: 'amount',
+      width: 80,
+      render: (txt: string) => {
+        if (Number(txt) > 100) {
+          return <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>
+        }
+        return formatMoney(txt)
+      },
+    },
+    {
+      title: '消费对象',
+      width: 80,
+      dataIndex: 'consumer',
+      key: 'consumer',
+      render: (val: number) => {
+        const consumer_type = {
+          1: '老公',
+          2: '老婆',
+          3: '家庭',
+          4: '牧牧',
+          5: '爷爷奶奶',
+          6: '溪溪',
+        }
+        if (val === 1) {
+          return <Tag color="cyan">{consumer_type[val]}</Tag>
+        } else if (val === 2) {
+          return <Tag color="magenta">{consumer_type[val]}</Tag>
+        } else if (val === 3) {
+          return <Tag color="geekblue">{consumer_type[val]}</Tag>
+        } else if (val === 4) {
+          return <Tag color="purple">{consumer_type[val]}</Tag>
+        } else if (val === 5) {
+          return <Tag color="lime">{consumer_type[val]}</Tag>
+        } else if (val === 6) {
+          return <Tag color="orange">{consumer_type[val]}</Tag>
+        }
+        return <Tag color="orange">{consumer_type[val]}</Tag>
+      },
+    },
+  
+    {
+      title: '标签',
+      dataIndex: 'tag',
+      width: 90,
+      render: (val: number) => (val ? tag_type[val] : ''),
+    },
+  ]
+
+interface ModalContentProps {
+  modalData: any
+  refresh: () => void
+}
+
+export function ModalContent({ modalData, refresh }: ModalContentProps) {
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+
+  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+    console.log('selectedRowKeys changed: ', newSelectedRowKeys)
+    setSelectedRowKeys(newSelectedRowKeys)
+  }
+
+  const rowSelection: TableRowSelection<I_Transaction> = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  }
+
+  return (
+    <>
+      <div style={{ padding: '8px 0' }}>
+        {selectedRowKeys.length > 0 && (
+          <SelectionFooter
+            onCancel={() => {
+              setSelectedRowKeys([])
+            }}
+            onDelete={() => {
+              window.mercury.api
+                .deleteTransactions(selectedRowKeys as number[])
+                .then(() => {
+                  setSelectedRowKeys([])
+                  message.success('删除成功')
+                  refresh()
+                })
+                .catch((error: any) => {
+                  console.error('删除失败:', error)
+                  message.error('删除失败')
+                })
+            }}
+            onUpdate={(params: Partial<I_Transaction>) => {
+              const obj = {
+                ...params,
+              }
+              if (params.category) {
+                obj.category = JSON.stringify(params.category)
+              }
+              
+              window.mercury.api
+                .updateTransactions(selectedRowKeys as number[], obj)
+                .then(() => {
+                  setSelectedRowKeys([])
+                  message.success('修改成功')
+                  refresh()
+                })
+                .catch((error: any) => {
+                  console.error('修改失败:', error)
+                  message.error('修改失败')
+                })
+            }}
+            selectedCount={selectedRowKeys.length}
+          />
+        )}
+      </div>
+      <Table
+        pagination={{
+          defaultPageSize: 50,
+          pageSizeOptions: [50, 300],
+          showSizeChanger: true,
+        }}
+        rowSelection={rowSelection}
+        rowKey="id"
+        columns={modalTableCol}
+        dataSource={modalData}
+        size="small"
+        scroll={{ y: 400 }}
+      />
+    </>
+  )
+} 
