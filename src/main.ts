@@ -1,7 +1,7 @@
 import { app, BrowserWindow, session} from 'electron';
 import path from 'path';
 import start from 'electron-squirrel-startup'
-import {handleMatchRules} from "./core/process";
+import {handleMatchRules, handleGenerateRule, handleProcessApi} from "./core/process";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
   if (start) {
@@ -45,10 +45,11 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
-
+// 禁用硬件加速 @TODO 需要优化
+app.disableHardwareAcceleration();
 
 app.whenReady().then(()=>{
-    handleMatchRules()
+    handleProcessApi()
 });
 
 app.on('activate', () => {

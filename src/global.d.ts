@@ -14,6 +14,7 @@ declare global {
                     abc_type?: number,
                     cost_type?: number
                 }) => Promise<any>;
+                generateRule: (pp?:Pick<Params_Transaction, 'trans_time'>) => Promise<any>;
                 updateMatchRule: ( id: number,rule: {
                     category: string,
                     rule: string,

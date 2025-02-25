@@ -26,6 +26,8 @@ contextBridge.exposeInMainWorld('mercury', {
             abc_type?: number,
             cost_type?: number
         }) => ipcRenderer.invoke('match-rules:update', id, rule),
+        //生成规则
+        generateRule: (pp:Pick<Params_Transaction, 'trans_time'>) => ipcRenderer.invoke('match-rules:generate', pp),
         // 删除匹配规则
         deleteMatchRule: (id: number) => ipcRenderer.invoke('match-rules:delete', id),
         // 根据条件获取所有交易
@@ -53,6 +55,7 @@ contextBridge.exposeInMainWorld('mercury', {
             trans_time?: string;
         }) => ipcRenderer.invoke('transactions:insert', transaction),
     },
+    
 
     crawler: (param: {
         web: 'pinduoduo'

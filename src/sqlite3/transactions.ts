@@ -15,8 +15,8 @@ export interface I_Transaction {
     abc_type: string
     cost_type: string
     trans_time: Date
-    createdAt: Date
-    updatedAt: Date
+    creation_time: Date
+    modification_time: Date
   }
 // 获取所有交易 根据preload.ts 的getTransactions
 export const getAllTransactions = async (params: Params_Transaction): Promise<I_Transaction[]> => {
@@ -27,62 +27,62 @@ export const getAllTransactions = async (params: Params_Transaction): Promise<I_
     // 添加调试日志查看输入参数
     console.log('Search params:', params)
 
-    if (params.is_unclassified) {
+    if (params?.is_unclassified) {
       conditions.push('(category IS NULL OR category = "" OR category = "[100000,100003]")')
     }
 
-    if (params.description) {
+    if (params?.description) {
       // description 或者payee 包含params.description
       conditions.push(`description LIKE '%${params.description}%' OR payee LIKE '%${params.description}%'`)
     }
 
-    if (params.consumer) {
+    if (params?.consumer) {
       conditions.push(`consumer LIKE '%${params.consumer}%'`)
     }
 
-    if (params.min_money !== undefined || params.max_money !== undefined) {
-      if (params.min_money !== undefined && params.max_money !== undefined) {
+    if (params?.min_money !== undefined || params?.max_money !== undefined) {
+      if (params?.min_money !== undefined && params?.max_money !== undefined) {
         conditions.push(`amount BETWEEN ${params.min_money} AND ${params.max_money}`)
-      } else if (params.min_money !== undefined) {
+      } else if (params?.min_money !== undefined) {
         conditions.push(`amount >= ${params.min_money}`)
-      } else if (params.max_money !== undefined) {
+      } else if (params?.max_money !== undefined) {
         conditions.push(`amount <= ${params.max_money}`)
       }
     }
 
-    if (params.trans_time && params.trans_time[0] && params.trans_time[1]) {
+    if (params?.trans_time && params?.trans_time[0] && params?.trans_time[1]) {
       conditions.push(`trans_time BETWEEN '${params.trans_time[0]}' AND '${params.trans_time[1]}'`)
     }
 
-    if (params.createdAt && params.createdAt[0] && params.createdAt[1]) {
-      conditions.push(`creation_time BETWEEN '${params.createdAt[0]}' AND '${params.createdAt[1]}'`)
+    if (params?.creation_time && params?.creation_time[0] && params?.creation_time[1]) {
+      conditions.push(`creation_time BETWEEN '${params.creation_time[0]}' AND '${params.creation_time[1]}'`)
     }
 
-    if (params.updatedAt && params.updatedAt[0] && params.updatedAt[1]) {
-      conditions.push(`modification_time BETWEEN '${params.updatedAt[0]}' AND '${params.updatedAt[1]}'`)
+    if (params?.modification_time && params?.modification_time[0] && params?.modification_time[1]) {
+      conditions.push(`modification_time BETWEEN '${params.modification_time[0]}' AND '${params.modification_time[1]}'`)
     }
 
-    if (params.account_type) {
+    if (params?.account_type) {
       conditions.push(`account_type = '${params.account_type}'`)
     }
 
-    if (params.payment_type) {
+    if (params?.payment_type) {
       conditions.push(`payment_type = '${params.payment_type}'`)
     }
 
-    if (params.tag) {
+    if (params?.tag) {
       conditions.push(`tag = '${params.tag}'`)
     }
 
-    if (params.abc_type) {
+    if (params?.abc_type) {
       conditions.push(`abc_type = '${params.abc_type}'`)
     }
 
-    if (params.cost_type) {
+    if (params?.cost_type) {
       conditions.push(`cost_type = '${params.cost_type}'`)
     }
     // category 
-    if (params.category) {
+    if (params?.category) {
       conditions.push(`category = '${params.category}'`)
     }
 
