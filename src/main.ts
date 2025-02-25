@@ -1,4 +1,4 @@
-import { app, BrowserWindow, session} from 'electron';
+import { app, BrowserWindow, session, Menu} from 'electron';
 import path from 'path';
 import start from 'electron-squirrel-startup'
 import {handleMatchRules, handleGenerateRule, handleProcessApi} from "./core/process";
@@ -19,6 +19,10 @@ const createWindow = () => {
       preload: path.join(__dirname, 'preload.js'),
      },
   });
+
+  // 移除菜单栏 window
+  mainWindow.removeMenu();
+  Menu.setApplicationMenu(null);
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
