@@ -16,7 +16,7 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
-    "create-table": "node src/sqlite3/script/create-table.js",
+    "create": "node src/sqlite3/script/create-table.js",
     "import-rules": "node src/sqlite3/script/import-rules.js",
     "import-trans": "node src/sqlite3/script/import-trans.js",
     "remove": "node src/sqlite3/script/del-all-trans.js",

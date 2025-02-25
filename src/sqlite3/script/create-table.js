@@ -1,6 +1,6 @@
 /* eslint-disable */
 const path = require('path');
-const { createRuleTable, createTransactionTable, checkTableExists, db } = require('./import-table');
+const { createRuleTable, createTransactionTable, checkTableExists, db, createRuleAutoTable } = require('./import-table');
 /* eslint-enable */
 
 async function main() {
@@ -21,6 +21,14 @@ async function main() {
             console.log('交易表创建成功');
         } else {
             console.log('交易表已存在');
+        }
+        // 检查规则表是否存在
+        const autoRuleTableExists = await checkTableExists('match_rules_auto');
+        if (!autoRuleTableExists) {
+            await createRuleAutoTable();
+            console.log('自动规则表创建成功');
+        } else {
+            console.log('自动规则表已存在');
         }
 
         console.log('所有表创建完成！');

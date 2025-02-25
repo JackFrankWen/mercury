@@ -1,6 +1,7 @@
 /* eslint-disable */
 const sqlite3 = require('sqlite3');
 const path = require('path');
+const { create } = require('domain');
 /* eslint-enable */
 
 // 连接到SQLite数据库
@@ -11,8 +12,27 @@ const db = new sqlite3.Database(path.join(__dirname, '../../../data/database.db'
         console.log('Database connected and created if not exists');
     }
 });
-
-// 创建规则表
+// 创建规则表 自动
+function createRuleAutoTable () {
+    const sql = `
+    CREATE TABLE IF NOT EXISTS "match_rules_auto" (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        payee TEXT,
+        category TEXT,
+        description TEXT, 
+        account_type TEXT,
+        payment_type TEXT,
+        consumer TEXT,
+        tag TEXT,
+        abc_type TEXT,
+        cost_type TEXT,
+        creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+        modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+`;
+return executeSQL(sql); 
+}
+// 创建规则表 手动添加
 function createRuleTable() {
     /*
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -93,5 +113,6 @@ module.exports = {
     db,
     createRuleTable,
     createTransactionTable,
+    createRuleAutoTable,
     checkTableExists
 };
