@@ -19,7 +19,7 @@ const UploadModal = (props: {
     const uploadProps: UploadProps = {
         name: 'file',
         fileList: fileList,
-        className: 'upload-cus',
+        className: 'upload-cus mt8',
         beforeUpload: (file) => {
             Papa.parse(file, {
                 header: false,
@@ -78,7 +78,7 @@ const UploadModal = (props: {
         onOk={handleOk}
         okText="开始AI分类"
     >
-        <div>
+        <div className="mb8">
             {
                 needTransferData.hasJingdong && (
                     <Alert message="需要上传京东交易记录" type="warning" />

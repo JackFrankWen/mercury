@@ -39,7 +39,7 @@ function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
   };
 
   return (
-    <div className="upload-wrap">
+    <div className="upload-wrap mt8">
       <Dragger {...uploadProps}>
         <div className="upload-cus-container">
           {/* <div className="upload-cus-icon">

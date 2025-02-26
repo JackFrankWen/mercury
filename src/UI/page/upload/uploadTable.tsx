@@ -29,6 +29,7 @@ import { roundToTwoDecimalPlaces, formatMoney } from 'src/UI/components/utils'
 import { DeleteOutlined } from '@ant-design/icons'
 import UploadModal from './uploadModal'
 import dayjs from 'dayjs'
+import { l } from 'vite/dist/node/types.d-aGj9QkWt'
 
 function checkNeedTransferData(data: any) {
   const hasJingdong = data.some((obj: any) => obj.payee?.includes('京东') && obj.description?.includes('京东-订单编号'))
@@ -80,25 +81,26 @@ const BasicTable = (props: {
   tableHeader: tableHeaderI
   onCancel: () => void
   onSubmitSuccess: (arr: any) => void
+  step: number
+  setStep: (step: number) => void
 }) => {
-  const { tableData, tableHeader, onCancel, onSubmitSuccess } = props
+  const { tableData, tableHeader, onCancel, onSubmitSuccess, step, setStep } = props
   const [form] = Form.useForm()
   const [data, setData] = useState(tableData)
   const [LoadingBtn, setBtnLoading, setLoadingFalse] = useLoadingButton()
   const [modalVisible, setModalVisible] = useState(false)
-  const [step, setStep] = useState(1)
-  // const [needTransferData, setNeedTransferData] = useState({
-  //   hasJingdong: false,
-  //   hasPdd: false,
-  // })
+
   // 写一个方法缓存needTransferData，根据data
   const needTransferData = useMemo(() => {
-    const {hasJingdong, hasPdd} = checkNeedTransferData(data)
+    const { hasJingdong, hasPdd } = checkNeedTransferData(data)
     return {
       hasJingdong,
       hasPdd,
     }
   }, [data])
+  useEffect(() => {
+    goStep2(needTransferData)
+  }, [needTransferData])
   const edit = (record: DataType) => {
     form.setFieldsValue({ name: '', age: '', address: '', ...record })
   }
@@ -107,7 +109,7 @@ const BasicTable = (props: {
     setData(newData)
   }
 
-  
+
 
   const columns = [
     {
@@ -127,7 +129,7 @@ const BasicTable = (props: {
     {
       title: '金额',
       dataIndex: 'amount',
-      
+
       render: (val: string, { flow_type }: { flow_type: number }) => {
         if (!val) return ''
         if (!flow_type) return 'flow_type 为空'
@@ -135,7 +137,7 @@ const BasicTable = (props: {
         if (/[\u4e00-\u9fa5]/.test(val)) {
           return <Typography.Text type="warning">这条数据有问题</Typography.Text>
         }
-        const child =  flow_type === 1 ? '支：' : '收：'
+        const child = flow_type === 1 ? '支：' : '收：'
         const type = flow_type === 1 ? 'danger' : 'success'
         return <Space>
           <Typography.Text type={type}>{child} ¥{val}</Typography.Text>
@@ -151,7 +153,7 @@ const BasicTable = (props: {
       width: 120,
       defaultCheck: false,
       render: (val: string) => {
-        return  getCategoryString(val) 
+        return getCategoryString(val)
       },
     },
     {
@@ -199,7 +201,7 @@ const BasicTable = (props: {
         }
       },
     },
-   
+
     {
       title: '账户',
       dataIndex: 'account_type',
@@ -228,29 +230,25 @@ const BasicTable = (props: {
       },
     },
   ]
+  
 
-  const goStep2 = ({hasJingdong, hasPdd}: {hasJingdong: boolean, hasPdd: boolean}) => {
-    if (hasJingdong) {
-      setModalVisible(true)
-    } else if (hasPdd) {
+  const goStep2 = ({ hasJingdong, hasPdd }: { hasJingdong: boolean, hasPdd: boolean }) => {
+    if (!hasJingdong && !hasPdd && step === 2) {
       // 替换为京东-订单编号
+      setStep(3)
+    } else if (step === 2) {
       setModalVisible(true)
-    } else {
-      setStep(2)
-      setModalVisible(false)
-      goStep3()
     }
-    console.log(hasJingdong, hasPdd, 'hasJingdong, hasPdd');
-    
+
   }
   // 根据用户规则分类
-  const ruleByUser = async(arr) => {
+  const ruleByUser = async (arr) => {
     const rules = await window.mercury.api.getAllMatchRule()
-    
+
     return arr.map((obj, index) => {
       // Get the text to match against (description or payee)
       const matchText = `${obj.description || ''} ${obj.payee || ''}`.trim()
-      
+
       // Find the first matching rule
       const matchingRule = rules.find(element => {
         const reg = new RegExp(element.rule)
@@ -269,25 +267,34 @@ const BasicTable = (props: {
       return obj
     })
   }
-  const goStep3 = async() => {
+  const goStep3 = async () => {
     // 根据用户规则分类
     // 根据ai 分类
     // 根据规则分类
-    const newData = await ruleByUser(data)
+    try {
+      const newData = await ruleByUser(data)
+      setData(newData)
+      setStep(4)
+      console.log(step, 'step aaaa====');
+      
+      setLoadingFalse()
+    } catch (error) {
+      message.error('分类失败')
+    }
 
-    setData(newData)
-    setStep(3)
-    setLoadingFalse()
-    
+
   }
   const submit = async () => {
     // 判断 描述中是否包含京东-订单编号
-    if(step === 1) {
+    console.log(step, 'step====');
+    
+    if (step === 2) {
       goStep2(needTransferData)
-    } else if (step === 2) {
-      // 分类
-      goStep3()
     } else if (step === 3) {
+      
+      // 分类
+      await goStep3()
+    } else if (step === 4) {
       // 上传
       onSubmitSuccess(data)
     }
@@ -317,107 +324,87 @@ const BasicTable = (props: {
       </>
     )
   }
+  console.log(step, 'step====');
   return (
     <div>
-      <Card bordered={false}>
-        <Row>
-          <Steps
-            current={step}
-             items={[
-              {
-                title: '上传',
-                description: '上传账单',
-              },
-              {
-                title: '替换',
-                description: '替换订单编号',
-              },
-              {
-                title: '分类',
-                description: 'ai自动分类',
-              },
-            ]}
-          />
-        </Row>
 
-        <Row align="middle" justify="center">
-          <Col span={24} style={{ textAlign: 'center' }}>
-            <span style={{ fontSize: '24px', marginRight: '12px' }}>
-              支出：
-              <Typography.Text type="danger">
-                {formatMoney(tableHeader.titleCost)}元
-              </Typography.Text>
-            </span>
-            <span style={{ fontSize: '24px' }}>
-              收入：
-              <Typography.Text type="success">
-                {formatMoney(tableHeader?.titleIncome)}元
-              </Typography.Text>
-            </span>
-            
-          </Col>
-          <Col span={24} style={{ textAlign: 'center' }}>
-            
-            
-            <span style={{ marginRight: '12px' }}>
-              <Typography.Text type="secondary">
-                {tableHeader.titleCostLabel}
-              </Typography.Text>
-            </span>
-            <span  >
-              <Typography.Text type="secondary">
-                {tableHeader.titleIncomeLabel}
-              </Typography.Text>
-            </span>
-          </Col>
-        </Row>
+      <Row align="middle" justify="center">
+        <Col span={24} style={{ textAlign: 'center' }}>
+          <span style={{ fontSize: '24px', marginRight: '12px' }}>
+            支出：
+            <Typography.Text type="danger">
+              {formatMoney(tableHeader.titleCost)}元
+            </Typography.Text>
+          </span>
+          <span style={{ fontSize: '24px' }}>
+            收入：
+            <Typography.Text type="success">
+              {formatMoney(tableHeader?.titleIncome)}元
+            </Typography.Text>
+          </span>
 
-        <Form form={form} component={false}>
-          <Table
-            rowKey="id"
-            onRow={(record) => {
-              return {
-                onDoubleClick: () => edit(record),
-              }
-            }}
-            rowClassName={(record) => {
+        </Col>
+        <Col span={24} style={{ textAlign: 'center' }}>
 
-              // 金额如果包含中文，则返回警告 
-              if (/[\u4e00-\u9fa5]/.test(record.amount)) {
-                return 'mercury-warning'
-              }
-              return ''
-            }}
-            dataSource={data}
-            size="small"
-            columns={columns}
-            summary={tableSummary}
-            scroll={{ x: 1200, y: 300 }}
-            pagination={false}
 
-          />
-        </Form>
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: '10px' }}
-        >
-          <Space>
-            <span style={{ fontSize: '12px' }}>{tableHeader?.fileName}</span>
-            <span style={{ fontSize: '12px' }}>账号:{tableHeader?.name}</span>
-            <span style={{ fontSize: '12px' }}>{tableHeader?.date}</span>
-          </Space>
-          <Space>
-            <Button onClick={onCancel}>取消</Button>
-            <LoadingBtn type="primary" onClick={submit}>
-              {
-                step !== 3 ? '下一步' : '提交'
-              }
-            </LoadingBtn>
+          <span style={{ marginRight: '12px' }}>
+            <Typography.Text type="secondary">
+              {tableHeader.titleCostLabel}
+            </Typography.Text>
+          </span>
+          <span  >
+            <Typography.Text type="secondary">
+              {tableHeader.titleIncomeLabel}
+            </Typography.Text>
+          </span>
+        </Col>
+      </Row>
 
-          </Space>
-        </Row>
-      </Card>
+      <Form form={form} component={false}>
+        <Table
+          rowKey="id"
+          onRow={(record) => {
+            return {
+              onDoubleClick: () => edit(record),
+            }
+          }}
+          rowClassName={(record) => {
+
+            // 金额如果包含中文，则返回警告 
+            if (/[\u4e00-\u9fa5]/.test(record.amount)) {
+              return 'mercury-warning'
+            }
+            return ''
+          }}
+          dataSource={data}
+          size="small"
+          columns={columns}
+          summary={tableSummary}
+          scroll={{ x: 1200, y: 300 }}
+          pagination={false}
+
+        />
+      </Form>
+      <Row
+        justify="space-between"
+        align="middle"
+        style={{ marginBottom: '10px' }}
+      >
+        <Space>
+          <span style={{ fontSize: '12px' }}>{tableHeader?.fileName}</span>
+          <span style={{ fontSize: '12px' }}>账号:{tableHeader?.name}</span>
+          <span style={{ fontSize: '12px' }}>{tableHeader?.date}</span>
+        </Space>
+        <Space>
+          <Button onClick={onCancel}>取消</Button>
+          <LoadingBtn type="primary" onClick={submit}>
+            {
+              step !== 4 ? '下一步' : '提交'
+            }
+          </LoadingBtn>
+
+        </Space>
+      </Row>
       {
         modalVisible && (
           <UploadModal
@@ -426,7 +413,7 @@ const BasicTable = (props: {
               setModalVisible(false)
               setLoadingFalse()
             }}
-            goStep3={()=>{
+            goStep3={() => {
               setModalVisible(false)
               goStep3()
             }}
@@ -446,7 +433,7 @@ const BasicTable = (props: {
                   const timeFormat = type === 'jd' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm';
                   const isSameTime = dayjs(obj.trans_time).format(timeFormat) === dayjs(item.trans_time).format(timeFormat);
                   const isSameAmount = Math.round(Number(obj.amount)) === Math.round(Number(item.amount))
-                  
+
                   return isSameTime && isSameAmount;
                 });
 
@@ -460,7 +447,7 @@ const BasicTable = (props: {
 
                 return obj;
               });
-              
+
 
               setData(newData);
               setModalVisible(false);

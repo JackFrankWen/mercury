@@ -1,7 +1,11 @@
 import { Button, ButtonProps } from 'antd'
 import React from 'react'
 
-export default function useLoadingButton() {
+export default function useLoadingButton() :[
+  (props: ButtonProps) => React.ReactNode,
+  () => void,
+  () => void
+] {
   const [loading, setLoading] = React.useState<boolean>(false)
   const setLoadingFalse = () => setLoading(false)
   const setBtnLoading = () => setLoading(true)
