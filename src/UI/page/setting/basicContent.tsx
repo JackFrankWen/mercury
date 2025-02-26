@@ -4,6 +4,7 @@ import React from 'react';
 function BasicContent() {
     return (
         <Form
+            style={{height: '100%'}}
             layout="vertical"
         >
             <Form.Item label="运行环境" name="requiredMarkValue">

@@ -42,6 +42,9 @@ function App(props: any): JSX.Element {
                 components: {
                     Menu: {
                         iconSize: 16,
+                        activeBarBorderWidth: 0,
+                        itemBorderRadius: 10,
+                        itemMarginInline:2,
                     },
                     Layout: {
                     },
@@ -51,16 +54,14 @@ function App(props: any): JSX.Element {
             }}
         >
             <Layout
-                style={{
-                    height: '100vh',
-                }}>
-
+                className="mercury-layout"
+                >
                 <Sider
                     theme="light"
                     collapsed={true}
                     className="mercury-sider"
-                    collapsedWidth={60}
-                >
+                    collapsedWidth={70}
+                > 
                     <Menu
                     mode="vertical"
                     onClick={({key})=>{
@@ -72,7 +73,7 @@ function App(props: any): JSX.Element {
                 />
                 </Sider>
 
-                <Content className="mercury-content" style={{ height: '100%' }}>
+                <Content className="mercury-content">
                     <AliveScope>
                         {
                             activeKey === 'home' && <KeepAlive>

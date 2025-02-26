@@ -6,7 +6,7 @@ import GenerateContent from "./generateContent";
 import './index.css'
 function Setting(): JSX.Element {
     return (
-        <div className="setting-page" style={{height: '100vh', overflow: 'hidden'}}>
+        <div className="setting-page">
             <Card style={{height: '100%'}}>
                 <Tabs
                     defaultActiveKey="1"
