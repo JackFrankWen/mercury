@@ -4,7 +4,6 @@ import {
     addMatchRule,
     updateMatchRule,
     deleteMatchRule,
-    generateRule
 } from "../sqlite3/match-rules";
 import {
     getAllTransactions,
@@ -15,6 +14,8 @@ import {
     insertTransaction
 } from "../sqlite3/transactions";
 import { transferCategory, sortByValue } from "./controller/transController";
+import { generateRule } from "./controller/matchAutoRulesController";
+import { batchInsertAutoRule, getAllMatchAutoRules, deleteMatchAutoRule } from "../sqlite3/match-auto-rules";
 
 
 export function handleProcessApi() {
@@ -126,9 +127,43 @@ export function handleProcessApi() {
     });
 
     ipcMain.handle('match-rules:generate', async (event, params) => {
-        console.log(params, 'params--------')
-        return await generateRule(params);
+        try {
+            const result = await generateRule(params);
+            return result;
+        } catch (error) {
+            console.error('Error generating rule:', error);
+            throw error;
+        }
     });
 
+    ipcMain.handle('match-rules:batchInsertAuto', async (event, list) => {
+        try {
+            await batchInsertAutoRule(list);
+            return { code: 200 }
+        } catch (error) {
+            console.error('Error batch inserting auto rules:', error);
+            throw error;
+        }
+    });
+
+    ipcMain.handle('match-rules:getAllAuto', async () => {
+        try {
+            const rules = await getAllMatchAutoRules();
+            return rules;
+        } catch (error) {
+            console.error('Error getting match rules:', error);
+            throw error;
+        }
+    });
+
+    ipcMain.handle('match-rules:deleteAuto', async (event, id) => {
+        try {
+            await deleteMatchAutoRule(id);
+            return { code: 200 }
+        } catch (error) {
+            console.error('Error deleting auto rules:', error);
+            throw error;
+        }
+    });
 
 }

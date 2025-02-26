@@ -3,7 +3,7 @@
 
 import { contextBridge, ipcRenderer } from 'electron';
 import { Params_Transaction } from './global';
-
+import { MatchRule } from './sqlite3/match-rules';
 contextBridge.exposeInMainWorld('mercury', {
     api: {
         // 获取所有匹配规则
@@ -26,6 +26,12 @@ contextBridge.exposeInMainWorld('mercury', {
             abc_type?: number,
             cost_type?: number
         }) => ipcRenderer.invoke('match-rules:update', id, rule),
+        // 批量插入自动规则
+        batchInsertAutoRule: (list: MatchRule[]) => ipcRenderer.invoke('match-rules:batchInsertAuto', list),
+        // 获取所有自动规则
+        getAllMatchAutoRule: () => ipcRenderer.invoke('match-rules:getAllAuto'),
+        // 删除自动规则
+        deleteMatchAutoRule: (id: number) => ipcRenderer.invoke('match-rules:deleteAuto', id),
         //生成规则
         generateRule: (pp:Pick<Params_Transaction, 'trans_time'>) => ipcRenderer.invoke('match-rules:generate', pp),
         // 删除匹配规则

@@ -5,7 +5,15 @@ declare global {
     interface Window {
         mercury: {
             api: {
+                // 批量插入自动规则
+                batchInsertAutoRule: (list: MatchRule[]) => Promise<any>;
+                // 获取所有自动规则
+                getAllMatchAutoRule: () => Promise<MatchRule[]>;
+                // 删除自动规则
+                deleteMatchAutoRule: (id: number) => Promise<any>;
+                // 获取所有匹配规则
                 getALlMatchRule: () => Promise<MatchRule[]>;
+                // 添加匹配规则
                 addMatchRule: (rule: {
                     category: string,
                     rule: string,
@@ -14,7 +22,9 @@ declare global {
                     abc_type?: number,
                     cost_type?: number
                 }) => Promise<any>;
+                // 生成规则
                 generateRule: (pp?:Pick<Params_Transaction, 'trans_time'>) => Promise<any>;
+                // 更新匹配规则
                 updateMatchRule: ( id: number,rule: {
                     category: string,
                     rule: string,
@@ -23,11 +33,17 @@ declare global {
                     abc_type?: number,
                     cost_type?: number
                 }) => Promise<any>;
+                // 删除匹配规则
                 deleteMatchRule: (id: number) => Promise<any>;
+                // 获取所有交易
                 getTransactions: (params:Params_Transaction) => Promise<any>;
+                // 删除交易
                 deleteTransactions: (ids: number[]) => Promise<any>;
+                // 更新交易
                 updateTransactions: (ids: number[], params: Partial<Params_Transaction>) => Promise<any>;
+                // 批量插入交易
                 batchInsertTransactions: (list: Params_Transaction[]) => Promise<any>;
+                // 插入交易
                 insertTransaction: (transaction: {
                     amount: number;
                     category?: string;
