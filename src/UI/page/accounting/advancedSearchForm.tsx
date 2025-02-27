@@ -60,7 +60,8 @@ export const AdvancedSearchForm = (props: {
                 </Col>
                 {
                     expand && (
-                        <Col span={8}>
+                        <>
+                            <Col span={8}>
 
                             <Form.Item
                                 name={`creation_time`}
@@ -69,6 +70,15 @@ export const AdvancedSearchForm = (props: {
                                 <RangePickerWrap bordered placeholder="placeholder"/>
                             </Form.Item>
                         </Col>
+                        <Col span={8}>
+                            <Form.Item
+                                name={`modify_time`}
+                                label="修改时间"
+                            >
+                                <RangePickerWrap bordered placeholder="placeholder"/>
+                            </Form.Item>
+                        </Col>
+                        </>
                     )
 
                 }
@@ -183,7 +193,7 @@ export const AdvancedSearchForm = (props: {
                                 setExpand(!expand);
                             }}
                         >
-                            <DownOutlined rotate={expand ? 180 : 0}/> Collapse
+                            {expand ? '收起' : '展开'}<DownOutlined rotate={expand ? 180 : 0}/> 
                         </a>
                     </Space>
                 </Col>

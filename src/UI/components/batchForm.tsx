@@ -37,8 +37,16 @@ const BatchUpdateArea = (props: {
         
       <Form.Item name="category" className='no-margin'>
         <Cascader
-          style={{ minWidth: '130px' }}
+          style={{ minWidth: '100px' }}
           options={category_type}
+          displayRender={(label:string []) => {
+            
+            if (label.length === 0) {
+              return ''
+            }
+            
+            return label[label.length - 1]
+          }}  
           showSearch={{
             filter: (inputValue: string, path: DefaultOptionType[]) =>
               path.some(

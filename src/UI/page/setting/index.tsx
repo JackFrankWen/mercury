@@ -7,8 +7,9 @@ import './index.css'
 function Setting(): JSX.Element {
     return (
         <div className="setting-page">
-            <Card style={{height: '100%'}}>
+            <Card size="small">
                 <Tabs
+                    size="small"
                     defaultActiveKey="1"
                     tabPosition="left"
                     className="setting-tabs"

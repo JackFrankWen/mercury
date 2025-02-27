@@ -242,7 +242,7 @@ const modalTableCol = [
         columns={modalTableCol}
         dataSource={modalData}
         size="small"
-        scroll={{ y: 400 }}
+        scroll={{ y: 'calc(100vh - 400px)' }}
       />
     </>
   )

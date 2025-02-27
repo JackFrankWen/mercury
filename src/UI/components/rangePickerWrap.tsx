@@ -45,7 +45,15 @@ function getFirstDayAndLastDayOfQuarter(quarter: number) {
         .endOf('month')
     
     return [firstDayOfQuarter, lastDayOfQuarter]
-}   
+} 
+// 获取过去10年的第一天和 今年最后一天
+function getFirstDayAndLastDayOfLastTenYear() {
+    const now = dayjs()
+    const lastTenYear = now.subtract(10, 'year')
+    const firstDayOfLastTenYear = lastTenYear.startOf('year')
+    const lastDayOfLastTenYear = now.endOf('year')
+    return [firstDayOfLastTenYear, lastDayOfLastTenYear]
+}
 const RangePickerWrap = (props: {
     placeholder?: string
     bordered?: boolean
@@ -72,6 +80,8 @@ const RangePickerWrap = (props: {
         const curQuarter = getFirstDayAndLastDayOfQuarter(0)
         const lastQuarter = getFirstDayAndLastDayOfQuarter(1)
         const lastTwoQuarter = getFirstDayAndLastDayOfQuarter(2)
+        // 过去10年
+        const lastTenYear = getFirstDayAndLastDayOfLastTenYear()
         return (
             <Space>
                 <a onClick={() => setClickDate(curMonth)}>当月</a>
@@ -83,7 +93,8 @@ const RangePickerWrap = (props: {
                 <a onClick={() => setClickDate(curQuarter)}>当前季度</a>
                 <a onClick={() => setClickDate(lastQuarter)}>上季度</a>
                 <a onClick={() => setClickDate(lastTwoQuarter)}>上上季度</a>
-            </Space>
+                <a onClick={() => setClickDate(lastTenYear)}>过去10年</a>
+             </Space>
         )
     }
 

@@ -1,7 +1,7 @@
 export const account_type = {
-    1: '老公钱包',
-    2: '老婆钱包',
-    3: '爷爷钱包',
+    1: '老公账户',
+    2: '老婆账户',
+    3: '爷爷账户',
 }
 export const payment_type = {
     1: '支付宝',
@@ -15,7 +15,7 @@ export const consumer_type = {
     3: '家庭',
     4: '牧牧',
     5: '爷爷奶奶',
-    6: '二宝',
+    6: '溪溪',
 }
 export const tag_type = {
     1: '日常支出',

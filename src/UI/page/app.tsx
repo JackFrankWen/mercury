@@ -48,7 +48,9 @@ function App(props: any): JSX.Element {
                     },
                     Layout: {
                     },
-                   
+                    Card: {
+                        // paddingLG: 12,
+                    },
 
                 },
 

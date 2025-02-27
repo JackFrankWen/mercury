@@ -42,7 +42,7 @@ const RuleTable = () => {
     {
       title: '分类',
       dataIndex: 'category',
-      width: 200,
+      width: 100,
       fixed: 'left',
       render: (val: string) => {
 
@@ -59,7 +59,7 @@ const RuleTable = () => {
       },
     },
     {
-      title: '对象',
+      title: '消费者',
       width: 80,
       dataIndex: 'consumer',
       key: 'consumer',

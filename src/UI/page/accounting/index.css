@@ -9,8 +9,8 @@
     .table-footer {
         position: fixed;
         bottom: 0;
-        width: calc(100% - 80px);
-        left: 80px;
+        width: calc(100% - 70px);
+        left: 70px;
         background: white;
         padding: 16px;
         opacity: 0.9;
