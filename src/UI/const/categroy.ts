@@ -512,7 +512,7 @@ export const category_type = [
   },
   {
     value: 100000,
-    label: '其他杂项',
+    label: '未归类',
     children: [
       {
         value: 100001,

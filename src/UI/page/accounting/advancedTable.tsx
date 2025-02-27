@@ -201,7 +201,7 @@ export function AdvancedTable(props: {
 
             <Table
                 style={{maxHeight: 400, overflow: 'auto'}}
-                
+                size="small"
                 className={'mt8'}
                 rowKey={'id'}
                 columns={columns}

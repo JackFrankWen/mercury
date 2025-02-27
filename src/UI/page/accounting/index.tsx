@@ -27,13 +27,17 @@ function Accounting(): JSX.Element {
         })
     }
     return (
-        <div className='p-accounting' style={{height: '100vh'}}>
-            <Card className='plr8' >
+        <div className='p-accounting'>
+            <Card className='plr8'
+               
+             >
                 <AdvancedSearchForm getTransactions={getTransactions}
                     setFormValue={setFormValue}
                  formValue={formValue}/>
             </Card>
-            <Card className='mt8 plr8'>
+            <Card
+            
+             className='mt8 plr8'>
                 <AdvancedTable data ={transactions}
                 fresh={
                     () => {

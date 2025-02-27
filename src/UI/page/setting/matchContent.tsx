@@ -178,6 +178,7 @@ const RuleTable = () => {
   return (
     <div className="match-content">
       <Table
+        size="middle"
         columns={columns}
         dataSource={ruleData}
         // pagination={{

@@ -31,10 +31,7 @@ html, body, #root {
 .mb8 {
     margin-bottom: 8px;
 }
-.plr8 {
-    padding-left: 8px;
-    padding-right: 8px;
-}
+
 .overflow-scroll {
     overflow: scroll;
 }

@@ -6,10 +6,13 @@ import {
   Input,
   InputNumber,
   message,
+  Modal,
+  notification,
   Popconfirm,
   Row,
   Space,
   Steps,
+  Alert,
   Table,
   Tag,
   Tooltip,
@@ -18,18 +21,15 @@ import {
 import React, { useEffect, useMemo, useState } from 'react'
 import { getCategoryString } from 'src/UI/const/categroy'
 import {
-  abc_type,
   account_type,
-  cost_type,
-  cpt_const,
-  tag_type,
 } from 'src/UI/const/web'
 import useLoadingButton from 'src/UI/components/useButton'
 import { roundToTwoDecimalPlaces, formatMoney } from 'src/UI/components/utils'
 import { DeleteOutlined } from '@ant-design/icons'
 import UploadModal from './uploadModal'
 import dayjs from 'dayjs'
-import { l } from 'vite/dist/node/types.d-aGj9QkWt'
+const { Text, Link } = Typography;
+
 
 function checkNeedTransferData(data: any) {
   const hasJingdong = data.some((obj: any) => obj.payee?.includes('京东') && obj.description?.includes('京东-订单编号'))
@@ -64,7 +64,29 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   index: number
   children: React.ReactNode
 }
-
+function changeCategoryModal(messageList: {
+  index: number,
+  message: string,
+  before: string,
+  after: string
+}[]) {
+  const content = messageList.map(item => {
+    return <div key={item.index}>
+      <span>第{item.index + 1}条：</span>
+      <Text delete style={{ width: '50px' }}>{item.before}</Text>
+      <Text type="success">{item.after}</Text>
+    </div>
+  })
+  Modal.info({
+    style: {
+      overflow: 'auto',
+      maxHeight: '500px',
+    },
+    title: '分类成功',
+    width: 600,
+    content: <Alert message={content} type="success" />,
+  })
+}
 
 export interface tableHeaderI {
   name: string
@@ -85,10 +107,22 @@ const BasicTable = (props: {
   setStep: (step: number) => void
 }) => {
   const { tableData, tableHeader, onCancel, onSubmitSuccess, step, setStep } = props
+  const [api, contextHolder] = notification.useNotification();
+
   const [form] = Form.useForm()
   const [data, setData] = useState(tableData)
   const [LoadingBtn, setBtnLoading, setLoadingFalse] = useLoadingButton()
   const [modalVisible, setModalVisible] = useState(false)
+  const openNotification = (messageList: any) => {
+
+    api.open({
+      message: '替换成功',
+      description: `一共替换${messageList.length}条数据，点击查看`,
+      onClick: () => {
+        changeCategoryModal(messageList)
+      },
+    });
+  }
 
   // 写一个方法缓存needTransferData，根据data
   const needTransferData = useMemo(() => {
@@ -98,6 +132,7 @@ const BasicTable = (props: {
       hasPdd,
     }
   }, [data])
+
   useEffect(() => {
     goStep2(needTransferData)
   }, [needTransferData])
@@ -230,7 +265,8 @@ const BasicTable = (props: {
       },
     },
   ]
-  
+
+
 
   const goStep2 = ({ hasJingdong, hasPdd }: { hasJingdong: boolean, hasPdd: boolean }) => {
     if (!hasJingdong && !hasPdd && step === 2) {
@@ -244,8 +280,9 @@ const BasicTable = (props: {
   // 根据用户规则分类
   const ruleByUser = async (arr) => {
     const rules = await window.mercury.api.getAllMatchRule()
+    let messageList = []
 
-    return arr.map((obj, index) => {
+    const newData = arr.map((obj, index) => {
       // Get the text to match against (description or payee)
       const matchText = `${obj.description || ''} ${obj.payee || ''}`.trim()
 
@@ -257,15 +294,23 @@ const BasicTable = (props: {
 
       // If a rule matches, update the category and notify
       if (matchingRule) {
-        message.info(`修改第${index + 1}条数据`)
+        messageList.push({
+          index,
+          message: `第${index + 1}条`,
+          before: obj.category,
+          after: matchingRule.category
+        })
         return {
           ...obj,
           category: matchingRule.category
         }
       }
 
+
       return obj
     })
+    openNotification(messageList)
+    return newData
   }
   const goStep3 = async () => {
     // 根据用户规则分类
@@ -276,7 +321,7 @@ const BasicTable = (props: {
       setData(newData)
       setStep(4)
       console.log(step, 'step aaaa====');
-      
+
       setLoadingFalse()
     } catch (error) {
       message.error('分类失败')
@@ -287,11 +332,11 @@ const BasicTable = (props: {
   const submit = async () => {
     // 判断 描述中是否包含京东-订单编号
     console.log(step, 'step====');
-    
+
     if (step === 2) {
       goStep2(needTransferData)
     } else if (step === 3) {
-      
+
       // 分类
       await goStep3()
     } else if (step === 4) {
@@ -327,7 +372,7 @@ const BasicTable = (props: {
   console.log(step, 'step====');
   return (
     <div>
-
+      {contextHolder}
       <Row align="middle" justify="center">
         <Col span={24} style={{ textAlign: 'center' }}>
           <span style={{ fontSize: '24px', marginRight: '12px' }}>
@@ -397,6 +442,7 @@ const BasicTable = (props: {
         </Space>
         <Space>
           <Button onClick={onCancel}>取消</Button>
+          
           <LoadingBtn type="primary" onClick={submit}>
             {
               step !== 4 ? '下一步' : '提交'
@@ -409,6 +455,7 @@ const BasicTable = (props: {
         modalVisible && (
           <UploadModal
             visible={modalVisible}
+          
             onCancel={() => {
               setModalVisible(false)
               setLoadingFalse()
@@ -419,6 +466,7 @@ const BasicTable = (props: {
             }}
             needTransferData={needTransferData}
             onOk={(type: string, transferData: []) => {
+              let messageList = []
               const newData = data.map((obj: any, index: number) => {
                 // Skip if no description or wrong description format
                 if (type === 'jd' && !obj.description?.includes('订单编号')) {
@@ -438,7 +486,12 @@ const BasicTable = (props: {
                 });
 
                 if (matchingItem) {
-                  message.success(`替换成功第: ${index + 1} 条数据`);
+                  messageList.push({
+                    index,
+                    message: `第: ${index + 1} 条`,
+                    before: obj.description,
+                    after: matchingItem.description
+                  })
                   return {
                     ...obj,
                     description: matchingItem.description
@@ -450,6 +503,7 @@ const BasicTable = (props: {
 
 
               setData(newData);
+              openNotification(messageList)
               setModalVisible(false);
               setLoadingFalse();
             }}
