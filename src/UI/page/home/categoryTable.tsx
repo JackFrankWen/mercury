@@ -27,12 +27,12 @@ const columns: ColumnsType<DataType> = [
   {
     title: '一级分类',
     dataIndex: 'name',
-    width: '33%',
+    width: '28%',
   },
   {
     title: '二级分类',
     dataIndex: 'oo',
-    width: '33%',
+    width: '28%',
   },
 
   {
@@ -161,6 +161,7 @@ const CategoryTable = (props: {
     <>
       <Table
         rowKey="id"
+        // size='middle'
         columns={columns}
         expandable={{
           indentSize: 0,
@@ -169,6 +170,7 @@ const CategoryTable = (props: {
         }}
         summary={tableSummary}
         dataSource={props.data}
+        scroll={{y: 400}}
         pagination={false}
       />
       {show && (

@@ -1,5 +1,5 @@
 import React, { useEffect, useState }   from "react";
-import {Button, Card} from "antd";
+import {Button, Card,Row,Col} from "antd";
 import useReviewForm from "./useReviewForm";
 import TableSection from "./reviewTable";
 import Summarize from "./review-sum";
@@ -25,19 +25,21 @@ function Index(): JSX.Element {
     //     fetchData(params)
     // }
     return (
-        <div>
+        <Row gutter={12}>
             
-            <Card bordered={false} hoverable>
-              {cpt}
-            </Card>
-            <div className="mt8">
-                <Summarize formValue={formValue} />
-            </div>
-            
-            <div className='mt8'>
-                <TableSection formValue={formValue} />
-            </div>
-        </div>
+            <Col span={16}>
+                    <Summarize formValue={formValue} />
+                    <div className="mt8">
+                        <TableSection formValue={formValue} />
+                    </div>
+            </Col>
+         
+            <Col span={8}>
+                <Card bordered={false} hoverable>
+                    {cpt}
+                </Card>
+            </Col>
+        </Row>
     );
 }
 

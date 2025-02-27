@@ -9,7 +9,7 @@ const useReviewForm = (): [any, React.ReactNode] => {
 
   const firstDayOfYear = now.clone().startOf('month') // get the first day of the current month
   const lastDayOfYear = now.clone().endOf('year') // get the last day of the current month
-  const initialValues = {  trans_time: [firstDayOfYear, lastDayOfYear] }
+  const initialValues = {  trans_time: [firstDayOfYear, lastDayOfYear], type: 'year' }
   const [formData, setFormData] = useState(initialValues)
 
   const onFormLayoutChange = (val: any) => {
@@ -30,10 +30,16 @@ const useReviewForm = (): [any, React.ReactNode] => {
       <Form.Item label="时间" name="trans_time">
         <RangePickerWrap bordered />
       </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          复盘
-        </Button>
+      <Form.Item label="类型" name="type">
+      <Radio.Group
+      block
+      options={[{ label: '年账单', value: 'year' },
+      { label: '月账单', value: 'month' },
+    ]}
+      defaultValue="year"
+      optionType="button"
+      buttonStyle="solid"
+    />
       </Form.Item>
     </Form>
   )

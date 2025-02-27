@@ -6,8 +6,9 @@ import type { SelectProps, } from 'antd'
 export function useSelect(props: {
   options: SelectProps['options']
   placeholder?: string
+  style?: React.CSSProperties
 }) {
-  const { options, placeholder = '成员' } = props
+  const { options, placeholder = '成员', style } = props
   const [value, setValue] = useState()
   const cpt = (
     <Select
@@ -16,6 +17,7 @@ export function useSelect(props: {
       onChange={(val) => setValue(val)}
       placeholder={placeholder}
       options={options}
+      style={style}
     />
   )
   return [value, cpt]

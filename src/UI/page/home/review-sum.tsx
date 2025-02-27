@@ -39,40 +39,38 @@ export default function Summarize(props: { formValue: any }) {
   return (
     <>
     
-      <Row className="home-section" gutter={24}>
+      <Row className="home-section" gutter={12}>
        
         <Col span={8}>
-          <Card hoverable>
+          <Card hoverable size="small">
             <Statistic title="总支出" prefix="¥" value={staticData.total} />
 
-            <Divider />
             <Row>
-              <Col span={12}>
-                <Typography.Text> 预算： 33</Typography.Text>
+              <Col span={24}>
+                <Typography.Text type='secondary'> 预算： 33</Typography.Text>
               </Col>
-              <Col span={12}>
-                <Typography.Text>结余： 33</Typography.Text>
+              <Col span={24}>
+                <Typography.Text type='secondary'>结余： 33</Typography.Text>
               </Col>
             </Row>
           </Card>
         </Col>
         <Col span={8}>
-          <Card hoverable>
+          <Card hoverable size="small">
             <Statistic
               title="老公钱包"
               prefix="¥"
               value={staticData.husband.total}
             />
 
-            <Divider />
             <Row>
-              <Col span={12}>
-                <Typography.Text>
+              <Col span={24}>
+                <Typography.Text type='secondary'>
                   支付宝: {staticData.husband.alipay}
                 </Typography.Text>
               </Col>
-              <Col span={12}>
-                <Typography.Text>
+              <Col span={24}>
+                  <Typography.Text type='secondary'>
                   微信: {staticData.husband.wechat}
                 </Typography.Text>
               </Col>
@@ -80,22 +78,21 @@ export default function Summarize(props: { formValue: any }) {
           </Card>
         </Col>
         <Col span={8}>
-          <Card hoverable>
+          <Card hoverable size="small">
             <Statistic
               title="老婆钱包"
               prefix="¥"
               value={staticData.wife.total}
             />
 
-            <Divider />
             <Row>
-              <Col span={12}>
-                <Typography.Text>
+              <Col span={24}>
+                <Typography.Text type='secondary'>
                   支付宝: {staticData.wife.alipay}
                 </Typography.Text>
               </Col>
-              <Col span={12}>
-                <Typography.Text>
+              <Col span={24}>
+                <Typography.Text type='secondary'>
                   微信: {staticData.wife.wechat}
                 </Typography.Text>
               </Col>
