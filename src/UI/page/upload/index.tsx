@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Spin, message, Steps, Card } from "antd";
-import UploadTable from './uploadTable'
+import UploadTable, { tableHeaderI } from './uploadTable'
 import UploadFile from './uploadFile'
 import Done from './done'
 
@@ -14,13 +14,13 @@ import './index.css'
 function UploadCenter(): JSX.Element {
   const [uploadVisable, setUploadVisiable] = useState(true)
   const [tableVisable, setTableVisable] = useState(false)
-  const [tableData, setTableData] = useState([])
-  const [tableHeader, setTableHeader] = useState({})
+  const [tableData, setTableData] = useState<Params_Transaction[]>([])
+  const [tableHeader, setTableHeader] = useState<tableHeaderI | null>(null)
   const [loading, setLoading] = useState(false)
   const [doneVisable, setDoneVisable] = useState(false)
   const [step, setStep] = useState(1)
 
-  const uploadToDatabase = (tableData: any) => {
+  const uploadToDatabase = (tableData: Params_Transaction[]) => {
     window.mercury.api.batchInsertTransactions(tableData).then((res: any) => {
       console.log(res, 'res')
       message.success('上传成功')
@@ -28,6 +28,34 @@ function UploadCenter(): JSX.Element {
       setLoading(false)
       setTableVisable(false)
     })
+  }
+
+  const handleUploadSuccess = (obj: { tableData: Params_Transaction[], tableHeader: tableHeaderI }) => {
+    setUploadVisiable(false)
+    setTableData(obj.tableData)
+    setTableHeader(obj.tableHeader)
+    setTableVisable(true)
+    setStep(step + 1)
+  }
+
+  const handleTableCancel = () => {
+    setTableVisable(false);
+    setUploadVisiable(true)
+    setTableData([])
+    setStep(1)
+  }
+
+  const handleSubmitSuccess = (arr: Params_Transaction[]) => {
+    uploadToDatabase(arr)
+  }
+
+  const handleReSubmit = () => {
+    setDoneVisable(false)
+    setUploadVisiable(true)
+    setTableData([])
+    setTableHeader(null)
+    setTableVisable(false)
+    setStep(1)
   }
   
   return (
@@ -53,40 +81,21 @@ function UploadCenter(): JSX.Element {
       />
       {uploadVisable && <UploadFile 
         setLoading={setLoading}
-         onUploadSuccess={(obj)=>{
-          setUploadVisiable(false)
-          setTableData(obj.tableData)
-          setTableHeader(obj.tableHeader)
-          setTableVisable(true)
-          setStep(step + 1)
-        }} 
+        onUploadSuccess={handleUploadSuccess} 
       />}
       {tableVisable && (
         <UploadTable 
+          setLoading={setLoading}
           tableData={tableData} 
           tableHeader={tableHeader} 
-          onCancel={() => {
-            setTableVisable(false);
-            setUploadVisiable(true)
-            setTableData([])
-            setStep(1) // 重置步骤
-          }} 
-          onSubmitSuccess={(arr: any) => {
-            uploadToDatabase(arr)
-          }}
+          onCancel={handleTableCancel}
+          onSubmitSuccess={handleSubmitSuccess}
           step={step}
-          setStep={(step: number) => setStep(step)}
+          setStep={setStep}
         />
       )}
       {doneVisable && <Done
-        reSubmit={() => {
-          setDoneVisable(false)
-          setUploadVisiable(true)
-          setTableData([])
-          setTableHeader({})
-          setTableVisable(false)
-          setStep(1) // 重置步骤
-        }}
+        reSubmit={handleReSubmit}
       />}
       </Card>
     </Spin>

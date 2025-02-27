@@ -181,6 +181,7 @@ const RuleTable = () => {
         size="middle"
         columns={columns}
         dataSource={ruleData}
+        scroll={{ y: 'calc(100vh - 200px)' }}
         // pagination={{
         //   defaultPageSize: 10,
         //   pageSizeOptions: [10, 20, 50],

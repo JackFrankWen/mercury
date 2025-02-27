@@ -200,13 +200,14 @@ export function AdvancedTable(props: {
             </Row>
 
             <Table
-                style={{maxHeight: 400, overflow: 'auto'}}
                 size="small"
                 className={'mt8'}
                 rowKey={'id'}
                 columns={columns}
                 rowSelection={{  ...rowSelection }}
-                scroll={{ x: 1300, y: window.innerHeight - 400 }}
+                scroll={{ x: 1300, 
+                    y: 'calc(100vh - 400px)'
+                 }}
                 dataSource={data}
                 pagination={{
                     defaultPageSize: 10,

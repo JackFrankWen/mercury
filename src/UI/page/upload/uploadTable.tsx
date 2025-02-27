@@ -72,19 +72,16 @@ function changeCategoryModal(messageList: {
 }[]) {
   const content = messageList.map(item => {
     return <div key={item.index}>
-      <span>第{item.index + 1}条：</span>
+      <span>{item.message}</span>
       <Text delete style={{ width: '50px' }}>{item.before}</Text>
       <Text type="success">{item.after}</Text>
     </div>
   })
   Modal.info({
-    style: {
-      overflow: 'auto',
-      maxHeight: '500px',
-    },
     title: '分类成功',
     width: 600,
-    content: <Alert message={content} type="success" />,
+    okText: '知道了',
+    content: <Alert style={{ maxHeight: '200px', overflow: 'auto' }} message={content} type="success" />,
   })
 }
 
@@ -105,8 +102,9 @@ const BasicTable = (props: {
   onSubmitSuccess: (arr: any) => void
   step: number
   setStep: (step: number) => void
+  setLoading: (loading: boolean) => void
 }) => {
-  const { tableData, tableHeader, onCancel, onSubmitSuccess, step, setStep } = props
+  const { tableData, tableHeader, onCancel, onSubmitSuccess, step, setStep, setLoading, loading } = props
   const [api, contextHolder] = notification.useNotification();
 
   const [form] = Form.useForm()
@@ -117,6 +115,7 @@ const BasicTable = (props: {
 
     api.open({
       message: '替换成功',
+      
       description: `一共替换${messageList.length}条数据，点击查看`,
       onClick: () => {
         changeCategoryModal(messageList)
@@ -135,6 +134,7 @@ const BasicTable = (props: {
 
   useEffect(() => {
     goStep2(needTransferData)
+    console.log('check needTransferData');
   }, [needTransferData])
   const edit = (record: DataType) => {
     form.setFieldsValue({ name: '', age: '', address: '', ...record })
@@ -293,12 +293,12 @@ const BasicTable = (props: {
       })
 
       // If a rule matches, update the category and notify
-      if (matchingRule) {
+      if (matchingRule && matchingRule.category !== obj.category) {
         messageList.push({
           index,
-          message: `第${index + 1}条`,
-          before: obj.category,
-          after: matchingRule.category
+          message: `第${index + 1}条(${obj.description})：`,
+          before: getCategoryString(obj.category),
+          after: getCategoryString(matchingRule.category)
         })
         return {
           ...obj,
@@ -332,17 +332,21 @@ const BasicTable = (props: {
   const submit = async () => {
     // 判断 描述中是否包含京东-订单编号
     console.log(step, 'step====');
+    setLoading(true)
 
+    setTimeout(() => {
     if (step === 2) {
       goStep2(needTransferData)
     } else if (step === 3) {
 
       // 分类
-      await goStep3()
+       goStep3()
     } else if (step === 4) {
-      // 上传
-      onSubmitSuccess(data)
-    }
+        // 上传
+        onSubmitSuccess(data)
+      }
+      setLoading(false)
+    }, 0)
   }
   const tableSummary = (pageData: any) => {
     let totalCost = 0
@@ -455,7 +459,7 @@ const BasicTable = (props: {
         modalVisible && (
           <UploadModal
             visible={modalVisible}
-          
+            setLoading={setLoading}
             onCancel={() => {
               setModalVisible(false)
               setLoadingFalse()
@@ -488,7 +492,7 @@ const BasicTable = (props: {
                 if (matchingItem) {
                   messageList.push({
                     index,
-                    message: `第: ${index + 1} 条`,
+                    message: `第 ${index + 1} 条：`,
                     before: obj.description,
                     after: matchingItem.description
                   })
@@ -504,6 +508,7 @@ const BasicTable = (props: {
 
               setData(newData);
               openNotification(messageList)
+              setLoading(false)
               setModalVisible(false);
               setLoadingFalse();
             }}
