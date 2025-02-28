@@ -5,11 +5,12 @@ import dayjs from 'dayjs'
 
 const useReviewForm = (): [any, React.ReactNode] => {
   const [form] = Form.useForm()
-  const now = dayjs().subtract(1, 'year') // get the current date/time in Day.js format
+  const now = dayjs()
+  const lastYear = now.subtract(1, 'year') // 先获取去年的时间
 
-  const firstDayOfYear = now.clone().startOf('month') // get the first day of the current month
-  const lastDayOfYear = now.clone().endOf('year') // get the last day of the current month
-  const initialValues = {  trans_time: [firstDayOfYear, lastDayOfYear], type: 'year' }
+  const firstDayOfYear = lastYear.startOf('year') // 获取去年1月1日
+  const lastDayOfYear = lastYear.endOf('year') // 获取去年12月31日
+  const initialValues = { trans_time: [firstDayOfYear, lastDayOfYear], type: 'year' }
   const [formData, setFormData] = useState({
     ...initialValues,
     trans_time: [initialValues.trans_time[0].format('YYYY-MM-DD 00:00:00'), initialValues.trans_time[1].format('YYYY-MM-DD 23:59:59')]
