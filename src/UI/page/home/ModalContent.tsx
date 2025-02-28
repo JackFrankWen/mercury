@@ -1,5 +1,5 @@
 import { Button, message, Space, Table, Tag, Tooltip, Typography, Input} from 'antd'
-import type { TableRowSelection } from 'antd'
+import type { InputRef, TableRowSelection } from 'antd'
 import React, { useRef, useState } from 'react'
 import dayjs from 'dayjs'
 import { SelectionFooter } from 'src/UI/components/SelectionFooter'
@@ -7,7 +7,7 @@ import { I_Transaction } from 'src/sqlite3/transactions'
 import { tag_type } from '../../const/web'
 import { formatMoney } from '../../components/utils'
 import { FilterDropdownProps } from 'antd/es/table/interface'
-
+import { cpt_const } from 'src/UI/const/web'
 interface ModalContentProps {
   modalData: any
   refresh: () => void
@@ -51,11 +51,29 @@ const modalTableCol = [
         return dayjs(val).format('YYYY-MM-DD HH:mm:ss')
       },
     },
+    // payment_type
+    {
+      title: '支付方式',
+      dataIndex: 'payment_type',
+      width: 120,
+      render: (val: string) => (
+        <Tag color="blue">{cpt_const.payment_type[val]}</Tag>
+      ),
+    },
+    // account_type 
+    {
+      title: '账号',
+      dataIndex: 'account_type',
+      width: 120,
+      render: (val: string) => (
+        <Tag color="green">{cpt_const.account_type[val]}</Tag>  
+      ),
+    },
+    // payee
     {
       title: '交易对象',
       dataIndex: 'payee',
       width: 120,
-      ellipsis: true,
       render: (val: string) => (
         <Tooltip placement="topLeft" title={val}>
           {val}

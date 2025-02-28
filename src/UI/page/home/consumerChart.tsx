@@ -29,7 +29,9 @@ function ConsumerChart(props: {
     }
 
     return (<div className="mt8">
-                        <Card bordered={false} hoverable>
+                        <Card 
+                        title="成员支出"
+                        bordered={false} hoverable>
                             <PieChart 
                                 data={data}
                             />

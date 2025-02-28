@@ -43,7 +43,7 @@ function YearLineChart(props: {
     }
 
     return (<div className="mt8">
-                        <Card bordered={false} hoverable extra={extra}>
+                        <Card title="年月消费" bordered={false} hoverable extra={extra}>
                             <LineChart 
                                 data={data}
                             />
