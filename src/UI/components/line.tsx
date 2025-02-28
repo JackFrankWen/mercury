@@ -23,12 +23,18 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150 }) => {
     });
 
     chart.data(data);
-    chart.scale('total', {
-      nice: true,
+
+    // 配置 y 轴：显示轴线但不显示刻度
+    chart.axis('total', {
+      label: null,  // 使用 null 而不是 false
+      line: null,   // 使用 null 而不是 false
+      tickLine: null  // 使用 null 而不是 false
     });
+    //tooltip 显示金额
 
     chart.tooltip({
       showMarkers: false,
+    
     });
     chart.interaction('active-region');
 

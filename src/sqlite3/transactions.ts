@@ -321,3 +321,40 @@ export async function getConsumerTotal(params: Params_Transaction): Promise<{ite
   }
 }
 
+// 按账户类型和支付方式分组统计
+export async function getAccountPaymentTotal(params: Params_Transaction): Promise<{account_type: string, payment_type: string, total: number}[]> {
+  try {
+    const db = await getDbInstance()
+    
+    const { whereClause } = generateWhereClause(params)
+    
+    const sql = `
+      SELECT 
+        account_type,
+        payment_type,
+        SUM(amount) as total
+      FROM transactions 
+      ${whereClause}
+      GROUP BY account_type, payment_type
+      ORDER BY total DESC
+    `
+
+    const rows = await new Promise<{account_type: string, payment_type: string, total: number}[]>((resolve, reject) => {
+      db.all(sql, (err, rows) => {
+        if (err) {
+          console.error('Error getting account and payment totals:', err)
+          reject(err)
+          return
+        }
+        resolve(rows || [])
+      })
+    })
+    
+    return rows
+  } catch (error) {
+    console.error('Error getting account and payment totals:', error)
+    throw error
+  }
+}
+
+// 获取所有交易记录

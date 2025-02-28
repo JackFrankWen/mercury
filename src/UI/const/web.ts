@@ -1,3 +1,8 @@
+export enum AccountType {
+    HUSBAND = 1,
+    WIFE = 2,
+    GRANDPARENTS = 3,
+}
 export const account_type = {
     1: '老公账户',
     2: '老婆账户',
@@ -9,6 +14,12 @@ export const payment_type = {
     3: '银行卡',
     4: '现金',
 }
+export enum PaymentType {
+    ALIPAY = 1,
+    WECHAT = 2,
+    BANK_CARD = 3,
+    CASH = 4,
+}
 export const consumer_type = {
     1: '老公',
     2: '老婆',
@@ -16,6 +27,13 @@ export const consumer_type = {
     4: '牧牧',
     5: '爷爷奶奶',
     6: '溪溪',
+}
+export enum ConsumerType {
+    HUSBAND = 1,
+    WIFE = 2,
+    FAMILY = 3,
+    MOO = 4,
+    GRANDPARENTS = 5,
 }
 export const tag_type = {
     1: '日常支出',

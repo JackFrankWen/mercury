@@ -64,6 +64,8 @@ contextBridge.exposeInMainWorld('mercury', {
         getTransactionsByMonth: (params: Params_Transaction) => ipcRenderer.invoke('transactions:getTransactionsByMonth', params),
         // 按消费者分组统计
         getConsumerTotal: (params: Params_Transaction) => ipcRenderer.invoke('transactions:getConsumerTotal', params),
+        // 按账户类型和支付方式分组统计
+        getAccountPaymentTotal: (params: Params_Transaction) => ipcRenderer.invoke('transactions:getAccountPaymentTotal', params),
     },
     
 

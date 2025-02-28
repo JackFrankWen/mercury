@@ -13,7 +13,8 @@ import {
     getCategoryTotal,
     insertTransaction,
     getTransactionsByMonth,
-    getConsumerTotal
+    getConsumerTotal,
+    getAccountPaymentTotal
 } from "../sqlite3/transactions";
 import { transferCategory, sortByValue } from "./controller/transController";
 import { generateRule } from "./controller/matchAutoRulesController";
@@ -188,5 +189,15 @@ export function handleProcessApi() {
             throw error;
         }
     });
+
+    ipcMain.handle('transactions:getAccountPaymentTotal', async (event, params) => {
+        try {
+            const result = await getAccountPaymentTotal(params);
+            return result;
+        } catch (error) {
+            console.error('Error getting account payment total:', error);
+            throw error;
+        }
+    }); 
 }
 

@@ -8,7 +8,7 @@ import PieChart from '../../components/donutChart';
 import { formatMoney } from '../../components/utils';
 import YearLineChart from './yearLineChart';
 import ConsumerChart from './consumerChart';
-    
+
 function Index(): JSX.Element {
     const [formValue, cpt] = useReviewForm()
     console.log(formValue, 'formValue====');
@@ -32,13 +32,7 @@ function Index(): JSX.Element {
     // const refreshTable = (params: Params_Transaction) => {
     //     fetchData(params)
     // }
-    const data = [
-        { item: '家庭', total: 4000, percent: 0.4 },
-        { item: '老公', total: 2100, percent: 0.21 },
-        { item: '牧牧', total: 1700, percent: 0.17 },
-        { item: '嘻嘻', total: 1300, percent: 0.13 },
-        { item: '老婆', total: 1300, percent: 0.13 },
-    ];
+   
 
     return (
         <Row gutter={12}>
