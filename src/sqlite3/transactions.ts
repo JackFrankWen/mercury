@@ -158,42 +158,9 @@ export async function getCategoryTotal(params: Params_Transaction): Promise<{cat
     if(!params.trans_time) {
       return []
     }
-    // Calculate months difference between start and end date
-   
+    
     const monthsDiff = getMonthsDiff(params.trans_time[0], params.trans_time[1])
-    
-    const conditions: string[] = [];
-    
-    
-    if (params.trans_time && params.trans_time[0] && params.trans_time[1]) {
-      conditions.push(`trans_time BETWEEN '${params.trans_time[0]}' AND '${params.trans_time[1]}'`);
-    }
-
-    if (params.account_type) {
-      conditions.push(`account_type = '${params.account_type}'`);
-    }
-
-    if (params.payment_type) {
-      conditions.push(`payment_type = '${params.payment_type}'`);
-    }
-
-    if (params.consumer) {
-      conditions.push(`consumer LIKE '%${params.consumer}%'`);
-    }
-
-    if (params.tag) {
-      conditions.push(`tag = '${params.tag}'`);
-    }
-
-    if (params.abc_type) {
-      conditions.push(`abc_type = '${params.abc_type}'`);
-    }
-
-    if (params.cost_type) {
-      conditions.push(`cost_type = '${params.cost_type}'`);
-    }
-
-    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    const { whereClause } = generateWhereClause(params)
     
     const sql = `
       SELECT 
@@ -204,7 +171,6 @@ export async function getCategoryTotal(params: Params_Transaction): Promise<{cat
       ${whereClause}
       GROUP BY category
     `;
-    console.log(sql,'===aa')
 
     const rows = await new Promise<{category: string, total: number, avg: number}[]>((resolve, reject) => {
       db.all(sql, (err, rows) => {
