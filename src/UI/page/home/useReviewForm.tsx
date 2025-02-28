@@ -1,57 +1,51 @@
 import React, { useState } from 'react'
-import { Button, Form, Input, Radio } from 'antd'
-import RangePickerWrap from 'src/UI/components/rangePickerWrap'
+import { Col, Typography, Row, theme } from 'antd'
 import dayjs from 'dayjs'
-
+import { LeftCircleFilled, RightCircleFilled } from '@ant-design/icons'
 const useReviewForm = (): [any, React.ReactNode] => {
-  const [form] = Form.useForm()
   const now = dayjs()
-  const lastYear = now.subtract(1, 'year') // 先获取去年的时间
+  const lastYear = now.subtract(1, 'year').format('YYYY')
+  const [date, setDate] = useState(lastYear)
 
-  const firstDayOfYear = lastYear.startOf('year') // 获取去年1月1日
-  const lastDayOfYear = lastYear.endOf('year') // 获取去年12月31日
-  const initialValues = { trans_time: [firstDayOfYear, lastDayOfYear], type: 'year' }
   const [formData, setFormData] = useState({
-    ...initialValues,
-    trans_time: [initialValues.trans_time[0].format('YYYY-MM-DD 00:00:00'), initialValues.trans_time[1].format('YYYY-MM-DD 23:59:59')]
+    trans_time: [lastYear + '-01-01 00:00:00', lastYear + '-12-31 23:59:59'],
+    type: 'year'
   })
 
-  const onFormLayoutChange = (val: any) => {
-    console.log(val)
-    setFormData({
-      ...val,
-      trans_time: [val.trans_time[0].format('YYYY-MM-DD 00:00:00'), val.trans_time[1].format('YYYY-MM-DD 23:59:59')]
-    })
-  }
-  const onFinish = (val: any) => {
-    setFormData(val)
-  }
+
   const cpt = (
-    <Form
-      layout="vertical"
-      form={form}
-      initialValues={initialValues}
-      onFinish={onFinish}
-      onValuesChange={onFormLayoutChange}
-      style={{ maxWidth: 600 }}
-    >
-      <Form.Item label="时间" name="trans_time">
-        <RangePickerWrap bordered />
-      </Form.Item>
-      <Form.Item label="类型" name="type">
-        <Radio.Group
-          block
-          options={[{ label: '年账单', value: 'year' },
-          { label: '月账单', value: 'month' },
-          { label: '季度', value: 'quater' }
-          ]}
-          defaultValue="year"
-          optionType="button"
-          buttonStyle="solid"
-        />
-      </Form.Item>
-    </Form>
+    <IconDate value={date} onChange={(val) => {
+      setDate(val)
+      setFormData({
+        ...formData,
+        trans_time: [val + '-01-01 00:00:00', val + '-12-31 23:59:59']
+      })
+    }} />
   )
   return [formData, cpt]
+}
+const IconDate = (props: {
+  value: string
+  onChange: (val: string) => void
+}) => {
+  return <Row>
+    <Col span={8} style={{textAlign: 'left'}}>
+      <LeftCircleFilled style={{
+        fontSize: 20,
+        color: theme.useToken().token.colorPrimary,
+        cursor: 'pointer'
+      }} onClick={() => props.onChange(dayjs(props.value).subtract(1, 'year').format('YYYY'))} />
+    </Col>
+    <Col span={8} style={{textAlign: 'center'}}>
+      <Typography.Text>{props.value}</Typography.Text>
+    </Col>
+    <Col span={8} style={{textAlign: 'right'}}>
+      <RightCircleFilled style={{
+        fontSize: 20,
+        cursor: 'pointer',
+        color: theme.useToken().token.colorPrimary
+      }} onClick={() => props.onChange(dayjs(props.value).add(1, 'year').format('YYYY'))} />
+    </Col>
+  </Row>
 }
 export default useReviewForm

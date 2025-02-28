@@ -50,24 +50,36 @@ const modalTableCol = [
         return dayjs(val).format('YYYY-MM-DD HH:mm:ss')
       },
     },
+     {
+      title: '金额',
+      dataIndex: 'amount',
+      width: 80,
+      sorter: (a, b) => Number(a.amount) - Number(b.amount),
+      render: (txt: string) => {
+        if (Number(txt) > 100) {
+          return <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>
+        }
+        return formatMoney(txt)
+      },
+    },
     // payment_type
-    {
-      title: '支付方式',
-      dataIndex: 'payment_type',
-      width: 120,
-      render: (val: string) => (
-        <Tag color="blue">{payment_type[Number(val)]}</Tag>
-      ),
-    },
+    // {
+    //   title: '支付方式',
+    //   dataIndex: 'payment_type',
+    //   width: 120,
+    //   render: (val: string) => (
+    //     <Tag color="blue">{payment_type[Number(val)]}</Tag>
+    //   ),
+    // },
     // account_type 
-    {
-      title: '账号',
-      dataIndex: 'account_type',
-      width: 120,
-      render: (val: string) => (
-        <Tag color="green">{account_type[Number(val)]}</Tag>  
-      ),
-    },
+    // {
+    //   title: '账号',
+    //   dataIndex: 'account_type',
+    //   width: 120,
+    //   render: (val: string) => (
+    //     <Tag color="green">{account_type[Number(val)]}</Tag>  
+    //   ),
+    // },
     // payee
     {
       title: '交易对象',
@@ -151,18 +163,7 @@ const modalTableCol = [
         </Tooltip>
       ),
     },
-    {
-      title: '金额',
-      dataIndex: 'amount',
-      width: 80,
-      sorter: (a, b) => Number(a.amount) - Number(b.amount),
-      render: (txt: string) => {
-        if (Number(txt) > 100) {
-          return <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>
-        }
-        return formatMoney(txt)
-      },
-    },
+   
     {
       title: '消费对象',
       width: 80,
