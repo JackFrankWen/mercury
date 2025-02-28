@@ -224,21 +224,41 @@ export async function insertTransaction(transaction: Partial<I_Transaction>): Pr
 export async function getTransactionsByMonth(params: Params_Transaction): Promise<{date: string, total: number}[]> {
   try {
     const db = await getDbInstance();
-    console.log(params,'====aaaa');
-   
+    
+    if (!params.trans_time || params.trans_time.length !== 2) {
+      return [];
+    }
+
+    const [startDate, endDate] = params.trans_time;
     const { whereClause } = generateWhereClause(params)
+    
     const sql = `
+      WITH RECURSIVE
+      date_range(date) AS (
+        SELECT date(?, 'start of month')
+        UNION ALL
+        SELECT date(date, '+1 month')
+        FROM date_range
+        WHERE strftime('%Y-%m', date) < strftime('%Y-%m', date(?))
+      ),
+      monthly_totals AS (
+        SELECT 
+          strftime('%Y-%m', trans_time) as month,
+          SUM(amount) as total
+        FROM transactions
+        ${whereClause}
+        GROUP BY strftime('%Y-%m', trans_time)
+      )
       SELECT 
-        strftime('%Y-%m', trans_time) as date,
-        SUM(amount) as total
-      FROM transactions
-      ${whereClause} 
-      GROUP BY strftime('%Y-%m', trans_time)
+        strftime('%Y-%m', date_range.date) as date,
+        COALESCE(monthly_totals.total, 0) as total
+      FROM date_range
+      LEFT JOIN monthly_totals ON strftime('%Y-%m', date_range.date) = monthly_totals.month
       ORDER BY date ASC
     `;
 
     const rows = await new Promise<{date: string, total: number}[]>((resolve, reject) => {
-      db.all(sql, (err, rows) => {
+      db.all(sql, [startDate, endDate], (err, rows) => {
         if (err) reject(err);
         else resolve(rows);
       });

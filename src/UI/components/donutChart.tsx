@@ -49,8 +49,15 @@ const DonutChart: React.FC<DonutChartProps> = ({
       radius: 0.85,
     });
     chart.tooltip({
-      showTitle: false,
-      showMarkers: false,
+      showTitle: true,
+      showMarkers: false, 
+      content: (datum) => {
+        console.log(datum, 'datum====');
+        
+        return {
+          value: `(${formatMoney(datum.total)})`,
+        };
+      },
     });
 
   

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import LineChart from 'src/UI/components/line';
-import { Card } from 'antd';
-
+import { Card, Space } from 'antd';
+import { useSelect } from '../../components/useSelect'
+import { cpt_const, } from 'src/UI/const/web'
 
 function YearLineChart(props: {
     formValue: any
@@ -9,10 +10,27 @@ function YearLineChart(props: {
     const { formValue } = props;
     const [data, setData] = useState<{date: string, total: number}[]>([]);
 
-    useEffect(() => {
-        fetchData(formValue);
-    }, [formValue]);
+    const [consumerVal, ConsumerCpt] = useSelect({
+        options: cpt_const.consumer_type,
+        placeholder: '消费者',
+    })
 
+   
+  
+    useEffect(() => {
+        fetchData({
+            ...formValue,
+            consumer: consumerVal,
+        });
+    }, [formValue,
+        consumerVal,
+
+    ]);
+    const extra = (
+        <>
+                {ConsumerCpt}
+        </>
+    )   
     const fetchData = async (obj) => {
         console.log(obj, 'obj====');
         if (!obj) return;
@@ -25,7 +43,7 @@ function YearLineChart(props: {
     }
 
     return (<div className="mt8">
-                        <Card bordered={false} hoverable>
+                        <Card bordered={false} hoverable extra={extra}>
                             <LineChart 
                                 data={data}
                             />
