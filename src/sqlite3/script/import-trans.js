@@ -85,6 +85,7 @@ async function main() {
         console.error('Error during import process:', err);
         process.exit(1);
     } finally {
+        console.log('close db')
         db.close();
     }
 }

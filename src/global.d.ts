@@ -97,4 +97,5 @@ export interface Params_Transaction  {
     min_money?: number;
     max_money?: number;
     is_unclassified?: boolean;
+    flow_type?: string;
 }

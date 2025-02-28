@@ -4,6 +4,11 @@ export function generateWhereClause(params: Params_Transaction): {
   conditions: string[] 
 } {
   const conditions: string[] = []
+  if (params?.flow_type) {
+    conditions.push(`flow_type = '${params.flow_type}'`)
+  } else {
+    conditions.push(`flow_type = '1'`)
+  }
 
   if (params?.is_unclassified) {
     conditions.push('(category IS NULL OR category = "" OR category = "[100000,100003]")')

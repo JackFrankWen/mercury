@@ -35,23 +35,21 @@ export default function Summarize(props: { formValue: any }) {
       const wifeWechat = res.find((item: any) => Number(item.account_type) === AccountType.WIFE && Number(item.payment_type) === PaymentType.WECHAT)
       const husbandAlipay = res.find((item: any) => Number(item.account_type) === AccountType.HUSBAND && Number(item.payment_type) === PaymentType.ALIPAY)
       const wifeAlipay = res.find((item: any) => Number(item.account_type) === AccountType.WIFE && Number(item.payment_type) === PaymentType.ALIPAY)
-      console.log(husbandWechat, 'husbandWechat====aaa');
-      console.log(wifeWechat, 'wifeWechat====aaa');
-      console.log(husbandAlipay, 'husbandAlipay====aaa');
-      console.log(wifeAlipay, 'wifeAlipay====aaa');
       
+      const husbandTotal = husbandWechat?.total || 0 + husbandAlipay?.total || 0
+      const wifeTotal = wifeWechat?.total || 0 + wifeAlipay?.total || 0
       setStaticData({
         husband: {
           wechat: husbandWechat?.total || 0,
           alipay: husbandAlipay?.total || 0,
-          total: husbandWechat?.total || 0 + husbandAlipay?.total || 0,
+          total: husbandTotal,
         },
         wife: {
           wechat: wifeWechat?.total || 0,
           alipay: wifeAlipay?.total || 0,
-          total: wifeWechat?.total || 0 + wifeAlipay?.total || 0,
+          total: wifeTotal,
         },
-        total: husbandWechat?.total || 0 + husbandAlipay?.total || 0 + wifeWechat?.total || 0 + wifeAlipay?.total || 0,
+        total: husbandTotal + wifeTotal,
         
       })
       
