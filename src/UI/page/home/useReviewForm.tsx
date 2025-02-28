@@ -39,15 +39,16 @@ const useReviewForm = (): [any, React.ReactNode] => {
         <RangePickerWrap bordered />
       </Form.Item>
       <Form.Item label="类型" name="type">
-      <Radio.Group
-      block
-      options={[{ label: '年账单', value: 'year' },
-      { label: '月账单', value: 'month' },
-    ]}
-      defaultValue="year"
-      optionType="button"
-      buttonStyle="solid"
-    />
+        <Radio.Group
+          block
+          options={[{ label: '年账单', value: 'year' },
+          { label: '月账单', value: 'month' },
+          { label: '季度', value: 'quater' }
+          ]}
+          defaultValue="year"
+          optionType="button"
+          buttonStyle="solid"
+        />
       </Form.Item>
     </Form>
   )

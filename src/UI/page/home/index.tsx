@@ -52,7 +52,7 @@ function Index(): JSX.Element {
             </Col>
          
             <Col span={8}>
-                <Card bordered={false} hoverable>
+                <Card size="small" bordered={false} hoverable>
                     {cpt}
                 </Card>
                 
