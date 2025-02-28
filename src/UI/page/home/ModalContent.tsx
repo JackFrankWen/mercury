@@ -4,10 +4,9 @@ import React, { useRef, useState } from 'react'
 import dayjs from 'dayjs'
 import { SelectionFooter } from 'src/UI/components/SelectionFooter'
 import { I_Transaction } from 'src/sqlite3/transactions'
-import { tag_type } from '../../const/web'
+import { payment_type, account_type, tag_type } from '../../const/web'
 import { formatMoney } from '../../components/utils'
 import { FilterDropdownProps } from 'antd/es/table/interface'
-import { cpt_const } from 'src/UI/const/web'
 interface ModalContentProps {
   modalData: any
   refresh: () => void
@@ -57,7 +56,7 @@ const modalTableCol = [
       dataIndex: 'payment_type',
       width: 120,
       render: (val: string) => (
-        <Tag color="blue">{cpt_const.payment_type[val]}</Tag>
+        <Tag color="blue">{payment_type[Number(val)]}</Tag>
       ),
     },
     // account_type 
@@ -66,7 +65,7 @@ const modalTableCol = [
       dataIndex: 'account_type',
       width: 120,
       render: (val: string) => (
-        <Tag color="green">{cpt_const.account_type[val]}</Tag>  
+        <Tag color="green">{account_type[Number(val)]}</Tag>  
       ),
     },
     // payee

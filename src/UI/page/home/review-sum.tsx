@@ -31,22 +31,41 @@ export default function Summarize(props: { formValue: any }) {
       // if (res) {
       //   setStaticData(res)
       // }
-      const husbandWechat = res.find((item: any) => Number(item.account_type) === AccountType.HUSBAND && Number(item.payment_type) === PaymentType.WECHAT)
-      const wifeWechat = res.find((item: any) => Number(item.account_type) === AccountType.WIFE && Number(item.payment_type) === PaymentType.WECHAT)
-      const husbandAlipay = res.find((item: any) => Number(item.account_type) === AccountType.HUSBAND && Number(item.payment_type) === PaymentType.ALIPAY)
-      const wifeAlipay = res.find((item: any) => Number(item.account_type) === AccountType.WIFE && Number(item.payment_type) === PaymentType.ALIPAY)
-      
-      const husbandTotal = husbandWechat?.total || 0 + husbandAlipay?.total || 0
-      const wifeTotal = wifeWechat?.total || 0 + wifeAlipay?.total || 0
+      const husbandWechat = res.reduce((acc, item) => {
+        if (Number(item.account_type) === AccountType.HUSBAND && Number(item.payment_type) === PaymentType.WECHAT) {
+          acc += Number(item.total)
+        }
+        return acc
+      }, 0)
+      const wifeWechat = res.reduce((acc, item) => {
+        if (Number(item.account_type) === AccountType.WIFE && Number(item.payment_type) === PaymentType.WECHAT) {
+          acc += Number(item.total)
+        }
+        return acc
+      }, 0)
+        const husbandAlipay = res.reduce((acc, item) => {
+        if (Number(item.account_type) === AccountType.HUSBAND && Number(item.payment_type) === PaymentType.ALIPAY) {
+          acc += Number(item.total)
+        }
+        return acc
+      }, 0)
+      const wifeAlipay = res.reduce((acc, item) => {
+        if (Number(item.account_type) === AccountType.WIFE && Number(item.payment_type) === PaymentType.ALIPAY) {
+          acc += Number(item.total)
+        }
+        return acc
+      }, 0)
+      const husbandTotal = husbandWechat + husbandAlipay
+      const wifeTotal = wifeWechat + wifeAlipay
       setStaticData({
         husband: {
-          wechat: husbandWechat?.total || 0,
-          alipay: husbandAlipay?.total || 0,
+          wechat: husbandWechat,
+          alipay: husbandAlipay,
           total: husbandTotal,
         },
         wife: {
-          wechat: wifeWechat?.total || 0,
-          alipay: wifeAlipay?.total || 0,
+          wechat: wifeWechat,
+          alipay: wifeAlipay,
           total: wifeTotal,
         },
         total: husbandTotal + wifeTotal,

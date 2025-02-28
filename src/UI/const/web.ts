@@ -68,7 +68,7 @@ export const flow_type = {
 
 export const transform = (obj: any) => {
     return Object.keys(obj).map((key) => ({
-        label: obj[key],
+        label: obj[Number(key)],
         value: Number(key),
     }))
 }
