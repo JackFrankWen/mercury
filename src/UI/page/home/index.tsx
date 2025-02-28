@@ -7,7 +7,8 @@ import Summarize from "./review-sum";
 import PieChart from '../../components/donutChart';
 import { formatMoney } from '../../components/utils';
 import YearLineChart from './yearLineChart';
-
+import ConsumerChart from './consumerChart';
+    
 function Index(): JSX.Element {
     const [formValue, cpt] = useReviewForm()
     console.log(formValue, 'formValue====');
@@ -56,17 +57,7 @@ function Index(): JSX.Element {
                     {cpt}
                 </Card>
                 
-                <Card  size="small" bordered={false} hoverable className="mt8">
-                    <PieChart 
-                        data={data} 
-                        height={200}
-                        centerText={{
-                            title: '总支出',
-                            value: formatMoney(data.reduce((sum, item) => sum + item.total, 0)),
-                            unit: '元'
-                        }}
-                    />
-                </Card>
+                <ConsumerChart formValue={formValue} />
             </Col>
         </Row>
     );

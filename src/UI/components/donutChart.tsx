@@ -14,7 +14,7 @@ interface DonutChartProps {
 
 const DonutChart: React.FC<DonutChartProps> = ({ 
   data, 
-  height = 700,
+  height = 200,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<Chart>();
@@ -60,10 +60,10 @@ const DonutChart: React.FC<DonutChartProps> = ({
       .adjust('stack')
       .position('percent')
       .color('item')
-      .label('percent', {
+      .label('item', {
         offset: -30,
         content: (data) => {
-          return `${(data.percent * 100).toFixed(1)}%`;
+          return `${data.item} ${Number(data.percent * 100).toFixed(1)}%`;
         },
         style: {
           textAlign: 'center',

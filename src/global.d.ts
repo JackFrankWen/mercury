@@ -61,6 +61,8 @@ declare global {
                 getCategoryTotalByDate: (params: Params_Transaction) => Promise<CategoryReturnType>;
                 // 获取年月交易数据
                 getTransactionsByMonth: (params: Params_Transaction) => Promise<{date: string, total: number}[]>
+                // 按消费者分组统计
+                getConsumerTotal: (params: Params_Transaction) => Promise<{item: string, total: number}[]>
         };
     }
 

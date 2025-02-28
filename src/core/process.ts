@@ -12,7 +12,8 @@ import {
     batchInsertTransactions, 
     getCategoryTotal,
     insertTransaction,
-    getTransactionsByMonth
+    getTransactionsByMonth,
+    getConsumerTotal
 } from "../sqlite3/transactions";
 import { transferCategory, sortByValue } from "./controller/transController";
 import { generateRule } from "./controller/matchAutoRulesController";
@@ -168,7 +169,6 @@ export function handleProcessApi() {
     });
 
     ipcMain.handle('transactions:getTransactionsByMonth', async (event, param) => {
-        console.log(param, 'gggg');
         
         try {
             const result = await getTransactionsByMonth(param);
@@ -179,4 +179,14 @@ export function handleProcessApi() {
         }
     });
 
+    ipcMain.handle('transactions:getConsumerTotal', async (event, params) => {
+        try {
+            const result = await getConsumerTotal(params);
+            return result;
+        } catch (error) {
+            console.error('Error getting consumer total:', error);
+            throw error;
+        }
+    });
 }
+

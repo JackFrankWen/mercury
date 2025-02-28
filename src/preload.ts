@@ -62,6 +62,8 @@ contextBridge.exposeInMainWorld('mercury', {
         }) => ipcRenderer.invoke('transactions:insert', transaction),
         // 获取年月交易数据
         getTransactionsByMonth: (params: Params_Transaction) => ipcRenderer.invoke('transactions:getTransactionsByMonth', params),
+        // 按消费者分组统计
+        getConsumerTotal: (params: Params_Transaction) => ipcRenderer.invoke('transactions:getConsumerTotal', params),
     },
     
 
