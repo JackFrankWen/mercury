@@ -97,7 +97,7 @@ const RangePickerWrap = (props: {
              </Space>
         )
     }
-
+// no icon
     return (
         <RangePicker
             value={date}
@@ -107,6 +107,7 @@ const RangePickerWrap = (props: {
             bordered={bordered}
             onOpenChange={(visiable) => setOpen(visiable)}
             renderExtraFooter={renderExtraFooter}
+            suffixIcon={null}
         />
     )
 }

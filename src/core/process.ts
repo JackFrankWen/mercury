@@ -11,7 +11,8 @@ import {
     updateTransactions,
     batchInsertTransactions, 
     getCategoryTotal,
-    insertTransaction
+    insertTransaction,
+    getTransactionsByMonth
 } from "../sqlite3/transactions";
 import { transferCategory, sortByValue } from "./controller/transController";
 import { generateRule } from "./controller/matchAutoRulesController";
@@ -162,6 +163,18 @@ export function handleProcessApi() {
             return { code: 200 }
         } catch (error) {
             console.error('Error deleting auto rules:', error);
+            throw error;
+        }
+    });
+
+    ipcMain.handle('transactions:getTransactionsByMonth', async (event, param) => {
+        console.log(param, 'gggg');
+        
+        try {
+            const result = await getTransactionsByMonth(param);
+            return result;
+        } catch (error) {
+            console.error('Error getting transactions by month:', error);
             throw error;
         }
     });

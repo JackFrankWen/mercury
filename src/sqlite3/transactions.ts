@@ -101,7 +101,7 @@ export const getAllTransactions = async (params: Params_Transaction): Promise<I_
       sql += ` LIMIT ${params.page_size} OFFSET ${offset}`
     }
 
-    console.log('==========Final SQL Query:', sql)
+    // console.log('==========Final SQL Query:', sql)
     
     const rows = await new Promise<I_Transaction[]>((resolve, reject) => {
       db.all(sql, (err, rows: I_Transaction[]) => {
@@ -317,6 +317,67 @@ export async function insertTransaction(transaction: Partial<I_Transaction>): Pr
     });
   } catch (error) {
     console.error('Error inserting transaction:', error);
+    throw error;
+  }
+}
+
+// 查询transaction 的所有数据，并且返回 [{date: '2022-02', total: 111}]
+export async function getTransactionsByMonth(params: Params_Transaction): Promise<{date: string, total: number}[]> {
+  try {
+    const db = await getDbInstance();
+    console.log(params,'====aaaa');
+    
+    const conditions = []
+    if (params.trans_time && params.trans_time[0] && params.trans_time[1]) {
+      conditions.push(`trans_time BETWEEN '${params.trans_time[0]}' AND '${params.trans_time[1]}'`);
+    }
+
+    if (params.account_type) {
+      conditions.push(`account_type = '${params.account_type}'`);
+    }
+
+    if (params.payment_type) {
+      conditions.push(`payment_type = '${params.payment_type}'`);
+    }
+
+    if (params.consumer) {
+      conditions.push(`consumer LIKE '%${params.consumer}%'`);
+    }
+
+    if (params.tag) {
+      conditions.push(`tag = '${params.tag}'`);
+    }
+
+    if (params.abc_type) {
+      conditions.push(`abc_type = '${params.abc_type}'`);
+    }
+
+    if (params.cost_type) {
+      conditions.push(`cost_type = '${params.cost_type}'`);
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    
+    const sql = `
+      SELECT 
+        strftime('%Y-%m', trans_time) as date,
+        SUM(amount) as total
+      FROM transactions
+      ${whereClause} 
+      GROUP BY strftime('%Y-%m', trans_time)
+      ORDER BY date ASC
+    `;
+
+    const rows = await new Promise<{date: string, total: number}[]>((resolve, reject) => {
+      db.all(sql, (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+
+    return rows;
+  } catch (error) {
+    console.error('Error getting transactions by month:', error);
     throw error;
   }
 }

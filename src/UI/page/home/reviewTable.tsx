@@ -3,7 +3,24 @@ import React, { useCallback, useEffect, useState } from 'react'
 import CategoryTable from './categoryTable'
 import { useSelect } from '../../components/useSelect'
 import { cpt_const, payment_type } from 'src/UI/const/web'
+import PieChart from 'src/UI/components/pieChart'
+import { CategoryReturnType } from 'src/global'
 
+// 写一个方法  CategoryReturnType中 child 每一条数据    转化成 PieChart 的 data 用reduce  
+// 转化 {value: item.child.value, name: item.child.name, type: item.    value}
+
+function convertCategoryReturnTypeToPieChartData(category: CategoryReturnType) {
+    return category.reduce((acc: any, item: any) => {
+        item.child.forEach((child: any) => {
+            acc.push({
+                value: Number(child.value),
+                name: child.name,
+                type: item.name,
+            })
+        })  
+        return acc
+    }, [])
+}
 function TableSection(props: { formValue: any }) {
     const { formValue } = props
     const [consumerVal, ConsumerCpt] = useSelect({
@@ -24,17 +41,15 @@ function TableSection(props: { formValue: any }) {
 
     })
 
-    const [category, setCategory] = useState<any>([])
+    const [category, setCategory] = useState<CategoryReturnType>([])
 
     const getCategory = async (data: any) => {
         const { trans_time } = formValue
-        const start_date = trans_time?.[0]?.format('YYYY-MM-DD 00:00:00')
-        const end_date = trans_time?.[1]?.format('YYYY-MM-DD 23:59:59')
-        console.log(start_date, end_date, 'start_date, end_date');
+       
         try {
             const result = await window.mercury.api.getCategoryTotalByDate({
                 ...data,
-                trans_time: [start_date, end_date],
+                trans_time, 
             })
             console.log(result, 'result')
 
@@ -77,9 +92,12 @@ function TableSection(props: { formValue: any }) {
     }, [formValue, consumerVal])
     return (
         <Card hoverable title="分类" bordered={false} extra={extra}>
-            <CategoryTable
-                refreshTable={refreshTable}
-                data={category}
+            <PieChart data={convertCategoryReturnTypeToPieChartData(category)} />
+            
+            <div className="mt8">
+                <CategoryTable
+                    refreshTable={refreshTable}
+                    data={category}
                 formValue={{
                     ...formValue,
                     consumer: consumerVal,
@@ -87,6 +105,7 @@ function TableSection(props: { formValue: any }) {
                     payment_type: paymentVal,
                 }}
             />
+            </div>
         </Card>
     )
 }

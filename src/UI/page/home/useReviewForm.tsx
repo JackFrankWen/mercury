@@ -10,10 +10,17 @@ const useReviewForm = (): [any, React.ReactNode] => {
   const firstDayOfYear = now.clone().startOf('month') // get the first day of the current month
   const lastDayOfYear = now.clone().endOf('year') // get the last day of the current month
   const initialValues = {  trans_time: [firstDayOfYear, lastDayOfYear], type: 'year' }
-  const [formData, setFormData] = useState(initialValues)
+  const [formData, setFormData] = useState({
+    ...initialValues,
+    trans_time: [initialValues.trans_time[0].format('YYYY-MM-DD 00:00:00'), initialValues.trans_time[1].format('YYYY-MM-DD 23:59:59')]
+  })
 
   const onFormLayoutChange = (val: any) => {
     console.log(val)
+    setFormData({
+      ...val,
+      trans_time: [val.trans_time[0].format('YYYY-MM-DD 00:00:00'), val.trans_time[1].format('YYYY-MM-DD 23:59:59')]
+    })
   }
   const onFinish = (val: any) => {
     setFormData(val)

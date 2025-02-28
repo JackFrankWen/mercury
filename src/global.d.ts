@@ -59,6 +59,8 @@ declare global {
                     trans_time?: string;
                 }) => Promise<{ code: number }>;
                 getCategoryTotalByDate: (params: Params_Transaction) => Promise<CategoryReturnType>;
+                // 获取年月交易数据
+                getTransactionsByMonth: (params: Params_Transaction) => Promise<{date: string, total: number}[]>
         };
     }
 

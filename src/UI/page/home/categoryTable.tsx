@@ -105,13 +105,11 @@ const CategoryTable = (props: {
   const getCategory = async (data: any, category: string) => {
     try {
       const {trans_time} = data
-        const start_date = trans_time?.[0]?.format('YYYY-MM-DD 00:00:00')
-        const end_date = trans_time?.[1]?.format('YYYY-MM-DD 23:59:59')
-        console.log(start_date, end_date, 'start_date, end_date');
+        
       const params = {
         ...data,
         category,
-        trans_time: [start_date, end_date],
+        trans_time,
         
       }
       window.mercury.api.getTransactions(params).then((res) => {

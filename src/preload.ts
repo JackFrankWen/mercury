@@ -60,6 +60,8 @@ contextBridge.exposeInMainWorld('mercury', {
             cost_type?: string;
             trans_time?: string;
         }) => ipcRenderer.invoke('transactions:insert', transaction),
+        // 获取年月交易数据
+        getTransactionsByMonth: (params: Params_Transaction) => ipcRenderer.invoke('transactions:getTransactionsByMonth', params),
     },
     
 
