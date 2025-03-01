@@ -20,6 +20,7 @@
     "import-rules": "node src/sqlite3/script/import-rules.js",
     "import-trans": "node src/sqlite3/script/import-trans.js",
     "remove": "node src/sqlite3/script/del-all-trans.js",
+    "import-json": "node src/sqlite3/script/import-json.js",
     "export": "node src/sqlite3/script/export-trans.js"
   },
   "dependencies": {
