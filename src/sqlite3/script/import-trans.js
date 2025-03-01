@@ -68,7 +68,7 @@ function importCSV(filepath) {
 // Execute
 async function main() {
     try {
-        const dataDir = path.join(__dirname, '../../../data/202410/transaction.csv');
+        const dataDir = path.join(__dirname, '../../../data/202501/transaction.csv');
         if (!fs.existsSync(dataDir)) {
             throw new Error(`文件不存在: ${dataDir}`);
         }
