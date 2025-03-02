@@ -55,8 +55,18 @@ export default function Summarize(props: { formValue: any }) {
         }
         return acc
       }, 0)
-      const husbandTotal = husbandWechat + husbandAlipay
-      const wifeTotal = wifeWechat + wifeAlipay
+      const husbandTotal = res.reduce((acc, item) => {
+        if (Number(item.account_type) === AccountType.HUSBAND) {
+          acc += Number(item.total)
+        }
+        return acc
+      }, 0) 
+      const wifeTotal = res.reduce((acc, item) => {
+        if (Number(item.account_type) === AccountType.WIFE) {
+          acc += Number(item.total)
+        }
+        return acc
+      }, 0)
       setStaticData({
         husband: {
           wechat: husbandWechat,
@@ -109,7 +119,7 @@ export default function Summarize(props: { formValue: any }) {
               value={staticData.husband.total}
             />
 
-            {/* <Row>
+            <Row>
               <Col span={24}>
                 <Typography.Text type='secondary' style={{fontSize: 12}}>
                   支付宝: {formatMoney(staticData.husband.alipay)}
@@ -120,7 +130,7 @@ export default function Summarize(props: { formValue: any }) {
                   微信: {formatMoney(staticData.husband.wechat)}
                 </Typography.Text>
               </Col>
-            </Row> */}
+            </Row>
           </Card>
         </Col>
         <Col span={8}>
@@ -131,7 +141,7 @@ export default function Summarize(props: { formValue: any }) {
               value={staticData.wife.total}
             />
 
-            {/* <Row>
+            <Row>
               <Col span={24}>
                 <Typography.Text type='secondary' style={{fontSize: 12}}>
                   支付宝: {formatMoney(staticData.wife.alipay)}
@@ -142,7 +152,7 @@ export default function Summarize(props: { formValue: any }) {
                   微信: {formatMoney(staticData.wife.wechat)}
                 </Typography.Text>
               </Col>
-            </Row> */}
+            </Row>
           </Card>
         </Col>
        

@@ -92,9 +92,8 @@ function TableSection(props: { formValue: any }) {
     }, [formValue, consumerVal])
     return (
         <Card hoverable title="分类" bordered={false} extra={extra}>
-            <PieChart data={convertCategoryReturnTypeToPieChartData(category)} />
             
-            <div className="mt8">
+            <div className="">
                 <CategoryTable
                     refreshTable={refreshTable}
                     data={category}
@@ -106,6 +105,7 @@ function TableSection(props: { formValue: any }) {
                 }}
             />
             </div>
+            <PieChart data={convertCategoryReturnTypeToPieChartData(category)} />
         </Card>
     )
 }
