@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import CategoryTable from './categoryTable'
 import { useSelect } from '../../components/useSelect'
 import { cpt_const, payment_type } from 'src/UI/const/web'
-import PieChart from 'src/UI/components/pieChart'
+import DonutChart from 'src/UI/components/donutChart'
 import { CategoryReturnType } from 'src/global'
 
 // 写一个方法  CategoryReturnType中 child 每一条数据    转化成 PieChart 的 data 用reduce  
@@ -30,10 +30,8 @@ function TableSection(props: { formValue: any }) {
 
     const [accountTypeVal, accountTypeCpt] = useSelect({
         options: cpt_const.account_type,
-        placeholder: '账号',
-        style: {
-            width: '120px',
-        }
+        placeholder: '账户类型',
+        
     })
     const [paymentVal, PaymentCpt] = useSelect({
         options: cpt_const.payment_type,
@@ -105,7 +103,7 @@ function TableSection(props: { formValue: any }) {
                 }}
             />
             </div>
-            <PieChart data={convertCategoryReturnTypeToPieChartData(category)} />
+            <DonutChart data={convertCategoryReturnTypeToPieChartData(category)} />
         </Card>
     )
 }

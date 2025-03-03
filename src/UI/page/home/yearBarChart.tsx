@@ -14,6 +14,14 @@ function YearBarChart(props: {
         options: cpt_const.consumer_type,
         placeholder: '消费者',
     })
+    const [accountTypeVal, AccountTypeCpt] = useSelect({
+        options: cpt_const.account_type,
+        placeholder: '账户类型',
+    })
+    const [paymentTypeVal, PaymentTypeCpt] = useSelect({
+        options: cpt_const.payment_type,
+        placeholder: '支付方式',
+    })
 
    
   
@@ -21,15 +29,21 @@ function YearBarChart(props: {
         fetchData({
             ...formValue,
             consumer: consumerVal,
+            account_type: accountTypeVal,
+            payment_type: paymentTypeVal,
         });
     }, [formValue,
         consumerVal,
+        accountTypeVal,
+        paymentTypeVal,
 
     ]);
     const extra = (
-        <>
+        <Space>
+                {AccountTypeCpt}
                 {ConsumerCpt}
-        </>
+                {PaymentTypeCpt}
+        </Space>
     )   
     const fetchData = async (obj) => {
         if (!obj) return;

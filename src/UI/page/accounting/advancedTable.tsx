@@ -210,8 +210,8 @@ export function AdvancedTable(props: {
                  }}
                 dataSource={data}
                 pagination={{
-                    defaultPageSize: 10,
-                    pageSizeOptions: [10, 20, 50],
+                    defaultPageSize: 30,
+                    pageSizeOptions: [30, 50, 100],
                     showSizeChanger: true,
                   }}
             />
