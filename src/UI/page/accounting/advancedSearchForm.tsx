@@ -40,7 +40,10 @@ export const AdvancedSearchForm = (props: {
     return (
         <Form 
         form={form} 
-        initialValues={formValue}
+        initialValues={{
+            ...formValue,
+            trans_time: [dayjs(formValue.trans_time[0]), dayjs(formValue.trans_time[1])]
+        }}
         onValuesChange={(changedValues, allValues) => {
             props.setFormValue(allValues)
         }}
