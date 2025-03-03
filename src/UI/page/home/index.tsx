@@ -4,7 +4,7 @@ import useReviewForm from "./useReviewForm";
 import TableSection from "./reviewTable";
 import Summarize from "./review-sum";
 
-import PieChart from '../../components/donutChart';
+import PieChart from '../../components/pieChart';
 import { formatMoney } from '../../components/utils';
 import YearBarChart from './yearBarChart';
 import ConsumerChart from './consumerChart';

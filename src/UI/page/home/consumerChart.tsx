@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PieChart from 'src/UI/components/donutChart';
+import PieChart from 'src/UI/components/pieChart';
 import { Card } from 'antd';
 import { consumer_type } from 'src/UI/const/web';
 
