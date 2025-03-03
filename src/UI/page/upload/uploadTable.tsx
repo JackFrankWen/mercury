@@ -280,7 +280,7 @@ const BasicTable = (props: {
   // 根据用户规则分类
   const ruleByUser = async (arr: any) => {
     const rules = await window.mercury.api.getAllMatchRule()
-    let messageList = []
+    const messageList = []
 
     const newData = arr.map((obj, index) => {
       // Get the text to match against (description or payee)
@@ -312,15 +312,44 @@ const BasicTable = (props: {
     openNotification(messageList)
     return newData
   }
+  const ruleByAi = async (arr: any) => {
+    try {
+      const autoData = await window.mercury.api.getAllMatchAutoRule()
+      const messageList = []
+      const newData = arr.map((obj, index) => {
+        // 当description 和 payee 都和autoData的 description 和 payee 匹配时，则更新category 
+        const matchingRule = autoData.find(element => {
+          return element.description === obj.description && element.payee === obj.payee
+        })
+        if (matchingRule && matchingRule.category !== obj.category) {
+          messageList.push({
+            index,
+            message: `第${index + 1}条(${obj.description})：`,
+            before: getCategoryString(obj.category),
+            after: getCategoryString(matchingRule.category)
+          })
+          return {
+            ...obj,
+            category: matchingRule.category
+          }
+        }
+        return obj
+      })
+      openNotification(messageList)
+      return newData
+    } catch (error) {
+      message.error('分类失败')
+    }
+  }
   const goStep3 = async () => {
     // 根据用户规则分类
     // 根据ai 分类
     // 根据规则分类
     try {
 
-      const autoData = await window.mercury.api.getAllMatchAutoRule()
+      const autoData = await ruleByAi(data)
       // 根据用户手动分类
-      const newData = await ruleByUser(data)
+      const newData = await ruleByUser(autoData)
       setData(newData)
       setStep(4)
       console.log(step, 'step aaaa====');
