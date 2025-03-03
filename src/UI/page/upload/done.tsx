@@ -13,7 +13,7 @@ const Done: React.FC<{
       <Button type="primary" key="console" onClick={prop.reSubmit}>
         再次提交
       </Button>,
-      <Button key="buy" onClick={prop.reSubmit}>再次提交</Button>,
+      <Button key="buy" onClick={prop.reSubmit}>去首页</Button>,
     ]}
   />
 );
