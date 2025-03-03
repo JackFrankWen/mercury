@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Chart } from '@antv/g2';
-
+import { formatMoney } from './utils';
 interface LineChartProps {
     data: {
         date: string,
@@ -34,14 +34,38 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150 }) => {
 
     chart.tooltip({
       showMarkers: false,
-    
+      showTitle: true,
+      customItems: (items) => {
+        return items.map(item => {
+          return {
+            ...item,
+            value: `${formatMoney(item.data.total, '万')}`
+          }
+        })
+      }
+      // customContent: (title, items) => {
+      //   const item = items[0];
+      //   if (!item) return '';
+      //   return `${formatMoney(item.data.total, '万')}`;
+      // }
     });
     chart.interaction('active-region');
 
     chart
       .interval()
       .position('date*total')
-      .style({ radius: [20, 20, 0, 0] });
+      .style({ radius: [20, 20, 0, 0] })
+      .label('total', {
+        offset: 5,
+        content: (data) => {
+         
+          return `${formatMoney(data.total, '万')}`;
+        },
+        style: {
+          fill: '#666',
+          fontSize: 12
+        }
+      });
 
     chart.render();
 

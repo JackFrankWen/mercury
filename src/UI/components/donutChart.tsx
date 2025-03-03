@@ -51,13 +51,18 @@ const DonutChart: React.FC<DonutChartProps> = ({
     chart.tooltip({
       showTitle: true,
       showMarkers: false, 
-      content: (datum) => {
-        console.log(datum, 'datum====');
-        
-        return {
-          value: `(${formatMoney(datum.total)})`,
-        };
-      },
+      customItems: (items) => {
+        return items.map(item => {
+          // 显示百分比
+          return {
+            ...item,
+            name: `${formatMoney(item.data.total, '万')}`,
+            value: `${Number(item.data.percent * 100).toFixed(1)}%`
+          }
+        })
+      }
+      
+       
     });
 
   
@@ -69,9 +74,9 @@ const DonutChart: React.FC<DonutChartProps> = ({
       .color('item')
       .label('item', {
         offset: -30,
-        content: (data) => {
-          return `${data.item} ${Number(data.percent * 100).toFixed(1)}%`;
-        },
+        // content: (data) => {
+        //   return `${data.item} ${Number(data.percent * 100).toFixed(1)}%`;
+        // },
         style: {
           textAlign: 'center',
           fontSize: 12,
@@ -80,7 +85,9 @@ const DonutChart: React.FC<DonutChartProps> = ({
       
 
     chart.interaction('element-active');
-    chart.legend(false);
+    chart.legend({
+      position: 'top',
+    });
 
     chart.render();
 

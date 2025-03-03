@@ -40,20 +40,34 @@ export function toNumberOrUndefiend(number: any): number | undefined {
 }
 
 /**
- * 格式化金额为中文货币格式字符串, 整数不显示小数点，小数最多保留2位，使用千分位分隔符
+ * 格式化金额为中文货币格式字符串
  * @param amount - 要格式化的金额，可以是数字或字符串
- * @returns 格式化后的金额字符串，整数不显示小数点，小数最多保留2位，使用千分位分隔符
+ * @param unit - 可选的单位，支持 "万"
+ * @returns 格式化后的金额字符串
  * @example
  * formatMoney(1234.56) // "1,234.56"
  * formatMoney("1234") // "1,234"
+ * formatMoney(12345, "万") // "1.2万"
  */
-export function formatMoney(amount: number | string): string {
+export function formatMoney(amount: number | string, unit?: '万'): string {
   if (typeof amount === 'string') {
     amount = parseFloat(amount);
   }
+  
+  if (unit === '万') {
+    amount = amount / 10000;
+    const formattedAmount = amount.toLocaleString('zh-CN', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1
+    });
+    return `${formattedAmount}${unit}`;
+  }
+
   const hasDecimal = amount % 1 !== 0;
-  return amount.toLocaleString('zh-CN', {
+  const formattedAmount = amount.toLocaleString('zh-CN', {
     minimumFractionDigits: hasDecimal ? 2 : 0,
     maximumFractionDigits: 2
   });
+
+  return formattedAmount;
 }

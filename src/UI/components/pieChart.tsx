@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { DataView } from '@antv/data-set';
 import { Chart } from '@antv/g2';
-
+import { formatMoney } from './utils';
 interface DataItem {
   value: number;
   type: string;
@@ -16,11 +16,11 @@ interface PieChartProps {
 const PieChart: React.FC<PieChartProps> = ({ data, height = 500 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<Chart>();
-  console.log(data, 'data------');
   
 
   useEffect(() => {
     if (!containerRef.current) return;
+    
 
     // 通过 DataSet 计算百分比
     const dv = new DataView();
@@ -53,6 +53,14 @@ const PieChart: React.FC<PieChartProps> = ({ data, height = 500 }) => {
     chart.tooltip({
       showTitle: false,
       showMarkers: false,
+      customItems: (items) => {
+        return items.map(item => {
+          return {
+            ...item,
+            value: `${formatMoney(item.data.value, '万')}`
+          }
+        })
+      }
     });
     chart.legend(false);
     chart
