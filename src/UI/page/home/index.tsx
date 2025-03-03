@@ -6,7 +6,7 @@ import Summarize from "./review-sum";
 
 import PieChart from '../../components/donutChart';
 import { formatMoney } from '../../components/utils';
-import YearLineChart from './yearLineChart';
+import YearBarChart from './yearBarChart';
 import ConsumerChart from './consumerChart';
 import AccountInfo from './accountInfo';
 function Index(): JSX.Element {
@@ -39,7 +39,7 @@ function Index(): JSX.Element {
             
             <Col span={16}>
                     <Summarize formValue={formValue} />
-                    <YearLineChart formValue={formValue} />
+                    <YearBarChart formValue={formValue} />
                     <div className="mt8">
                         <TableSection formValue={formValue} />
                     </div>

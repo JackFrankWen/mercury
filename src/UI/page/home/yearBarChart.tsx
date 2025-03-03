@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import LineChart from 'src/UI/components/line';
+import BarChart from 'src/UI/components/barChart';
 import { Card, Space } from 'antd';
 import { useSelect } from '../../components/useSelect'
 import { cpt_const, } from 'src/UI/const/web'
 
-function YearLineChart(props: {
+function YearBarChart(props: {
     formValue: any
 }) {
     const { formValue } = props;
@@ -41,11 +41,11 @@ function YearLineChart(props: {
 
     return (<div className="mt8">
                         <Card title="年月消费" bordered={false} hoverable extra={extra}>
-                            <LineChart 
+                            <BarChart 
                                 data={data}
                             />
                         </Card>
                     </div>)
 }
 
-export default YearLineChart;
+export default YearBarChart;
