@@ -30,6 +30,7 @@ function ConsumerChart(props: {
 
     return (<div className="mt8">
                         <Card 
+                        size='small'
                         title="成员支出"
                         bordered={false} hoverable>
                             <PieChart 

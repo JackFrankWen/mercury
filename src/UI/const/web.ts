@@ -3,16 +3,22 @@ export enum AccountType {
     WIFE = 2,
     GRANDPARENTS = 3,
 }
-export const account_type = {
+export const account_type: { [key: number]: string } = {
     1: '老公账户',
     2: '老婆账户',
     3: '爷爷账户',
 }
-export const payment_type = {
+export const getAccountType = (type: number | string): string => {
+    return account_type[Number(type)] || '未知账户';
+}
+export const payment_type: { [key: number]: string } = {
     1: '支付宝',
     2: '微信',
     3: '银行卡',
     4: '现金',
+}
+export const getPaymentType = (type: number | string): string => {
+    return payment_type[Number(type)] || '未知支付方式';
 }
 export enum PaymentType {
     ALIPAY = 1,
@@ -20,7 +26,7 @@ export enum PaymentType {
     BANK_CARD = 3,
     CASH = 4,
 }
-export const consumer_type = {
+export const consumer_type: { [key: number]: string } = {
     1: '老公',
     2: '老婆',
     3: '家庭',

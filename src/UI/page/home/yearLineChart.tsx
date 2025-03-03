@@ -32,12 +32,9 @@ function YearLineChart(props: {
         </>
     )   
     const fetchData = async (obj) => {
-        console.log(obj, 'obj====');
         if (!obj) return;
-        console.log(obj,'====222');
         
         const result = await window.mercury.api.getTransactionsByMonth(obj);
-        console.log(result, '======');
          
         setData(result);
     }

@@ -2,6 +2,7 @@ import { Card, Col, Divider, Progress, Row, Statistic, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { AccountType, PaymentType } from 'src/UI/const/web'
 import { formatMoney } from 'src/UI/components/utils'
+
 export default function Summarize(props: { formValue: any }) {
   const { formValue } = props
   const gridStyle: React.CSSProperties = {
@@ -26,7 +27,6 @@ export default function Summarize(props: { formValue: any }) {
   const getSumrize = async (obj) => {
     try {
       const res = await window.mercury.api.getAccountPaymentTotal(obj)
-      console.log(res,'res====aaa');
       
       // if (res) {
       //   setStaticData(res)
@@ -120,7 +120,7 @@ export default function Summarize(props: { formValue: any }) {
               value={formatMoney(staticData.husband.total)}
             />
 
-            <Row>
+            {/* <Row>
               <Col span={24}>
                 <Typography.Text type='secondary' style={{fontSize: 12}}>
                   支付宝: {formatMoney(staticData.husband.alipay)}
@@ -131,7 +131,7 @@ export default function Summarize(props: { formValue: any }) {
                   微信: {formatMoney(staticData.husband.wechat)}
                 </Typography.Text>
               </Col>
-            </Row>
+            </Row> */}
           </Card>
         </Col>
         <Col span={8}>
@@ -142,7 +142,7 @@ export default function Summarize(props: { formValue: any }) {
               value={formatMoney(staticData.wife.total)}
             />
 
-            <Row>
+            {/* <Row>
               <Col span={24}>
                 <Typography.Text type='secondary' style={{fontSize: 12}}>
                   支付宝: {formatMoney(staticData.wife.alipay)}
@@ -153,7 +153,7 @@ export default function Summarize(props: { formValue: any }) {
                   微信: {formatMoney(staticData.wife.wechat)}
                 </Typography.Text>
               </Col>
-            </Row>
+            </Row> */}
           </Card>
         </Col>
        
