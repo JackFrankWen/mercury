@@ -93,7 +93,10 @@ function AccountInfo(props: { formValue: any }) {
     const items: CollapseProps['items'] = Object.values(newData).map((item, index) => {
         return {
             key: index,
-            label: item.account_type,
+            label: <Flex justify='space-between' align='center'>
+                <Typography.Text style={{ fontSize: 12, fontWeight: 500 }}>{item.account_type}</Typography.Text>
+                <Typography.Text style={{ fontSize: 12, fontWeight: 500 }}>{formatMoney(item.total, '万')}</Typography.Text>
+            </Flex>,
             children: item.children.map((child: any, childIndex: number) => {
                 // 百分号取整
                 const percent = Math.floor(child.total / item.total * 100)
