@@ -8,7 +8,7 @@ import PieChart from '../../components/donutChart';
 import { formatMoney } from '../../components/utils';
 import YearLineChart from './yearLineChart';
 import ConsumerChart from './consumerChart';
-
+import AccountInfo from './accountInfo';
 function Index(): JSX.Element {
     const [formValue, cpt] = useReviewForm()
     console.log(formValue, 'formValue====');
@@ -50,6 +50,7 @@ function Index(): JSX.Element {
                 <Card size="small" bordered={false} hoverable>
                     {cpt}
                 </Card>
+                <AccountInfo accountType="老公" total={1000} wechat={1000} alipay={1000} />
                 
                 <ConsumerChart formValue={formValue} />
             </Col>

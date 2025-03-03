@@ -31,39 +31,40 @@ export default function Summarize(props: { formValue: any }) {
       // if (res) {
       //   setStaticData(res)
       // }
+      // 老公微信取整数
       const husbandWechat = res.reduce((acc, item) => {
         if (Number(item.account_type) === AccountType.HUSBAND && Number(item.payment_type) === PaymentType.WECHAT) {
-          acc += Number(item.total)
+          acc += Math.floor(Number(item.total))
         }
         return acc
       }, 0)
       const wifeWechat = res.reduce((acc, item) => {
         if (Number(item.account_type) === AccountType.WIFE && Number(item.payment_type) === PaymentType.WECHAT) {
-          acc += Number(item.total)
+          acc += Math.floor(Number(item.total))
         }
         return acc
       }, 0)
         const husbandAlipay = res.reduce((acc, item) => {
         if (Number(item.account_type) === AccountType.HUSBAND && Number(item.payment_type) === PaymentType.ALIPAY) {
-          acc += Number(item.total)
+          acc += Math.floor(Number(item.total))
         }
         return acc
       }, 0)
       const wifeAlipay = res.reduce((acc, item) => {
         if (Number(item.account_type) === AccountType.WIFE && Number(item.payment_type) === PaymentType.ALIPAY) {
-          acc += Number(item.total)
+          acc += Math.floor(Number(item.total))
         }
         return acc
       }, 0)
       const husbandTotal = res.reduce((acc, item) => {
         if (Number(item.account_type) === AccountType.HUSBAND) {
-          acc += Number(item.total)
+          acc += Math.floor(Number(item.total))
         }
         return acc
       }, 0) 
       const wifeTotal = res.reduce((acc, item) => {
         if (Number(item.account_type) === AccountType.WIFE) {
-          acc += Number(item.total)
+          acc += Math.floor(Number(item.total))
         }
         return acc
       }, 0)
@@ -116,7 +117,7 @@ export default function Summarize(props: { formValue: any }) {
             <Statistic
               title="老公钱包"
               prefix="¥"
-              value={staticData.husband.total}
+              value={formatMoney(staticData.husband.total)}
             />
 
             <Row>
@@ -138,7 +139,7 @@ export default function Summarize(props: { formValue: any }) {
             <Statistic
               title="老婆钱包"
               prefix="¥"
-              value={staticData.wife.total}
+              value={formatMoney(staticData.wife.total)}
             />
 
             <Row>

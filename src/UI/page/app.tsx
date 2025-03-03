@@ -46,6 +46,10 @@ function App(props: any): JSX.Element {
                         itemBorderRadius: 10,
                         itemMarginInline:2,
                     },
+                    Collapse: {
+                        /* 这里是你的组件 token */
+                        contentPadding: 0,
+                      },
                     Layout: {
                     },
                     Card: {
