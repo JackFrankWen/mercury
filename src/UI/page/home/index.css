@@ -1,0 +1,12 @@
+.home-page {
+    height: 100vh;
+    overflow: scroll;
+}
+.home-page-left {
+    height: 100%;
+    overflow: scroll;
+}
+.home-page-right {
+    height: 100%;
+    overflow: scroll
+}

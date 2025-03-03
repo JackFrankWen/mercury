@@ -168,7 +168,7 @@ const CategoryTable = (props: {
         }}
         summary={tableSummary}
         dataSource={props.data}
-        scroll={{y: 400}}
+        // scroll={{y: 400}}
         pagination={false}
       />
       {show && (

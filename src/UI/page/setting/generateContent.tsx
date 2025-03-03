@@ -1,8 +1,8 @@
-import { Button, Spin, Tooltip, Popconfirm, Space, Table, Transfer } from "antd";
+import { Button, Spin, Tooltip, Popconfirm, Space, Table, Transfer, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { getCategoryString } from "src/UI/const/categroy";
 import type { GetProp, TableColumnsType, TableProps, TransferProps } from 'antd';
-
+import dayjs from 'dayjs';
 type TransferItem = GetProp<TransferProps, 'dataSource'>[number];
 type TableRowSelection<T extends object> = TableProps<T>['rowSelection'];
 
@@ -19,10 +19,19 @@ export default function GenerateContent(): JSX.Element {
   const [autoData, setAutoData] = useState<any[]>([]);
   const onGenerate = async () => {
     setLoading(true);
-    const res = await window.mercury.api.generateRule({ trans_time: ['2020-01-01', '2025-12-02'] });
+    const res = await window.mercury.api.generateRule({ trans_time: ['2025-01-01 00:00:00', 
+      dayjs().endOf('year').format('YYYY-MM-DD HH:mm:ss')
+    ] });
     console.log(res, 'res');
+    // 过滤掉autoData中重复的数据 交易对方和描述一致
+    const data = res.filter((item) => !autoData.some((autoItem) => autoItem.payee === item.payee && autoItem.description === item.description));
+    if (data.length > 0) {
+      setGenerateData(data);
+    } else {
+      message.warning('没有生成规则');
+    }
     setLoading(false);
-    setGenerateData(res);
+    
   }
   const refreshAutoData = () => {
     window.mercury.api.getAllMatchAutoRule().then((res) => {
@@ -110,17 +119,19 @@ export default function GenerateContent(): JSX.Element {
       </Space>
       {
         generateData.length > 0 && (
-          <TableTransfer
-            className="mt8"
-            rowKey={(record) => record.id}
-            dataSource={generateData}
-            targetKeys={targetKeys}
-            operations={['生成的规则', '']}
+          <div className="mt8">
+            <TableTransfer
+              className="mt8"
+              rowKey={(record) => record.id}
+              dataSource={generateData}
+              targetKeys={targetKeys}
+              operations={['生成的规则', '']}
             showSelectAll={true}
             onChange={onChange}
             leftColumns={columns}
             rightColumns={columns}
           />
+          </div>
         )
       }
       {

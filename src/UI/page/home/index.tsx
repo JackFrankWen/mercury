@@ -9,6 +9,7 @@ import { formatMoney } from '../../components/utils';
 import YearBarChart from './yearBarChart';
 import ConsumerChart from './consumerChart';
 import AccountInfo from './accountInfo';
+import './index.css'
 function Index(): JSX.Element {
     const [formValue, cpt] = useReviewForm()
     console.log(formValue, 'formValue====');
@@ -35,9 +36,9 @@ function Index(): JSX.Element {
    
 
     return (
-        <Row gutter={12}>
+        <Row gutter={12} className="home-page">
             
-            <Col span={16}>
+            <Col span={16} className="home-page-left">
                     <Summarize formValue={formValue} />
                     <YearBarChart formValue={formValue} />
                     <div className="mt8">
@@ -46,7 +47,7 @@ function Index(): JSX.Element {
                    
             </Col>
          
-            <Col span={8}>
+            <Col span={8} className="home-page-right">
                 <Card size="small" bordered={false} hoverable>
                     {cpt}
                 </Card>

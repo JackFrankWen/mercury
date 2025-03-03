@@ -278,7 +278,7 @@ const BasicTable = (props: {
 
   }
   // 根据用户规则分类
-  const ruleByUser = async (arr) => {
+  const ruleByUser = async (arr: any) => {
     const rules = await window.mercury.api.getAllMatchRule()
     let messageList = []
 
@@ -317,6 +317,9 @@ const BasicTable = (props: {
     // 根据ai 分类
     // 根据规则分类
     try {
+
+      const autoData = await window.mercury.api.getAllMatchAutoRule()
+      // 根据用户手动分类
       const newData = await ruleByUser(data)
       setData(newData)
       setStep(4)
