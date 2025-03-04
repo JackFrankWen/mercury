@@ -83,7 +83,7 @@ const UploadModal = (props: {
         width={500}
         onCancel={onCancel}
         onOk={handleOk}
-        okText="提交"
+        okText="直接跳过"
     >
         <Spin spinning={modalLoading}>
             <div className="mb8">
