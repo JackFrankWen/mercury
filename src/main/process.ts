@@ -19,6 +19,7 @@ import {
 import { transferCategory, sortByValue } from "./controller/transController";
 import { generateRule } from "./controller/matchAutoRulesController";
 import { batchInsertAutoRule, getAllMatchAutoRules, deleteMatchAutoRule } from "./sqlite3/match-auto-rules";
+import { exportAllTablesToCSV } from './sqlite3/export';
 
 
 export function handleProcessApi() {
@@ -198,6 +199,18 @@ export function handleProcessApi() {
             console.error('Error getting account payment total:', error);
             throw error;
         }
-    }); 
+    });
+
+    ipcMain.handle('export:csv', async () => {
+        console.log('export:csv1');
+        
+        try {
+            await exportAllTablesToCSV();
+            return { code: 200, message: '导出成功' };
+        } catch (error) {
+            console.error('Export error:', error);
+            return { code: 500, message: '导出失败' };
+        }
+    });
 }
 

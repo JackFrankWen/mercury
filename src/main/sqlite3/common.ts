@@ -1,3 +1,5 @@
+import { Params_Transaction } from "src/preload/type"
+
 // Helper function to generate WHERE clause from Params_Transaction
 export function generateWhereClause(params: Params_Transaction): { 
   whereClause: string, 

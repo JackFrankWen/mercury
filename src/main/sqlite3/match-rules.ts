@@ -1,5 +1,4 @@
 import { getDbInstance } from './connect'
-import { getAllTransactions, I_Transaction } from './transactions'
 export interface MatchRule {
   id?: number
   category: string
