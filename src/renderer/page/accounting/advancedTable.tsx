@@ -7,7 +7,7 @@ import {ControlOutlined, PlusOutlined} from "@ant-design/icons";
 import React, {useState} from "react";
 import {account_type, cost_type, payment_type, tag_type} from "../../const/web";
 import type { TableColumnsType, TableProps } from 'antd';
-import { I_Transaction,  } from "src/sqlite3/transactions";
+import { I_Transaction,  } from "src/main/sqlite3/transactions";
 import dayjs from "dayjs";
 import { SelectionFooter } from '../../components/SelectionFooter';
 import { getCategoryString } from "../../const/categroy";

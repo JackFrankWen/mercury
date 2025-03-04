@@ -2,8 +2,8 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { contextBridge, ipcRenderer } from 'electron';
-import { Params_Transaction } from './global';
-import { MatchRule } from './sqlite3/match-rules';
+import { Params_Transaction } from './preload';
+import { MatchRule } from './main/sqlite3/match-rules';
 contextBridge.exposeInMainWorld('mercury', {
     api: {
         // 获取所有匹配规则

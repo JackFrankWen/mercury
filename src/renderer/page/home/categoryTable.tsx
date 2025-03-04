@@ -7,7 +7,7 @@ import useModal from '../../components/useModal'
 import { abc_type, cost_type, tag_type } from '../../const/web'
 import dayjs from 'dayjs'
 import { SelectionFooter } from 'src/renderer/components/SelectionFooter'
-import { I_Transaction } from 'src/sqlite3/transactions'
+import { I_Transaction } from 'src/main/sqlite3/transactions'
 import { ModalContent } from './ModalContent'
 // import BatchUpdateArea from '../views/accounting/batch-update'
 

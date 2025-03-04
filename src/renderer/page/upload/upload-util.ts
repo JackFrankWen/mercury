@@ -1,4 +1,4 @@
-import { I_Transaction } from "src/sqlite3/transactions"
+import { I_Transaction } from "src/main/sqlite3/transactions"
 import { getMatchCategory } from "src/renderer/const/alipayMatch"
 import { category_type } from "src/renderer/const/categroy"
 

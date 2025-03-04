@@ -2,7 +2,7 @@ import React , { useEffect, useState }from "react";
 import {Card} from "antd";
 import {AdvancedSearchForm} from "./advancedSearchForm";
 import {AdvancedTable} from "./advancedTable";
-import { Params_Transaction } from "src/global";
+import { Params_Transaction } from "src/preload/index";
 import './index.css'
 import dayjs from "dayjs";
 

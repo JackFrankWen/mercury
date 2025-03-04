@@ -1,7 +1,7 @@
 import { app, BrowserWindow, session, Menu} from 'electron';
 import path from 'path';
 import start from 'electron-squirrel-startup'
-import {handleMatchRules, handleGenerateRule, handleProcessApi} from "./core/process";
+import {handleMatchRules, handleGenerateRule, handleProcessApi} from "./main/process";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
   if (start) {

@@ -1,6 +1,6 @@
 import { log } from "node:console"
 import { getDbInstance } from "./connect"
-import { Params_Transaction } from "src/global"
+import { Params_Transaction } from "src/preload/index"
 import { generateWhereClause } from "./common"
 export interface I_Transaction {
     id: number

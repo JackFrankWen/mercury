@@ -4,7 +4,7 @@ import {
     addMatchRule,
     updateMatchRule,
     deleteMatchRule,
-} from "../sqlite3/match-rules";
+} from "./sqlite3/match-rules";
 import {
     getAllTransactions,
     deleteTransactions,
@@ -15,10 +15,10 @@ import {
     getTransactionsByMonth,
     getConsumerTotal,
     getAccountPaymentTotal
-} from "../sqlite3/transactions";
+} from "./sqlite3/transactions";
 import { transferCategory, sortByValue } from "./controller/transController";
 import { generateRule } from "./controller/matchAutoRulesController";
-import { batchInsertAutoRule, getAllMatchAutoRules, deleteMatchAutoRule } from "../sqlite3/match-auto-rules";
+import { batchInsertAutoRule, getAllMatchAutoRules, deleteMatchAutoRule } from "./sqlite3/match-auto-rules";
 
 
 export function handleProcessApi() {

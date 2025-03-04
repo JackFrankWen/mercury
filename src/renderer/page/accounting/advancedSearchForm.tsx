@@ -3,7 +3,7 @@ import React, {useState} from "react";
 import RangePickerWrap from "../../components/rangePickerWrap";
 import {cpt_const} from "../../const/web";
 import {DownOutlined} from "@ant-design/icons";
-import { Params_Transaction } from "src/global";
+import { Params_Transaction } from "src/preload/index";
 import dayjs from "dayjs";
 import { I_FormValue } from "./index";
 

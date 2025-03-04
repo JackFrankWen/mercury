@@ -4,7 +4,7 @@ import CategoryTable from './categoryTable'
 import { useSelect } from '../../components/useSelect'
 import { cpt_const, payment_type } from 'src/renderer/const/web'
 import DonutChart from 'src/renderer/components/donutChart'
-import { CategoryReturnType } from 'src/global'
+import { CategoryReturnType } from 'src/preload/index'
 
 // 写一个方法  CategoryReturnType中 child 每一条数据    转化成 PieChart 的 data 用reduce  
 // 转化 {value: item.child.value, name: item.child.name, type: item.    value}

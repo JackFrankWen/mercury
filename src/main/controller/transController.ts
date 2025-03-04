@@ -1,5 +1,5 @@
 import { getCategoryObj, getCategoryName } from "../../renderer/const/categroy";
-import { CategoryReturnType } from "../../global"
+import { CategoryReturnType } from "../../preload"
 import { roundToTwoDecimalPlaces } from "../../renderer/components/utils";
 
 

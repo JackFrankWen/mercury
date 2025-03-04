@@ -1,6 +1,6 @@
-import { getAllTransactions } from "../../sqlite3/transactions"
-import { Params_Transaction } from "../../global"
-import { I_Transaction } from "../../sqlite3/transactions"
+import { getAllTransactions } from "../sqlite3/transactions"
+import { Params_Transaction } from "../../preload"
+import { I_Transaction } from "../sqlite3/transactions"
 
 // 获取数组中 同时满足 a.payee === b.payee 和 a.description === b.description c.category === b.category 的记录 只返回其中一条 
 export const getPayeeAndDescription = (list: I_Transaction[]) => {
