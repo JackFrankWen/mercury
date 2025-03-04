@@ -16,12 +16,12 @@
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
-    "init": "node src/sqlite3/script/create-table.js",
-    "import-rules": "node src/sqlite3/script/import-rules.js",
-    "import-trans": "node src/sqlite3/script/import-trans.js",
-    "remove": "node src/sqlite3/script/del-all-trans.js",
-    "import-json": "node src/sqlite3/script/import-json.js",
-    "export": "node src/sqlite3/script/export-trans.js"
+    "init": "node scripts/create-table.js",
+    "import-rules": "node scripts/import-rules.js",
+    "import-trans": "node scripts/import-trans.js",
+    "remove": "node scripts/del-all-trans.js",
+    "import-json": "node scripts/import-json.js",
+    "export": "node scripts/export-trans.js"
   },
   "dependencies": {
     "@antv/data-set": "^0.11.8",

@@ -62,7 +62,7 @@ function importCSV(filepath) {
 // 主函数
 async function main() {
     try {
-        const dataDir = path.join(__dirname, '../../../data/202501/match_rules.csv');
+        const dataDir = path.join(__dirname, '../data/202501/match_rules.csv');
         if (!fs.existsSync(dataDir)) {
             throw new Error(`文件不存在: ${dataDir}`);
         }

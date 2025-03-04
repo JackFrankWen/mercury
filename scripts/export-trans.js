@@ -23,7 +23,7 @@ function extractKeywords(text) {
 }
 
 function exportTrans() {
-    const db = new sqlite3.Database(path.join(__dirname, '../../../data/database.db'));
+    const db = new sqlite3.Database(path.join(__dirname, '../data/database.db'));
     db.all('SELECT * FROM transactions', (err, rows) => {
         if (err) {
             console.error(err);
@@ -34,7 +34,7 @@ function exportTrans() {
         
         
         const jsonData = JSON.stringify(descriptions);
-        fs.writeFileSync(path.join(__dirname, '../../../data/transactions.txt'), jsonData);
+        fs.writeFileSync(path.join(__dirname, '../data/transactions.txt'), jsonData);
     });
 }
 
