@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Collapse, CollapseProps, Flex, Progress, Row, Typography } from 'antd';
 import { AccountBookFilled } from '@ant-design/icons';
-import { getAccountType, getPaymentType} from 'src/UI/const/web';
-import { formatMoney } from 'src/UI/components/utils';
+import { getAccountType, getPaymentType} from 'src/renderer/const/web';
+import { formatMoney } from 'src/renderer/components/utils';
 
 interface AccountInfoProps {
     accountType: string;

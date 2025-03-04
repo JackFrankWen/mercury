@@ -2,7 +2,7 @@ import { Button, message, Space, Table, Tag, Tooltip, Typography, Input} from 'a
 import type { InputRef, TableRowSelection } from 'antd'
 import React, { useRef, useState } from 'react'
 import dayjs from 'dayjs'
-import { SelectionFooter } from 'src/UI/components/SelectionFooter'
+import { SelectionFooter } from 'src/renderer/components/SelectionFooter'
 import { I_Transaction } from 'src/sqlite3/transactions'
 import { payment_type, account_type, tag_type } from '../../const/web'
 import { formatMoney } from '../../components/utils'

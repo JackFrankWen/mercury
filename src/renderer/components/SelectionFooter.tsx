@@ -1,7 +1,7 @@
 import { Button, Col, Row, Space } from 'antd';
 import React, { useState } from 'react';
 import { I_Transaction } from 'src/sqlite3/transactions';
-import BatchUpdateArea from 'src/UI/components/batchForm';
+import BatchUpdateArea from 'src/renderer/components/batchForm';
 interface SelectionFooterProps {
     selectedCount: number;
     onCancel: () => void;

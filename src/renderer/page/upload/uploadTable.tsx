@@ -19,12 +19,12 @@ import {
   Typography,
 } from 'antd'
 import React, { useEffect, useMemo, useState } from 'react'
-import { getCategoryString } from 'src/UI/const/categroy'
+import { getCategoryString } from 'src/renderer/const/categroy'
 import {
   account_type,
-} from 'src/UI/const/web'
-import useLoadingButton from 'src/UI/components/useButton'
-import { roundToTwoDecimalPlaces, formatMoney } from 'src/UI/components/utils'
+} from 'src/renderer/const/web'
+import useLoadingButton from 'src/renderer/components/useButton'
+import { roundToTwoDecimalPlaces, formatMoney } from 'src/renderer/components/utils'
 import { DeleteOutlined } from '@ant-design/icons'
 import UploadModal from './uploadModal'
 import dayjs from 'dayjs'

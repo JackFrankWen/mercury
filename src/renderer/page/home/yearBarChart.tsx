@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import BarChart from 'src/UI/components/barChart';
+import BarChart from 'src/renderer/components/barChart';
 import { Card, Space } from 'antd';
 import { useSelect } from '../../components/useSelect'
-import { cpt_const, } from 'src/UI/const/web'
+import { cpt_const, } from 'src/renderer/const/web'
 
 function YearBarChart(props: {
     formValue: any

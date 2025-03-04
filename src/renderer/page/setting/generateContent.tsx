@@ -1,6 +1,6 @@
 import { Button, Spin, Tooltip, Popconfirm, Space, Table, Transfer, message } from "antd";
 import React, { useEffect, useState } from "react";
-import { getCategoryString } from "src/UI/const/categroy";
+import { getCategoryString } from "src/renderer/const/categroy";
 import type { GetProp, TableColumnsType, TableProps, TransferProps } from 'antd';
 import dayjs from 'dayjs';
 type TransferItem = GetProp<TransferProps, 'dataSource'>[number];

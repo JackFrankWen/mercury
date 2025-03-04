@@ -2,8 +2,8 @@ import { Card, Col, Row, Space } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import CategoryTable from './categoryTable'
 import { useSelect } from '../../components/useSelect'
-import { cpt_const, payment_type } from 'src/UI/const/web'
-import DonutChart from 'src/UI/components/donutChart'
+import { cpt_const, payment_type } from 'src/renderer/const/web'
+import DonutChart from 'src/renderer/components/donutChart'
 import { CategoryReturnType } from 'src/global'
 
 // 写一个方法  CategoryReturnType中 child 每一条数据    转化成 PieChart 的 data 用reduce  

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import PieChart from 'src/UI/components/pieChart';
+import PieChart from 'src/renderer/components/pieChart';
 import { Card } from 'antd';
-import { consumer_type } from 'src/UI/const/web';
+import { consumer_type } from 'src/renderer/const/web';
 
 
 function ConsumerChart(props: {

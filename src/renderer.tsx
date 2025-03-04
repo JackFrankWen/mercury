@@ -31,7 +31,7 @@ import React from 'react';
 import { createRoot } from "react-dom/client";
 
 
-import App from "./UI/page/app";
+import App from "./renderer/page/app";
 
 import './index.css';
 

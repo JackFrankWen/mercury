@@ -1,6 +1,6 @@
-import { getCategoryObj, getCategoryName } from "../../UI/const/categroy";
+import { getCategoryObj, getCategoryName } from "../../renderer/const/categroy";
 import { CategoryReturnType } from "../../global"
-import { roundToTwoDecimalPlaces } from "../../UI/components/utils";
+import { roundToTwoDecimalPlaces } from "../../renderer/components/utils";
 
 
 export function transferCategory(list: any): CategoryReturnType {

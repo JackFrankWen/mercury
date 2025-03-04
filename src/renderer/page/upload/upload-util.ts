@@ -1,6 +1,6 @@
 import { I_Transaction } from "src/sqlite3/transactions"
-import { getMatchCategory } from "src/UI/const/alipayMatch"
-import { category_type } from "src/UI/const/categroy"
+import { getMatchCategory } from "src/renderer/const/alipayMatch"
+import { category_type } from "src/renderer/const/categroy"
 
 export interface tableHeaderI {
     name: string

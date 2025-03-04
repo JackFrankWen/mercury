@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { cpt_const } from 'src/UI/const/web'
-import { category_type } from 'src/UI/const/categroy'
+import { cpt_const } from 'src/renderer/const/web'
+import { category_type } from 'src/renderer/const/categroy'
 import SelectWrap from './selectWrap'
 import {  toNumberOrUndefiend } from './utils'
 import {

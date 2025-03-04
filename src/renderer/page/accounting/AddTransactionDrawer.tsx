@@ -1,8 +1,8 @@
 import React from 'react';
 import { Drawer, Form, Input, Button, Space, Select, DatePicker, message, Cascader } from 'antd';
 import { account_type, payment_type, tag_type } from "../../const/web";
-import { category_type } from 'src/UI/const/categroy';
-import { toNumberOrUndefiend } from 'src/UI/components/utils';
+import { category_type } from 'src/renderer/const/categroy';
+import { toNumberOrUndefiend } from 'src/renderer/components/utils';
 
 // 定义消费者类型映射
 const CONSUMER_TYPE_MAP = {

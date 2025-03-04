@@ -1,7 +1,7 @@
 import { Card, Col, Divider, Progress, Row, Statistic, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { AccountType, PaymentType } from 'src/UI/const/web'
-import { formatMoney } from 'src/UI/components/utils'
+import { AccountType, PaymentType } from 'src/renderer/const/web'
+import { formatMoney } from 'src/renderer/components/utils'
 
 export default function Summarize(props: { formValue: any }) {
   const { formValue } = props
