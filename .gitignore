@@ -102,3 +102,6 @@ out/
 data/transactions.txt
 data/transactions.json
 data/transactions.csv
+
+# exports
+exports/
