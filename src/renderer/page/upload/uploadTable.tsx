@@ -24,11 +24,11 @@ import {
   account_type,
 } from 'src/renderer/const/web'
 import useLoadingButton from 'src/renderer/components/useButton'
-import { roundToTwoDecimalPlaces, formatMoney } from 'src/renderer/components/utils'
+import {  formatMoney } from 'src/renderer/components/utils'
 import { DeleteOutlined } from '@ant-design/icons'
 import UploadModal from './uploadModal'
 import dayjs from 'dayjs'
-const { Text, Link } = Typography;
+import { openNotification, } from 'src/renderer/components/notification'
 
 
 function checkNeedTransferData(data: any) {
@@ -64,26 +64,6 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   index: number
   children: React.ReactNode
 }
-function changeCategoryModal(messageList: {
-  index: number,
-  message: string,
-  before: string,
-  after: string
-}[]) {
-  const content = messageList.map(item => {
-    return <div key={item.index}>
-      <span>{item.message}</span>
-      <Text delete style={{ width: '50px' }}>{item.before}</Text>
-      <Text type="success">{item.after}</Text>
-    </div>
-  })
-  Modal.info({
-    title: '分类成功',
-    width: 600,
-    okText: '知道了',
-    content: <Alert style={{ maxHeight: '200px', overflow: 'auto' }} message={content} type="success" />,
-  })
-}
 
 export interface tableHeaderI {
   name: string
@@ -111,17 +91,6 @@ const BasicTable = (props: {
   const [data, setData] = useState(tableData)
   const [LoadingBtn, setBtnLoading, setLoadingFalse] = useLoadingButton()
   const [modalVisible, setModalVisible] = useState(false)
-  const openNotification = (messageList: any) => {
-
-    api.open({
-      message: '替换成功',
-      
-      description: `一共替换${messageList.length}条数据，点击查看`,
-      onClick: () => {
-        changeCategoryModal(messageList)
-      },
-    });
-  }
 
   // 写一个方法缓存needTransferData，根据data
   const needTransferData = useMemo(() => {
@@ -309,7 +278,7 @@ const BasicTable = (props: {
 
       return obj
     })
-    openNotification(messageList)
+    openNotification(messageList, api)
     return newData
   }
   const ruleByAi = async (arr: any) => {
@@ -335,7 +304,7 @@ const BasicTable = (props: {
         }
         return obj
       })
-      openNotification(messageList)
+      openNotification(messageList, api)
       return newData
     } catch (error) {
       message.error('分类失败')
@@ -367,13 +336,13 @@ const BasicTable = (props: {
     setLoading(true)
 
     setTimeout(() => {
-    if (step === 2) {
-      goStep2(needTransferData)
-    } else if (step === 3) {
+      if (step === 2) {
+        goStep2(needTransferData)
+      } else if (step === 3) {
 
-      // 分类
-       goStep3()
-    } else if (step === 4) {
+        // 分类
+        goStep3()
+      } else if (step === 4) {
         // 上传
         onSubmitSuccess(data)
       }
@@ -481,7 +450,7 @@ const BasicTable = (props: {
         </Space>
         <Space>
           <Button onClick={onCancel}>取消</Button>
-          
+
           <LoadingBtn type="primary" onClick={submit}>
             {
               step !== 4 ? '下一步' : '提交'
@@ -542,7 +511,7 @@ const BasicTable = (props: {
 
 
               setData(newData);
-              openNotification(messageList)
+              openNotification(messageList, api)
               setLoading(false)
               setModalVisible(false);
               setLoadingFalse();

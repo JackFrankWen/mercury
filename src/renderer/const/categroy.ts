@@ -26,7 +26,7 @@ export const category_type = [
     children: [
       {
         value: 10001,
-        label: '买菜(废)',
+        label: '买菜',
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -44,7 +44,7 @@ export const category_type = [
       },
       {
         value: 10003,
-        label: '水果(废)',
+        label: '水果',
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -70,13 +70,14 @@ export const category_type = [
       },
       {
         value: 10006,
-        label: '餐饮美食',
+        label: '下馆子',
         tag: variable_cost,
         consumer: family,
         cost_type: chill,
         abc_type: b, // 489.39166666666665
         budget: 500, // 589
       },
+      
     ],
   },
   {

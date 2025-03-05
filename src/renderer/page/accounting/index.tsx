@@ -26,6 +26,7 @@ function Accounting(): JSX.Element {
     const getTransactions = (params: Params_Transaction) => {
         
 
+        console.log('===params', params);
         window.mercury.api.getTransactions(params).then((res) => {
             
             if(res) {

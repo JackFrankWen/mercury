@@ -208,6 +208,19 @@ export function AdvancedTable(props: {
                 scroll={{ x: 1300, 
                     y: 'calc(100vh - 400px)'
                  }}
+                onRow={(record) => {
+                    return {
+                        onClick: () => {
+                            console.log('===record', record);
+                            // 行选择
+                            if (selectedRowKeys.includes(record.id)) {
+                                onSelectChange(selectedRowKeys.filter((id) => id !== record.id))
+                            } else {
+                                onSelectChange([...selectedRowKeys, record.id])
+                            }
+                        }
+                    }
+                }}
                 dataSource={data}
                 pagination={{
                     defaultPageSize: 30,
