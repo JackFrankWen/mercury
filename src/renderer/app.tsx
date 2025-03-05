@@ -2,10 +2,10 @@ import React from "react";
 import { Layout, ConfigProvider, Menu } from "antd";
 import KeepAlive, { AliveScope } from "react-activation";
 import { useNavigate } from "react-router-dom";
-import Home from "./home";
-import Accounting from "./accounting";
-import Setting from "./setting";
-import Upload from "./upload";
+import Home from "./page/home";
+import Accounting from "./page/accounting";
+import Setting from "./page/setting";
+import Upload from "./page/upload";
 
 
 import {
