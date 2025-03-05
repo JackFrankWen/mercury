@@ -51,7 +51,7 @@ const PieChart: React.FC<PieChartProps> = ({ data, height = 500 }) => {
       radius: 0.5,
     });
     chart.tooltip({
-      showTitle: false,
+      // showTitle: false,
       showMarkers: false,
       customItems: (items) => {
         return items.map(item => {

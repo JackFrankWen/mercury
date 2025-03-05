@@ -2,10 +2,12 @@ import React from "react";
 import { Layout, ConfigProvider, Menu } from "antd";
 import KeepAlive, { AliveScope } from "react-activation";
 import { useNavigate } from "react-router-dom";
+
 import Home from "./page/home";
 import Accounting from "./page/accounting";
 import Setting from "./page/setting";
 import Upload from "./page/upload";
+import icon from "../../build/icon.png";
 
 
 import {
@@ -45,6 +47,7 @@ function App(props: any): JSX.Element {
                         activeBarBorderWidth: 0,
                         itemBorderRadius: 10,
                         itemMarginInline:2,
+                        itemMarginBlock: 12
                     },
                     Collapse: {
                         /* 这里是你的组件 token */
@@ -69,6 +72,9 @@ function App(props: any): JSX.Element {
                     className="mercury-sider"
                     collapsedWidth={70}
                 > 
+                    <div className="mercury-logo">
+                        <img src={icon} alt="logo" />
+                    </div>
                     <Menu
                     mode="vertical"
                     onClick={({key})=>{
