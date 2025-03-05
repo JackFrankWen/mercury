@@ -8,7 +8,6 @@ import {
     formateToTableAlipayMobileHeader,
     formateToTableDataAlipayMobile,
 } from './upload-util'
-
 export enum ClassificationEnum {
     WECHAT = 'wechat',// 手机导入
     ALIPAY = 'alipay',// 电脑导入
@@ -47,7 +46,8 @@ export function transformArrayTo2D(data: string[]): string[][] {
 
 export function handleToTable(csvData: any): {
     tableHeader: tableHeaderI,
-    tableData: I_Transaction[]
+    tableData: I_Transaction[],
+    success: boolean
 } {
     let tableData: I_Transaction[] = []
     let tableHeader: tableHeaderI | undefined = undefined
@@ -57,6 +57,13 @@ export function handleToTable(csvData: any): {
     const WECHAT = 2
     try {
         const type = getClassification(csvData)
+        if (type === ClassificationEnum.UNKNOWN) {
+            return {
+                tableHeader: undefined,
+                tableData: [],
+                success: false
+            }
+        }
         switch (type) {
             case ClassificationEnum.WECHAT:
                  csvHeader = csvData.slice(0, 17)
@@ -70,7 +77,8 @@ export function handleToTable(csvData: any): {
                 
                 return {
                     tableHeader: tableHeader,
-                    tableData: tableData as I_Transaction[]
+                    tableData: tableData as I_Transaction[],
+                    success: true
                 }
             case ClassificationEnum.ALIPAY:
                 csvHeader = [...csvData.slice(0, 5), ...csvData.slice(-7)]
@@ -83,7 +91,8 @@ export function handleToTable(csvData: any): {
                 )
                 return {
                     tableHeader:tableHeader,
-                    tableData: tableData
+                    tableData: tableData as I_Transaction[],
+                    success: true
                 }
             case ClassificationEnum.ALIPAY_MOBILE:
                 csvHeader = csvData.slice(0, 22)
@@ -122,19 +131,22 @@ export function handleToTable(csvData: any): {
                  
                 return {
                     tableHeader: tableHeader,
-                    tableData: tableData
+                    tableData: tableData as I_Transaction[],
+                    success: true
                 }
             default:
                 return {
                     tableHeader: undefined,
-                    tableData: []
+                    tableData: [],
+                    success: false
                 }
         }
     } catch (error) {
         console.error(error)
         return {
             tableHeader: undefined,
-            tableData: []
+            tableData: [],
+            success: false
         }
     }
 }

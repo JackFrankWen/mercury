@@ -80,6 +80,7 @@ const columns: ColumnsType<I_Transaction> = [
         render: renderBoldPrice,
         key: 'amount',
         width: 120,
+        sorter: (a, b) => Number(a.amount) - Number(b.amount),
     },
     {
         title: '交易对方',

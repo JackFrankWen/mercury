@@ -23,6 +23,17 @@ interface AddTransactionDrawerProps {
 function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDrawerProps) {
   const [form] = Form.useForm();
 
+  const initData = {
+    category: undefined,
+    amount: undefined,
+    description: '无',
+    payee: '无',
+    consumer: undefined,
+    payment_type: 3,
+    account_type: 1,
+    tag: undefined,
+    trans_time: undefined,
+  }
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
@@ -70,7 +81,7 @@ function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDra
         </Space>
       }
     >
-      <Form form={form} layout="vertical">
+      <Form form={form} layout="vertical" initialValues={initData}>
       <Form.Item name="category" label="分类">
         <Cascader
           options={category_type}
@@ -88,8 +99,6 @@ function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDra
                 )
 
                 form.setFieldsValue({
-                  account_type: undefined,
-                  payment_type: undefined,
                   tag: toNumberOrUndefiend(obj?.tag),
                   abc_type: toNumberOrUndefiend(obj?.abc_type),
                   consumer: toNumberOrUndefiend(obj?.consumer),

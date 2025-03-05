@@ -40,34 +40,49 @@ export function toNumberOrUndefiend(number: any): number | undefined {
 }
 
 /**
- * 格式化金额为中文货币格式字符串
+ * 格式化金额为中文货币格式字符串 3.0万只限 3万  3.2万显示 3.2万
  * @param amount - 要格式化的金额，可以是数字或字符串
- * @param unit - 可选的单位，支持 "万"
+ * @param unit - 可选的单位，支持 "万" "千" "亿"
  * @returns 格式化后的金额字符串
  * @example
  * formatMoney(1234.56) // "1,234.56"
  * formatMoney("1234") // "1,234"
  * formatMoney(12345, "万") // "1.2万"
+ * formatMoney(12345, "千") // "12.3千"
+ * formatMoney(123456789, "亿") // "1.23亿"
+ * formatMoney(10000, "万") // "1万"
  */
-export function formatMoney(amount: number | string, unit?: '万'): string {
+export function formatMoney(amount: number | string, unit?: '万' | '千' | '亿'): string {
   if (typeof amount === 'string') {
     amount = parseFloat(amount);
   }
-  
-  if (unit === '万') {
-    amount = amount / 10000;
-    const formattedAmount = amount.toLocaleString('zh-CN', {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1
+
+  let result: number;
+  if (unit === '亿') {
+    result = amount / 100000000;
+  } else if (unit === '千') {
+    result = amount / 1000;
+  } else if (unit === '万') {
+    result = amount / 10000;
+  } else {
+    // No unit case
+    const hasDecimal = amount % 1 !== 0;
+    return amount.toLocaleString('zh-CN', {
+      minimumFractionDigits: hasDecimal ? 2 : 0,
+      maximumFractionDigits: 2
     });
-    return `${formattedAmount}${unit}`;
   }
 
-  const hasDecimal = amount % 1 !== 0;
-  const formattedAmount = amount.toLocaleString('zh-CN', {
-    minimumFractionDigits: hasDecimal ? 2 : 0,
-    maximumFractionDigits: 2
+  // For units (万/千/亿), format with one decimal place
+  const formatted = result.toLocaleString('zh-CN', {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1
   });
 
-  return formattedAmount;
+  // Remove .0 if present
+  const finalAmount = formatted.endsWith('.0') 
+    ? formatted.slice(0, -2) 
+    : formatted;
+
+  return `${finalAmount}${unit}`;
 }

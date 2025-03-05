@@ -1,5 +1,5 @@
 import React from "react";
-import { Upload, UploadProps } from "antd";
+import { Upload, UploadProps, message } from "antd";
 import Papa from 'papaparse';
 import { handleToTable } from './classification';
 import { WechatOutlined, AlipayCircleOutlined, CloudUploadOutlined } from '@ant-design/icons';
@@ -27,7 +27,13 @@ function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
           skipEmptyLines: true,
           complete: function (results: any) {
             const csvData = results.data || [];
-            const { tableHeader, tableData } = handleToTable(csvData);
+            const { tableHeader, tableData, success } = handleToTable(csvData);
+            if (!success) {
+              message.error('上传错误文件')
+              setLoading(false);
+              return false;
+            }
+
             onUploadSuccess({ tableHeader, tableData });
             setLoading(false);
           },
@@ -42,21 +48,7 @@ function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
     <div className="upload-wrap mt8">
       <Dragger {...uploadProps}>
         <div className="upload-cus-container">
-          {/* <div className="upload-cus-icon">
-          <WechatOutlined />
-          <AlipayCircleOutlined />
-
-          </div>
-          <p
-            className="ant-upload-text"
-            style={{
-              position: 'absolute',
-              top: '50%',
-              marginTop: '60px',
-            }}
-          >
-            点击或拖拽上传支付宝csv文件
-          </p> */}
+        
           <p className="ant-upload-drag-icon">
           <CloudUploadOutlined />
           </p>

@@ -35,17 +35,21 @@ const UploadModal = (props: {
                         // const csvHeader = csvData.slice(0, 1)
                         try {
                             const csvContent = csvData.slice(1)
-                            console.log(csvData, 'csvData');
+                            console.log(csvData, '===csvData');
                             const { name, } = file
                             // 如果文件名包含jd_，则认为是京东的文件
                             let data
 
                             if (name.includes('jd')) {
                                 data = formateToTableJd(csvContent, 'jd')
+                                console.log(data, '===data');
+                                
                                 if (needTransferData.hasJingdong) {
                                     onOk('jd', data)
 
                                 } else {
+                                    setModalLoading(true)
+                                    setLoading(true)
                                     message.error('上传错误文件')
                                 }
                                 //jd
@@ -54,11 +58,15 @@ const UploadModal = (props: {
                                     data = formateToTableJd(csvContent, 'pdd')
                                     onOk('pdd', data)
                                 } else {
+                                    setModalLoading(true)
+                                    setLoading(true)
                                     message.error('上传错误文件')
                                 }
                                 // pdd
                             } else {
                                 message.error('上传错误文件')
+                                setModalLoading(true)
+                                setLoading(true)
                             }
 
                             setFileList([file])
