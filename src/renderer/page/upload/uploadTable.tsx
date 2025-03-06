@@ -358,7 +358,7 @@ const BasicTable = (props: {
             if (/[\u4e00-\u9fa5]/.test(record.amount)) {
               return 'mercury-warning'
             }
-            if (record.description?.includes('京东-订单编号') || record.description?.includes('拼多多')) {
+            if (record.description?.includes('京东-订单编号') || record.description?.includes('商户单号')) {
               return 'mercury-warning'
             }
             return ''
