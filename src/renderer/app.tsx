@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout, ConfigProvider, Menu, Flex, Tooltip } from "antd";
-import KeepAlive, { AliveScope } from "react-activation";
-import { BrowserRouter, Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { AliveScope, KeepAlive } from "react-activation";
+import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 
 import Home from "./page/home";
 import Accounting from "./page/accounting";
@@ -52,7 +52,9 @@ function App(props: any): JSX.Element {
                     },
                 }}
             >
-                <MainLayout />
+                <AliveScope>
+                    <MainLayout />
+                </AliveScope>
             </ConfigProvider>
         </BrowserRouter>
     );
@@ -118,29 +120,25 @@ function MainLayout(): JSX.Element {
             </Sider>
 
             <Content className="mercury-content">
-                <AliveScope>
-                    <Routes>
-                        <Route path="/" element={
-                            <KeepAlive name="home" cacheKey="home-cache">
-                                <Home />
-                            </KeepAlive>
-                        } />
-                        <Route path="/accounting" element={
-                            <KeepAlive name="accounting" cacheKey="accounting-cache">
-                                <Accounting />
-                            </KeepAlive>
-                        } />
-                        <Route path="/setting" element={
-                            <KeepAlive name="setting" cacheKey="setting-cache">
-                                <Setting />
-                            </KeepAlive>
-                        } />
-                        <Route path="/upload" element={
-                            <Upload />
-                        } />
-                        <Route path="*" element={<navigate to="/" replace />} />
-                    </Routes>
-                </AliveScope>
+                <Routes>
+                    <Route path="/" element={
+                        <KeepAlive id="home-cache" name="home">
+                            <Home />
+                        </KeepAlive>
+                    } />
+                    <Route path="/accounting" element={
+                        <KeepAlive id="accounting-cache" name="accounting">
+                            <Accounting />
+                        </KeepAlive>
+                    } />
+                    <Route path="/setting" element={
+                        <KeepAlive id="setting-cache" name="setting">
+                            <Setting />
+                        </KeepAlive>
+                    } />
+                    <Route path="/upload" element={<Upload />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
             </Content>
         </Layout>
     );
