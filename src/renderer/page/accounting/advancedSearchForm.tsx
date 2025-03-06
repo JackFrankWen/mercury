@@ -45,7 +45,17 @@ export const AdvancedSearchForm = (props: {
             trans_time: [dayjs(formValue.trans_time[0]), dayjs(formValue.trans_time[1])]
         }}
         onValuesChange={(changedValues, allValues) => {
-            props.setFormValue(allValues)
+            console.log('changedValues', changedValues);
+            console.log('allValues', allValues);
+            const new_allValues = {...allValues};
+            const trans_time = allValues.trans_time;
+            if (Array.isArray(trans_time) && trans_time.length === 2) {
+                new_allValues.trans_time = [
+                    dayjs(trans_time[0]).format('YYYY-MM-DD HH:mm:ss'),
+                    dayjs(trans_time[1]).format('YYYY-MM-DD HH:mm:ss')
+                ];
+            }
+            props.setFormValue(new_allValues)
         }}
         name="advanced_search" style={formStyle} onFinish={onFinish}>
             <Row gutter={24}>

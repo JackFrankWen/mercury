@@ -17,7 +17,7 @@ export function generateWhereClause(params: Params_Transaction): {
   }
 
   if (params?.description) {
-    conditions.push(`description LIKE '%${params.description}%' OR payee LIKE '%${params.description}%'`)
+    conditions.push(`(description LIKE '%${params.description}%' OR payee LIKE '%${params.description}%')`)
   }
 
   if (params?.consumer) {

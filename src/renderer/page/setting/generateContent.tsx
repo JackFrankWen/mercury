@@ -19,7 +19,9 @@ export default function GenerateContent(): JSX.Element {
   const [autoData, setAutoData] = useState<any[]>([]);
   const onGenerate = async () => {
     setLoading(true);
-    const res = await window.mercury.api.generateRule({ trans_time: ['2025-01-01 00:00:00', 
+    // 获取当前年份 第1天
+    const currentYear = dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss');
+    const res = await window.mercury.api.generateRule({ trans_time: [currentYear, 
       dayjs().endOf('year').format('YYYY-MM-DD HH:mm:ss')
     ] });
     console.log(res, 'res');
@@ -27,6 +29,7 @@ export default function GenerateContent(): JSX.Element {
     const data = res.filter((item) => !autoData.some((autoItem) => autoItem.payee === item.payee && autoItem.description === item.description));
     if (data.length > 0) {
       setGenerateData(data);
+      setAutoData([]);
     } else {
       message.warning('没有生成规则');
     }
@@ -174,6 +177,7 @@ const TableTransfer: React.FC<TableTransferProps> = (props) => {
             dataSource={filteredItems}
             rowKey={(record) => record.id}
             size="small"
+            scroll={{ y: 400 }}
             pagination={false}
             style={{ pointerEvents: listDisabled ? 'none' : undefined }}
             onRow={({ key, disabled: itemDisabled }) => ({

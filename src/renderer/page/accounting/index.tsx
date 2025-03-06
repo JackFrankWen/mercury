@@ -27,7 +27,13 @@ function Accounting(): JSX.Element {
         
 
         console.log('===params', params);
-        window.mercury.api.getTransactions(params).then((res) => {
+        // 如果 trans_time [object, object] 则转换为 [string, string]
+        
+        const params_new = {
+            ...params,
+            is_unclassified: params.chose_unclassified === 'unclassified'
+        }
+        window.mercury.api.getTransactions(params_new).then((res) => {
             
             if(res) {
                 setTransactions(res)
@@ -49,7 +55,10 @@ function Accounting(): JSX.Element {
                 <AdvancedTable data ={transactions}
                 fresh={
                     () => {
-                        getTransactions(formValue)
+                        getTransactions({
+                            ...formValue,
+                            is_unclassified: formValue.chose_unclassified === 'unclassified'
+                        })
                     }
                 }
                 />

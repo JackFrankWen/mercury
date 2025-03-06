@@ -37,6 +37,7 @@ export const getAllTransactions = async (params: Params_Transaction): Promise<I_
       sql += ` LIMIT ${params.page_size} OFFSET ${offset}`
     }
     
+    console.log('sql===', sql);
     const rows = await new Promise<I_Transaction[]>((resolve, reject) => {
       db.all(sql, (err, rows: I_Transaction[]) => {
         if (err) {
