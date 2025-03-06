@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, ConfigProvider, Menu } from "antd";
+import { Layout, ConfigProvider, Menu, Flex, Tooltip } from "antd";
 import KeepAlive, { AliveScope } from "react-activation";
 import { useNavigate } from "react-router-dom";
 
@@ -17,6 +17,7 @@ import {
     CloudUploadOutlined,
     HomeOutlined,
     ReadOutlined,
+    ReloadOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 type MenuItem = Required<MenuProps>['items'][number];
@@ -72,9 +73,11 @@ function App(props: any): JSX.Element {
                     className="mercury-sider"
                     collapsedWidth={70}
                 > 
+                <Flex align="center" vertical>
                     <div className="mercury-logo">
                         <img src={icon} alt="logo" />
                     </div>
+                    
                     <Menu
                     mode="vertical"
                     onClick={({key})=>{
@@ -83,7 +86,17 @@ function App(props: any): JSX.Element {
                     defaultSelectedKeys={['home']}
                     theme="light"
                     items={items}
-                />
+                    />
+                </Flex>
+                    
+                  <div className="mercury-reload" onClick={()=>{
+                     window.location.reload();
+                  }}>
+                    <Tooltip title="刷新" placement="right">
+
+                    <ReloadOutlined />
+                    </Tooltip>
+                  </div> 
                 </Sider>
 
                 <Content className="mercury-content">
