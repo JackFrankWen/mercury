@@ -71,7 +71,7 @@ function UploadCenter(): JSX.Element {
           },
           {
             title: '替换',
-            description: '替换订单编号',
+            description: '替换描述',
           },
           {
             title: '分类',
