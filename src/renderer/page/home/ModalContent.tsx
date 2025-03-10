@@ -85,6 +85,68 @@ const modalTableCol = [
       title: '交易对象',
       dataIndex: 'payee',
       width: 120,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+        <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+          <Input
+            ref={searchInput}
+            placeholder={`Search`}
+            value={selectedKeys[0]}
+            onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+            onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
+            style={{ marginBottom: 8, display: 'block' }}
+          />
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => handleSearch(selectedKeys as string[], confirm)}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Search
+            </Button>
+            <Button
+              onClick={() => clearFilters && handleReset(clearFilters)}
+              size="small"
+              style={{ width: 90 }}
+            >
+              Reset
+            </Button>
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                confirm({ closeDropdown: false });
+                setSearchText((selectedKeys as string[])[0]);
+                setSearchedColumn();
+              }}
+            >
+              Filter
+            </Button>
+            <Button
+              type="link"
+              size="small"
+              onClick={() => {
+                close();
+              }}
+            >
+              close
+            </Button>
+          </Space>
+        </div>
+      ),
+      filterSearch: true,
+      onFilter: (value, record) =>
+        record.description
+          .toString()
+          .toLowerCase()
+          .includes((value as string).toLowerCase()),
+      filterDropdownProps: {
+        onOpenChange(open) {
+          if (open) {
+            setTimeout(() => searchInput.current?.select(), 100);
+          }
+        },
+      },
       render: (val: string) => (
         <Tooltip placement="topLeft" title={val}>
           {val}
@@ -256,6 +318,17 @@ const modalTableCol = [
           showSizeChanger: true,
         }}
         rowSelection={rowSelection}
+        onRow={(record) => {
+          return {
+            onClick: () => {
+              if (selectedRowKeys.includes(record.id)) {
+                setSelectedRowKeys(selectedRowKeys.filter((id) => id !== record.id))
+              } else {
+                setSelectedRowKeys([record.id])
+              }
+            }
+          }
+        }}
         rowKey="id"
         columns={modalTableCol}
         dataSource={modalData}

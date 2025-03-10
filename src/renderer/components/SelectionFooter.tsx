@@ -1,5 +1,5 @@
-import { Button, Col, Row, Space } from 'antd';
-import React, { useState } from 'react';
+import { Button, Col, Row, Space, Popconfirm } from 'antd';
+import React, { useState ,} from 'react';
 import { I_Transaction } from 'src/main/sqlite3/transactions';
 import BatchUpdateArea from 'src/renderer/components/batchForm';
 interface SelectionFooterProps {
@@ -29,7 +29,9 @@ const removeUndefined = (obj: any) => {
                     <div>选择 {selectedCount}个</div>
                     <Space.Compact >
                         <Button onClick={onCancel}>取消</Button>
-                        <Button danger onClick={onDelete}>批量删除</Button>
+                        <Popconfirm title="确定删除吗？" onConfirm={onDelete}>
+                            <Button danger>批量删除</Button>
+                        </Popconfirm>
                         <Button type="primary" onClick={() => onUpdate(removeUndefined(formValues))}>批量修改</Button>
                     </Space.Compact>
                 </Row>
