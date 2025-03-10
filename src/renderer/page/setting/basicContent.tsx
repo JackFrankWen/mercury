@@ -31,7 +31,7 @@ function BasicContent() {
                 </Radio.Group>
             </Form.Item>
             <Form.Item label="当前版本"  tooltip="This is a required field">
-                <p>1.0.0</p>
+                <Button>替换详情</Button>
             </Form.Item>
             <Form.Item label="导出"  tooltip="This is a required field">
                 <Space>

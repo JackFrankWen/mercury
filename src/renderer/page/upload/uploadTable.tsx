@@ -26,7 +26,7 @@ import {
 import useLoadingButton from 'src/renderer/components/useButton'
 import {  formatMoney } from 'src/renderer/components/utils'
 import { DeleteOutlined } from '@ant-design/icons'
-import UploadModal from './uploadModal'
+import UploadModal from '../../components/uploadModal'
 import dayjs from 'dayjs'
 import { openNotification, } from 'src/renderer/components/notification'
 import { ruleByUser, ruleByAi } from './ruleUtils'
@@ -402,12 +402,12 @@ const BasicTable = (props: {
               setModalVisible(false)
               setLoadingFalse()
             }}
-            goStep3={() => {
+            onOk={() => {
               setModalVisible(false)
               goStep3()
             }}
             needTransferData={needTransferData}
-            onOk={(type: string, transferData: []) => {
+            onUploadSuccess={(type: string, transferData: []) => {
               let messageList = []
               const newData = data.map((obj: any, index: number) => {
                 // Skip if no description or wrong description format
