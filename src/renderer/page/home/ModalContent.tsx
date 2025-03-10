@@ -72,14 +72,7 @@ const modalTableCol = [
     //   ),
     // },
     // account_type 
-    // {
-    //   title: '账号',
-    //   dataIndex: 'account_type',
-    //   width: 120,
-    //   render: (val: string) => (
-    //     <Tag color="green">{account_type[Number(val)]}</Tag>  
-    //   ),
-    // },
+  
     // payee
     {
       title: '交易对象',
@@ -256,6 +249,14 @@ const modalTableCol = [
         return <Tag color="orange">{consumer_type[val]}</Tag>
       },
     },
+      {
+      title: '账号',
+      dataIndex: 'account_type',
+      width: 100,
+      render: (val: string) => (
+        <Tag color="green">{account_type[Number(val)]}</Tag>  
+      ),
+    },
     {
       title: '标签',
       dataIndex: 'tag',
@@ -324,7 +325,7 @@ const modalTableCol = [
               if (selectedRowKeys.includes(record.id)) {
                 setSelectedRowKeys(selectedRowKeys.filter((id) => id !== record.id))
               } else {
-                setSelectedRowKeys([record.id])
+                setSelectedRowKeys([...selectedRowKeys, record.id])
               }
             }
           }
