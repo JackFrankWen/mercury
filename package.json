@@ -21,7 +21,8 @@
     "import-trans": "node scripts/import-trans.js",
     "remove": "node scripts/del-all-trans.js",
     "import-json": "node scripts/import-json.js",
-    "export": "node scripts/export-trans.js"
+    "export": "node scripts/export-trans.js",
+    "replace": "node scripts/batch-replace.js"
   },
   "dependencies": {
     "@antv/data-set": "^0.11.8",

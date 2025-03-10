@@ -420,8 +420,8 @@ const BasicTable = (props: {
 
                 // Find matching transfer data
                 const matchingItem = transferData.find((item: any) => {
-                  const timeFormat = type === 'jd' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm';
-                  const isSameTime = dayjs(obj.trans_time).format(timeFormat) === dayjs(item.trans_time).format(timeFormat);
+                  // 时间误差在3分钟
+                  const isSameTime = dayjs(obj.trans_time).diff(dayjs(item.trans_time), 'minute') < 3;
                   const isSameAmount = Math.round(Number(obj.amount)) === Math.round(Number(item.amount))
 
                   return isSameTime && isSameAmount;
