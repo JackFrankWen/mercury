@@ -4,13 +4,14 @@ import BasicContent from "./basicContent";
 import MatchContent from "./matchContent";
 import GenerateContent from "./generateContent";
 import './index.css'
+import AdvancedRule from "./advancedRule";
 function Setting(): JSX.Element {
     return (
         <div className="setting-page">
             <Card size="small">
                 <Tabs
                     size="small"
-                    defaultActiveKey="1"
+                    defaultActiveKey="4"
                     tabPosition="left"
                     className="setting-tabs"
                     style={{height: '100%'}}
@@ -23,6 +24,9 @@ function Setting(): JSX.Element {
                     </Tabs.TabPane>
                     <Tabs.TabPane tab="生成规则" key="3" style={{height: '100%'}}>
                         <GenerateContent />
+                    </Tabs.TabPane>
+                        <Tabs.TabPane tab="高级规则" key="4" style={{height: '100%'}}>
+                        <AdvancedRule />
                     </Tabs.TabPane>
                 </Tabs>
             </Card>

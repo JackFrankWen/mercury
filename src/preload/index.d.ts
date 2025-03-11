@@ -3,6 +3,8 @@ export {};
 
 import { CategoryReturnType, Params_Transaction } from './type';
 import { MatchRule } from '../main/sqlite3/match-rules';
+import { AdvancedRule } from '../main/sqlite3/advance-rules';
+
 declare global {
     interface Window {
         mercury: {
@@ -69,7 +71,12 @@ declare global {
                 getAccountPaymentTotal: (params: Params_Transaction) => Promise<{account_type: string, payment_type: string, total: number}[]>
                 // 导出csv
                 exportToCsv: () => Promise<{ code: number, message: string }>
-        };
+                // 高级规则 API 类型
+                getAllAdvancedRules: () => Promise<AdvancedRule[]>;
+                addAdvancedRule: (rule: AdvancedRule) => Promise<{ code: number; id?: number }>;
+                updateAdvancedRule: (id: number, rule: AdvancedRule) => Promise<{ code: number }>;
+                deleteAdvancedRule: (id: number) => Promise<{ code: number }>;
+            };
+        }
     }
-
 }

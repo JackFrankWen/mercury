@@ -4,6 +4,8 @@
 import { contextBridge, ipcRenderer } from 'electron';
 import { Params_Transaction } from './preload';
 import { MatchRule } from './main/sqlite3/match-rules';
+import { AdvancedRule } from './main/sqlite3/advance-rules';
+
 contextBridge.exposeInMainWorld('mercury', {
     api: {
         // 获取所有匹配规则
@@ -68,6 +70,14 @@ contextBridge.exposeInMainWorld('mercury', {
         getAccountPaymentTotal: (params: Params_Transaction) => ipcRenderer.invoke('transactions:getAccountPaymentTotal', params),
         // 导出csv
         exportToCsv: () => ipcRenderer.invoke('export:csv'),
+        // 高级规则 API
+        getAllAdvancedRules: () => ipcRenderer.invoke('advanced-rules:getAll'),
+        // 添加高级规则
+        addAdvancedRule: (rule: AdvancedRule) => ipcRenderer.invoke('advanced-rules:add', rule),
+        // 更新高级规则
+        updateAdvancedRule: (id: number, rule: AdvancedRule) => ipcRenderer.invoke('advanced-rules:update', id, rule),
+        // 删除高级规则
+        deleteAdvancedRule: (id: number) => ipcRenderer.invoke('advanced-rules:delete', id),
     },
     
 

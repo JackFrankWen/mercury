@@ -20,6 +20,12 @@ import { transferCategory, sortByValue } from "./controller/transController";
 import { generateRule } from "./controller/matchAutoRulesController";
 import { batchInsertAutoRule, getAllMatchAutoRules, deleteMatchAutoRule } from "./sqlite3/match-auto-rules";
 import { exportAllTablesToCSV } from './sqlite3/export';
+import { 
+    getAllAdvancedRules, 
+    addAdvancedRule, 
+    updateAdvancedRule, 
+    deleteAdvancedRule 
+} from "./sqlite3/advance-rules";
 
 
 export function handleProcessApi() {
@@ -210,6 +216,47 @@ export function handleProcessApi() {
         } catch (error) {
             console.error('Export error:', error);
             return { code: 500, message: '导出失败' };
+        }
+    });
+
+    // 高级规则 API 处理函数
+    ipcMain.handle('advanced-rules:getAll', async () => {
+        try {
+            const rules = await getAllAdvancedRules();
+            return rules;
+        } catch (error) {
+            console.error('Error getting advanced rules:', error);
+            throw error;
+        }
+    });
+
+    ipcMain.handle('advanced-rules:add', async (event, rule) => {
+        try {
+            const result = await addAdvancedRule(rule);
+            return result;
+        } catch (error) {
+            console.error('Error adding advanced rule:', error);
+            return { code: 500, error: error.message };
+        }
+    });
+
+    ipcMain.handle('advanced-rules:update', async (event, id, rule) => {
+        try {
+            const result = await updateAdvancedRule(id, rule);
+            return result;
+        } catch (error) {
+            console.error('Error updating advanced rule:', error);
+            return { code: 500, error: error.message };
+        }
+    });
+
+    ipcMain.handle('advanced-rules:delete', async (event, id) => {
+        try {
+            const result = await deleteAdvancedRule(id);
+            return result;
+        } catch (error) {
+            console.error('Error deleting advanced rule:', error);
+            return { code: 500, error: error.message };
         }
     });
 }

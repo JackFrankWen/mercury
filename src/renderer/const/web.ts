@@ -73,12 +73,53 @@ export const flow_type = {
 }
 
 export const transform = (obj: any) => {
-    return Object.keys(obj).map((key) => ({
-        label: obj[Number(key)],
-        value: Number(key),
-    }))
+    // 如果key不是数字则不需要number    
+    return Object.keys(obj).map((key) => {
+        if (isNaN(Number(key))) {
+            return {
+                label: obj[key],
+                value: key,
+            }
+        }
+        return {
+            label: obj[Number(key)],
+            value: Number(key),
+        }
+    })
 }
 
+export const formula_type = {
+    1: '等于',
+    2: '包含',
+    3: '大于',
+    4: '小于',
+}  
+export const getFormulaType = (type: number | string): string => {
+    return formula_type[Number(type)] || '未知公式';
+}
+export const condition_type = {
+    // account_type: '账户类型',
+    // consumer_type: '消费者类型',
+    // payment_type: '支付方式',
+    // abc_type: 'ABC分类',
+    // tag_type: '标签类型',
+    // flow_type: '收支类型',
+    description: '描述',
+    payee: '交易对象',
+    // transaction_time: '交易时间',
+    amount: '金额',
+}
+export const getConditionType = (type: number | string): string => {
+    return condition_type[type] || '未知条件';
+}
+export const priority_type = {
+    1: 'p3',
+    10: 'p2',
+    100: 'p1',
+}
+export const getPriorityType = (type: number | string): string => {
+    return priority_type[Number(type)] || '未知优先级';
+}
 export const cpt_const = {
     account_type: transform(account_type),
     cost_type: transform(cost_type),
@@ -86,4 +127,7 @@ export const cpt_const = {
     tag_type: transform(tag_type),
     consumer_type: transform(consumer_type),
     payment_type: transform(payment_type),
+    formula_type: transform(formula_type),
+    condition_type: transform(condition_type),
+    priority_type: transform(priority_type),
 }
