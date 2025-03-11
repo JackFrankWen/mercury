@@ -13,17 +13,18 @@ export function changeCategoryModal(messageList: MessageItem[]) {
     return (
       <div key={item.index}>
         <span>{item.message}</span>
-        <Text delete style={{ width: '50px' }}>{item.before}</Text>
-        <Text type="success">{item.after}</Text>
+        <Text delete style={{ width: '50px', marginRight: '10px' }}>{item.before}</Text>
+        <Text type="warning">{item.after}</Text>
       </div>
     );
   });
 
   Modal.info({
-    title: '分类成功',
+    title: '替换的记录',
     width: 600,
     okText: '知道了',
-    content: <Alert style={{ maxHeight: '200px', overflow: 'auto' }} message={content} type="success" />,
+    icon: <></>,
+    content: <Alert style={{}} message={<div style={{ maxHeight: '200px', overflow: 'auto' }}>{content}</div>} type="success" />,
   });
 }
 
@@ -35,6 +36,8 @@ export function openNotification(messageList: MessageItem[], api: any) {
   api.open({
     message: '替换成功',
     description: `一共替换${messageList.length}条数据，点击查看`,
+    showProgress: true,
+    pauseOnHover: true,
     onClick: () => {
       changeCategoryModal(messageList);
     },

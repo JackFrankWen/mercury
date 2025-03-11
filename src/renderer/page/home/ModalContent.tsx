@@ -43,7 +43,7 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
 const modalTableCol = [
     {
       title: '交易时间',
-      width: 200,
+      width: 160,
       dataIndex: 'trans_time',
       key: 'trans_time',
       render: (val: string) => {
@@ -59,7 +59,7 @@ const modalTableCol = [
         if (Number(txt) > 100) {
           return <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>
         }
-        return formatMoney(txt)
+        return `¥${formatMoney(txt)}`
       },
     },
     // payment_type
