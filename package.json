@@ -18,6 +18,7 @@
     "lint": "eslint --ext .ts,.tsx .",
     "init": "node scripts/create-table.js",
     "import-rules": "node scripts/import-rules.js",
+    "import-a": "node scripts/import-advanced-rules.js",
     "import-trans": "node scripts/import-trans.js",
     "remove": "node scripts/del-all-trans.js",
     "import-json": "node scripts/import-json.js",

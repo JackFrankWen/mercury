@@ -89,13 +89,13 @@ export const transform = (obj: any) => {
 }
 
 export const formula_type = {
-    1: '等于',
-    2: '包含',
-    3: '大于',
-    4: '小于',
+    eq: '等于',
+    gte: '大于等于',
+    lte: '小于等于',
+    like: '包含',
 }  
 export const getFormulaType = (type: number | string): string => {
-    return formula_type[Number(type)] || '未知公式';
+    return formula_type[type] || '未知公式';
 }
 export const condition_type = {
     // account_type: '账户类型',

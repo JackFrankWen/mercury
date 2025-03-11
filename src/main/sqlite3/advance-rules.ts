@@ -17,7 +17,7 @@ export async function getAllAdvancedRules(): Promise<AdvancedRule[]> {
     const db = await getDbInstance();
     
     return new Promise<AdvancedRule[]>((resolve, reject) => {
-      db.all('SELECT * FROM advanced_rules ORDER BY priority DESC', (err, rows: AdvancedRule[]) => {
+      db.all('SELECT * FROM advanced_rules ORDER BY category ASC', (err, rows: AdvancedRule[]) => {
         if (err) {
           console.error('Error getting advanced rules:', err);
           reject(err);
