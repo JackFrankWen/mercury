@@ -57,7 +57,32 @@ function createRuleTable() {
     `;
     return executeSQL(sql);
 }
-
+// 创建高级规则表
+function createAdvancedRuleTable() {
+     /*
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    rule TEXT, // 规则
+    category TEXT,
+    consumer TEXT,
+    tag TEXT,
+    priority INTEGER,// 优先级
+    creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
+    */ 
+    const sql = `
+        CREATE TABLE IF NOT EXISTS "advanced_rules" (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            rule TEXT,
+            category TEXT,
+            consumer TEXT,
+            tag TEXT,
+            priority INTEGER,
+            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+            modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `;
+    return executeSQL(sql);
+}
 // 创建交易表
 function createTransactionTable() {
     const sql = `
@@ -112,6 +137,7 @@ async function checkTableExists(tableName) {
 module.exports = {
     db,
     createRuleTable,
+    createAdvancedRuleTable,
     createTransactionTable,
     createRuleAutoTable,
     checkTableExists
