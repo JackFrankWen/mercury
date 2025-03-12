@@ -50,7 +50,7 @@ function importCSV(filepath) {
                             row.category,
                             row.consumer,
                             row.tag,
-                            row.priority || 10
+                            row.priority || 1
                         ]);
                         successCount++;
                     } catch (err) {
