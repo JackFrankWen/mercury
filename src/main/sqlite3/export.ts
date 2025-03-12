@@ -5,8 +5,8 @@ import dayjs from 'dayjs';
 
 export async function exportAllTablesToCSV(): Promise<void> {
     const db = await getDbInstance();
-    const tables = ['transactions', 'match_rules', 'match_rules_auto'];
-    const exportDir = path.join(process.cwd(), 'exports', dayjs().format('YYYYMMDD-HHmmss'));
+    const tables = ['transactions', 'match_rules', 'advanced_rules'];
+    const exportDir = path.join(process.cwd(), 'exports', dayjs().format('YYYYMMDD-HHmm'));
 
     // 创建导出目录
     if (!fs.existsSync(exportDir)) {
