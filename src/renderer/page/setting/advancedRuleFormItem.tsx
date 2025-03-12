@@ -1,9 +1,9 @@
-import { Col, Row, Space, Table, Button, Input } from "antd"
+import { Col, Row, Space, Table, Button, Input, InputNumber } from "antd"
 import React from "react"
 import { PlusOutlined, MinusOutlined, PlusCircleFilled, MinusCircleFilled } from "@ant-design/icons"
 import SelectWrap from "../../components/selectWrap"
 import { cpt_const } from "../../const/web"
-
+const { TextArea } = Input
 
 type RuleItem = {
     condition: string
@@ -35,10 +35,10 @@ function AdvancedRuleFormItem(props: {
                                             }
                                             return item
                                         }))
-                                    }} 
+                                    }}
                                     onDelete={() => {
                                         onChange(value.filter((_, i) => i !== index))
-                                    }} 
+                                    }}
                                     onAdd={() => {
                                         onChange([...value, [{ condition: '', formula: '', value: '' }]])
                                     }} />
@@ -48,11 +48,11 @@ function AdvancedRuleFormItem(props: {
                 })
             }
             <Button
-            className="mt8"
-            icon={<PlusOutlined />} 
-            onClick={() => {
-                onChange([...value, [{ condition: '', formula: '', value: '' }]])
-            }}>添加规则</Button>
+                className="mt8"
+                icon={<PlusOutlined />}
+                onClick={() => {
+                    onChange([...value, [{ condition: '', formula: '', value: '' }]])
+                }}>添加规则</Button>
         </div>
     )
 
@@ -66,50 +66,6 @@ function AdvancedRuleItem(props: {
 }) {
     const { data, onDelete, onAdd, onChange, rowKey } = props
 
-    /*
-    [
-      {
-          "comType": 1,
-          "condition": "expireDate",
-          "formula": "=",
-          "id": 48,
-          "rowKey": "1741671545950",
-          "value": "33"
-      },
-      {
-          "comType": 1,
-          "condition": "application",
-          "formula": "=",
-          "id": 49,
-          "rowKey": "1741671546994",
-          "value": "cw"
-      },
-      {
-          "comType": 1,
-          "condition": "application",
-          "formula": "=",
-          "id": 50,
-          "rowKey": "1741671547975",
-          "value": "cw"
-      },
-      {
-          "comType": 2,
-          "condition": "isAdmin",
-          "formula": "=",
-          "id": 51,
-          "rowKey": "1741671571119",
-          "value": "true"
-      },
-      {
-          "comType": 3,
-          "condition": "isAdmin",
-          "formula": "=",
-          "id": 52,
-          "rowKey": "1741671969887",
-          "value": "true"
-      }
-  ]
-    */
 
     const columns = [
         {
@@ -131,50 +87,96 @@ function AdvancedRuleItem(props: {
             dataIndex: 'condition',
             render: (text: string, record: any, index: number) => {
                 return <SelectWrap placeholder="条件" options={cpt_const.condition_type}
-                value={record.condition}
-                 onChange={(value) => {
-                    console.log(value,'value');
-                    onChange(data.map((item, i) => {
-                        if (i === index) {
-                            return { ...item, condition: value }
-                        }
-                        return item
-                    }))
-                }} />
+                    value={record.condition}
+                    onChange={(value) => {
+                        console.log(value, 'value');
+                        onChange(data.map((item, i) => {
+                            if (i === index) {
+                                return { ...item, 
+                                    condition: value,
+                                    formula: undefined,
+                                    value: undefined
+                                }
+                            }
+                            return item
+                        }))
+                    }} />
             }
         },
         {
             title: '公式',
             dataIndex: 'formula',
+            width: 100,
             render: (text: string, record: any, index: number) => {
-                return <SelectWrap placeholder="公式" options={cpt_const.formula_type}
-                value={record.formula}
-                 onChange={(value) => {
-                    console.log(value,'value');
-                    onChange(data.map((item, i) => {
-                        if (i === index) {
-                            return { ...item, formula: value }
-                        }
-                        return item
-                    }))
-                }} />
+                let options = cpt_const.formula_type
+                if (['description', 'payee'].includes(record.condition)) {
+                    options = options.filter((item) => item.value === 'like' || item.value === 'eq')
+                } else if (['amount'].includes(record.condition)) {
+                    options = options.filter((item) => item.value === 'gt' || item.value === 'lt')
+                } else if (['account'].includes(record.condition)) {
+                    options = options.filter((item) => item.value === 'eq')
+                }
+                console.log(options, 'options');
+                
+                return <SelectWrap placeholder="公式" options={options}
+                    value={record.formula}
+                    disabled={!record.condition}
+                    onChange={(value) => {
+                        console.log(value, 'value');
+                        onChange(data.map((item, i) => {
+                            if (i === index) {
+                                return { ...item, 
+                                    formula: value,
+                                    value: undefined
+                                }
+                            }
+                            return item
+                        }))
+                    }} />
             }
         },
         {
             title: '值',
             dataIndex: 'value',
             render: (text: string, record: any, index: number) => {
-                return <Input placeholder="值"
-                 value={record.value}
-                 onChange={(e) => {
-                    console.log(e.target.value,'value');
-                    onChange(data.map((item, i) => {
-                        if (i === index) {
-                            return { ...item, value: e.target.value }
-                        }
-                        return item
-                    }))
-                }} />
+                if (record.condition === 'amount') {
+                    // 判断是否为数字
+                    const intValue = isNaN(record.value) ? 0 : record.value
+                    return <InputNumber placeholder="值"
+                        value={intValue}
+                        onChange={(e) => {
+                            console.log(e, 'value');
+                            onChange(data.map((item, i) => {
+                                if (i === index) {
+                                    return { ...item, value: e}
+                                }
+                                return item
+                            }))
+                        }} />
+                } else if (record.condition === 'account') {
+                    return <SelectWrap placeholder="值" options={cpt_const.account_type}
+                        value={record.value}
+                        onChange={(value) => {
+                            onChange(data.map((item, i) => {
+                                if (i === index) {
+                                    return { ...item, value: value }
+                                }
+                                return item
+                            }))
+                        }} />
+                }
+                return <TextArea placeholder="值"
+                    autoSize={{ minRows: 3, maxRows: 5 }}
+                    value={record.value}
+                    onChange={(e) => {
+                        console.log(e.target.value, 'value');
+                        onChange(data.map((item, i) => {
+                            if (i === index) {
+                                return { ...item, value: e.target.value }
+                            }
+                            return item
+                        }))
+                    }} />
             }
         },
     ]

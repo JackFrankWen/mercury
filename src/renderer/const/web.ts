@@ -93,13 +93,17 @@ export const formula_type = {
     gte: '大于等于',
     lte: '小于等于',
     like: '包含',
+    gt: '大于',
+    lt: '小于',
+    ne: '不等于',
+    in: '在范围内',
 }  
 export const getFormulaType = (type: number | string): string => {
     return formula_type[type] || '未知公式';
 }
 export const condition_type = {
-    // account_type: '账户类型',
-    // consumer_type: '消费者类型',
+    account: '账户',
+    // consumer: '消费者',
     // payment_type: '支付方式',
     // abc_type: 'ABC分类',
     // tag_type: '标签类型',

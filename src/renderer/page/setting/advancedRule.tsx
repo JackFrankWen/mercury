@@ -43,7 +43,7 @@ const RuleTable = () => {
     {
       title: '分类',
       dataIndex: 'category',
-      width: 100,
+      width: 70,
       fixed: 'left',
       render: (val: string) => {
 
@@ -53,7 +53,7 @@ const RuleTable = () => {
     {
       title: '优先级',
       dataIndex: 'priority',
-      width: 100,
+      width: 50,
       render: (val: number) => {
         return <div>{getPriorityType(val)}</div>
       },
@@ -62,7 +62,7 @@ const RuleTable = () => {
       title: '规则',
       dataIndex: 'rule',
       ellipsis: true,
-      width: 100,
+      width: 150,
       render: (val: string | undefined) => {
         const rule: RuleItemList = val ? JSON.parse(val) : []
         return <div>{rule.map((item: RuleItem[]) => {
@@ -112,7 +112,7 @@ const RuleTable = () => {
       title: 'Action',
       key: 'action',
       fixed: 'right',
-      width: 200,
+      width: 100,
       render: (_, record) => (
         <Space size="middle">
          
