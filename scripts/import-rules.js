@@ -2,7 +2,7 @@
 const fs = require('fs');
 const csv = require('csv-parser');
 const path = require('path');
-const { db, createRuleTable, checkTableExists } = require('./import-table');
+const { db, createRuleTable, checkTableExists } = require('./utils/import-table');
 /* eslint-enable */
 
 // 导入CSV数据

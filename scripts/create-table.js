@@ -1,6 +1,6 @@
 /* eslint-disable */
 const path = require('path');
-const { createRuleTable, createTransactionTable, checkTableExists, db, createRuleAutoTable, createAdvancedRuleTable } = require('./import-table');
+const { createRuleTable, createTransactionTable, checkTableExists, db, createRuleAutoTable, createAdvancedRuleTable } = require('./utils/import-table');
 /* eslint-enable */
 
 async function main() {

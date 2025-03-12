@@ -2,7 +2,7 @@
 const fs = require('fs');
 const csv = require('csv-parser');
 const path = require('path');
-const { db, createAdvancedRuleTable, checkTableExists } = require('./import-table');
+const { db, createAdvancedRuleTable, checkTableExists } = require('./utils/import-table');
 const { log } = require('console');
 /* eslint-enable */
 
