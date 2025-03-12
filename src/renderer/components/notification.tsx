@@ -1,4 +1,7 @@
-import { Modal, Alert, Typography, notification } from 'antd';
+import React from 'react';
+import { Modal, Alert, Typography, notification, Popover } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import { renderRuleContent } from 'src/renderer/page/setting/advancedRule';
 const { Text } = Typography;
 
 interface MessageItem {
@@ -6,15 +9,24 @@ interface MessageItem {
   message: string;
   before: string;
   after: string;
+  extra: any;
 }
 
 export function changeCategoryModal(messageList: MessageItem[]) {
   const content = messageList.map(item => {
+    const extra = item.extra ? JSON.parse(item.extra.rule) : ''
     return (
       <div key={item.index}>
         <span>{item.message}</span>
         <Text delete style={{ width: '50px', marginRight: '10px' }}>{item.before}</Text>
         <Text type="warning">{item.after}</Text>
+        {
+          extra && (
+            <Popover title="规则" content={renderRuleContent(extra)}>
+              <ExclamationCircleFilled style={{ color: 'red', marginLeft: '10px' }} />
+            </Popover>
+          )
+        }
       </div>
     );
   });

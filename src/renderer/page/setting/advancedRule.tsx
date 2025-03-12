@@ -3,9 +3,9 @@ import type { ColumnsType } from 'antd/es/table'
 import React, { useEffect, useState } from 'react'
 import { getCategoryString } from '../../const/categroy'
 import useLoadingButton from '../../components/useButton'
-import {  getPriorityType, getConditionType, getFormulaType, priority_type } from '../../const/web'
+import { getPriorityType, getConditionType, getFormulaType, priority_type } from '../../const/web'
 import AdvancedRuleModal from './advancedRuleModal'
-import { RuleItemList } from './advancedRuleFormItem'
+import { RuleItem, RuleItemList, RuleItemListList } from './advancedRuleFormItem'
 // Add type declarations at the top
 type TypeMap = { [key: string]: string }
 
@@ -18,6 +18,21 @@ interface DataType {
   id: number
 }
 
+export const renderRuleContent = (rule: RuleItemListList) => {
+  return (
+    <div>
+      {rule.map((item: RuleItemList) => (
+        <div>
+          {item.map((item: RuleItem) => (
+            <div>
+              {getConditionType(item.condition)} {getFormulaType(item.formula)} {item.value}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}
 const RuleTable = () => {
   const [ruleData, setRuleData] = useState<any>()
   const [isUpdate, setIsUpdate] = useState<boolean>()
@@ -29,15 +44,6 @@ const RuleTable = () => {
         setRuleData(res)
       }
     })
-    // try {
-    //   const res = await $api.getALlMatchRule()
-    //   console.log(res, 'rule')
-    //   if (res) {
-    //     setRuleData(res)
-    //   }
-    // } catch (error) {
-    //   console.log(error)
-    // }
   }
   const columns: ColumnsType<DataType> = [
     {
@@ -46,7 +52,6 @@ const RuleTable = () => {
       width: 70,
       fixed: 'left',
       render: (val: string) => {
-
         return <div>{getCategoryString(val)}</div>
       },
     },
@@ -64,12 +69,11 @@ const RuleTable = () => {
       ellipsis: true,
       width: 150,
       render: (val: string | undefined) => {
-        const rule: RuleItemList = val ? JSON.parse(val) : []
-        return <div>{rule.map((item: RuleItem[]) => {
-          return <div>{item.map((item: RuleItem) => {
-            return <div>{getConditionType(item.condition)} {getFormulaType(item.formula)} {item.value}</div>
-          })}</div>
-        })}</div>
+        const rule: RuleItemListList = val ? JSON.parse(val) : []
+        if (rule.length === 0) {
+          return <div>暂无规则</div>
+        }
+        return renderRuleContent(rule)
       },
     },
     // {
@@ -115,7 +119,7 @@ const RuleTable = () => {
       width: 100,
       render: (_, record) => (
         <Space size="middle">
-         
+
           <a
             onClick={() => {
               setVisiable(true)
@@ -124,7 +128,7 @@ const RuleTable = () => {
               console.log(record)
             }}
           >
-          查看
+            查看
           </a>
           <a
             onClick={() => {
@@ -161,7 +165,7 @@ const RuleTable = () => {
   }
   return (
     <div className="match-content">
-       <Button type="primary" onClick={() => {
+      <Button type="primary" onClick={() => {
         setVisiable(true)
         setIsUpdate(false)
         setRecord({})
@@ -179,7 +183,7 @@ const RuleTable = () => {
         // }}
         pagination={false}
       />
-     
+
       {visiable && (
         <Modal
           title="高级规则"

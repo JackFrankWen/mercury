@@ -29,7 +29,7 @@ import { DeleteOutlined } from '@ant-design/icons'
 import UploadModal from '../../components/uploadModal'
 import dayjs from 'dayjs'
 import { openNotification, } from 'src/renderer/components/notification'
-import { ruleByUser, ruleByAi } from './ruleUtils'
+import {  ruleByAdvanced } from './ruleUtils'
 
 
 function checkNeedTransferData(data: any) {
@@ -252,9 +252,8 @@ const BasicTable = (props: {
     // 根据ai 分类
     // 根据规则分类
     try {
-      const autoData = await ruleByAi(data, api)
+      const newData = await ruleByAdvanced(data, api)
       // 根据用户手动分类
-      const newData = await ruleByUser(autoData, api)
       setData(newData)
       setStep(4)
       console.log(step, 'step aaaa====');
@@ -266,7 +265,6 @@ const BasicTable = (props: {
   }
   const submit = async () => {
     // 判断 描述中是否包含京东-订单编号
-    console.log(step, 'step====');
     setLoading(true)
 
     setTimeout(() => {

@@ -5,15 +5,16 @@ import SelectWrap from "../../components/selectWrap"
 import { cpt_const } from "../../const/web"
 const { TextArea } = Input
 
-type RuleItem = {
+export type RuleItem = {
     condition: string
     formula: string
     value: string
 }
-export type RuleItemList = RuleItem[][]
+export type RuleItemList = RuleItem[]
+export type RuleItemListList = RuleItemList[]
 function AdvancedRuleFormItem(props: {
-    value: RuleItemList,
-    onChange: (value: RuleItemList) => void
+    value: RuleItemListList,
+    onChange: (value: RuleItemListList) => void
 }) {
     const { value, onChange } = props
     return (
@@ -60,9 +61,9 @@ function AdvancedRuleFormItem(props: {
 function AdvancedRuleItem(props: {
     onDelete: () => void
     onAdd: () => void
-    onChange: (newValue: RuleItem[]) => void
+    onChange: (newValue: RuleItemList) => void
     rowKey: number
-    data: RuleItem[]
+    data: RuleItemList
 }) {
     const { data, onDelete, onAdd, onChange, rowKey } = props
 

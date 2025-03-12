@@ -7,18 +7,21 @@ import { category_type } from '../../const/categroy'
 import { toNumberOrUndefiend } from '../../components/utils'
 import useLoadingButton from '../../components/useButton'
 import { DefaultOptionType } from 'antd/es/cascader'
-import AdvancedRuleFormItem from './advancedRuleFormItem'
+import AdvancedRuleFormItem, { RuleItemList } from './advancedRuleFormItem'
+
+export type RuleFormData = {
+  id?: number
+  category?: string
+  consumer?: string
+  abc_type?: number
+  cost_type?: number
+  priority?: number
+  rule: string // 需要解析成 RuleItemList
+  tag?: string
+}
+
 const RuleForm = (props: {
-  data?: {
-    id: number
-    category?: string
-    consumer?: string
-    abc_type?: number
-    cost_type?: number
-    priority?: number
-    rule: any
-    tag?: string
-  }
+  data?: RuleFormData 
   onCancel: () => void
   refresh: () => void
 }) => {

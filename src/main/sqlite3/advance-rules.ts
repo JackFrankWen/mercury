@@ -1,5 +1,5 @@
 import { getDbInstance } from './connect';
-
+import { RuleItemList } from '../../renderer/page/setting/advancedRuleFormItem';
 export interface AdvancedRule {
   id?: number;
   rule: string;
