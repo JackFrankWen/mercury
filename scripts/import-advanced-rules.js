@@ -18,19 +18,19 @@ function importCSV(filepath) {
             .on('data', (data) => {
                 results.push({
                     ...data,
-                    rule: JSON.stringify([[
-                        {
-                            condition: 'description',
-                            formula: 'like',
-                            value: data.rule
-                        }
-                    ], [
-                        {
-                            condition: 'payee',
-                            formula: 'like',
-                            value: data.rule
-                        }
-                    ]]),
+                    // rule: JSON.stringify([[
+                    //     {
+                    //         condition: 'description',
+                    //         formula: 'like',
+                    //         value: data.rule
+                    //     }
+                    // ], [
+                    //     {
+                    //         condition: 'payee',
+                    //         formula: 'like',
+                    //         value: data.rule
+                    //     }
+                    // ]]),
                 });
             })
             .on('end', () => {
@@ -77,7 +77,7 @@ function importCSV(filepath) {
 // 主函数
 async function main() {
     try {
-        const dataDir = path.join(__dirname, '../data/202501/match_rules.csv');
+        const dataDir = path.join(__dirname, '../exports/20250312-1523/advanced_rules.csv');
         if (!fs.existsSync(dataDir)) {
             throw new Error(`文件不存在: ${dataDir}`);
         }

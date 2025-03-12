@@ -47,8 +47,8 @@ function importCSV(filepath) {
                             row.consumer,
                             row.flow_type, 
                             row.tag,
-                            row.abc_type,
-                            row.cost_type,
+                            row.abc_type || '',
+                            row.cost_type || '',
                             row.trans_time
                         ]);
                         successCount++;
@@ -68,7 +68,7 @@ function importCSV(filepath) {
 // Execute
 async function main() {
     try {
-        const dataDir = path.join(__dirname, '../data/202501/transaction.csv');
+        const dataDir = path.join(__dirname, '../exports/20250312-1523/transactions.csv');
         if (!fs.existsSync(dataDir)) {
             throw new Error(`文件不存在: ${dataDir}`);
         }
@@ -87,6 +87,7 @@ async function main() {
     } finally {
         console.log('close db')
         db.close();
+        
     }
 }
 
