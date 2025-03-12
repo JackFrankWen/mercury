@@ -13,10 +13,10 @@ interface MessageItem {
   extra?: AdvancedRule;
 }
 
-export function changeCategoryModal(messageList: MessageItem[]) {
+export function changeCategoryModal(messageList: MessageItem[], title: string) {
   const content = messageList.map(item => {
     const extra = item.extra ? JSON.parse(item.extra.rule) : ''
-    const priority = item.extra ? item.extra.priority : ''
+    const id = item.extra ? item.extra.id : ''
     return (
       <div key={item.index}>
         <span>{item.message}</span>
@@ -24,7 +24,7 @@ export function changeCategoryModal(messageList: MessageItem[]) {
         <Text type="warning">{item.after}</Text>
         {
           extra && (
-            <Popover title={`规则详情-${priority}`} content={renderRuleContent(extra)}>
+            <Popover title={`规则id-${id}`} content={renderRuleContent(extra)}>
               <ExclamationCircleFilled style={{ color: 'red', marginLeft: '10px' }} />
             </Popover>
           )
@@ -34,7 +34,7 @@ export function changeCategoryModal(messageList: MessageItem[]) {
   });
 
   Modal.info({
-    title: '替换的记录',
+    title: title || '替换的记录',
     width: 600,
     okText: '知道了',
     icon: <></>,
@@ -42,18 +42,18 @@ export function changeCategoryModal(messageList: MessageItem[]) {
   });
 }
 
-export function openNotification(messageList: MessageItem[], api: any) {
+export function openNotification(messageList: MessageItem[], api: any, title: string) {
   if (messageList.length === 0) {
     return;
   }
 
   api.open({
-    message: '替换成功',
+    message: title || '替换成功',
     description: `一共替换${messageList.length}条数据，点击查看`,
     showProgress: true,
     pauseOnHover: true,
     onClick: () => {
-      changeCategoryModal(messageList);
+      changeCategoryModal(messageList, title);
     },
   });
 }

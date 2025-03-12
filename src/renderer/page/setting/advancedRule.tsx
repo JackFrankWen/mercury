@@ -1,4 +1,4 @@
-import { message, Space, Table, Tag, Modal, Button } from 'antd'
+import { message, Space, Table, Tag, Modal, Button, Popover, Typography } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import React, { useEffect, useState } from 'react'
 import { getCategoryString } from '../../const/categroy'
@@ -6,6 +6,7 @@ import useLoadingButton from '../../components/useButton'
 import { getPriorityType, getConditionType, getFormulaType, priority_type } from '../../const/web'
 import AdvancedRuleModal from './advancedRuleModal'
 import { RuleItem, RuleItemList, RuleItemListList } from './advancedRuleFormItem'
+
 // Add type declarations at the top
 type TypeMap = { [key: string]: string }
 
@@ -21,14 +22,29 @@ interface DataType {
 export const renderRuleContent = (rule: RuleItemListList) => {
   return (
     <div>
-      {rule.map((item: RuleItemList) => (
-        <div>
+      {rule.map((item: RuleItemList, index: number) => (<>
+        <div key={index} style={{
+          padding: '5px',
+          borderRadius: '5px',
+          overflow: 'hidden',
+          margin: '5px', backgroundColor: '#f0f0f0'
+        }}>
           {item.map((item: RuleItem) => (
             <div>
-              {getConditionType(item.condition)} {getFormulaType(item.formula)} {item.value}
+              <Typography.Text strong>{getConditionType(item.condition)}</Typography.Text>
+               <Typography.Text code>{getFormulaType(item.formula)}</Typography.Text>
+                <Typography.Text>{item.value}</Typography.Text>
             </div>
           ))}
         </div>
+         {
+            index !== rule.length - 1 && (
+              <span>
+                <Typography.Text strong>OR</Typography.Text>
+              </span>
+            )
+          }
+        </>
       ))}
     </div>
   )
@@ -47,6 +63,11 @@ const RuleTable = () => {
   }
   const columns: ColumnsType<DataType> = [
     {
+      title: 'id',
+      dataIndex: 'id',
+      width: 50,
+    },
+    {
       title: '分类',
       dataIndex: 'category',
       width: 70,
@@ -60,6 +81,14 @@ const RuleTable = () => {
       dataIndex: 'priority',
       width: 50,
       render: (val: number) => {
+
+        if (val === 1) {
+          return <Tag color="magenta">{getPriorityType(val)}</Tag>
+        } else if (val === 10) {
+          return <Tag color="gold">{getPriorityType(val)}</Tag>
+        } else if (val === 100) {
+          return <Tag color="geekblue">{getPriorityType(val)}</Tag>
+        }
         return <div>{getPriorityType(val)}</div>
       },
     },
@@ -73,7 +102,12 @@ const RuleTable = () => {
         if (rule.length === 0) {
           return <div>暂无规则</div>
         }
-        return renderRuleContent(rule)
+
+        return <Popover content={renderRuleContent(rule)}>
+          <div style={{  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {renderRuleContent(rule)}
+          </div>
+        </Popover>
       },
     },
     // {

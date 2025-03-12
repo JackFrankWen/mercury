@@ -113,7 +113,7 @@ function AdvancedRuleItem(props: {
                 if (['description', 'payee'].includes(record.condition)) {
                     options = options.filter((item) => item.value === 'like' || item.value === 'eq')
                 } else if (['amount'].includes(record.condition)) {
-                    options = options.filter((item) => item.value === 'gt' || item.value === 'lt')
+                    options = options.filter((item) => item.value === 'gte' || item.value === 'lt')
                 } else if (['account'].includes(record.condition)) {
                     options = options.filter((item) => item.value === 'eq')
                 }
