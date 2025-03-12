@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Alert, message, Modal, Upload, UploadProps, Spin } from 'antd'
 import Papa from 'papaparse'
-import { formateToTableJd } from '../page/upload/upload-util'
+import { formateToTableJd } from '../page/upload/csvUtil'
 const { Dragger } = Upload;
 
 const UploadModal = (props: {

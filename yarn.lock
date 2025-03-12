@@ -980,21 +980,6 @@
   dependencies:
     "cross-spawn" "^7.0.1"
 
-"@mapbox/node-pre-gyp@^1.0.9":
-  "integrity" "sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ=="
-  "resolved" "https://registry.npmmirror.com/@mapbox/node-pre-gyp/-/node-pre-gyp-1.0.11.tgz"
-  "version" "1.0.11"
-  dependencies:
-    "detect-libc" "^2.0.0"
-    "https-proxy-agent" "^5.0.0"
-    "make-dir" "^3.1.0"
-    "node-fetch" "^2.6.7"
-    "nopt" "^5.0.0"
-    "npmlog" "^5.0.1"
-    "rimraf" "^3.0.2"
-    "semver" "^7.3.5"
-    "tar" "^6.1.11"
-
 "@nodelib/fs.scandir@2.1.5":
   "integrity" "sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz"
@@ -1622,14 +1607,6 @@
   "resolved" "https://mirrors.cloud.tencent.com/npm/aproba/-/aproba-2.0.0.tgz"
   "version" "2.0.0"
 
-"are-we-there-yet@^2.0.0":
-  "integrity" "sha512-Ci/qENmwHnsYo9xKIcUJN5LeDKdJ6R1Z1j9V/J5wyq8nh/mYPEpIKJbBZXtZjG04HiK7zV/p6Vs9952MrMeUIw=="
-  "resolved" "https://registry.npmmirror.com/are-we-there-yet/-/are-we-there-yet-2.0.0.tgz"
-  "version" "2.0.0"
-  dependencies:
-    "delegates" "^1.0.0"
-    "readable-stream" "^3.6.0"
-
 "are-we-there-yet@^3.0.0":
   "integrity" "sha512-QZW4EDmGwlYur0Yyf/b2uGucHQMa8aFUP7eu9ddR73vvhFyt4V0Vl3QHPcTNJ8l6qYOBdxgXdnBXQrHilfRQBg=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/are-we-there-yet/-/are-we-there-yet-3.0.1.tgz"
@@ -1970,9 +1947,9 @@
     "escape-string-regexp" "^1.0.5"
     "supports-color" "^5.3.0"
 
-"chalk@^4.0.0", "chalk@^4.1.0", "chalk@^4.1.1":
+"chalk@^4.0.0", "chalk@^4.1.0", "chalk@^4.1.1", "chalk@^4.1.2":
   "integrity" "sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA=="
-  "resolved" "https://mirrors.cloud.tencent.com/npm/chalk/-/chalk-4.1.2.tgz"
+  "resolved" "https://registry.npmmirror.com/chalk/-/chalk-4.1.2.tgz"
   "version" "4.1.2"
   dependencies:
     "ansi-styles" "^4.1.0"
@@ -2089,7 +2066,7 @@
   "resolved" "https://registry.npmmirror.com/color-name/-/color-name-1.1.3.tgz"
   "version" "1.1.3"
 
-"color-support@^1.1.2", "color-support@^1.1.3":
+"color-support@^1.1.3":
   "integrity" "sha512-qiBjkpbMLO/HL68y+lh4q0/O1MZFj2RX6X/KmMa3+gJD3z+WwI1ZzDHysvqHGS3mP6mznPckpXmw1nI9cJjyRg=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/color-support/-/color-support-1.1.3.tgz"
   "version" "1.1.3"
@@ -2134,7 +2111,7 @@
   "resolved" "https://mirrors.cloud.tencent.com/npm/concat-map/-/concat-map-0.0.1.tgz"
   "version" "0.0.1"
 
-"console-control-strings@^1.0.0", "console-control-strings@^1.1.0":
+"console-control-strings@^1.1.0":
   "integrity" "sha512-ty/fTekppD2fIwRvnZAVdeOiGd1c7YXEixbgJTNzqcxJWKQnjJ/V1bNEEE6hygpM3WjwHFUVK6HTjWSzV4a8sQ=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/console-control-strings/-/console-control-strings-1.1.0.tgz"
   "version" "1.1.0"
@@ -3376,21 +3353,6 @@
   "resolved" "https://mirrors.cloud.tencent.com/npm/gar/-/gar-1.0.4.tgz"
   "version" "1.0.4"
 
-"gauge@^3.0.0":
-  "integrity" "sha512-+5J6MS/5XksCuXq++uFRsnUd7Ovu1XenbeuIuNRJxYWjgQbPuFhT14lAvsWfqfAmnwluf1OwMjz39HjfLPci0Q=="
-  "resolved" "https://registry.npmmirror.com/gauge/-/gauge-3.0.2.tgz"
-  "version" "3.0.2"
-  dependencies:
-    "aproba" "^1.0.3 || ^2.0.0"
-    "color-support" "^1.1.2"
-    "console-control-strings" "^1.0.0"
-    "has-unicode" "^2.0.1"
-    "object-assign" "^4.1.1"
-    "signal-exit" "^3.0.0"
-    "string-width" "^4.2.3"
-    "strip-ansi" "^6.0.1"
-    "wide-align" "^1.1.2"
-
 "gauge@^4.0.3":
   "integrity" "sha512-f9m+BEN5jkg6a0fZjleidjN51VE1X+mPFQ2DJ0uv1V39oCLCbsGe6yjbBnp7eK7z/+GAon99a3nHuqbuuthyPg=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/gauge/-/gauge-4.0.4.tgz"
@@ -3675,7 +3637,7 @@
 
 "has-flag@^4.0.0":
   "integrity" "sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ=="
-  "resolved" "https://mirrors.cloud.tencent.com/npm/has-flag/-/has-flag-4.0.0.tgz"
+  "resolved" "https://registry.npmmirror.com/has-flag/-/has-flag-4.0.0.tgz"
   "version" "4.0.0"
 
 "has-property-descriptors@^1.0.0", "has-property-descriptors@^1.0.2":
@@ -4301,13 +4263,6 @@
   "resolved" "https://mirrors.cloud.tencent.com/npm/lru-cache/-/lru-cache-7.18.3.tgz"
   "version" "7.18.3"
 
-"make-dir@^3.1.0":
-  "integrity" "sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw=="
-  "resolved" "https://registry.npmmirror.com/make-dir/-/make-dir-3.1.0.tgz"
-  "version" "3.1.0"
-  dependencies:
-    "semver" "^6.0.0"
-
 "make-error@^1.1.1":
   "integrity" "sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/make-error/-/make-error-1.3.6.tgz"
@@ -4605,11 +4560,6 @@
   dependencies:
     "semver" "^7.3.5"
 
-"node-addon-api@^3.0.2":
-  "integrity" "sha512-mmcei9JghVNDYydghQmeDX8KoAm0FAiYyIcUt/N4nhyAipB17pllZQDOJD2fotxABnt4Mdz+dKTO7eftLg4d0A=="
-  "resolved" "https://registry.npmmirror.com/node-addon-api/-/node-addon-api-3.2.1.tgz"
-  "version" "3.2.1"
-
 "node-addon-api@^7.0.0":
   "integrity" "sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ=="
   "resolved" "https://registry.npmmirror.com/node-addon-api/-/node-addon-api-7.1.1.tgz"
@@ -4667,14 +4617,6 @@
   "resolved" "https://registry.npmmirror.com/node-releases/-/node-releases-2.0.18.tgz"
   "version" "2.0.18"
 
-"nodejieba@^3.4.4":
-  "integrity" "sha512-yqx89UYqTQoIL04reK6cRWBGpzUEeahwX65Qrj8+6d4FN/DOE3h26gBD2KmLAY5lTEQt0Uc42uZqKjlNUuIReA=="
-  "resolved" "https://registry.npmmirror.com/nodejieba/-/nodejieba-3.4.4.tgz"
-  "version" "3.4.4"
-  dependencies:
-    "@mapbox/node-pre-gyp" "^1.0.9"
-    "node-addon-api" "^3.0.2"
-
 "nopt@^5.0.0":
   "integrity" "sha512-Tbj67rffqceeLpcRXrT7vKAN8CwfPeIBgM7E6iBkmKLV7bEMwpGgYLGv0jACUsECaa/vuxP0IjEont6umdMgtQ=="
   "resolved" "https://registry.npmmirror.com/nopt/-/nopt-5.0.0.tgz"
@@ -4710,16 +4652,6 @@
   "version" "2.0.2"
   dependencies:
     "path-key" "^2.0.0"
-
-"npmlog@^5.0.1":
-  "integrity" "sha512-AqZtDUWOMKs1G/8lwylVjrdYgqA4d9nu8hc+0gzRxlDb1I10+FHBGMXs6aiQHFdCUUlqH99MUMuLfzWDNDtfxw=="
-  "resolved" "https://registry.npmmirror.com/npmlog/-/npmlog-5.0.1.tgz"
-  "version" "5.0.1"
-  dependencies:
-    "are-we-there-yet" "^2.0.0"
-    "console-control-strings" "^1.1.0"
-    "gauge" "^3.0.0"
-    "set-blocking" "^2.0.0"
 
 "npmlog@^6.0.0":
   "integrity" "sha512-/vBvz5Jfr9dT/aFWd0FIRf+T/Q2WBsLENygUaFUqstqsycmZAP/t5BvFJTK0viFmSUxiUKTUplWy5vt+rvKIxg=="
@@ -5877,11 +5809,6 @@
   "resolved" "https://mirrors.cloud.tencent.com/npm/semver/-/semver-5.7.2.tgz"
   "version" "5.7.2"
 
-"semver@^6.0.0":
-  "integrity" "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="
-  "resolved" "https://registry.npmmirror.com/semver/-/semver-6.3.1.tgz"
-  "version" "6.3.1"
-
 "semver@^6.2.0":
   "integrity" "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="
   "resolved" "https://registry.npmmirror.com/semver/-/semver-6.3.1.tgz"
@@ -6319,7 +6246,7 @@
 
 "supports-color@^7.1.0":
   "integrity" "sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw=="
-  "resolved" "https://mirrors.cloud.tencent.com/npm/supports-color/-/supports-color-7.2.0.tgz"
+  "resolved" "https://registry.npmmirror.com/supports-color/-/supports-color-7.2.0.tgz"
   "version" "7.2.0"
   dependencies:
     "has-flag" "^4.0.0"
@@ -6772,7 +6699,7 @@
   dependencies:
     "isexe" "^2.0.0"
 
-"wide-align@^1.1.2", "wide-align@^1.1.5":
+"wide-align@^1.1.5":
   "integrity" "sha512-eDMORYaPNZ4sQIuuYPDHdQvf4gyCF9rEEV/yPxGfwPkRodwEgiMUUXTx/dex+Me0wxx53S+NgUHaP7y3MGlDmg=="
   "resolved" "https://mirrors.cloud.tencent.com/npm/wide-align/-/wide-align-1.1.5.tgz"
   "version" "1.1.5"

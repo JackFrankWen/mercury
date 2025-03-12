@@ -7,7 +7,7 @@ import {
     formateToTableDataWechat,
     formateToTableAlipayMobileHeader,
     formateToTableDataAlipayMobile,
-} from './upload-util'
+} from './csvUtil'
 export enum ClassificationEnum {
     WECHAT = 'wechat',// 手机导入
     ALIPAY = 'alipay',// 电脑导入

@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Alert, Typography, notification, Popover } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import { renderRuleContent } from 'src/renderer/page/setting/advancedRule';
+import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
 const { Text } = Typography;
 
 interface MessageItem {
@@ -9,12 +10,13 @@ interface MessageItem {
   message: string;
   before: string;
   after: string;
-  extra: any;
+  extra?: AdvancedRule;
 }
 
 export function changeCategoryModal(messageList: MessageItem[]) {
   const content = messageList.map(item => {
     const extra = item.extra ? JSON.parse(item.extra.rule) : ''
+    const priority = item.extra ? item.extra.priority : ''
     return (
       <div key={item.index}>
         <span>{item.message}</span>
@@ -22,7 +24,7 @@ export function changeCategoryModal(messageList: MessageItem[]) {
         <Text type="warning">{item.after}</Text>
         {
           extra && (
-            <Popover title="规则" content={renderRuleContent(extra)}>
+            <Popover title={`规则详情-${priority}`} content={renderRuleContent(extra)}>
               <ExclamationCircleFilled style={{ color: 'red', marginLeft: '10px' }} />
             </Popover>
           )
