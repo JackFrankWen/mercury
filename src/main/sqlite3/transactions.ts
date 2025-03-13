@@ -344,4 +344,30 @@ export async function getAccountPaymentTotal(params: Params_Transaction): Promis
   }
 }
 
+// 删除所有交易数据
+export async function deleteAllTransactions(): Promise<{ code: number; message: string }> {
+  try {
+    const db = await getDbInstance();
+    
+    await new Promise<void>((resolve, reject) => {
+      db.run('DELETE FROM transactions', (err) => {
+        if (err) {
+          console.error('Error deleting all transactions:', err);
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
+    
+    return { code: 200, message: '所有交易数据已成功删除' };
+  } catch (error) {
+    console.error('Error deleting all transactions:', error);
+    return { 
+      code: 500, 
+      message: error instanceof Error ? error.message : '删除交易数据时发生未知错误' 
+    };
+  }
+}
+
 // 获取所有交易记录

@@ -76,6 +76,8 @@ declare global {
                 addAdvancedRule: (rule: AdvancedRule) => Promise<{ code: number; id?: number }>;
                 updateAdvancedRule: (id: number, rule: AdvancedRule) => Promise<{ code: number }>;
                 deleteAdvancedRule: (id: number) => Promise<{ code: number }>;
+                // 删除所有交易数据
+                deleteAllTransactions: () => Promise<{ code: number; message: string }>;
             };
         }
     }

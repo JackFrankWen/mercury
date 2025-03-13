@@ -14,7 +14,8 @@ import {
     insertTransaction,
     getTransactionsByMonth,
     getConsumerTotal,
-    getAccountPaymentTotal
+    getAccountPaymentTotal,
+    deleteAllTransactions
 } from "./sqlite3/transactions";
 import { transferCategory, sortByValue } from "./controller/transController";
 import { generateRule } from "./controller/matchAutoRulesController";
@@ -257,6 +258,20 @@ export function handleProcessApi() {
         } catch (error) {
             console.error('Error deleting advanced rule:', error);
             return { code: 500, error: error.message };
+        }
+    });
+
+    // 删除所有交易数据处理程序
+    ipcMain.handle('transactions:deleteAll', async () => {
+        try {
+            const result = await deleteAllTransactions();
+            return result;
+        } catch (error) {
+            console.error('Error deleting all transactions:', error);
+            return { 
+                code: 500, 
+                message: error instanceof Error ? error.message : '删除交易数据时发生未知错误' 
+            };
         }
     });
 }

@@ -1,4 +1,4 @@
-import {Form, Radio, Button, Breadcrumb, Space, message} from 'antd';
+import {Form, Radio, Button, Breadcrumb, Space, message, Modal} from 'antd';
 import React from 'react';
 
 function BasicContent() {
@@ -19,6 +19,25 @@ function BasicContent() {
     const onExportJson = () => {
         console.log('导出json');
     }
+    const onDeleteAllTransactions = async () => {
+        Modal.confirm({
+            title: '确认',
+            content: '确认删除所有交易数据吗？',
+            onOk: async () => {
+                try {
+                    const result = await window.mercury.api.deleteAllTransactions();
+                    if (result.code === 200) {
+                        message.success(result.message);
+                    } else {
+                        message.error(result.message);
+                    }
+                } catch (error) {
+                    console.error('Error deleting all transactions:', error);
+                    message.error('删除所有交易数据时发生错误');
+                }
+            }
+        });
+    }
     return (
         <Form
             style={{height: '100%'}}
@@ -31,7 +50,8 @@ function BasicContent() {
                 </Radio.Group>
             </Form.Item>
             <Form.Item label="当前版本"  tooltip="This is a required field">
-                <Button>替换详情</Button>
+                
+                <Button onClick={onDeleteAllTransactions}>删除所有交易</Button>
             </Form.Item>
             <Form.Item label="导出"  tooltip="This is a required field">
                 <Space>

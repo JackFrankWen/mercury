@@ -78,6 +78,8 @@ contextBridge.exposeInMainWorld('mercury', {
         updateAdvancedRule: (id: number, rule: AdvancedRule) => ipcRenderer.invoke('advanced-rules:update', id, rule),
         // 删除高级规则
         deleteAdvancedRule: (id: number) => ipcRenderer.invoke('advanced-rules:delete', id),
+        // 删除所有交易数据
+        deleteAllTransactions: () => ipcRenderer.invoke('transactions:deleteAll'),
     },
     
 
