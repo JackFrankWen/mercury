@@ -1,11 +1,22 @@
 /* eslint-disable */
 const sqlite3 = require('sqlite3');
 const path = require('path');
+const fs = require('fs');
 const { create } = require('domain');
 /* eslint-enable */
 
+// 获取数据库路径
+function getDbPath() {
+  // 在开发环境中使用项目根目录
+  const dbDir = path.join(__dirname, '../../data');
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+  }
+  return path.join(dbDir, 'database.db');
+}
+
 // 连接到SQLite数据库
-const db = new sqlite3.Database(path.join(__dirname, '../data/database.db'), (err) => {
+const db = new sqlite3.Database(getDbPath(), (err) => {
     if (err) {
         console.error('Error opening database:', err);
     } else {
@@ -72,6 +83,7 @@ function createAdvancedRuleTable() {
     const sql = `
         CREATE TABLE IF NOT EXISTS "advanced_rules" (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT,
             rule TEXT,
             category TEXT,
             consumer TEXT,

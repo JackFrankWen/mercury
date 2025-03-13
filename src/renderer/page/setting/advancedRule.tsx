@@ -63,9 +63,9 @@ const RuleTable = () => {
   }
   const columns: ColumnsType<DataType> = [
     {
-      title: 'id',
-      dataIndex: 'id',
-      width: 50,
+      title: '名称',
+      dataIndex: 'name',
+      width: 100,
     },
     {
       title: '分类',

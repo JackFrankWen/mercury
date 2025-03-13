@@ -2,6 +2,7 @@ import { getDbInstance } from './connect';
 import { RuleItemList } from '../../renderer/page/setting/advancedRuleFormItem';
 export interface AdvancedRule {
   id?: number;
+  name: string;
   rule: string;
   category: string;
   consumer: string;
@@ -39,12 +40,12 @@ export async function addAdvancedRule(rule: AdvancedRule): Promise<{ code: numbe
     
     return new Promise<{ code: number; id?: number }>((resolve, reject) => {
       const sql = `
-        INSERT INTO advanced_rules (rule, category, consumer, tag, priority)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO advanced_rules (name, rule, category, consumer, tag, priority)
+        VALUES (?, ?, ?, ?, ?, ?)
       `;
       
       db.run(sql, 
-        [rule.rule, rule.category, rule.consumer, rule.tag, rule.priority],
+        [rule.name, rule.rule, rule.category, rule.consumer, rule.tag, rule.priority],
         function(err) {
           if (err) {
             console.error('Error adding advanced rule:', err);
@@ -69,12 +70,12 @@ export async function updateAdvancedRule(id: number, rule: AdvancedRule): Promis
     return new Promise<{ code: number }>((resolve, reject) => {
       const sql = `
         UPDATE advanced_rules
-        SET rule = ?, category = ?, consumer = ?, tag = ?, priority = ?, modification_time = CURRENT_TIMESTAMP
+        SET name = ?, rule = ?, category = ?, consumer = ?, tag = ?, priority = ?, modification_time = CURRENT_TIMESTAMP
         WHERE id = ?
       `;
       
       db.run(sql, 
-        [rule.rule, rule.category, rule.consumer, rule.tag, rule.priority, id],
+        [rule.name, rule.rule, rule.category, rule.consumer, rule.tag, rule.priority, id],
         function(err) {
           if (err) {
             console.error('Error updating advanced rule:', err);

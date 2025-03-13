@@ -38,14 +38,15 @@ function importCSV(filepath) {
                 
                 const stmt = db.prepare(`
                     INSERT INTO advanced_rules (
-                        rule, category, consumer, tag, priority, 
+                        name,rule, category, consumer, tag, priority, 
                         creation_time, modification_time
-                    ) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                    ) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
                 `);
 
-                results.forEach((row) => {
+                results.forEach((row, index) => {
                     try {
                         stmt.run([
+                            row.name || `规则_${index + 1}`,
                             row.rule,
                             row.category,
                             row.consumer,
@@ -77,7 +78,8 @@ function importCSV(filepath) {
 // 主函数
 async function main() {
     try {
-        const dataDir = path.join(__dirname, '../exports/20250312-1523/advanced_rules.csv');
+        const dataDir = path.join(__dirname, '../exports/stable/advanced_rules.csv');
+        // const dataDir = path.join(__dirname, '../data/202501/match_rules.csv');
         if (!fs.existsSync(dataDir)) {
             throw new Error(`文件不存在: ${dataDir}`);
         }

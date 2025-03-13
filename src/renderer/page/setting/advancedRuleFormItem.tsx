@@ -111,11 +111,11 @@ function AdvancedRuleItem(props: {
             render: (text: string, record: any, index: number) => {
                 let options = cpt_const.formula_type
                 if (['description', 'payee'].includes(record.condition)) {
-                    options = options.filter((item) => item.value === 'like' || item.value === 'eq')
+                    options = options.filter((item) => ['notLike', 'like','eq'].includes(item.value))
                 } else if (['amount'].includes(record.condition)) {
-                    options = options.filter((item) => item.value === 'gte' || item.value === 'lt')
+                    options = options.filter((item) => ['gte', 'lt','eq'].includes(item.value))
                 } else if (['account'].includes(record.condition)) {
-                    options = options.filter((item) => item.value === 'eq')
+                    options = options.filter((item) => ['eq'].includes(item.value))
                 }
                 console.log(options, 'options');
                 

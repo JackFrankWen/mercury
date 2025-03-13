@@ -88,7 +88,7 @@ export const transform = (obj: any) => {
     })
 }
 
-export const formula_type = {
+export const formula_type: { [key: string]: string } = {
     eq: '等于',
     gte: '大于等于',
     lte: '小于等于',
@@ -97,6 +97,7 @@ export const formula_type = {
     lt: '小于',
     ne: '不等于',
     in: '在范围内',
+    notLike: '不包含',
 }  
 export const getFormulaType = (type: number | string): string => {
     return formula_type[type] || '未知公式';

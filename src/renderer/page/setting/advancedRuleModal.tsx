@@ -11,6 +11,7 @@ import AdvancedRuleFormItem, { RuleItemList } from './advancedRuleFormItem'
 
 export type RuleFormData = {
   id?: number
+  name?: string
   category?: string
   consumer?: string
   abc_type?: number
@@ -88,13 +89,14 @@ const RuleForm = (props: {
       layout="vertical"
       form={form}
       initialValues={{
+        name: data?.name,
         category: data?.category ? JSON.parse(data?.category) : undefined,
         abc_type: toNumberOrUndefiend(data?.abc_type),
         cost_type: toNumberOrUndefiend(data?.cost_type),
         tag: toNumberOrUndefiend(data?.tag),
         consumer: toNumberOrUndefiend(data?.consumer),
         rule: data?.rule ? JSON.parse(data?.rule) : [],
-        priority: toNumberOrUndefiend(data?.priority),
+        priority: toNumberOrUndefiend(data?.priority) || 1,
       }}
       onValuesChange={onFormLayoutChange}
       style={{ maxWidth: 600 }}
@@ -114,6 +116,9 @@ const RuleForm = (props: {
               ),
           }}
         />
+      </Form.Item>
+      <Form.Item name="name">
+        <Input placeholder="规则名称" />
       </Form.Item>
       <Form.Item name="tag">
         <SelectWrap placeholder="标签" options={cpt_const.tag_type} />
