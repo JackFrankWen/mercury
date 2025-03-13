@@ -118,7 +118,7 @@ function applyRule(transactions: I_Transaction[], rules: AdvancedRule[]) {
         ruleGroup.every(ruleItem => matchRuleItem(transaction, ruleItem))
       );
 
-      if (isMatch) {
+      if (isMatch && rule.category !== transaction.category) {
         messageList.push({
           index,
           message: `第${index + 1}条:(${transaction.payee})(${transaction.description})`,
