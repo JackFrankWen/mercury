@@ -103,7 +103,7 @@ export const getFormulaType = (type: number | string): string => {
     return formula_type[type] || '未知公式';
 }
 export const condition_type = {
-    account: '账户',
+    account_type: '账户',
     // consumer: '消费者',
     // payment_type: '支付方式',
     // abc_type: 'ABC分类',

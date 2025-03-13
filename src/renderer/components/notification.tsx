@@ -16,7 +16,7 @@ interface MessageItem {
 export function changeCategoryModal(messageList: MessageItem[], title: string) {
   const content = messageList.map(item => {
     const extra = item.extra ? JSON.parse(item.extra.rule) : ''
-    const id = item.extra ? item.extra.id : ''
+    const name = item.extra ? item.extra.name : ''
     return (
       <div key={item.index}>
         <span>{item.message}</span>
@@ -24,7 +24,7 @@ export function changeCategoryModal(messageList: MessageItem[], title: string) {
         <Text type="warning">{item.after}</Text>
         {
           extra && (
-            <Popover title={`规则id-${id}`} content={renderRuleContent(extra)}>
+            <Popover title={`规则名称【${name}】`} content={renderRuleContent(extra)}>
               <ExclamationCircleFilled style={{ color: 'red', marginLeft: '10px' }} />
             </Popover>
           )

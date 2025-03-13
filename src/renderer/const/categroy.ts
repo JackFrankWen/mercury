@@ -108,7 +108,7 @@ export const category_type = [
       },
       {
         value: 50004,
-        label: '厨房用品(废)',
+        label: '厨房用品',
         tag: fix_cost,
         consumer: family,
         cost_type: basic,
@@ -257,14 +257,14 @@ export const category_type = [
       },
       {
         value: 30002,
-        label: '地铁公交（废）',
+        label: '地铁公交',
         tag: general_cost,
         cost_type: basic,
         abc_type: a,
       },
       {
         value: 30003,
-        label: '打车(废)',
+        label: '打车',
         tag: general_cost,
         cost_type: basic,
         abc_type: a,

@@ -48,8 +48,8 @@ const UploadModal = (props: {
                                     onUploadSuccess('jd', data)
 
                                 } else {
-                                    setModalLoading(true)
-                                    setLoading(true)
+                                    setModalLoading(false)
+                                    setLoading(false)
                                     message.error('上传错误文件')
                                 }
                                 //jd
@@ -58,15 +58,15 @@ const UploadModal = (props: {
                                     data = formateToTableJd(csvContent, 'pdd')
                                     onUploadSuccess('pdd', data)
                                 } else {
-                                    setModalLoading(true)
-                                    setLoading(true)
+                                    setModalLoading(false)
+                                    setLoading(false)
                                     message.error('上传错误文件')
                                 }
                                 // pdd
                             } else {
                                 message.error('上传错误文件')
-                                setModalLoading(true)
-                                setLoading(true)
+                                setModalLoading(false)
+                                setLoading(false)
                             }
 
                             setFileList([file])

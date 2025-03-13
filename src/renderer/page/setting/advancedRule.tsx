@@ -1,7 +1,8 @@
-import { message, Space, Table, Tag, Modal, Button, Popover, Typography } from 'antd'
+import { message, Space, Table, Tag, Modal, Button, Popover, Typography, Input } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import React, { useEffect, useState } from 'react'
 import { getCategoryString } from '../../const/categroy'
+import { getAccountType } from '../../const/web'
 import useLoadingButton from '../../components/useButton'
 import { getPriorityType, getConditionType, getFormulaType, priority_type } from '../../const/web'
 import AdvancedRuleModal from './advancedRuleModal'
@@ -18,7 +19,12 @@ interface DataType {
   tags: string[]
   id: number
 }
-
+const renderValue = (value: RuleItem) => {
+  if (value.condition === 'account_type') {
+    return getAccountType(value.value)
+  }
+  return value.value
+}
 export const renderRuleContent = (rule: RuleItemListList) => {
   return (
     <div>
@@ -33,7 +39,7 @@ export const renderRuleContent = (rule: RuleItemListList) => {
             <div>
               <Typography.Text strong>{getConditionType(item.condition)}</Typography.Text>
                <Typography.Text code>{getFormulaType(item.formula)}</Typography.Text>
-                <Typography.Text>{item.value}</Typography.Text>
+                <Typography.Text>{renderValue(item)}</Typography.Text>
             </div>
           ))}
         </div>
@@ -66,6 +72,9 @@ const RuleTable = () => {
       title: '名称',
       dataIndex: 'name',
       width: 100,
+      render: (val: string) => {
+        return <Typography.Text type="success">{val}</Typography.Text>
+      },
     },
     {
       title: '分类',
@@ -197,13 +206,20 @@ const RuleTable = () => {
     setVisiable(false)
     getRuleData()
   }
+  const onSearch = (value: string) => {
+    console.log(value)
+  }
   return (
     <div className="match-content">
-      <Button type="primary" onClick={() => {
-        setVisiable(true)
-        setIsUpdate(false)
-        setRecord({})
-      }}>新增</Button>
+      <Space>
+      <Input.Search placeholder="请输入规则内容" onSearch={onSearch} enterButton />
+
+        <Button type="primary" onClick={() => {
+          setVisiable(true)
+          setIsUpdate(false)
+          setRecord({})
+        }}>新增</Button>
+      </Space>
       <Table
         size="middle"
         className="mt8"

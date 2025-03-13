@@ -101,6 +101,8 @@ function matchRuleItem(transaction: I_Transaction, ruleItem: RuleItem): boolean 
       case 'lt': return transactionAmount < ruleValue;
       case 'eq': return transactionAmount === ruleValue;
     }
+  } else if (ruleItem.condition === 'account_type') {
+    return transaction.account_type === ruleItem.value;
   }
   return false;
 }
@@ -130,6 +132,7 @@ function applyRule(transactions: I_Transaction[], rules: AdvancedRule[]) {
         return {
           ...transaction,
           tag: rule.tag || transaction.tag,
+          consumer: rule.consumer || transaction.consumer,
           category: rule.category
         };
       }

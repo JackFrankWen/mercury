@@ -114,7 +114,7 @@ function AdvancedRuleItem(props: {
                     options = options.filter((item) => ['notLike', 'like','eq'].includes(item.value))
                 } else if (['amount'].includes(record.condition)) {
                     options = options.filter((item) => ['gte', 'lt','eq'].includes(item.value))
-                } else if (['account'].includes(record.condition)) {
+                } else if (['account_type'].includes(record.condition)) {
                     options = options.filter((item) => ['eq'].includes(item.value))
                 }
                 console.log(options, 'options');
@@ -128,7 +128,6 @@ function AdvancedRuleItem(props: {
                             if (i === index) {
                                 return { ...item, 
                                     formula: value,
-                                    value: undefined
                                 }
                             }
                             return item
@@ -154,7 +153,7 @@ function AdvancedRuleItem(props: {
                                 return item
                             }))
                         }} />
-                } else if (record.condition === 'account') {
+                } else if (record.condition === 'account_type') {
                     return <SelectWrap placeholder="值" options={cpt_const.account_type}
                         value={record.value}
                         onChange={(value) => {
