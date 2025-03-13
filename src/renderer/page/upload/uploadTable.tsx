@@ -344,6 +344,7 @@ const BasicTable = (props: {
 
       <Form form={form} component={false}>
         <Table
+          virtual
           rowKey="id"
           onRow={(record) => {
             return {
