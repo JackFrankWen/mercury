@@ -1,53 +1,29 @@
 import { Col, Collapse, Flex, message, Modal, Progress, Table, Tag, Tooltip, Typography } from 'antd'
 import type { CollapseProps, TableColumnsType, TableRowSelection } from 'antd'
-import { getDateTostring, roundToTwoDecimalPlaces, formatMoney } from '../../components/utils'
 import React, { useCallback, useEffect, useState } from 'react'
-import { ColumnsType } from 'antd/es/table/interface'
 import useModal from '../../components/useModal'
-import { abc_type, cost_type, tag_type } from '../../const/web'
-import dayjs from 'dayjs'
-import { SelectionFooter } from 'src/renderer/components/SelectionFooter'
-import { I_Transaction } from 'src/main/sqlite3/transactions'
 import { ModalContent } from './ModalContent'
 import { AccountBookFilled } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
-import { category_type } from '../../const/categroy'
+import { category_type, findCategoryById } from '../../const/categroy'
+import { formatMoney } from '../../components/utils'
 // import BatchUpdateArea from '../views/accounting/batch-update'
 
 // Initialize FontAwesome library
 library.add(fas)
 
-// Helper function to find category and icon by id
-const findCategoryById = (id: string | number): { label: string, icon: string } | undefined => {
-  const numId = typeof id === 'string' ? parseInt(id, 10) : id;
-  
-  // Search through all categories and their children
-  for (const category of category_type) {
-    if (category.value === numId) {
-      return { label: category.label, icon: category.icon };
-    }
-    
-    for (const child of category.children) {
-      if (child.value === numId) {
-        return { label: child.label, icon: child.icon };
-      }
-    }
-  }
-  
-  return undefined;
-}
 
-// Render FontAwesome icon from string
-const renderIcon = (iconString: string) => {
+// Render FontAwesome icon from string with color
+const renderIcon = (iconString: string, color: string = '#1677ff') => {
   if (!iconString) return null;
   
   const iconParts = iconString.split(' ');
   if (iconParts.length < 2) return null;
   
   const iconName = iconParts[1].replace('fa-', '');
-  return <FontAwesomeIcon icon={['fas', iconName]} />;
+  return <FontAwesomeIcon icon={['fas', iconName]} style={{ color }} />;
 }
 
 interface ExpandedDataType {
@@ -81,11 +57,11 @@ const Item = (props: {
                 }}
             >
                 {icon ? 
-                    <span>{renderIcon(icon)}</span> :
-                    <AccountBookFilled style={{ fontSize: 32, color: color }} />
+                    <span style={{ fontSize: 18 }}>{renderIcon(icon, color)}</span> :
+                    <AccountBookFilled style={{ fontSize: 18, color: color }} />
                 }
             </Col>
-            <Col flex='auto' >
+            <Col flex='auto' style={{ marginLeft: 8 }}>
                 <Flex justify='space-between'>
                     <Typography.Text style={{
                         fontSize: 12,
@@ -95,7 +71,7 @@ const Item = (props: {
                 <Progress size='small' showInfo={false} percent={percent} strokeColor={color} />
             </Col>
             <Flex vertical align='center'>
-                <Typography.Text >{total}</Typography.Text>
+                <Typography.Text>{total}</Typography.Text>
                 <Typography.Text style={{ fontSize: 12 }} type='secondary'>{percent}%</Typography.Text>
             </Flex>
         </Flex>
@@ -159,7 +135,9 @@ const CategoryTable = (props: {
         label: <Flex justify='space-between' align='center'>
             <Flex align='center' gap={10}>
                 {categoryInfo?.icon && (
-                    <span style={{ fontSize: 16 }}>{renderIcon(categoryInfo.icon)}</span>
+                    <span style={{ fontSize: 16 }}>
+                      {renderIcon(categoryInfo.icon, categoryInfo.color)}
+                    </span>
                 )}
                 <Typography.Text style={{ fontSize: 12, fontWeight: 500 }}>{item.name}</Typography.Text>
             </Flex>
@@ -171,7 +149,7 @@ const CategoryTable = (props: {
                 name={child.name} 
                 total={child.value} 
                 percent={parseFloat(child.avg)} 
-                color={child.color || '#1677ff'} 
+                color={childCategoryInfo?.color || child.color || '#1677ff'} 
                 icon={childCategoryInfo?.icon} 
             />
         })
