@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Modal, Steps, Button, Form, Input, DatePicker, Alert, Select, Table, Space, Spin, message, Result } from 'antd'
+import { Modal, Steps, Button, Form, Input, DatePicker, Alert, Select, Table, Space, Spin, message, Result, Typography, Tooltip } from 'antd'
 import { RuleItemListList } from './advancedRuleFormItem'
 import { renderRuleContent } from './advancedRule'
 import type { Params_Transaction } from 'src/preload/type'
@@ -7,6 +7,8 @@ import dayjs from 'dayjs'
 import { getCategoryString } from '../../const/categroy'
 import { openNotification, changeCategoryModal } from '../../components/notification'
 import RangePickerWrap from '../../components/rangePickerWrap'
+import { findMatchList } from '../upload/ruleUtils'
+import { getConsumerType, getTagType } from 'src/renderer/const/web'
 const { Step } = Steps
 const { RangePicker } = DatePicker
 
@@ -40,6 +42,8 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({ visible, rule, on
   const [previewData, setPreviewData] = useState<DataPreviewItem[]>([])
   const [results, setResults] = useState<ResultItem[]>([])
   const [api, contextHolder] = message.useMessage()
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+  const [dataSource, setDataSource] = useState<any[]>([])
   
   // 获取满足规则条件的交易记录
   const fetchPreviewData = async (values: any) => {
@@ -47,18 +51,24 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({ visible, rule, on
     try {
       // 构建查询参数
       const params: Params_Transaction = {
-        trans_time: values.dateRange ? [
-          values.dateRange[0].format('YYYY-MM-DD'),
-          values.dateRange[1].format('YYYY-MM-DD 23:59:59')
-        ] : undefined,
+        trans_time: values.dateRange.map((item: any) => item.format('YYYY-MM-DD HH:mm:ss')),
         flow_type: '1'
       }
+
+      console.log(params, 'params');
+      
       
       // 获取交易数据
       const transactions = await window.mercury.api.getTransactions(params)
+      const matchList = findMatchList(transactions, rule)
       
       // 这里简单展示数据，实际应用中可能需要根据高级规则筛选匹配的记录
-      setPreviewData(transactions.slice(0, 100))
+      setPreviewData(matchList)
+      setDataSource(matchList)
+      if (matchList.length > 0) {
+        const allKeys = matchList.map(item => item.id);
+        setSelectedRowKeys(allKeys);
+      }
     } catch (error) {
       console.error('获取预览数据失败:', error)
       message.error('获取预览数据失败')
@@ -122,6 +132,7 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({ visible, rule, on
           
           <Alert
             message="规则信息"
+            style={{ maxHeight: 360, overflow: 'auto' }}
             description={
               <div>
                 <div>名称: {rule?.name}</div>
@@ -146,22 +157,58 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({ visible, rule, on
         <div>
           <Alert
             message="以下数据将被应用新的分类规则"
-            description={`共找到 ${previewData.length} 条符合条件的数据，将被设置为分类 "${getCategoryString(rule?.category)}"`}
+            description={`共找到 ${previewData.length} 条符合条件的数据，将被设置为：${getCategoryString(rule?.category)}${rule?.consumer ? ` · ${getConsumerType(rule?.consumer)}` : ''}${rule?.tag ? ` · ${getTagType(rule?.tag)}` : ''}`}
             type="warning"
             showIcon
             style={{ marginBottom: 16 }}
           />
           
           <Table
+            rowSelection={
+              {
+                selectedRowKeys,
+                onChange: (newSelectedRowKeys: React.Key[]) => {
+                  setSelectedRowKeys(newSelectedRowKeys);
+                }
+              }
+            }
+            onRow={(record) => {
+              return {
+                onClick: () => {
+                  if (selectedRowKeys.includes(record.id)) {
+                    setSelectedRowKeys(selectedRowKeys.filter(key => key !== record.id))
+                  } else {
+                    setSelectedRowKeys([...selectedRowKeys, record.id])
+                  }
+                }
+              }
+            }}
+            virtual
+            scroll={{ y: 200, x: 900}}
             dataSource={previewData}
             rowKey="id"
             size="small"
-            pagination={{ pageSize: 10 }}
+            pagination={false}
             columns={[
+              {
+                title: '现分类',
+                dataIndex: 'category',
+                width: 100,
+                render: val => <Typography.Text delete>{getCategoryString(val)}</Typography.Text>
+              },
+              {
+                title: '交易对象',
+                dataIndex: 'payee',
+                ellipsis: true,
+                width: 100,
+              },
+             
               {
                 title: '描述',
                 dataIndex: 'description',
                 ellipsis: true,
+                width: 200,
+                render: val => <Tooltip title={val}><Typography.Text>{val}</Typography.Text></Tooltip>
               },
               {
                 title: '金额',
@@ -170,16 +217,23 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({ visible, rule, on
                 render: val => `¥${Number(val).toFixed(2)}`
               },
               {
-                title: '现分类',
-                dataIndex: 'category',
-                width: 120,
-                render: val => getCategoryString(val)
+                title: '消费者',
+                dataIndex: 'consumer',
+                width: 100,
+                render: val => getConsumerType(val)
               },
+              {
+                title: '标签',
+                dataIndex: 'tag',
+                width: 100,
+                render: val => getTagType(val)
+              },
+              
               {
                 title: '交易时间',
                 dataIndex: 'trans_time',
-                width: 120,
-                render: val => dayjs(val).format('YYYY-MM-DD')
+                width: 150,
+                render: val => dayjs(val).format('YYYY-MM-DD HH:mm:ss')
               }
             ]}
           />

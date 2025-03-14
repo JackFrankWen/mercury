@@ -26,6 +26,9 @@ export enum PaymentType {
     BANK_CARD = 3,
     CASH = 4,
 }
+export const getConsumerType = (type: number | string): string => {
+    return consumer_type[Number(type)] || '未知消费者';
+}
 export const consumer_type: { [key: number]: string } = {
     1: '老公',
     2: '老婆',
@@ -41,6 +44,9 @@ export enum ConsumerType {
     MOO = 4,
     GRANDPARENTS = 5,
 }
+export const getTagType = (type: number | string): string => {
+    return tag_type[Number(type)] || '未知标签';
+}   
 export const tag_type = {
     1: '日常支出',
     2: '变动支出',

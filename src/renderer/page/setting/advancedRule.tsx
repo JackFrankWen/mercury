@@ -73,6 +73,7 @@ const RuleTable = () => {
       title: '名称',
       dataIndex: 'name',
       width: 80,
+      fixed: 'left',
       render: (val: string) => {
         return <Typography.Text strong type="success">{val}</Typography.Text>
       },
@@ -81,7 +82,6 @@ const RuleTable = () => {
       title: '分类',
       dataIndex: 'category',
       width: 70,
-      fixed: 'left',
       render: (val: string) => {
         return <div>{getCategoryString(val)}</div>
       },
@@ -159,7 +159,6 @@ const RuleTable = () => {
     {
       title: 'Action',
       key: 'action',
-      fixed: 'right',
       width: 100,
       render: (_, record) => (
         <Space size="middle">
@@ -232,7 +231,7 @@ const RuleTable = () => {
         className="mt8"
         columns={columns}
         dataSource={ruleData}
-        scroll={{ y: 'calc(100vh - 200px)' }}
+        scroll={{ y: 'calc(100vh - 200px)', x: 'calc(100vw + 100px)' }}
         // pagination={{
         //   defaultPageSize: 10,
         //   pageSizeOptions: [10, 20, 50],

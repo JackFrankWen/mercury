@@ -106,6 +106,21 @@ function matchRuleItem(transaction: I_Transaction, ruleItem: RuleItem): boolean 
   }
   return false;
 }
+// 找到需要修改的列表
+export function findMatchList(transactions: I_Transaction[], rules: AdvancedRule): I_Transaction[] {
+  const matchList: I_Transaction[] = [];
+  transactions.forEach((transaction, index) => {
+    const ruleGroups: RuleItemListList = JSON.parse(rules.rule);
+    const isMatch = ruleGroups.some(ruleGroup => 
+      // All conditions within a group must match (AND condition)
+      ruleGroup.every(ruleItem => matchRuleItem(transaction, ruleItem))
+    );
+    if (isMatch && rules.category !== transaction.category) {
+      matchList.push(transaction);
+    }
+  });
+  return matchList;
+}
 
 function applyRule(transactions: I_Transaction[], rules: AdvancedRule[]) {
   const messageList: any[] = [];

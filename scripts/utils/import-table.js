@@ -76,6 +76,7 @@ function createAdvancedRuleTable() {
     category TEXT,
     consumer TEXT,
     tag TEXT,
+    active INTEGER,// 是否启用
     priority INTEGER,// 优先级
     creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -88,6 +89,7 @@ function createAdvancedRuleTable() {
             category TEXT,
             consumer TEXT,
             tag TEXT,
+            active INTEGER,
             priority INTEGER,
             creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
             modification_time DATETIME DEFAULT CURRENT_TIMESTAMP

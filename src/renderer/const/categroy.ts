@@ -301,7 +301,7 @@ export const category_type = [
       },
       {
         value: 30007,
-        label: '汽车用品及服务',
+        label: '汽车消费',
         tag: variable_cost,
         cost_type: basic,
         abc_type: b,
