@@ -25,7 +25,7 @@ import {
 } from 'src/renderer/const/web'
 import useLoadingButton from 'src/renderer/components/useButton'
 import {  formatMoney } from 'src/renderer/components/utils'
-import { DeleteOutlined } from '@ant-design/icons'
+import { DeleteOutlined, SearchOutlined } from '@ant-design/icons'
 import UploadModal from '../../components/uploadModal'
 import dayjs from 'dayjs'
 import { openNotification, } from 'src/renderer/components/notification'
@@ -97,6 +97,8 @@ const BasicTable = (props: {
   const [data, setData] = useState(tableData)
   const [LoadingBtn, setBtnLoading, setLoadingFalse] = useLoadingButton()
   const [modalVisible, setModalVisible] = useState(false)
+  const [searchText, setSearchText] = useState({ payee: '', description: '' })
+  const [searchedColumn, setSearchedColumn] = useState('')
 
   // 写一个方法缓存needTransferData，根据data
   const needTransferData = useMemo(() => {
@@ -121,7 +123,55 @@ const BasicTable = (props: {
     setData(newData)
   }
 
+  const handleSearch = (selectedKeys: string[], confirm: () => void, dataIndex: string) => {
+    confirm();
+    setSearchText({ ...searchText, [dataIndex]: selectedKeys[0] });
+    setSearchedColumn(dataIndex);
+  };
 
+  const handleReset = (clearFilters: () => void, dataIndex: string) => {
+    clearFilters();
+    setSearchText({ ...searchText, [dataIndex]: '' });
+  };
+
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          placeholder={`搜索${dataIndex === 'payee' ? '交易对方' : '描述'}`}
+          value={selectedKeys[0]}
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ marginBottom: 8, display: 'block' }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            搜索
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters, dataIndex)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            重置
+          </Button>
+        </Space>
+      </div>
+    ),
+   
+    onFilter: (value: string, record: any) => {
+      return record[dataIndex]
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        : false
+    },
+    filteredValue: searchText[dataIndex] ? [searchText[dataIndex]] : null,
+  });
 
   const columns = [
     {
@@ -173,6 +223,7 @@ const BasicTable = (props: {
       dataIndex: 'payee',
       ellipsis: true,
       width: 120,
+      ...getColumnSearchProps('payee'),
       render: (val: string) => (
         <Tooltip title={val}>
           <span>{val}</span>
@@ -183,6 +234,7 @@ const BasicTable = (props: {
       title: '描述',
       dataIndex: 'description',
       ellipsis: true,
+      ...getColumnSearchProps('description'),
       render: (val: string) => (
         <Tooltip title={val}>
           <span>{val}</span>
@@ -222,7 +274,7 @@ const BasicTable = (props: {
       render: (val: number) => (val ? account_type[val] : ''),
     },
     {
-      title: '操作1',
+      title: '操作',
       dataIndex: 'operation',
       width: 40,
       render: (_: any, record: DataType) => {

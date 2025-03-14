@@ -85,9 +85,14 @@ const RuleTable = () => {
     {
       title: '优先级',
       dataIndex: 'priority',
-      width: 50,
+      width: 100,
+      filters: [
+        { text: getPriorityType(1), value: 1 },
+        { text: getPriorityType(10), value: 10 },
+        { text: getPriorityType(100), value: 100 },
+      ],
+      onFilter: (value, record) => record.priority === value,
       render: (val: number) => {
-
         if (val === 1) {
           return <Tag color="magenta">{getPriorityType(val)}</Tag>
         } else if (val === 10) {
@@ -103,6 +108,11 @@ const RuleTable = () => {
       dataIndex: 'active',
       ellipsis: true,
       width: 80,
+      filters: [
+        { text: '启用', value: 1 },
+        { text: '禁用', value: 0 },
+      ],
+      onFilter: (value, record) => record.active === value,
       render: (val: number) => <Badge status={val === 1 ? 'success' : 'default'} text={val === 1 ? '启用' : '禁用'} />
     },
     {
