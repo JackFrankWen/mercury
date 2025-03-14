@@ -91,6 +91,9 @@ function matchRuleItem(transaction: I_Transaction, ruleItem: RuleItem): boolean 
       return reg.test(transaction[ruleItem.condition]);
     } else if (ruleItem.formula === 'eq') {
       return transaction[ruleItem.condition] === ruleItem.value;
+    } else if (ruleItem.formula === 'notlike') {
+      const reg = new RegExp(ruleItem.value);
+      return !reg.test(transaction[ruleItem.condition]);
     }
   } else if (ruleItem.condition === 'amount') {
     const transactionAmount = Number(transaction.amount);

@@ -115,23 +115,23 @@ const RuleTable = () => {
       onFilter: (value, record) => record.active === value,
       render: (val: number) => <Badge status={val === 1 ? 'success' : 'default'} text={val === 1 ? '启用' : '禁用'} />
     },
-    {
-      title: '规则',
-      dataIndex: 'rule',
-      ellipsis: true,
-      render: (val: string | undefined, record: any) => {
-        const rule: RuleItemListList = val ? JSON.parse(val) : []
-        if (rule.length === 0) {
-          return <div>暂无规则</div>
-        }
+    // {
+    //   title: '规则',
+    //   dataIndex: 'rule',
+    //   ellipsis: true,
+    //   render: (val: string | undefined, record: any) => {
+    //     const rule: RuleItemListList = val ? JSON.parse(val) : []
+    //     if (rule.length === 0) {
+    //       return <div>暂无规则</div>
+    //     }
 
-        return <Popover content={renderRuleContent(rule)}>
-          <div style={{  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-           复杂
-          </div>
-        </Popover>
-      },
-    },
+    //     return <Popover content={renderRuleContent(rule)}>
+    //       <div style={{  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+    //        {renderRuleContent(rule)}
+    //       </div>
+    //     </Popover>
+    //   },
+    // },
     // {
     //   title: '消费者',
     //   width: 80,
@@ -246,8 +246,7 @@ const RuleTable = () => {
       <Input.Search 
         placeholder="请输入规则内容、名称" 
         onSearch={onSearch} 
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
+
         enterButton />
 
         <Button type="primary" onClick={() => {
@@ -301,7 +300,6 @@ const RuleTable = () => {
           onClose={() => setBatchReplaceVisible(false)}
           onSuccess={() => {
             setBatchReplaceVisible(false)
-            getRuleData()
           }}
         />
       )}
