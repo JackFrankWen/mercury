@@ -22,9 +22,9 @@ function Setting(): JSX.Element {
                     <Tabs.TabPane tab="规则设置" key="2" className="overflow-scroll" style={{height: '100%'}}   >
                         <MatchContent />
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="生成规则" key="3" style={{height: '100%'}}>
+                    {/* <Tabs.TabPane tab="生成规则" key="3" style={{height: '100%'}}>
                         <GenerateContent />
-                    </Tabs.TabPane>
+                    </Tabs.TabPane> */}
                         <Tabs.TabPane tab="高级规则" key="4" style={{height: '100%'}}>
                         <AdvancedRule />
                     </Tabs.TabPane>

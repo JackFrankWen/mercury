@@ -101,3 +101,21 @@ export function formatMoney(amount: number | string, unit?: '万' | '千' | '亿
 
   return `${finalAmount}${unit}`;
 }
+type OS = 'Mac' | 'Windows' | 'Other';
+
+/**
+ * 检测操作系统
+ * @returns 操作系统类型
+ */
+export function detectOS(): OS {
+  const userAgent = navigator.userAgent.toLowerCase();
+  const platform = navigator.platform.toLowerCase();
+  
+  if (userAgent.indexOf('mac') !== -1 || platform.indexOf('mac') !== -1) {
+    return 'Mac';
+  } else if (userAgent.indexOf('win') !== -1 || platform.indexOf('win') !== -1) {
+    return 'Windows';
+  } else {
+    return 'Other';
+  }
+}
