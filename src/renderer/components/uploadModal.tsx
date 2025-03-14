@@ -13,6 +13,8 @@ const UploadModal = (props: {
     needTransferData: {
         hasJingdong: boolean
         hasPdd: boolean
+        jingdongData: any[]
+        pddData: any[]
     }
 }) => {
     const { visible, onCancel, onUploadSuccess, needTransferData, onOk, setLoading, } = props
@@ -43,7 +45,7 @@ const UploadModal = (props: {
                             if (name.includes('jd')) {
                                 data = formateToTableJd(csvContent, 'jd')
                                 console.log(data, '===data');
-                                
+
                                 if (needTransferData.hasJingdong) {
                                     onUploadSuccess('jd', data)
 
@@ -84,7 +86,10 @@ const UploadModal = (props: {
     const handleOk = () => {
         onOk()
     }
+    const { hasJingdong, hasPdd, jingdongData, pddData } = needTransferData
 
+    const jingdongDescription = jingdongData.length > 0 ? jingdongData.map((item: any) => `第${item.dataIndex + 1}条数据`).join(',') : ''
+    const pddDescription = pddData.length > 0 ? pddData.map((item: any) => `第${item.dataIndex + 1}条数据`).join(',') : ''
     return (<Modal
         open={visible}
         title="上传文件"
@@ -96,13 +101,31 @@ const UploadModal = (props: {
         <Spin spinning={modalLoading}>
             <div className="mb8">
                 {
-                    needTransferData.hasJingdong && (
-                        <Alert message="请上传京东csv文件，或者跳过替换，直接提交！" type="warning" />
+                    hasJingdong && (
+                        <Alert 
+                        style={{
+                            maxHeight: 200,
+                            overflow: 'auto'
+                        }}
+                        message="请上传京东csv文件！"
+                            type="warning"
+                            showIcon
+                            description={`有问题数据：${jingdongDescription}`}
+                        />
                     )
                 }
                 {
-                    needTransferData.hasPdd && (
-                        <Alert message="请上传拼多多csv文件，或者跳过替换，直接提交！！！" type="warning" />
+                    hasPdd && (
+                        <Alert 
+                        style={{
+                            maxHeight: 200,
+                            overflow: 'auto'
+                        }}
+                        message="请上传拼多多csv文件！" 
+                        type="warning"
+                            showIcon
+                            description={`有问题数据：${pddDescription}`}
+                        />
                     )
                 }
 

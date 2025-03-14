@@ -221,9 +221,9 @@ export function handleProcessApi() {
     });
 
     // 高级规则 API 处理函数
-    ipcMain.handle('advanced-rules:getAll', async () => {
+    ipcMain.handle('advanced-rules:getAll', async (event, rule) => {
         try {
-            const rules = await getAllAdvancedRules();
+            const rules = await getAllAdvancedRules(rule);
             return rules;
         } catch (error) {
             console.error('Error getting advanced rules:', error);

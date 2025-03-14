@@ -13,12 +13,14 @@ export interface AdvancedRule {
 }
 
 // 获取所有高级规则
-export async function getAllAdvancedRules(): Promise<AdvancedRule[]> {
+export async function getAllAdvancedRules(rule?: string): Promise<AdvancedRule[]> {
   try {
     const db = await getDbInstance();
     
     return new Promise<AdvancedRule[]>((resolve, reject) => {
-      db.all('SELECT * FROM advanced_rules ORDER BY category ASC', (err, rows: AdvancedRule[]) => {
+      const where = rule ? `WHERE rule LIKE '%${rule}%' OR name LIKE '%${rule}%'` : '';
+      const sql = `SELECT * FROM advanced_rules ${where} ORDER BY category ASC`;
+      db.all(sql, (err, rows: AdvancedRule[]) => {
         if (err) {
           console.error('Error getting advanced rules:', err);
           reject(err);

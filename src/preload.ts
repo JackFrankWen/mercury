@@ -71,7 +71,7 @@ contextBridge.exposeInMainWorld('mercury', {
         // 导出csv
         exportToCsv: () => ipcRenderer.invoke('export:csv'),
         // 高级规则 API
-        getAllAdvancedRules: () => ipcRenderer.invoke('advanced-rules:getAll'),
+        getAllAdvancedRules: (rule?: string) => ipcRenderer.invoke('advanced-rules:getAll', rule),
         // 添加高级规则
         addAdvancedRule: (rule: AdvancedRule) => ipcRenderer.invoke('advanced-rules:add', rule),
         // 更新高级规则

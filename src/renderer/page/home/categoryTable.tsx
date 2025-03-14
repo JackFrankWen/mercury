@@ -43,7 +43,7 @@ const columns: ColumnsType<DataType> = [
       <Typography.Text>
         {formatMoney(val)}
         <Typography.Text type="secondary" style={{ marginLeft: '2px' }}>
-          (月均: {formatMoney(obj.avg)})
+          (月均: {formatMoney(obj.avg, '千', true)})
         </Typography.Text>
       </Typography.Text>
     ),
@@ -53,7 +53,7 @@ const columns: ColumnsType<DataType> = [
 const expandedRowRender = (toggle: any) => (record: DataType) => {
   const columns: TableColumnsType<ExpandedDataType> = [
     { title: '一级分类', width: '30%', dataIndex: '' },
-    { title: '二级分类', width: '28%', dataIndex: 'name' },
+    { title: '二级分类', width: '33%', dataIndex: 'name' },
     {
       title: '金额',
       dataIndex: 'value',
@@ -62,7 +62,7 @@ const expandedRowRender = (toggle: any) => (record: DataType) => {
         <Typography.Text>
           {formatMoney(val)}
           <Typography.Text type="secondary" style={{ marginLeft: '2px' }}>
-            (月均: {formatMoney(obj.avg)})
+            (月均: {formatMoney(obj.avg, '千', true)})
           </Typography.Text>
         </Typography.Text>
       ),

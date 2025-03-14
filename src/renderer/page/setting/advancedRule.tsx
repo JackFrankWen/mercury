@@ -59,8 +59,8 @@ const RuleTable = () => {
   const [ruleData, setRuleData] = useState<any>()
   const [isUpdate, setIsUpdate] = useState<boolean>()
   const [LoadingBtn, , setLoadingFalse] = useLoadingButton()
-  const getRuleData = async () => {
-    window.mercury.api.getAllAdvancedRules().then((res: any) => {
+  const getRuleData = async (rule?: string) => {
+    window.mercury.api.getAllAdvancedRules(rule).then((res: any) => {
       console.log(res, '====rule')
       if (res) {
         setRuleData(res)
@@ -71,9 +71,9 @@ const RuleTable = () => {
     {
       title: '名称',
       dataIndex: 'name',
-      width: 100,
+      width: 80,
       render: (val: string) => {
-        return <Typography.Text type="success">{val}</Typography.Text>
+        return <Typography.Text strong type="success">{val}</Typography.Text>
       },
     },
     {
@@ -208,11 +208,12 @@ const RuleTable = () => {
   }
   const onSearch = (value: string) => {
     console.log(value)
+    getRuleData(value)
   }
   return (
     <div className="match-content">
       <Space>
-      <Input.Search placeholder="请输入规则内容" onSearch={onSearch} enterButton />
+      <Input.Search placeholder="请输入规则内容、名称" onSearch={onSearch} enterButton />
 
         <Button type="primary" onClick={() => {
           setVisiable(true)

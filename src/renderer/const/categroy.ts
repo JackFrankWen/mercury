@@ -77,6 +77,15 @@ export const category_type = [
         abc_type: b, // 489.39166666666665
         budget: 500, // 589
       },
+      {
+        value: 10007,
+        label: '奶茶',
+        tag: variable_cost,
+        consumer: family,
+        cost_type: chill,
+        abc_type: b, // 489.39166666666665
+        budget: 500, // 5
+      }
       
     ],
   },
@@ -157,7 +166,7 @@ export const category_type = [
   },
   {
     value: 20000,
-    label: '家庭杂费及服务费',
+    label: '家庭杂费',
     children: [
       {
         value: 20001,

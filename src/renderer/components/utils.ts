@@ -40,9 +40,10 @@ export function toNumberOrUndefiend(number: any): number | undefined {
 }
 
 /**
- * 格式化金额为中文货币格式字符串 3.0万只限 3万  3.2万显示 3.2万
+ * 格式化金额为中文货币格式字符串
  * @param amount - 要格式化的金额，可以是数字或字符串
- * @param unit - 可选的单位，支持 "万" "千" "亿"
+ * @param unit -  手动选的单位，支持 "万" "千" "亿"
+ * @param autoUnit - 是否自动显示单位 根据金额自动显示单位 4千 5.2万
  * @returns 格式化后的金额字符串
  * @example
  * formatMoney(1234.56) // "1,234.56"
@@ -51,10 +52,24 @@ export function toNumberOrUndefiend(number: any): number | undefined {
  * formatMoney(12345, "千") // "12.3千"
  * formatMoney(123456789, "亿") // "1.23亿"
  * formatMoney(10000, "万") // "1万"
+ * formatMoney(5000, undefined, true) // "5千"
+ * formatMoney(20000, undefined, true) // "2万"
+ * formatMoney(300000000, undefined, true) // "3亿"
  */
-export function formatMoney(amount: number | string, unit?: '万' | '千' | '亿'): string {
+export function formatMoney(amount: number | string, unit?: '万' | '千' | '亿', autoUnit?: boolean): string {
   if (typeof amount === 'string') {
     amount = parseFloat(amount);
+  }
+
+  // Handle auto unit selection
+  if (autoUnit) {
+    if (amount >= 100000000) {
+      unit = '亿';
+    } else if (amount >= 10000) {
+      unit = '万';
+    } else if (amount >= 1000) {
+      unit = '千';
+    }
   }
 
   let result: number;

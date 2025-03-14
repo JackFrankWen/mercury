@@ -72,7 +72,7 @@ declare global {
                 // 导出csv
                 exportToCsv: () => Promise<{ code: number, message: string }>
                 // 高级规则 API 类型
-                getAllAdvancedRules: () => Promise<AdvancedRule[]>;
+                getAllAdvancedRules: (rule?: string) => Promise<AdvancedRule[]>;
                 addAdvancedRule: (rule: AdvancedRule) => Promise<{ code: number; id?: number }>;
                 updateAdvancedRule: (id: number, rule: AdvancedRule) => Promise<{ code: number }>;
                 deleteAdvancedRule: (id: number) => Promise<{ code: number }>;

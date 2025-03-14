@@ -33,11 +33,16 @@ import {  ruleByAdvanced } from './ruleUtils'
 
 
 function checkNeedTransferData(data: any) {
-  const hasJingdong = data.some((obj: any) => obj.payee?.includes('京东') && obj.description?.includes('京东-订单编号'))
-  const hasPdd = data.some((obj: any) => obj.payee?.includes('拼多多') && obj.description?.includes('商户单号'))
+  // 返回data中所有payee包含京东和拼多多，并且description包含京东-订单编号和商户单号的数据 ,返回index 
+  const jingdongData = data.map((obj: any, dataIndex: number) => obj.payee?.includes('京东') && obj.description?.includes('京东-订单编号') ? { ...obj, dataIndex } : null).filter(Boolean)
+  const pddData = data.map((obj: any, dataIndex: number) => obj.payee?.includes('拼多多') && obj.description?.includes('商户单号') ? { ...obj, dataIndex } : null).filter(Boolean)
+  const hasJingdong = jingdongData.length > 0
+  const hasPdd = pddData.length > 0
   return {
     hasJingdong,
     hasPdd,
+    jingdongData,
+    pddData,
   }
 }
 
@@ -95,10 +100,12 @@ const BasicTable = (props: {
 
   // 写一个方法缓存needTransferData，根据data
   const needTransferData = useMemo(() => {
-    const { hasJingdong, hasPdd } = checkNeedTransferData(data)
+    const { hasJingdong, hasPdd, jingdongData, pddData } = checkNeedTransferData(data)
     return {
       hasJingdong,
       hasPdd,
+      jingdongData,
+      pddData,
     }
   }, [data])
 
