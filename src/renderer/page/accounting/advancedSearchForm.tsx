@@ -29,7 +29,13 @@ export const AdvancedSearchForm = (props: {
         const params = {
             ...values,
             is_unclassified: values.chose_unclassified === 'unclassified',
-            trans_time: values.trans_time?.map((date: any) => dayjs(date).format('YYYY-MM-DD HH:mm:ss')),
+            trans_time: values.trans_time?.map((date: any, index: number) => {
+                if (index === 0) {
+                    return dayjs(date).startOf('month').format('YYYY-MM-DD HH:mm:ss')
+                } else {
+                    return dayjs(date).endOf('month').format('YYYY-MM-DD HH:mm:ss')
+                }
+            })
         }
         
         console.log('params', params);
@@ -45,16 +51,15 @@ export const AdvancedSearchForm = (props: {
             trans_time: [dayjs(formValue.trans_time[0]), dayjs(formValue.trans_time[1])]
         }}
         onValuesChange={(changedValues, allValues) => {
-            console.log('changedValues', changedValues);
-            console.log('allValues', allValues);
             const new_allValues = {...allValues};
             const trans_time = allValues.trans_time;
             if (Array.isArray(trans_time) && trans_time.length === 2) {
                 new_allValues.trans_time = [
-                    dayjs(trans_time[0]).format('YYYY-MM-DD HH:mm:ss'),
-                    dayjs(trans_time[1]).format('YYYY-MM-DD HH:mm:ss')
+                    dayjs(trans_time[0]).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
+                    dayjs(trans_time[1]).endOf('month').format('YYYY-MM-DD HH:mm:ss')
                 ];
             }
+            console.log(new_allValues, 'new_allValues')
             props.setFormValue(new_allValues)
         }}
         name="advanced_search" style={formStyle} onFinish={onFinish}>

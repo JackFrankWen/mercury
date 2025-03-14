@@ -2,7 +2,7 @@ import React from "react";
 import { Layout, ConfigProvider, Menu, Flex, Tooltip } from "antd";
 import { AliveScope, KeepAlive } from "react-activation";
 import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
-
+import zhCN from 'antd/locale/zh_CN';
 import Home from "./page/home";
 import Accounting from "./page/accounting";
 import Setting from "./page/setting";
@@ -19,6 +19,11 @@ import {
     ReloadOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
+import 'dayjs/locale/zh-cn';
+// import dayjs from "dayjs";
+
+// dayjs.locale('zh-cn');
+
 type MenuItem = Required<MenuProps>['items'][number];
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -28,6 +33,7 @@ function App(props: any): JSX.Element {
     return (
         <BrowserRouter>
             <ConfigProvider
+                locale={zhCN}
                 theme={{
                     token: {
                         colorPrimary: "#eccf10",

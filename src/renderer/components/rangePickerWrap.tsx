@@ -65,9 +65,18 @@ const RangePickerWrap = (props: {
     const [date, setDate] = useState<any>(value)
     const [open, setOpen] = useState<boolean>(false)
     const setClickDate = (val: any) => {
-        setDate(val)
-        setOpen(false)
-        if (onChange) onChange(val)
+        if (val.length === 2) {
+            const newVal = val.map((item: any, index: number) => {
+                if (index === 0) {
+                    return item.startOf('month')
+                } else {
+                    return item.endOf('month')
+                }
+            })
+            setDate(newVal)
+            setOpen(false)
+            if (onChange) onChange(newVal)
+        }
     }
     const renderExtraFooter = () => {
         const curMonth = getFirstDayAndLastDay(0, 'month')
@@ -102,6 +111,7 @@ const RangePickerWrap = (props: {
         <RangePicker
             value={date}
             open={open}
+            picker="month"
             format="YYYY-MM-DD"
             onChange={(dates) => setClickDate(dates)}
             bordered={bordered}
