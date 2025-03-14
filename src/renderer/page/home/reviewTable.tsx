@@ -5,8 +5,7 @@ import { useSelect } from '../../components/useSelect'
 import { cpt_const, payment_type } from 'src/renderer/const/web'
 import DonutChart from 'src/renderer/components/donutChart'
 import { CategoryReturnType } from 'src/preload/index'
-import { DribbbleCircleFilled, SlidersFilled, SlidersOutlined } from '@ant-design/icons'
-
+import CategoryCollaspe from './categoryCollaspe'
 // 写一个方法  CategoryReturnType中 child 每一条数据    转化成 PieChart 的 data 用reduce  
 // 转化 {value: item.child.value, name: item.child.name, type: item.    value}
 
@@ -41,11 +40,10 @@ const Tab1Content = ({ category, formValue, refreshTable }) => {
 const Tab2Content = ({ category, formValue, refreshTable }) => {
     return (
         <div style={{ minHeight: '400px' }}>
-            <CategoryTable 
+            <CategoryCollaspe 
                 refreshTable={refreshTable}
                 data={category}
                 formValue={formValue}
-                view="alternate"  // 可以增加一个视图类型参数来区分不同的展示方式
             />
         </div>
     )
