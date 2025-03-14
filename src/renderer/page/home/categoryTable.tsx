@@ -34,7 +34,7 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: '二级分类',
-    dataIndex: 'name',
+    dataIndex: 'oo',
     width: '28%',
   },
 
