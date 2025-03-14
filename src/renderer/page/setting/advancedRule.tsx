@@ -7,6 +7,7 @@ import useLoadingButton from '../../components/useButton'
 import { getPriorityType, getConditionType, getFormulaType, priority_type } from '../../const/web'
 import AdvancedRuleModal from './advancedRuleModal'
 import { RuleItem, RuleItemList, RuleItemListList } from './advancedRuleFormItem'
+import BatchReplaceModal from './batchReplaceModal'
 
 // Add type declarations at the top
 type TypeMap = { [key: string]: string }
@@ -162,7 +163,6 @@ const RuleTable = () => {
       width: 100,
       render: (_, record) => (
         <Space size="middle">
-
           <a
             onClick={() => {
               setVisiable(true)
@@ -173,6 +173,10 @@ const RuleTable = () => {
           >
             查看
           </a>
+          <a onClick={() => {
+            setSelectedRule(record)
+            setBatchReplaceVisible(true)
+          }}>批量替换</a>
           <a
             onClick={() => {
               Modal.confirm({
@@ -201,6 +205,8 @@ const RuleTable = () => {
   const [visiable, setVisiable] = useState(false)
   const [input, setInput] = useState<string>('')
   const [record, setRecord] = useState<any>()
+  const [batchReplaceVisible, setBatchReplaceVisible] = useState(false)
+  const [selectedRule, setSelectedRule] = useState<any>(null)
 
   const refresh = () => {
     setVisiable(false)
@@ -249,6 +255,18 @@ const RuleTable = () => {
             onCancel={() => setVisiable(false)}
           />
         </Modal>
+      )}
+
+      {batchReplaceVisible && (
+        <BatchReplaceModal
+          visible={batchReplaceVisible}
+          rule={selectedRule}
+          onClose={() => setBatchReplaceVisible(false)}
+          onSuccess={() => {
+            setBatchReplaceVisible(false)
+            getRuleData()
+          }}
+        />
       )}
     </div>
   )
