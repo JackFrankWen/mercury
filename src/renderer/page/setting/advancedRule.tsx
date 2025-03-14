@@ -77,7 +77,7 @@ const RuleTable = () => {
     {
       title: '分类',
       dataIndex: 'category',
-      width: 70,
+      width: 100,
       render: (val: string) => {
         return <div>{getCategoryString(val)}</div>
       },
