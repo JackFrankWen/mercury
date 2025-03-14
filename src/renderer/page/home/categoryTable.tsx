@@ -15,8 +15,11 @@ interface ExpandedDataType {
   name: string
   category: string
   avg: string
+  value: string
 }
+
 interface DataType {
+  id: string
   name: string
   avg: string
   value: string
@@ -31,7 +34,7 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: '二级分类',
-    dataIndex: 'oo',
+    dataIndex: 'name',
     width: '28%',
   },
 
@@ -101,36 +104,42 @@ const CategoryTable = (props: {
   const { data, formValue, refreshTable } = props
   const [show, toggle] = useModal()
   const [cate, setCate] = useState<string>('')
-  const [modalData, setModaldata] = useState()
+  const [modalData, setModaldata] = useState<any>()
+  const [loading, setLoading] = useState<boolean>(false)
+
   const getCategory = async (data: any, category: string) => {
+    if (!category) return;
+    
+    setLoading(true);
     try {
-      const {trans_time} = data
-        
+      const { trans_time } = data;
       const params = {
         ...data,
         category,
         trans_time,
-        
       }
-      window.mercury.api.getTransactions(params).then((res) => {
-        console.log('res', res);
-        
-        if(res) {
-          setModaldata(res)
-        }
-    })
-
+      
+      const res = await window.mercury.api.getTransactions(params);
+      if (res) {
+        setModaldata(res);
+      }
     } catch (error) {
-      console.log(error)
+      console.error("Error fetching transactions:", error);
+      message.error("获取交易数据失败");
+    } finally {
+      setLoading(false);
     }
   }
+  
   useEffect(() => {
-    getCategory(formValue, cate)
-  }, [formValue, cate])
+    if (cate && show) {
+      getCategory(formValue, cate);
+    }
+  }, [formValue, cate, show]);
 
   const onRowClick = (val: string) => {
-    toggle()
-    setCate(val)
+    setCate(val);
+    toggle();
   }
   const tableSummary = (pageData: any) => {
     let totalCost = 0
@@ -152,14 +161,15 @@ const CategoryTable = (props: {
     )
   }
   const refresh = useCallback(() => {
-    refreshTable()
-    getCategory(formValue, cate)
-  }, [formValue, cate])
+    refreshTable();
+    if (cate) {
+      getCategory(formValue, cate);
+    }
+  }, [formValue, cate, refreshTable]);
   return (
     <>
       <Table
         rowKey="id"
-        // size='middle'
         columns={columns}
         expandable={{
           indentSize: 0,
@@ -167,15 +177,23 @@ const CategoryTable = (props: {
           expandedRowRender: expandedRowRender(onRowClick),
         }}
         summary={tableSummary}
-        dataSource={props.data}
-        // scroll={{y: 400}}
+        dataSource={data}
         pagination={false}
       />
       {show && (
-        <Modal width={1000} 
-        closable={false}
-        footer={null} open={show} onCancel={toggle}>
-          <ModalContent modalData={modalData} refresh={refresh} />
+        <Modal 
+          width={1000} 
+          closable={true}
+          footer={null} 
+          open={show} 
+          onCancel={toggle}
+          title="交易详情"
+        >
+          {loading ? (
+            <div style={{ textAlign: 'center', padding: '20px' }}>Loading...</div>
+          ) : (
+            <ModalContent modalData={modalData} refresh={refresh} />
+          )}
         </Modal>
       )}
     </>
