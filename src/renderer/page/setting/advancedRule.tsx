@@ -54,6 +54,8 @@ const RuleTable = () => {
   const [ruleData, setRuleData] = useState<any>()
   const [isUpdate, setIsUpdate] = useState<boolean>()
   const [LoadingBtn, , setLoadingFalse] = useLoadingButton()
+  const [searchValue, setSearchValue] = useState<string>('')
+  
   const getRuleData = async (rule?: { nameOrRule?: string; active?: number }) => {
     window.mercury.api.getAllAdvancedRules(rule).then((res: any) => {
       console.log(res, '====rule')
@@ -178,7 +180,7 @@ const RuleTable = () => {
               window.mercury.api.updateAdvancedRule(record.id, { ...record, active: record.active === 1 ? 0 :1 }).then((res: any) => {
                 if (res.code === 200) {
                 message.success('状态更新成功')
-                getRuleData()
+                getRuleData(searchValue ? { nameOrRule: searchValue } : undefined)
               }
             })
           }}>{record.active === 1 ? '禁用' : '启用'}</Button>
@@ -195,7 +197,7 @@ const RuleTable = () => {
                   window.mercury.api.deleteAdvancedRule(record.id).then((res: any) => {
                     if (res.code === 200) {
                       message.success('删除成功')
-                      getRuleData()
+                      getRuleData(searchValue ? { nameOrRule: searchValue } : undefined)
                     }
                   })
                 }
@@ -210,20 +212,20 @@ const RuleTable = () => {
     },
   ]
   useEffect(() => {
-    getRuleData()
+    getRuleData(searchValue ? { nameOrRule: searchValue } : undefined)
   }, [])
   const [visiable, setVisiable] = useState(false)
-  const [input, setInput] = useState<string>('')
   const [record, setRecord] = useState<AdvancedRule>()
   const [batchReplaceVisible, setBatchReplaceVisible] = useState(false)
   const [selectedRule, setSelectedRule] = useState<any>(null)
 
   const refresh = () => {
     setVisiable(false)
-    getRuleData()
+    getRuleData(searchValue ? { nameOrRule: searchValue } : undefined)
   }
   const onSearch = (value: string) => {
     console.log(value)
+    setSearchValue(value)
     getRuleData({
       nameOrRule: value
     })
@@ -231,7 +233,12 @@ const RuleTable = () => {
   return (
     <div className="match-content">
       <Space>
-      <Input.Search placeholder="请输入规则内容、名称" onSearch={onSearch} enterButton />
+      <Input.Search 
+        placeholder="请输入规则内容、名称" 
+        onSearch={onSearch} 
+        value={searchValue}
+        onChange={(e) => setSearchValue(e.target.value)}
+        enterButton />
 
         <Button type="primary" onClick={() => {
           setVisiable(true)
