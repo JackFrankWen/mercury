@@ -1,10 +1,11 @@
-import { Card, Col, Row, Space } from 'antd'
+import { Card, Col, Row, Space, Flex, Tabs } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import CategoryTable from './categoryTable'
 import { useSelect } from '../../components/useSelect'
 import { cpt_const, payment_type } from 'src/renderer/const/web'
 import DonutChart from 'src/renderer/components/donutChart'
 import { CategoryReturnType } from 'src/preload/index'
+import { DribbbleCircleFilled, SlidersFilled, SlidersOutlined } from '@ant-design/icons'
 
 // 写一个方法  CategoryReturnType中 child 每一条数据    转化成 PieChart 的 data 用reduce  
 // 转化 {value: item.child.value, name: item.child.name, type: item.    value}
@@ -21,6 +22,35 @@ function convertCategoryReturnTypeToPieChartData(category: CategoryReturnType) {
         return acc
     }, [])
 }
+
+// Tab1内容组件
+const Tab1Content = ({ category, formValue, refreshTable }) => {
+    return (
+        <>
+            <CategoryTable
+                refreshTable={refreshTable}
+                data={category}
+                formValue={formValue}
+            />
+            <DonutChart data={convertCategoryReturnTypeToPieChartData(category)} />
+        </>
+    )
+}
+
+// Tab2内容组件
+const Tab2Content = ({ category, formValue, refreshTable }) => {
+    return (
+        <div style={{ minHeight: '400px' }}>
+            <CategoryTable 
+                refreshTable={refreshTable}
+                data={category}
+                formValue={formValue}
+                view="alternate"  // 可以增加一个视图类型参数来区分不同的展示方式
+            />
+        </div>
+    )
+}
+
 function TableSection(props: { formValue: any }) {
     const { formValue } = props
     const [consumerVal, ConsumerCpt] = useSelect({
@@ -31,7 +61,6 @@ function TableSection(props: { formValue: any }) {
     const [accountTypeVal, accountTypeCpt] = useSelect({
         options: cpt_const.account_type,
         placeholder: '账户类型',
-        
     })
     const [paymentVal, PaymentCpt] = useSelect({
         options: cpt_const.payment_type,
@@ -40,6 +69,11 @@ function TableSection(props: { formValue: any }) {
     })
 
     const [category, setCategory] = useState<CategoryReturnType>([])
+    const [activeTabKey, setActiveTabKey] = useState('tab1')
+
+    const handleTabChange = (key) => {
+        setActiveTabKey(key);
+    }
 
     const getCategory = async (data: any) => {
         const { trans_time } = formValue
@@ -77,6 +111,7 @@ function TableSection(props: { formValue: any }) {
                 {accountTypeCpt}
                 {ConsumerCpt}
                 {PaymentCpt}
+                
             </Space>
         </>
     )
@@ -87,23 +122,58 @@ function TableSection(props: { formValue: any }) {
             account_type: accountTypeVal,
             payment_type: paymentVal,
         })
-    }, [formValue, consumerVal])
-    return (
-        <Card hoverable title="分类" bordered={false} extra={extra}>
-            
-            <div className="">
-                <CategoryTable
-                    refreshTable={refreshTable}
-                    data={category}
+    }, [formValue, consumerVal, accountTypeVal, paymentVal])
+
+    // 定义标签页配置
+    const tabList = [
+        {
+            key: 'tab1',
+            tab: '数据',
+        },
+        {
+            key: 'tab2',
+            tab: '图表视图',
+        },
+    ]
+
+    // 定义标签页内容
+    const contentList = {
+        tab1: (
+            <Tab1Content 
+                category={category} 
                 formValue={{
                     ...formValue,
                     consumer: consumerVal,
                     account_type: accountTypeVal,
                     payment_type: paymentVal,
                 }}
+                refreshTable={refreshTable}
             />
-            </div>
-            <DonutChart data={convertCategoryReturnTypeToPieChartData(category)} />
+        ),
+        tab2: (
+            <Tab2Content 
+                category={category} 
+                formValue={{
+                    ...formValue,
+                    consumer: consumerVal,
+                    account_type: accountTypeVal,
+                    payment_type: paymentVal,
+                }}
+                refreshTable={refreshTable}
+            />
+        ),
+    }
+
+    return (
+        <Card 
+            hoverable 
+            bordered={false} 
+            tabBarExtraContent={extra}
+            tabList={tabList}
+            activeTabKey={activeTabKey}
+            onTabChange={handleTabChange}
+        >
+            {contentList[activeTabKey]}
         </Card>
     )
 }
