@@ -38,9 +38,9 @@ function importCSV(filepath) {
                 
                 const stmt = db.prepare(`
                     INSERT INTO advanced_rules (
-                        name,rule, category, consumer, tag, priority, 
+                        name,rule, category, consumer, tag, priority,active, 
                         creation_time, modification_time
-                    ) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
                 `);
 
                 results.forEach((row, index) => {
