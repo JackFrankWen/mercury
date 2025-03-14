@@ -10,16 +10,26 @@ export interface AdvancedRule {
   priority: number;
   creation_time?: string;
   modification_time?: string;
+  active: number;
 }
 
 // 获取所有高级规则
-export async function getAllAdvancedRules(rule?: string): Promise<AdvancedRule[]> {
+export async function getAllAdvancedRules(params?: { nameOrRule?: string; active?: number }): Promise<AdvancedRule[]> {
   try {
     const db = await getDbInstance();
     
     return new Promise<AdvancedRule[]>((resolve, reject) => {
-      const where = rule ? `WHERE rule LIKE '%${rule}%' OR name LIKE '%${rule}%'` : '';
+      const whereConditions = [];
+      if (params?.nameOrRule) {
+        whereConditions.push(`(rule LIKE '%${params.nameOrRule}%' OR name LIKE '%${params.nameOrRule}%')`);
+      }
+      if (params?.active !== undefined) {
+        whereConditions.push(`active = ${params.active}`);
+      }
+      
+      const where = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
       const sql = `SELECT * FROM advanced_rules ${where} ORDER BY category ASC`;
+      
       db.all(sql, (err, rows: AdvancedRule[]) => {
         if (err) {
           console.error('Error getting advanced rules:', err);
@@ -72,12 +82,12 @@ export async function updateAdvancedRule(id: number, rule: AdvancedRule): Promis
     return new Promise<{ code: number }>((resolve, reject) => {
       const sql = `
         UPDATE advanced_rules
-        SET name = ?, rule = ?, category = ?, consumer = ?, tag = ?, priority = ?, modification_time = CURRENT_TIMESTAMP
+        SET name = ?, rule = ?, category = ?, consumer = ?, tag = ?, priority = ?, active = ?, modification_time = CURRENT_TIMESTAMP
         WHERE id = ?
       `;
       
       db.run(sql, 
-        [rule.name, rule.rule, rule.category, rule.consumer, rule.tag, rule.priority, id],
+        [rule.name, rule.rule, rule.category, rule.consumer, rule.tag, rule.priority, rule.active, id],
         function(err) {
           if (err) {
             console.error('Error updating advanced rule:', err);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Cascader, Col, message, Row, Space, Table } from 'antd'
+import { Card, Cascader, Col, message, Row, Space, Switch, Table } from 'antd'
 import { Button, Form, Input, Radio } from 'antd'
 import SelectWrap from '../../components/selectWrap'
 import { cpt_const } from '../../const/web'
@@ -8,7 +8,7 @@ import { toNumberOrUndefiend } from '../../components/utils'
 import useLoadingButton from '../../components/useButton'
 import { DefaultOptionType } from 'antd/es/cascader'
 import AdvancedRuleFormItem, { RuleItemList } from './advancedRuleFormItem'
-
+import { AdvancedRule } from 'src/main/sqlite3/advance-rules'
 export type RuleFormData = {
   id?: number
   name?: string
@@ -22,14 +22,15 @@ export type RuleFormData = {
 }
 
 const RuleForm = (props: {
-  data?: RuleFormData 
+  data?: AdvancedRule
   onCancel: () => void
   refresh: () => void
 }) => {
   const [form] = Form.useForm()
   const   [LoadingBtn, , setLoadingFalse ] = useLoadingButton()
 
-  const { data } = props
+  const { data = {
+  } as AdvancedRule } = props
   const onFormLayoutChange = (value: { category: [number, number] }) => {
     console.log(value,'onFormLayoutChange');
     
@@ -59,6 +60,7 @@ const RuleForm = (props: {
       if (data?.id) {
         res = await window.mercury.api.updateAdvancedRule(data.id,{
             ...formValue,
+            active: formValue.active ? 1 : 0,
             category: JSON.stringify(formValue.category),
             rule: JSON.stringify(formValue.rule),
         })
@@ -66,6 +68,7 @@ const RuleForm = (props: {
       } else {
         res = await window.mercury.api.addAdvancedRule({
             ...formValue,
+            active: formValue.active ? 1 : 0,
             category: JSON.stringify(formValue.category),
             rule: JSON.stringify(formValue.rule),
         })
@@ -97,6 +100,7 @@ const RuleForm = (props: {
         consumer: toNumberOrUndefiend(data?.consumer),
         rule: data?.rule ? JSON.parse(data?.rule) : [],
         priority: toNumberOrUndefiend(data?.priority) || 1,
+        active: data?.active === 1,
       }}
       onValuesChange={onFormLayoutChange}
       style={{ maxWidth: 600 }}
@@ -129,7 +133,9 @@ const RuleForm = (props: {
       <Form.Item name="priority">
         <SelectWrap placeholder="优先级" options={cpt_const.priority_type} />
       </Form.Item>
-     
+      <Form.Item name="active" valuePropName="checked">
+        <Switch />
+      </Form.Item>
       <Form.Item name="rule">
         <AdvancedRuleFormItem />
       </Form.Item>

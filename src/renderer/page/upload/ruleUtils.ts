@@ -163,7 +163,9 @@ function applyRule(transactions: I_Transaction[], rules: AdvancedRule[]) {
 
 export const ruleByAdvanced = async (arr:I_Transaction[] , api: any) => {
  try {      
-  const rules: AdvancedRule[] = await window.mercury.api.getAllAdvancedRules();
+  const rules: AdvancedRule[] = await window.mercury.api.getAllAdvancedRules({
+    active: 1
+  });
   const p1Rules = rules.filter((item: any) => item.priority === 1);
   const p10Rules = rules.filter((item: any) => item.priority === 10);
   const p100Rules = rules.filter((item: any) => item.priority === 100);

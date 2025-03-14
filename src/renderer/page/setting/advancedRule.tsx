@@ -1,4 +1,4 @@
-import { message, Space, Table, Tag, Modal, Button, Popover, Typography, Input } from 'antd'
+import { message, Space, Table, Tag, Modal, Button, Popover, Typography, Input, Badge } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import React, { useEffect, useState } from 'react'
 import { getCategoryString } from '../../const/categroy'
@@ -8,18 +8,12 @@ import { getPriorityType, getConditionType, getFormulaType, priority_type } from
 import AdvancedRuleModal from './advancedRuleModal'
 import { RuleItem, RuleItemList, RuleItemListList } from './advancedRuleFormItem'
 import BatchReplaceModal from './batchReplaceModal'
+import { AdvancedRule } from 'src/main/sqlite3/advance-rules'
 
 // Add type declarations at the top
 type TypeMap = { [key: string]: string }
 
-interface DataType {
-  key: string
-  name: string
-  age: number
-  address: string
-  tags: string[]
-  id: number
-}
+
 const renderValue = (value: RuleItem) => {
   if (value.condition === 'account_type') {
     return getAccountType(value.value)
@@ -60,7 +54,7 @@ const RuleTable = () => {
   const [ruleData, setRuleData] = useState<any>()
   const [isUpdate, setIsUpdate] = useState<boolean>()
   const [LoadingBtn, , setLoadingFalse] = useLoadingButton()
-  const getRuleData = async (rule?: string) => {
+  const getRuleData = async (rule?: { nameOrRule?: string; active?: number }) => {
     window.mercury.api.getAllAdvancedRules(rule).then((res: any) => {
       console.log(res, '====rule')
       if (res) {
@@ -68,7 +62,7 @@ const RuleTable = () => {
       }
     })
   }
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<AdvancedRule> = [
     {
       title: '名称',
       dataIndex: 'name',
@@ -103,11 +97,17 @@ const RuleTable = () => {
       },
     },
     {
+      title: '状态',
+      dataIndex: 'active',
+      ellipsis: true,
+      width: 80,
+      render: (val: number) => <Badge status={val === 1 ? 'success' : 'default'} text={val === 1 ? '启用' : '禁用'} />
+    },
+    {
       title: '规则',
       dataIndex: 'rule',
       ellipsis: true,
-      width: 150,
-      render: (val: string | undefined) => {
+      render: (val: string | undefined, record: any) => {
         const rule: RuleItemListList = val ? JSON.parse(val) : []
         if (rule.length === 0) {
           return <div>暂无规则</div>
@@ -115,7 +115,7 @@ const RuleTable = () => {
 
         return <Popover content={renderRuleContent(rule)}>
           <div style={{  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {renderRuleContent(rule)}
+           复杂
           </div>
         </Popover>
       },
@@ -159,10 +159,10 @@ const RuleTable = () => {
     {
       title: 'Action',
       key: 'action',
-      width: 100,
+      width: 200,
       render: (_, record) => (
-        <Space size="middle">
-          <a
+        <Space.Compact size="middle">
+          <Button
             onClick={() => {
               setVisiable(true)
               setIsUpdate(true)
@@ -171,12 +171,23 @@ const RuleTable = () => {
             }}
           >
             查看
-          </a>
-          <a onClick={() => {
-            setSelectedRule(record)
-            setBatchReplaceVisible(true)
-          }}>批量替换</a>
-          <a
+          </Button>
+          <Button
+            onClick={() => {
+            
+              window.mercury.api.updateAdvancedRule(record.id, { ...record, active: record.active === 1 ? 0 :1 }).then((res: any) => {
+                if (res.code === 200) {
+                message.success('状态更新成功')
+                getRuleData()
+              }
+            })
+          }}>{record.active === 1 ? '禁用' : '启用'}</Button>
+          <Button
+            onClick={() => {
+              setSelectedRule(record)
+              setBatchReplaceVisible(true)
+            }}>批量替换</Button>
+          <Button
             onClick={() => {
               Modal.confirm({
                 title: '确定要删除吗？',
@@ -193,8 +204,8 @@ const RuleTable = () => {
             }}
           >
             删除
-          </a>
-        </Space>
+          </Button>
+        </Space.Compact>
       ),
     },
   ]
@@ -203,7 +214,7 @@ const RuleTable = () => {
   }, [])
   const [visiable, setVisiable] = useState(false)
   const [input, setInput] = useState<string>('')
-  const [record, setRecord] = useState<any>()
+  const [record, setRecord] = useState<AdvancedRule>()
   const [batchReplaceVisible, setBatchReplaceVisible] = useState(false)
   const [selectedRule, setSelectedRule] = useState<any>(null)
 
@@ -213,7 +224,9 @@ const RuleTable = () => {
   }
   const onSearch = (value: string) => {
     console.log(value)
-    getRuleData(value)
+    getRuleData({
+      nameOrRule: value
+    })
   }
   return (
     <div className="match-content">
@@ -223,7 +236,15 @@ const RuleTable = () => {
         <Button type="primary" onClick={() => {
           setVisiable(true)
           setIsUpdate(false)
-          setRecord({})
+          setRecord({
+            active: 1,
+            consumer: '',
+            name: '',
+            priority: 1,
+            tag: '',
+            rule: '',
+            category: '',
+          })
         }}>新增</Button>
       </Space>
       <Table
@@ -231,7 +252,7 @@ const RuleTable = () => {
         className="mt8"
         columns={columns}
         dataSource={ruleData}
-        scroll={{ y: 'calc(100vh - 200px)', x: 'calc(100vw + 100px)' }}
+        scroll={{ y: 'calc(100vh - 200px)', }}
         // pagination={{
         //   defaultPageSize: 10,
         //   pageSizeOptions: [10, 20, 50],
