@@ -98,10 +98,14 @@ export function handleToTable(csvData: any): {
             case ClassificationEnum.ALIPAY_MOBILE:
                 csvHeader = csvData.slice(0, 22)
                 
-                console.log(csvData.slice(22)[0], 'csvData.slice(22)[0]')
+                console.log(csvData, 'csvData.slice(22)[0]')
                 const os = detectOS()
                 console.log(os, 'os')
-                csvContent = transformArrayTo2D(csvData.slice(22)[0] )
+                if (os === 'Windows') {
+                    csvContent = csvData.slice(22)
+                } else {
+                    csvContent = transformArrayTo2D(csvData.slice(22)[0] )
+                }
                 // 交易时间	交易分类	交易对方	对方账号	商品说明	收/支	金额	收/付款方式	交易状态	交易订单号	商家订单号	备注
                 // 0: (12) ['交易时间', '交易分类', '交易对方', '对方账号', '商品说明', '收/支', '金额', '收/付款方式', '交易状态', '交易订单号', '商家订单号', '备注']
                 tableHeader = formateToTableAlipayMobileHeader(csvHeader)
