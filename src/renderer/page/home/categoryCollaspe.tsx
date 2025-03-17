@@ -27,11 +27,13 @@ const Item = (props: {
     percent: number,
     color: string,
     icon?: string,
+    onClick: () => void,
 }) => {
-    const { name, total, percent, color, icon } = props;
+    const { name, total, percent, color, icon, onClick } = props;
     return (
         <Row justify='space-between'
         align='middle'
+        onClick={onClick}
          style={{
           margin: '0 10px 10px',
           borderRadius: 8,
@@ -46,15 +48,15 @@ const Item = (props: {
               <Col>
               
                 {icon ? 
-                    <span style={{ fontSize: 22 }}>{renderIcon(icon, color)}</span> :
-                    <AccountBookFilled style={{ fontSize: 22, color: color }} />
+                    <span style={{ fontSize: 16 }}>{renderIcon(icon, color)}</span> :
+                    <AccountBookFilled style={{ fontSize: 16, color: color }} />
                 }
               </Col>
               <Col >
               
                  <Typography.Text style={{
                         fontSize: 12,
-                        marginLeft: 10
+                        marginLeft: 5
                     }} >{name}</Typography.Text>
             
               </Col>
@@ -67,7 +69,7 @@ const Item = (props: {
     )
 }
 
-const CategoryTable = (props: {
+const CategoryCollaspe = (props: {
   data: DataType[]
   formValue: any
   refreshTable: () => void
@@ -143,7 +145,7 @@ const CategoryTable = (props: {
                         fontSize: 12,
                         marginBottom: -10
                     }} strong>{item.name}</Typography.Text>
-                  <Typography.Text>{formatMoney(item.value)}</Typography.Text>
+                  <Typography.Text>{formatMoney(item.value, '万')}</Typography.Text>
                 </Row>
                 <Row justify='space-between'>
                   <Col flex='auto'>
@@ -161,6 +163,10 @@ const CategoryTable = (props: {
         children: item.child.map((child, index) => {
             const childCategoryInfo = findCategoryById(child.id);
             return <Item 
+                onClick={() => {
+                  setCate(child.category);
+                  toggle();
+                }}
                 name={child.name} 
                 total={child.value} 
                 percent={parseFloat(child.avg)} 
@@ -201,4 +207,4 @@ const CategoryTable = (props: {
   )
 }
 
-export default CategoryTable
+export default CategoryCollaspe
