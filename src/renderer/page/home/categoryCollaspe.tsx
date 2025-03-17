@@ -30,45 +30,39 @@ const Item = (props: {
 }) => {
     const { name, total, percent, color, icon } = props;
     return (
-        <Row justify='start'
-        align='bottom'
+        <Row justify='space-between'
+        align='middle'
          style={{
-          padding: '2px 15px',
+          margin: '0 10px 10px',
+          borderRadius: 8,
+          padding: '0 10px',
+          background: '#fff'
         }}>
-            <Col
-                style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'center'
-                }}
+            <Row
+                justify='start'
+                align='middle'
+                
             >
+              <Col>
+              
                 {icon ? 
                     <span style={{ fontSize: 22 }}>{renderIcon(icon, color)}</span> :
                     <AccountBookFilled style={{ fontSize: 22, color: color }} />
                 }
-            </Col>
-            <Col flex='auto' style={{ marginLeft: 8 }}>
-                <Row justify='space-between' 
-                align='middle'
-                style={{
-                  marginBottom: -5,
-                }}>
-                    <Typography.Text style={{
+              </Col>
+              <Col >
+              
+                 <Typography.Text style={{
                         fontSize: 12,
-                        marginBottom: -10
-                    }} type='secondary'>{name}</Typography.Text>
-                  <Typography.Text>{total}</Typography.Text>
-                </Row>
-                <Row justify='space-between'>
-                  <Col flex='auto'>
-                    <Progress size='small' showInfo={false} percent={percent} strokeColor={color} />
-                  </Col>
-                  <Col>
-                    <Typography.Text style={{
-                      fontSize: 12,
-                      paddingLeft: 10
-                    }} type='secondary'>{percent}%</Typography.Text>
-                  </Col>
-                </Row>
+                        marginLeft: 10
+                    }} >{name}</Typography.Text>
+            
+              </Col>
+              </Row>
+            <Col>
+                  <Typography.Text>{formatMoney(total)}元</Typography.Text>
             </Col>
+            
         </Row>
     )
 }
@@ -128,10 +122,7 @@ const CategoryTable = (props: {
     return {
         key: index,
         label: <Row justify='start'
-        align='bottom'
-         style={{
-          padding: '2px 15px',
-        }}>
+        align='bottom'>
             <Col
                 style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center'
@@ -151,8 +142,8 @@ const CategoryTable = (props: {
                     <Typography.Text style={{
                         fontSize: 12,
                         marginBottom: -10
-                    }} type='secondary'>{item.name}</Typography.Text>
-                  <Typography.Text>{item.value}</Typography.Text>
+                    }} strong>{item.name}</Typography.Text>
+                  <Typography.Text>{formatMoney(item.value)}</Typography.Text>
                 </Row>
                 <Row justify='space-between'>
                   <Col flex='auto'>
@@ -185,6 +176,7 @@ const CategoryTable = (props: {
         {
            <Collapse
            bordered={false}
+           
            expandIconPosition="end" 
            items={items}
            />

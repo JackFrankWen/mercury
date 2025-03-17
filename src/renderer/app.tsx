@@ -48,7 +48,7 @@ function App(props: any): JSX.Element {
                             itemMarginBlock: 12
                         },
                         Collapse: {
-                            contentPadding: 0,
+                            contentPadding: '0 0',
                         },
                         Layout: {
                         },

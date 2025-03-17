@@ -89,7 +89,6 @@ function TableSection(props: { formValue: any }) {
         }
     }
     useEffect(() => {
-        console.log('====aa');
 
         getCategory({
             ...formValue,
