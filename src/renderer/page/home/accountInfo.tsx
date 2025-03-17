@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Col, Collapse, CollapseProps, Flex, Progress, Row, Typography } from 'antd';
-import { AccountBookFilled } from '@ant-design/icons';
+import { AccountBookFilled, AlipayCircleOutlined, BankFilled, WechatOutlined } from '@ant-design/icons';
 import { getAccountType, getPaymentType} from 'src/renderer/const/web';
 import { formatMoney } from 'src/renderer/components/utils';
 
@@ -47,6 +47,16 @@ const Item = (props: {
 
 }) => {
     const { name, total, percent, color } = props;
+    let icon 
+    if (name === '支付宝') {
+        icon = <AlipayCircleOutlined style={{ fontSize: 28, color: '#00A0E9' }}  />
+    } else if ( name === '微信') {
+        icon = <WechatOutlined style={{ fontSize: 28, color: '#07C160' }}  />
+    } else if ( ['银行'].includes(name)) {
+       icon  = <BankFilled style={{ fontSize: 28, color: color }} />
+    } else {
+        icon =  <AccountBookFilled style={{ fontSize: 28, color: color }} />
+    }
     return (
         <Flex justify='start' align='center'>
             <Col
@@ -54,7 +64,7 @@ const Item = (props: {
                     display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}
             >
-                <AccountBookFilled style={{ fontSize: 32, color: color }} />
+                {icon}
             </Col>
             <Col flex='auto' >
                 <Flex justify='space-between'>
