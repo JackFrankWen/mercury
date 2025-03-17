@@ -1,8 +1,10 @@
 import React from 'react';
 import { Drawer, Form, Input, Button, Space, Select, DatePicker, message, Cascader } from 'antd';
-import { account_type, payment_type, tag_type } from "../../const/web";
+import { account_type, flow_type, payment_type, tag_type } from "../../const/web";
 import { category_type } from 'src/renderer/const/categroy';
 import { toNumberOrUndefiend } from 'src/renderer/components/utils';
+import { c } from 'vite/dist/node/types.d-aGj9QkWt';
+import dayjs from 'dayjs';
 
 // 定义消费者类型映射
 const CONSUMER_TYPE_MAP = {
@@ -32,7 +34,7 @@ function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDra
     payment_type: 3,
     account_type: 1,
     tag: undefined,
-    trans_time: undefined,
+    trans_time: dayjs(),
   }
   const handleSubmit = async () => {
     try {
@@ -52,6 +54,7 @@ function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDra
 
       const formattedValues = {
         ...values,
+        flow_type: 1,
         category: JSON.stringify(values.category),
         trans_time: values.trans_time ? values.trans_time.format('YYYY-MM-DD HH:mm:ss') : undefined
       };
