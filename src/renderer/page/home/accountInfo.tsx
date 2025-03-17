@@ -47,39 +47,50 @@ const Item = (props: {
 
 }) => {
     const { name, total, percent, color } = props;
-    let icon 
+    let icon, progressColor
     if (name === '支付宝') {
-        icon = <AlipayCircleOutlined style={{ fontSize: 28, color: '#00A0E9' }}  />
+        icon = <AlipayCircleOutlined style={{ fontSize: 32, color: '#00A0E9' }}  />
+        progressColor = '#00A0E9'
     } else if ( name === '微信') {
-        icon = <WechatOutlined style={{ fontSize: 28, color: '#07C160' }}  />
+        icon = <WechatOutlined style={{ fontSize: 32, color: '#07C160' }}  />
+        progressColor = '#07C160'
     } else if ( ['银行'].includes(name)) {
-       icon  = <BankFilled style={{ fontSize: 28, color: color }} />
+       icon  = <BankFilled style={{ fontSize: 32, color: color }} />
+       progressColor = color
     } else {
-        icon =  <AccountBookFilled style={{ fontSize: 28, color: color }} />
+        icon =  <AccountBookFilled style={{ fontSize: 32, color: color }} />
+        progressColor = color
     }
     return (
-        <Flex justify='start' align='center'>
+        <Row justify='space-between' align='bottom' style={{ marginBottom: 2 }}>
             <Col
                 style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    marginRight: 8
                 }}
             >
                 {icon}
             </Col>
-            <Col flex='auto' >
-                <Flex justify='space-between'>
+            <Col flex='auto'  >
+                <Row justify='space-between' align='middle' style={{ marginBottom: -8 }}>
                     <Typography.Text style={{
                         fontSize: 12,
                         marginBottom: -5,
                     }} type='secondary'>{name}</Typography.Text>
-                </Flex>
-                <Progress size='small' showInfo={false} percent={percent} strokeColor={color} />
+                    <Typography.Text >{total}</Typography.Text>
+                </Row>
+                <Row justify='space-between' >
+                    <Col flex='auto'>
+                        <Progress size='small' showInfo={false} percent={percent} strokeColor={progressColor} />
+                    </Col>
+                    <Col>
+                        <Typography.Text style={{ fontSize: 12, paddingLeft: 10 }} type='secondary'>{percent}%</Typography.Text>
+                    </Col>
+                </Row>
             </Col>
-            <Flex vertical align='center'>
-                <Typography.Text >{total}</Typography.Text>
-                <Typography.Text style={{ fontSize: 12 }} type='secondary'>{percent}%</Typography.Text>
-            </Flex>
-        </Flex>
+        </Row>
     )
 }
 
