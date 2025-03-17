@@ -101,7 +101,7 @@ export function handleToTable(csvData: any): {
                 console.log(csvData, 'csvData.slice(22)[0]')
                 const os = detectOS()
                 console.log(os, 'os')
-                if (os === 'Windows') {
+                if (csvData.slice(22)[0].length ===0) {
                     csvContent = csvData.slice(22)
                 } else {
                     csvContent = transformArrayTo2D(csvData.slice(22)[0] )
@@ -115,8 +115,7 @@ export function handleToTable(csvData: any): {
                     ALIPAY
                 )  
                 // 获取statusLIst 所有status
-                // let statusList = tableData.map((item) => {
-                //     return item.status
+                // let statusList = tableData.map((item) =】00
                 // })
                 // // 去重复   
                 // let statusSet = new Set(statusList)
