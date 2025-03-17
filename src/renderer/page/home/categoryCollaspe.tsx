@@ -5,26 +5,10 @@ import useModal from '../../components/useModal'
 import { ModalContent } from './ModalContent'
 import { AccountBookFilled } from '@ant-design/icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fas } from '@fortawesome/free-solid-svg-icons'
 import { category_type, findCategoryById } from '../../const/categroy'
 import { formatMoney } from '../../components/utils'
+import { renderIcon } from '../../components/FontIcon'
 // import BatchUpdateArea from '../views/accounting/batch-update'
-
-// Initialize FontAwesome library
-library.add(fas)
-
-
-// Render FontAwesome icon from string with color
-const renderIcon = (iconString: string, color: string = '#1677ff') => {
-  if (!iconString) return null;
-  
-  const iconParts = iconString.split(' ');
-  if (iconParts.length < 2) return null;
-  
-  const iconName = iconParts[1].replace('fa-', '');
-  return <FontAwesomeIcon icon={['fas', iconName]} style={{ color }} />;
-}
 
 interface ExpandedDataType {
   name: string

@@ -19,7 +19,7 @@ import {
   Typography,
 } from 'antd'
 import React, { useEffect, useMemo, useState } from 'react'
-import { getCategoryString } from 'src/renderer/const/categroy'
+import { findCategoryById, getCategoryString } from 'src/renderer/const/categroy'
 import {
   account_type,
 } from 'src/renderer/const/web'
@@ -30,6 +30,7 @@ import UploadModal from '../../components/uploadModal'
 import dayjs from 'dayjs'
 import { openNotification, } from 'src/renderer/components/notification'
 import {  ruleByAdvanced } from './ruleUtils'
+import { renderIcon } from 'src/renderer/components/FontIcon'
 
 
 function checkNeedTransferData(data: any) {
@@ -214,8 +215,15 @@ const BasicTable = (props: {
       dataIndex: 'category',
       width: 120,
       defaultCheck: false,
-      render: (val: string) => {
-        return getCategoryString(val)
+      render: (val: string, obj: any) => {
+        const cate = JSON.parse(obj.category)
+        console.log(cate, 'cate====');
+        
+        const category = findCategoryById(cate[1])
+        return  <Space>
+            {renderIcon(category.icon, category.color)}
+            {getCategoryString(val)}
+          </Space>
       },
     },
     {
