@@ -1,4 +1,4 @@
-import { Col, Collapse, Flex, message, Modal, Progress, Table, Tag, Tooltip, Typography } from 'antd'
+import { Col, Collapse, Flex, message, Modal, Progress, Row, Table, Tag, Tooltip, Typography } from 'antd'
 import type { CollapseProps, TableColumnsType, TableRowSelection } from 'antd'
 import React, { useCallback, useEffect, useState } from 'react'
 import useModal from '../../components/useModal'
@@ -10,18 +10,14 @@ import { formatMoney } from '../../components/utils'
 import { renderIcon } from '../../components/FontIcon'
 // import BatchUpdateArea from '../views/accounting/batch-update'
 
-interface ExpandedDataType {
-  name: string
-  category: string
-  avg: string
-  value: string
-}
+
 
 interface DataType {
   id: string
   name: string
   avg: string
   value: string
+  percent: string
   child: DataType[]
 }
 
@@ -34,31 +30,46 @@ const Item = (props: {
 }) => {
     const { name, total, percent, color, icon } = props;
     return (
-        <Flex justify='start' align='center'>
+        <Row justify='start'
+        align='bottom'
+         style={{
+          padding: '2px 15px',
+        }}>
             <Col
                 style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'center'
                 }}
             >
                 {icon ? 
-                    <span style={{ fontSize: 18 }}>{renderIcon(icon, color)}</span> :
-                    <AccountBookFilled style={{ fontSize: 18, color: color }} />
+                    <span style={{ fontSize: 22 }}>{renderIcon(icon, color)}</span> :
+                    <AccountBookFilled style={{ fontSize: 22, color: color }} />
                 }
             </Col>
             <Col flex='auto' style={{ marginLeft: 8 }}>
-                <Flex justify='space-between'>
+                <Row justify='space-between' 
+                align='middle'
+                style={{
+                  marginBottom: -5,
+                }}>
                     <Typography.Text style={{
                         fontSize: 12,
-                        marginBottom: -5,
+                        marginBottom: -10
                     }} type='secondary'>{name}</Typography.Text>
-                </Flex>
-                <Progress size='small' showInfo={false} percent={percent} strokeColor={color} />
+                  <Typography.Text>{total}</Typography.Text>
+                </Row>
+                <Row justify='space-between'>
+                  <Col flex='auto'>
+                    <Progress size='small' showInfo={false} percent={percent} strokeColor={color} />
+                  </Col>
+                  <Col>
+                    <Typography.Text style={{
+                      fontSize: 12,
+                      paddingLeft: 10
+                    }} type='secondary'>{percent}%</Typography.Text>
+                  </Col>
+                </Row>
             </Col>
-            <Flex vertical align='center'>
-                <Typography.Text>{total}</Typography.Text>
-                <Typography.Text style={{ fontSize: 12 }} type='secondary'>{percent}%</Typography.Text>
-            </Flex>
-        </Flex>
+        </Row>
     )
 }
 
@@ -116,17 +127,46 @@ const CategoryTable = (props: {
     
     return {
         key: index,
-        label: <Flex justify='space-between' align='center'>
-            <Flex align='center' gap={10}>
-                {categoryInfo?.icon && (
-                    <span style={{ fontSize: 16 }}>
-                      {renderIcon(categoryInfo.icon, categoryInfo.color)}
-                    </span>
-                )}
-                <Typography.Text style={{ fontSize: 12, fontWeight: 500 }}>{item.name}</Typography.Text>
-            </Flex>
-            <Typography.Text style={{ fontSize: 12, fontWeight: 500 }}>{formatMoney(item.value, '万')}</Typography.Text>
-        </Flex>,
+        label: <Row justify='start'
+        align='bottom'
+         style={{
+          padding: '2px 15px',
+        }}>
+            <Col
+                style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'center'
+                }}
+            >
+                {categoryInfo?.icon ? 
+                    <span style={{ fontSize: 22 }}>{renderIcon(categoryInfo.icon, categoryInfo.color)}</span> :
+                    <AccountBookFilled style={{ fontSize: 22, color: categoryInfo.color }} />
+                }
+            </Col>
+            <Col flex='auto' style={{ marginLeft: 8 }}>
+                <Row justify='space-between' 
+                align='middle'
+                style={{
+                  marginBottom: -5,
+                }}>
+                    <Typography.Text style={{
+                        fontSize: 12,
+                        marginBottom: -10
+                    }} type='secondary'>{item.name}</Typography.Text>
+                  <Typography.Text>{item.value}</Typography.Text>
+                </Row>
+                <Row justify='space-between'>
+                  <Col flex='auto'>
+                    <Progress size='small' showInfo={false} percent={parseFloat(item.percent)} strokeColor={categoryInfo.color} />
+                  </Col>
+                  <Col>
+                    <Typography.Text style={{
+                      fontSize: 12,
+                      paddingLeft: 10
+                    }} type='secondary'>{parseFloat(item.percent)}%</Typography.Text>
+                  </Col>
+                </Row>
+            </Col>
+        </Row>,
         children: item.child.map((child, index) => {
             const childCategoryInfo = findCategoryById(child.id);
             return <Item 

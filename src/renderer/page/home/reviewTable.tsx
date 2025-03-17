@@ -23,7 +23,7 @@ function convertCategoryReturnTypeToPieChartData(category: CategoryReturnType) {
 }
 
 // Tab1内容组件
-const Tab1Content = ({ category, formValue, refreshTable }) => {
+const Tab2Content = ({ category, formValue, refreshTable }) => {
     return (
         <>
             <CategoryTable
@@ -37,7 +37,7 @@ const Tab1Content = ({ category, formValue, refreshTable }) => {
 }
 
 // Tab2内容组件
-const Tab2Content = ({ category, formValue, refreshTable }) => {
+const Tab1Content = ({ category, formValue, refreshTable }) => {
     return (
         <div style={{ minHeight: '400px' }}>
             <CategoryCollaspe 
@@ -126,11 +126,11 @@ function TableSection(props: { formValue: any }) {
     const tabList = [
         {
             key: 'tab1',
-            tab: '数据',
+            tab: '图表',
         },
         {
             key: 'tab2',
-            tab: '图表视图',
+            tab: '数据',
         },
     ]
 

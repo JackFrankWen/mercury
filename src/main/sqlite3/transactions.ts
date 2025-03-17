@@ -153,7 +153,7 @@ export function getMonthsDiff(startDate: string, endDate: string): number {
 }
 
 // 获取category 的 group by 
-export async function getCategoryTotal(params: Params_Transaction): Promise<{category: string, total: number, avg: number}[]> {
+export async function getCategoryTotal(params: Params_Transaction): Promise<{category: string, total: number, avg: number, percent: number}[]> {
   try {
     const db = await getDbInstance()
     if(!params.trans_time) {
@@ -164,16 +164,23 @@ export async function getCategoryTotal(params: Params_Transaction): Promise<{cat
     const { whereClause } = generateWhereClause(params)
     
     const sql = `
+      WITH total_sum AS (
+        SELECT SUM(amount) as grand_total
+        FROM transactions
+        ${whereClause}
+      )
       SELECT 
         category, 
         SUM(amount) as total,
-        SUM(amount)/${monthsDiff} as avg 
+        SUM(amount)/${monthsDiff} as avg,
+        (SUM(amount) * 100.0 / (SELECT grand_total FROM total_sum)) as percent
       FROM transactions 
       ${whereClause}
       GROUP BY category
+      ORDER BY total DESC
     `;
 
-    const rows = await new Promise<{category: string, total: number, avg: number}[]>((resolve, reject) => {
+    const rows = await new Promise<{category: string, total: number, avg: number, percent: number}[]>((resolve, reject) => {
       db.all(sql, (err, rows) => {
         if (err) reject(err);
         else resolve(rows);

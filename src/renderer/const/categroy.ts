@@ -24,13 +24,13 @@ export const category_type = [
     value: 10000,
     label: '餐饮',
     icon: 'fa-solid fa-utensils',
-    color: '#FF6B6B', // 红色调
+    color: '#E74C3C', // 深红色
     children: [
       {
         value: 10001,
         label: '买菜',
         icon: 'fa-solid fa-carrot',
-        color: '#FF8E6B',
+        color: '#2ECC71', // 鲜绿色
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -41,7 +41,7 @@ export const category_type = [
         value: 10002,
         label: '超市',
         icon: 'fa-solid fa-cart-shopping',
-        color: '#FFA76B',
+        color: '#3498DB', // 亮蓝色
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -52,7 +52,7 @@ export const category_type = [
         value: 10003,
         label: '水果',
         icon: 'fa-solid fa-apple-whole',
-        color: '#FFBD6B',
+        color: '#F39C12', // 亮橙色
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -63,7 +63,7 @@ export const category_type = [
         value: 10004,
         label: '零食',
         icon: 'fa-solid fa-cookie-bite',
-        color: '#FFD06B',
+        color: '#9B59B6', // 亮紫色
         tag: variable_cost,
         consumer: undefined,
         cost_type: chill,
@@ -74,7 +74,7 @@ export const category_type = [
         value: 10005,
         label: '工作餐',
         icon: 'fa-solid fa-bowl-food',
-        color: '#FFE36B',
+        color: '#1ABC9C', // 亮青绿色
         tag: general_cost,
         cost_type: basic,
         abc_type: a,
@@ -84,7 +84,7 @@ export const category_type = [
         value: 10006,
         label: '下馆子',
         icon: 'fa-solid fa-bowl-rice',
-        color: '#FFF56B',
+        color: '#8E44AD', // 深紫色
         tag: variable_cost,
         consumer: family,
         cost_type: chill,
@@ -95,7 +95,7 @@ export const category_type = [
         value: 10007,
         label: '奶茶',
         icon: 'fa-solid fa-mug-hot',
-        color: '#F5FF6B',
+        color: '#F1C40F', // 亮黄色
         tag: variable_cost,
         consumer: family,
         cost_type: chill,
@@ -109,13 +109,13 @@ export const category_type = [
     value: 50000,
     label: '购物消费',
     icon: 'fa-solid fa-shopping-bag',
-    color: '#4ECDC4', // 绿松石色调
+    color: '#3498DB', // 蓝色
     children: [
       {
         value: 50001,
         label: '衣裤鞋帽',
         icon: 'fa-solid fa-shirt',
-        color: '#4ECDAA',
+        color: '#E67E22', // 亮橙色
         tag: variable_cost,
         cost_type: basic,
         abc_type: a,
@@ -124,7 +124,7 @@ export const category_type = [
         value: 50002,
         label: '日常用品', // 卫生纸牙膏牙刷，
         icon: 'fa-solid fa-toilet-paper',
-        color: '#4ECD90',
+        color: '#27AE60', // 深绿色
         tag: fix_cost,
         consumer: family,
         cost_type: basic,
@@ -134,7 +134,7 @@ export const category_type = [
         value: 50003,
         label: '电子数码',
         icon: 'fa-solid fa-mobile-screen',
-        color: '#4ECD76',
+        color: '#9B59B6', // 紫色
         tag: variable_cost,
         cost_type: basic,
         abc_type: b,
@@ -143,7 +143,7 @@ export const category_type = [
         value: 50004,
         label: '厨房用品',
         icon: 'fa-solid fa-kitchen-set',
-        color: '#4ECD5C',
+        color: '#F39C12', // 金橙色
         tag: fix_cost,
         consumer: family,
         cost_type: basic,
@@ -153,7 +153,7 @@ export const category_type = [
         value: 50005,
         label: '化妆护肤', // 护肤品 金额太大
         icon: 'fa-solid fa-spray-can-sparkles',
-        color: '#4ECD42',
+        color: '#E91E63', // 粉红色
         tag: variable_cost,
         cost_type: basic,
         abc_type: a,
@@ -163,7 +163,7 @@ export const category_type = [
         value: 50006,
         label: '宠物支出',
         icon: 'fa-solid fa-paw',
-        color: '#42CD4E',
+        color: '#FF5722', // 深橙色
         tag: fix_cost,
         consumer: family,
         cost_type: basic,
@@ -173,7 +173,7 @@ export const category_type = [
         value: 50007,
         label: '母婴用品',
         icon: 'fa-solid fa-baby',
-        color: '#28CD4E',
+        color: '#8E44AD', // 深紫色
         tag: variable_cost,
         cost_type: fix_cost,
         abc_type: a,
@@ -183,7 +183,7 @@ export const category_type = [
         value: 50008,
         label: '家装家电',
         icon: 'fa-solid fa-home',
-        color: '#0ECD4E',
+        color: '#16A085', // 青色
         tag: fix_cost,
         cost_type: basic,
         abc_type: a,
@@ -193,7 +193,7 @@ export const category_type = [
         value: 50009,
         label: '乐器',
         icon: 'fa-solid fa-music',
-        color: '#0ECDC4',
+        color: '#D4AC0D', // 亮金色
         tag: variable_cost,
         abc_type: b,
         cost_type: develop,
@@ -210,7 +210,7 @@ export const category_type = [
         value: 20001,
         label: '水费',
         icon: 'fa-solid fa-water',
-        color: '#6E97F5',
+        color: '#FF9800', // 亮橙色
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -220,7 +220,7 @@ export const category_type = [
         value: 20002,
         label: '电费',
         icon: 'fa-solid fa-bolt',
-        color: '#7FA4F6',
+        color: '#FF4081', // 粉红色
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -230,7 +230,7 @@ export const category_type = [
         value: 20003,
         label: '燃气费',
         icon: 'fa-solid fa-fire',
-        color: '#90B0F7',
+        color: '#4CAF50', // 绿色
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -240,7 +240,7 @@ export const category_type = [
         value: 20004,
         label: '物业费',
         icon: 'fa-solid fa-building',
-        color: '#A1BDF8',
+        color: '#9C27B0', // 紫色
         tag: fix_cost,
         consumer: family,
         cost_type: basic,
@@ -250,7 +250,7 @@ export const category_type = [
         value: 20005,
         label: '快递费',
         icon: 'fa-solid fa-truck',
-        color: '#B2C9F9',
+        color: '#FFC107', // 琥珀色
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -260,7 +260,7 @@ export const category_type = [
         value: 20006,
         label: '理发费',
         icon: 'fa-solid fa-scissors',
-        color: '#C3D6FA',
+        color: '#00BCD4', // 青色
         tag: fix_cost,
         cost_type: basic,
         abc_type: a,
@@ -269,7 +269,7 @@ export const category_type = [
         value: 20007,
         label: '手机话费',
         icon: 'fa-solid fa-phone',
-        color: '#D4E2FB',
+        color: '#F44336', // 红色
         tag: fix_cost,
         cost_type: basic,
         abc_type: a,
@@ -278,7 +278,7 @@ export const category_type = [
         value: 20008,
         label: 'VPN',
         icon: 'fa-solid fa-wifi',
-        color: '#E5EEFC',
+        color: '#2196F3', // 亮蓝色
         tag: fix_cost,
         consumer: family,
         cost_type: develop,
@@ -288,7 +288,7 @@ export const category_type = [
         value: 20009,
         label: '家政',
         icon: 'fa-solid fa-hands-helping',
-        color: '#F6FBFD',
+        color: '#673AB7', // 深紫色
         tag: fix_cost,
         consumer: family,
         cost_type: basic,
@@ -298,7 +298,7 @@ export const category_type = [
         value: 20010,
         label: '宽带',
         icon: 'fa-solid fa-wifi',
-        color: '#E5EEFC',
+        color: '#009688', // 青绿色
         tag: fix_cost,
         consumer: family,
         cost_type: basic,
@@ -308,7 +308,7 @@ export const category_type = [
         value: 20011,
         label: '其他杂费',
         icon: 'fa-solid fa-question',
-        color: '#F6FBFD',
+        color: '#CDDC39', // 酸橙色
         tag: general_cost,
         consumer: family,
         cost_type: basic,
@@ -326,13 +326,13 @@ export const category_type = [
         value: 30001,
         label: '违章罚款',
         icon: 'fa-solid fa-exclamation-triangle',
-        color: '#FFBC5C',
+        color: '#3F51B5', // 靛蓝色
       },
       {
         value: 30002,
         label: '地铁公交',
         icon: 'fa-solid fa-train',
-        color: '#FFC571',
+        color: '#9C27B0', // 紫色
         tag: general_cost,
         cost_type: basic,
         abc_type: a,
@@ -341,7 +341,7 @@ export const category_type = [
         value: 30003,
         label: '打车',
         icon: 'fa-solid fa-taxi',
-        color: '#FFCE86',
+        color: '#4CAF50', // 绿色
         tag: general_cost,
         cost_type: basic,
         abc_type: a,
@@ -350,7 +350,7 @@ export const category_type = [
         value: 30004,
         label: '交通通行',
         icon: 'fa-solid fa-bicycle',
-        color: '#FFD79B',
+        color: '#E91E63', // 粉红色
         tag: variable_cost,
         cost_type: basic,
         abc_type: b,
@@ -359,7 +359,7 @@ export const category_type = [
         value: 30005,
         label: '停车费',
         icon: 'fa-solid fa-parking',
-        color: '#FFE0B0',
+        color: '#673AB7', // 深紫色
         tag: general_cost,
         cost_type: basic,
         abc_type: a,
@@ -368,7 +368,7 @@ export const category_type = [
         value: 30006,
         label: '油费',
         icon: 'fa-solid fa-gas-pump',
-        color: '#FFE9C5',
+        color: '#2196F3', // 亮蓝色
         tag: general_cost,
         cost_type: basic,
         abc_type: a,
@@ -377,7 +377,7 @@ export const category_type = [
         value: 30007,
         label: '汽车消费',
         icon: 'fa-solid fa-car',
-        color: '#FFF2DA',
+        color: '#009688', // 青绿色
         tag: variable_cost,
         cost_type: basic,
         abc_type: b,
@@ -394,7 +394,7 @@ export const category_type = [
         value: 60001,
         label: '请客',
         icon: 'fa-solid fa-glass-cheers',
-        color: '#E9908D',
+        color: '#4CAF50', // 绿色
         tag: variable_cost,
         cost_type: develop,
         abc_type: b,
@@ -403,7 +403,7 @@ export const category_type = [
         value: 60002,
         label: '回礼',
         icon: 'fa-solid fa-gift',
-        color: '#EDA6A3',
+        color: '#2196F3', // 蓝色
         tag: variable_cost,
         consumer: family,
         cost_type: develop,
@@ -413,7 +413,7 @@ export const category_type = [
         value: 60003,
         label: '孝敬长辈',
         icon: 'fa-solid fa-heart',
-        color: '#F1BCB9',
+        color: '#9C27B0', // 紫色
         tag: fix_cost,
         cost_type: basic,
         abc_type: a,
@@ -431,7 +431,7 @@ export const category_type = [
         label: '聚会(用其他娱乐)',
         disabled: true,
         icon: 'fa-solid fa-users',
-        color: '#AB7CD2',
+        color: '#FF5722', // 深橙色
         tag: variable_cost,
         abc_type: b,
       },
@@ -439,7 +439,7 @@ export const category_type = [
         value: 70002,
         label: '游戏（用其他娱乐）',
         icon: 'fa-solid fa-gamepad',
-        color: '#B993DB',
+        color: '#4CAF50', // 绿色
         tag: variable_cost,
         disabled: true,
         cost_type: chill,
@@ -449,7 +449,7 @@ export const category_type = [
         value: 70003,
         label: '休闲娱乐',
         icon: 'fa-solid fa-umbrella-beach',
-        color: '#C7AAE4',
+        color: '#FFC107', // 琥珀色
         tag: variable_cost,
         cost_type: chill,
         abc_type: c,
@@ -466,7 +466,7 @@ export const category_type = [
         value: 80001,
         label: '个人保险',
         icon: 'fa-solid fa-heart-circle-check',
-        color: '#7C9DB6',
+        color: '#FF4081', // 亮粉色
         tag: fix_cost,
         consumer: family,
         cost_type: basic,
@@ -476,7 +476,7 @@ export const category_type = [
         value: 80002,
         label: '医疗费用',
         icon: 'fa-solid fa-stethoscope',
-        color: '#8EACC2',
+        color: '#4CAF50', // 绿色
         tag: variable_cost,
         cost_type: basic,
         abc_type: a,
@@ -485,7 +485,7 @@ export const category_type = [
         value: 80003,
         label: '医疗杂物',
         icon: 'fa-solid fa-band-aid',
-        color: '#A0BBCE',
+        color: '#FFC107', // 琥珀色
         tag: fix_cost,
         consumer: family,
         cost_type: basic,
@@ -503,7 +503,7 @@ export const category_type = [
         value: 90001,
         label: '摄影',
         icon: 'fa-solid fa-camera',
-        color: '#71C375',
+        color: '#9C27B0', // 紫色
         tag: variable_cost,
         consumer: wife,
         cost_type: develop,
@@ -513,7 +513,7 @@ export const category_type = [
         value: 90002,
         label: '书包杂志',
         icon: 'fa-solid fa-book',
-        color: '#86CB87',
+        color: '#FF5722', // 深橙色
         tag: variable_cost,
         cost_type: develop,
         abc_type: b,
@@ -522,7 +522,7 @@ export const category_type = [
         value: 90004,
         label: '教育培训',
         icon: 'fa-solid fa-graduation-cap',
-        color: '#9BD39A',
+        color: '#2196F3', // 蓝色
         tag: variable_cost,
         cost_type: develop,
         abc_type: b,
@@ -531,7 +531,7 @@ export const category_type = [
         value: 90003,
         label: '个人投资',
         icon: 'fa-solid fa-hand-holding-dollar',
-        color: '#B0DBAC',
+        color: '#FF9800', // 橙色
         tag: variable_cost,
         cost_type: develop,
         abc_type: b,
@@ -540,7 +540,7 @@ export const category_type = [
         value: 90005,
         label: '仪式文化',
         icon: 'fa-solid fa-trophy',
-        color: '#C5E3BF',
+        color: '#E91E63', // 粉红色
         tag: variable_cost,
         cost_type: develop,
         abc_type: b,
@@ -557,7 +557,7 @@ export const category_type = [
         value: 91001,
         label: '工资',
         icon: 'fa-solid fa-money-bill-wave',
-        color: '#7DCFB0',
+        color: '#FF5722', // 深橙色
         tag: variable_cost,
         consumer: wife,
         cost_type: develop,
@@ -575,7 +575,7 @@ export const category_type = [
         value: 92001,
         label: '股票',
         icon: 'fa-solid fa-chart-simple',
-        color: '#FADB82',
+        color: '#E91E63', // 粉红色
         tag: variable_cost,
         consumer: wife,
         cost_type: develop,
@@ -585,7 +585,7 @@ export const category_type = [
         value: 92002,
         label: '基金',
         icon: 'fa-solid fa-piggy-bank',
-        color: '#FBE196',
+        color: '#9C27B0', // 紫色
         tag: variable_cost,
         consumer: wife,
         cost_type: develop,
@@ -595,7 +595,7 @@ export const category_type = [
         value: 92003,
         label: '理财',
         icon: 'fa-solid fa-wallet',
-        color: '#FCE7AA',
+        color: '#2196F3', // 蓝色
         tag: variable_cost,
         consumer: wife,
         cost_type: develop,
@@ -613,7 +613,7 @@ export const category_type = [
         value: 110001,
         label: '交通费用（旅）',
         icon: 'fa-solid fa-bus',
-        color: '#D9A1C5',
+        color: '#4CAF50', // 绿色
         tag: variable_cost,
         cost_type: chill,
         abc_type: b,
@@ -622,7 +622,7 @@ export const category_type = [
         value: 110002,
         label: '住宿费（旅）',
         icon: 'fa-solid fa-hotel',
-        color: '#E0B1CE',
+        color: '#2196F3', // 蓝色
         tag: variable_cost,
         cost_type: chill,
         abc_type: b,
@@ -631,7 +631,7 @@ export const category_type = [
         value: 110003,
         label: '餐饮费（旅）',
         icon: 'fa-solid fa-utensils',
-        color: '#E7C1D7',
+        color: '#FF5722', // 深橙色
         tag: variable_cost,
         cost_type: chill,
         abc_type: b,
@@ -640,7 +640,7 @@ export const category_type = [
         value: 110004,
         label: '娱乐费（旅）',
         icon: 'fa-solid fa-ticket',
-        color: '#EED1E0',
+        color: '#FFC107', // 琥珀色
         tag: variable_cost,
         cost_type: chill,
         abc_type: b,
@@ -649,7 +649,7 @@ export const category_type = [
         value: 110005,
         label: '其他费用（旅）',
         icon: 'fa-solid fa-suitcase',
-        color: '#F5E1E9',
+        color: '#009688', // 青绿色
         tag: variable_cost,
         cost_type: chill,
         abc_type: b,
@@ -660,25 +660,37 @@ export const category_type = [
     value: 100000,
     label: '未归类',
     icon: 'fa-solid fa-question',
-    color: '#BCBCBC', // 灰色
+    color: '#95A5A6', // 灰色
     children: [
       {
         value: 100001,
         label: '烂账',
         icon: 'fa-solid fa-trash-can',
-        color: '#D4D4D4',
+        color: '#FF5722', // 深橙色
+        tag: general_cost,
+        consumer: family,
+        cost_type: basic,
+        abc_type: a,
       },
       {
         value: 100002,
         label: '意外丢失',
         icon: 'fa-solid fa-triangle-exclamation',
-        color: '#E8E8E8',
+        color: '#FFC107', // 琥珀色
+        tag: general_cost,
+        consumer: family,
+        cost_type: basic,
+        abc_type: a,
       },
       {
         value: 100003,
         label: '未分类',
         icon: 'fa-solid fa-question-circle',
-        color: '#F5F5F5',
+        color: '#2196F3', // 蓝色
+        tag: general_cost,
+        consumer: family,
+        cost_type: basic,
+        abc_type: a,
       },
     ],
   },

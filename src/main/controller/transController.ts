@@ -9,7 +9,8 @@ export function transferCategory(list: any): CategoryReturnType {
   return list.reduce((newList: CategoryReturnType, element: { 
     total: string; 
     category: string; 
-    avg: string 
+    avg: string
+    percent: string
   }) => {
     const [parent_id, child_id] = element.category ? JSON.parse(element.category) : []
     
@@ -18,7 +19,8 @@ export function transferCategory(list: any): CategoryReturnType {
       category: element.category,
       avg: roundToTwoDecimalPlaces(element.avg),
       id: child_id,
-      name: getCategoryName(child_id)
+      name: getCategoryName(child_id),
+      percent: roundToTwoDecimalPlaces(element.percent)
     }
 
     const existingParent = newList.find(item => item.id === parent_id)
@@ -35,6 +37,9 @@ export function transferCategory(list: any): CategoryReturnType {
             avg: roundToTwoDecimalPlaces(
               Number(item.avg) + Number(element.avg)
             ),
+            percent: roundToTwoDecimalPlaces(
+              Number(item.percent) + Number(element.percent)
+            ),
             child: [...item.child, childItem]
           }
         }
@@ -48,6 +53,7 @@ export function transferCategory(list: any): CategoryReturnType {
       id: parent_id,
       avg: roundToTwoDecimalPlaces(element.avg), 
       name: getCategoryName(parent_id),
+      percent: roundToTwoDecimalPlaces(element.percent),
       child: [childItem]
     }
 
