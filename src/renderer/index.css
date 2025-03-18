@@ -73,3 +73,6 @@ html, body, #root {
     margin: 0 !important;
     margin-inline-end: 0 !important;
 }
+.ant-picker-panel {
+    border: none !important;
+}

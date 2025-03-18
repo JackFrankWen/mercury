@@ -78,7 +78,7 @@ function YearBarChart(props: { formValue: FormData }) {
   };
   return (
     <div className="mt8">
-      <Card title={cardTitle()} bordered={false} hoverable extra={extra}>
+      <Card title={cardTitle()} bordered={false}  hoverable extra={extra}>
         {formValue.type === "year" ? (
           <BarChart data={data} />
         ) : (

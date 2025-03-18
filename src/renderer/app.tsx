@@ -35,11 +35,15 @@ function App(props: any): JSX.Element {
             <ConfigProvider
                 locale={zhCN}
                 theme={{
+                   
                     token: {
                         colorPrimary: "#eccf10",
                         colorInfo: "#eccf10"
                     },
                     components: {
+                        Calendar:{
+                            
+                        },
                         Menu: {
                             iconSize: 16,
                             activeBarBorderWidth: 0,

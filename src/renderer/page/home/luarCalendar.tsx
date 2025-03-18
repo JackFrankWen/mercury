@@ -1,11 +1,12 @@
 import React from "react";
-import { Calendar, Col, Radio, Row, Select } from "antd";
+import { Calendar, Col, Flex, Radio, Row, Select, Typography } from "antd";
 import type { CalendarProps } from "antd";
 import dayjs from "dayjs";
 import classNames from "classnames";
 import { Dayjs } from "dayjs";
 import { HolidayUtil, Lunar } from "lunar-typescript";
 import { FormData } from "./useReviewForm";
+import { formatMoney } from "../../components/utils";
 
 interface LunarCalendarProps {
   className?: string;
@@ -29,6 +30,11 @@ const LunarCalendar: React.FC<LunarCalendarProps> = (props) => {
     const displayHoliday =
       h?.getTarget() === h?.getDay() ? h?.getName() : undefined;
     if (info.type === "date") {
+      // 如果不是这个月不渲染
+      if (date.month() !== dayjs(formValue.date).month()) {
+        return <></>
+      }
+      const total = data.find((item) => item.date === date.format("YYYY-MM-DD"))?.total;
       return React.cloneElement(info.originNode, {
         ...(info.originNode as React.ReactElement<any>).props,
         className: "",
@@ -38,37 +44,33 @@ const LunarCalendar: React.FC<LunarCalendarProps> = (props) => {
           border: "none",
         },
         children: (
-          <div>
-            <span>{date.get("date")}</span>
+          <Flex style={{
+            marginRight: 4,
+          }} justify="start" align="center" vertical className="lunar-calendar-cell">
+            {info.type === "date" && <Typography.Text strong>{date.get("date")}</Typography.Text>}
             {info.type === "date" && (
-              <div>{displayHoliday || solarTerm || lunar}</div>
+              <Typography.Text type="secondary" style={{fontSize: 12}}>{displayHoliday || solarTerm || lunar}</Typography.Text>
             )}
-          </div>
+            {total && (
+              <Typography.Text type="success" style={{fontSize: 12}}>-{ formatMoney(total)}</Typography.Text>
+            )}
+          </Flex>
         ),
       });
     }
-
-    if (info.type === "month") {
-      // Due to the fact that a solar month is part of the lunar month X and part of the lunar month X+1,
-      // when rendering a month, always take X as the lunar month of the month
-      const d2 = Lunar.fromDate(new Date(date.get("year"), date.get("month")));
-      const month = d2.getMonthInChinese();
-      return (
-        <div>
-          {date.get("month") + 1}月（{month}月）
-        </div>
-      );
-    }
+    return info.originNode;
   };
   const calData = dayjs(formValue.date);
 
   return (
     <Calendar
       className={props.className}
-      fullCellRender={(a,b)=>cellRender(a,b)}
+      fullCellRender={(a,b)=>cellRender(a,b, data)}
+      onPanelChange={undefined}
+      onSelect={undefined}
       fullscreen={false}
       value={calData}
-      headerRender={() => null}
+      headerRender={() => <></>}
     ></Calendar>
   );
 };
