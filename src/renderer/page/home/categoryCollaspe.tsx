@@ -37,7 +37,7 @@ const Item = (props: {
          style={{
           margin: '0 10px 10px',
           borderRadius: 8,
-          padding: '0 10px',
+          padding: '8px 10px',
           background: '#fff'
         }}>
             <Row

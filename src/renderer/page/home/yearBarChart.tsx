@@ -3,6 +3,7 @@ import BarChart from 'src/renderer/components/barChart';
 import { Card, Space } from 'antd';
 import { useSelect } from '../../components/useSelect'
 import { cpt_const, } from 'src/renderer/const/web'
+import LunarCalendar from './luarCalendar';
 
 function YearBarChart(props: {
     formValue: any
@@ -52,12 +53,22 @@ function YearBarChart(props: {
          
         setData(result);
     }
-
+    const cardTitle = () => {
+        if (formValue.type === 'year') {
+            return '年消费'
+        } else {
+            return '月度消费'
+        }
+    }   
     return (<div className="mt8">
-                        <Card title="年月消费" bordered={false} hoverable extra={extra}>
-                            <BarChart 
-                                data={data}
-                            />
+                        <Card title={cardTitle()} bordered={false} hoverable extra={extra}>
+                           {
+                            formValue.type === 'year' ?
+                                 <BarChart
+                            data={data}
+                            /> : <LunarCalendar />
+                        }
+                            
                         </Card>
                     </div>)
 }
