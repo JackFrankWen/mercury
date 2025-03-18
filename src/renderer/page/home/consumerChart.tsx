@@ -12,19 +12,21 @@ function ConsumerChart(props: { formValue: any }) {
   }, [formValue]);
 
   const fetchData = async (obj) => {
-    console.log(obj, 'obj====');
-    if (!obj) return;
-    console.log(obj, '====3333');
+    try {
+      console.log(obj, 'obj====');
+      if (!obj) return;
 
-    const result = await window.mercury.api.getConsumerTotal(obj);
-    console.log(result, '======');
+      const result = await window.mercury.api.getConsumerTotal(obj);
 
-    setData(
-      result.map((item) => ({
-        item: consumer_type[Number(item.item)],
-        total: item.total,
-      })),
-    );
+      setData(
+        result.map((item) => ({
+          item: consumer_type[Number(item.item)],
+          total: item.total,
+        })),
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
