@@ -17,43 +17,58 @@ import {
   Tag,
   Tooltip,
   Typography,
-} from "antd";
-import React, { useEffect, useMemo, useState } from "react";
-import { findCategoryById, getCategoryString } from "src/renderer/const/categroy";
-import { account_type } from "src/renderer/const/web";
-import useLoadingButton from "src/renderer/components/useButton";
-import { formatMoney } from "src/renderer/components/utils";
-import { DeleteOutlined, SearchOutlined } from "@ant-design/icons";
-import UploadModal from "../../components/uploadModal";
-import dayjs from "dayjs";
-import { openNotification } from "src/renderer/components/notification";
-import { ruleByAdvanced } from "./ruleUtils";
-import { renderIcon } from "src/renderer/components/FontIcon";
-import { getCategoryCol } from "src/renderer/components/commonColums";
+} from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  findCategoryById,
+  getCategoryString,
+} from 'src/renderer/const/categroy';
+import { account_type } from 'src/renderer/const/web';
+import useLoadingButton from 'src/renderer/components/useButton';
+import { formatMoney } from 'src/renderer/components/utils';
+import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import UploadModal from '../../components/uploadModal';
+import dayjs from 'dayjs';
+import { openNotification } from 'src/renderer/components/notification';
+import { ruleByAdvanced } from './ruleUtils';
+import { renderIcon } from 'src/renderer/components/FontIcon';
+import { getCategoryCol } from 'src/renderer/components/commonColums';
 
 function checkNeedTransferData(data: any) {
   // 返回data中所有payee包含京东和拼多多，并且description包含京东-订单编号和商户单号的数据 ,返回index
   const jingdongData = data
     .map((obj: any, dataIndex: number) =>
-      obj.payee?.includes("京东") && obj.description?.includes("京东-订单编号")
+      obj.payee?.includes('京东') && obj.description?.includes('京东-订单编号')
         ? { ...obj, dataIndex }
-        : null
+        : null,
     )
     .filter(Boolean);
   const pddData = data
     .map((obj: any, dataIndex: number) =>
-      obj.payee?.includes("拼多多") && obj.description?.includes("商户单号")
+      obj.payee?.includes('拼多多') && obj.description?.includes('商户单号')
         ? { ...obj, dataIndex }
-        : null
+        : null,
+    )
+    .filter(Boolean);
+  const alipay1688 = data
+    .map((obj: any, dataIndex: number) =>
+      obj.payee?.includes('1688先采后付') &&
+      obj.description?.includes('先采后付还款')
+        ? { ...obj, dataIndex }
+        : null,
     )
     .filter(Boolean);
   const hasJingdong = jingdongData.length > 0;
   const hasPdd = pddData.length > 0;
+  const has1688 = alipay1688.length > 0;
   return {
     hasJingdong,
     hasPdd,
+    has1688,
+
     jingdongData,
     pddData,
+    alipay1688,
   };
 }
 
@@ -76,7 +91,7 @@ interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean;
   dataIndex: string;
   title: any;
-  inputType: "number" | "text";
+  inputType: 'number' | 'text';
   record: DataType;
   index: number;
   children: React.ReactNode;
@@ -101,20 +116,29 @@ const BasicTable = (props: {
   setStep: (step: number) => void;
   setLoading: (loading: boolean) => void;
 }) => {
-  const { tableData, tableHeader, onCancel, onSubmitSuccess, step, setStep, setLoading, loading } =
-    props;
+  const {
+    tableData,
+    tableHeader,
+    onCancel,
+    onSubmitSuccess,
+    step,
+    setStep,
+    setLoading,
+    loading,
+  } = props;
   const [api, contextHolder] = notification.useNotification();
 
   const [form] = Form.useForm();
   const [data, setData] = useState(tableData);
   const [LoadingBtn, setBtnLoading, setLoadingFalse] = useLoadingButton();
   const [modalVisible, setModalVisible] = useState(false);
-  const [searchText, setSearchText] = useState({ payee: "", description: "" });
-  const [searchedColumn, setSearchedColumn] = useState("");
+  const [searchText, setSearchText] = useState({ payee: '', description: '' });
+  const [searchedColumn, setSearchedColumn] = useState('');
 
   // 写一个方法缓存needTransferData，根据data
   const needTransferData = useMemo(() => {
-    const { hasJingdong, hasPdd, jingdongData, pddData } = checkNeedTransferData(data);
+    const { hasJingdong, hasPdd, jingdongData, pddData } =
+      checkNeedTransferData(data);
     return {
       hasJingdong,
       hasPdd,
@@ -125,17 +149,21 @@ const BasicTable = (props: {
 
   useEffect(() => {
     goStep2(needTransferData);
-    console.log("check needTransferData");
+    console.log('check needTransferData');
   }, [needTransferData]);
   const edit = (record: DataType) => {
-    form.setFieldsValue({ name: "", age: "", address: "", ...record });
+    form.setFieldsValue({ name: '', age: '', address: '', ...record });
   };
   const onDelete = (record: DataType) => {
     const newData = data.filter((obj: DataType) => obj.id !== record.id);
     setData(newData);
   };
 
-  const handleSearch = (selectedKeys: string[], confirm: () => void, dataIndex: string) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: () => void,
+    dataIndex: string,
+  ) => {
     confirm();
     setSearchText({ ...searchText, [dataIndex]: selectedKeys[0] });
     setSearchedColumn(dataIndex);
@@ -143,18 +171,25 @@ const BasicTable = (props: {
 
   const handleReset = (clearFilters: () => void, dataIndex: string) => {
     clearFilters();
-    setSearchText({ ...searchText, [dataIndex]: "" });
+    setSearchText({ ...searchText, [dataIndex]: '' });
   };
 
   const getColumnSearchProps = (dataIndex: string) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }: any) => (
       <div style={{ padding: 8 }}>
         <Input
-          placeholder={`搜索${dataIndex === "payee" ? "交易对方" : "描述"}`}
+          placeholder={`搜索${dataIndex === 'payee' ? '交易对方' : '描述'}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-          style={{ marginBottom: 8, display: "block" }}
+          style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
@@ -179,7 +214,10 @@ const BasicTable = (props: {
 
     onFilter: (value: string, record: any) => {
       return record[dataIndex]
-        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
+        ? record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase())
         : false;
     },
     filteredValue: searchText[dataIndex] ? [searchText[dataIndex]] : null,
@@ -187,32 +225,34 @@ const BasicTable = (props: {
 
   const columns = [
     {
-      title: "序号",
-      dataIndex: "index",
+      title: '序号',
+      dataIndex: 'index',
       width: 50,
-      fixed: "left",
+      fixed: 'left',
       render: (val: number, ctn: any, index: number) => index + 1,
     },
     {
-      title: "交易时间",
-      dataIndex: "trans_time",
+      title: '交易时间',
+      dataIndex: 'trans_time',
       width: 180,
       defaultCheck: true,
-      fixed: "left",
+      fixed: 'left',
     },
     {
-      title: "金额",
-      dataIndex: "amount",
+      title: '金额',
+      dataIndex: 'amount',
 
       render: (val: string, { flow_type }: { flow_type: number }) => {
-        if (!val) return "";
-        if (!flow_type) return "flow_type 为空";
+        if (!val) return '';
+        if (!flow_type) return 'flow_type 为空';
         // 金额如果包含中文，则返回警告
         if (/[\u4e00-\u9fa5]/.test(val)) {
-          return <Typography.Text type="warning">这条数据有问题</Typography.Text>;
+          return (
+            <Typography.Text type="warning">这条数据有问题</Typography.Text>
+          );
         }
-        const child = flow_type === 1 ? "支：" : "收：";
-        const type = flow_type === 1 ? "danger" : "success";
+        const child = flow_type === 1 ? '支：' : '收：';
+        const type = flow_type === 1 ? 'danger' : 'success';
         return (
           <Space>
             <Typography.Text type={type}>
@@ -228,11 +268,11 @@ const BasicTable = (props: {
       defaultCheck: false,
     }),
     {
-      title: "交易对方",
-      dataIndex: "payee",
+      title: '交易对方',
+      dataIndex: 'payee',
       ellipsis: true,
       width: 120,
-      ...getColumnSearchProps("payee"),
+      ...getColumnSearchProps('payee'),
       render: (val: string) => (
         <Tooltip title={val}>
           <span>{val}</span>
@@ -240,10 +280,10 @@ const BasicTable = (props: {
       ),
     },
     {
-      title: "描述",
-      dataIndex: "description",
+      title: '描述',
+      dataIndex: 'description',
       ellipsis: true,
-      ...getColumnSearchProps("description"),
+      ...getColumnSearchProps('description'),
       render: (val: string) => (
         <Tooltip title={val}>
           <span>{val}</span>
@@ -251,17 +291,17 @@ const BasicTable = (props: {
       ),
     },
     {
-      title: "消费成员",
+      title: '消费成员',
       width: 80,
-      dataIndex: "consumer",
+      dataIndex: 'consumer',
       defaultCheck: false,
-      key: "consumer",
+      key: 'consumer',
       render: (val: number) => {
         const consumer_type = {
-          1: "老公",
-          2: "老婆",
-          3: "家庭",
-          4: "牧牧",
+          1: '老公',
+          2: '老婆',
+          3: '家庭',
+          4: '牧牧',
         };
         if (val === 1) {
           return <Tag color="cyan">{consumer_type[val]}</Tag>;
@@ -276,15 +316,15 @@ const BasicTable = (props: {
     },
 
     {
-      title: "账户",
-      dataIndex: "account_type",
+      title: '账户',
+      dataIndex: 'account_type',
       width: 80,
       defaultCheck: false,
-      render: (val: number) => (val ? account_type[val] : ""),
+      render: (val: number) => (val ? account_type[val] : ''),
     },
     {
-      title: "操作",
-      dataIndex: "operation",
+      title: '操作',
+      dataIndex: 'operation',
       width: 40,
       render: (_: any, record: DataType) => {
         return (
@@ -296,7 +336,7 @@ const BasicTable = (props: {
               okText="Yes"
               cancelText="No"
             >
-              <DeleteOutlined style={{ color: "red" }} />
+              <DeleteOutlined style={{ color: 'red' }} />
             </Popconfirm>
           </Space>
         );
@@ -304,7 +344,13 @@ const BasicTable = (props: {
     },
   ];
 
-  const goStep2 = ({ hasJingdong, hasPdd }: { hasJingdong: boolean; hasPdd: boolean }) => {
+  const goStep2 = ({
+    hasJingdong,
+    hasPdd,
+  }: {
+    hasJingdong: boolean;
+    hasPdd: boolean;
+  }) => {
     if (!hasJingdong && !hasPdd && step === 2) {
       // 替换为京东-订单编号
       setStep(3);
@@ -321,11 +367,11 @@ const BasicTable = (props: {
       // 根据用户手动分类
       setData(newData);
       setStep(4);
-      console.log(step, "step aaaa====");
+      console.log(step, 'step aaaa====');
 
       setLoadingFalse();
     } catch (error) {
-      message.error("分类失败");
+      message.error('分类失败');
     }
   };
   const submit = async () => {
@@ -370,29 +416,35 @@ const BasicTable = (props: {
       </>
     );
   };
-  console.log(step, "step====");
+  console.log(step, 'step====');
   return (
     <div>
       {contextHolder}
       <Row align="middle" justify="center">
-        <Col span={24} style={{ textAlign: "center" }}>
-          <span style={{ fontSize: "24px", marginRight: "12px" }}>
+        <Col span={24} style={{ textAlign: 'center' }}>
+          <span style={{ fontSize: '24px', marginRight: '12px' }}>
             支出：
-            <Typography.Text type="danger">{formatMoney(tableHeader.titleCost)}元</Typography.Text>
+            <Typography.Text type="danger">
+              {formatMoney(tableHeader.titleCost)}元
+            </Typography.Text>
           </span>
-          <span style={{ fontSize: "24px" }}>
+          <span style={{ fontSize: '24px' }}>
             收入：
             <Typography.Text type="success">
               {formatMoney(tableHeader?.titleIncome)}元
             </Typography.Text>
           </span>
         </Col>
-        <Col span={24} style={{ textAlign: "center" }}>
-          <span style={{ marginRight: "12px" }}>
-            <Typography.Text type="secondary">{tableHeader.titleCostLabel}</Typography.Text>
+        <Col span={24} style={{ textAlign: 'center' }}>
+          <span style={{ marginRight: '12px' }}>
+            <Typography.Text type="secondary">
+              {tableHeader.titleCostLabel}
+            </Typography.Text>
           </span>
           <span>
-            <Typography.Text type="secondary">{tableHeader.titleIncomeLabel}</Typography.Text>
+            <Typography.Text type="secondary">
+              {tableHeader.titleIncomeLabel}
+            </Typography.Text>
           </span>
         </Col>
       </Row>
@@ -409,15 +461,16 @@ const BasicTable = (props: {
           rowClassName={(record) => {
             // 金额如果包含中文，则返回警告
             if (/[\u4e00-\u9fa5]/.test(record.amount)) {
-              return "mercury-warning";
+              return 'mercury-warning';
             }
             if (
-              record.description?.includes("京东-订单编号") ||
-              record.description?.includes("商户单号")
+              record.description?.includes('京东-订单编号') ||
+              record.description?.includes('先采后付还款') ||
+              record.description?.includes('商户单号')
             ) {
-              return "mercury-warning";
+              return 'mercury-warning';
             }
-            return "";
+            return '';
           }}
           dataSource={data}
           size="small"
@@ -427,17 +480,21 @@ const BasicTable = (props: {
           pagination={false}
         />
       </Form>
-      <Row justify="space-between" align="middle" style={{ marginBottom: "10px" }}>
+      <Row
+        justify="space-between"
+        align="middle"
+        style={{ marginBottom: '10px' }}
+      >
         <Space>
-          <span style={{ fontSize: "12px" }}>{tableHeader?.fileName}</span>
-          <span style={{ fontSize: "12px" }}>账号:{tableHeader?.name}</span>
-          <span style={{ fontSize: "12px" }}>{tableHeader?.date}</span>
+          <span style={{ fontSize: '12px' }}>{tableHeader?.fileName}</span>
+          <span style={{ fontSize: '12px' }}>账号:{tableHeader?.name}</span>
+          <span style={{ fontSize: '12px' }}>{tableHeader?.date}</span>
         </Space>
         <Space>
           <Button onClick={onCancel}>取消</Button>
 
           <LoadingBtn type="primary" onClick={submit}>
-            {step !== 4 ? "下一步" : "提交"}
+            {step !== 4 ? '下一步' : '提交'}
           </LoadingBtn>
         </Space>
       </Row>
@@ -458,19 +515,22 @@ const BasicTable = (props: {
             let messageList = [];
             const newData = data.map((obj: any, index: number) => {
               // Skip if no description or wrong description format
-              if (type === "jd" && !obj.description?.includes("订单编号")) {
+              if (type === 'jd' && !obj.description?.includes('订单编号')) {
                 return obj;
               }
-              if (type === "pdd" && !obj.description?.includes("商户单号")) {
+              if (type === 'pdd' && !obj.description?.includes('商户单号')) {
                 return obj;
               }
 
               // Find matching transfer data
               const matchingItem = transferData.find((item: any) => {
                 // 时间误差在3分钟
-                const isSameTime = dayjs(obj.trans_time).diff(dayjs(item.trans_time), "minute") < 3;
+                const isSameTime =
+                  dayjs(obj.trans_time).diff(dayjs(item.trans_time), 'minute') <
+                  3;
                 const isSameAmount =
-                  Math.round(Number(obj.amount)) === Math.round(Number(item.amount));
+                  Math.round(Number(obj.amount)) ===
+                  Math.round(Number(item.amount));
 
                 return isSameTime && isSameAmount;
               });

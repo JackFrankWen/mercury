@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { Alert, message, Modal, Upload, UploadProps, Spin } from "antd";
-import Papa from "papaparse";
-import { formateToTableJd } from "../page/upload/csvUtil";
+import React, { useState } from 'react';
+import { Alert, message, Modal, Upload, UploadProps, Spin } from 'antd';
+import Papa from 'papaparse';
+import { formateToTableJd } from '../page/upload/csvUtil';
 const { Dragger } = Upload;
 
 const UploadModal = (props: {
@@ -15,68 +15,75 @@ const UploadModal = (props: {
     hasPdd: boolean;
     jingdongData: any[];
     pddData: any[];
+    has1688: boolean;
+    alipay1688: any[];
   };
 }) => {
-  const { visible, onCancel, onUploadSuccess, needTransferData, onOk, setLoading } = props;
+  const {
+    visible,
+    onCancel,
+    onUploadSuccess,
+    needTransferData,
+    onOk,
+    setLoading,
+  } = props;
   const [modalLoading, setModalLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
   const uploadProps: UploadProps = {
-    name: "file",
+    name: 'file',
     fileList: fileList,
-    className: "upload-cus mt8",
+    className: 'upload-cus mt8',
     beforeUpload: (file) => {
-      setModalLoading(true);
-      setLoading(true);
-      setTimeout(() => {
-        Papa.parse(file, {
-          header: false,
-          // encoding: 'gb18030',
-          skipEmptyLines: true,
-          complete: function (results: any) {
-            const csvData = results.data || [];
-            // const csvHeader = csvData.slice(0, 1)
-            try {
-              const csvContent = csvData.slice(1);
-              console.log(csvData, "===csvData");
-              const { name } = file;
-              // 如果文件名包含jd_，则认为是京东的文件
-              let data;
+      console.log(file, '===aaa');
+      Papa.parse(file, {
+        header: false,
+        // encoding: 'gb18030',
+        skipEmptyLines: true,
+        complete: function (results: any) {
+          const csvData = results.data || [];
+          // const csvHeader = csvData.slice(0, 1)
+          try {
+            const csvContent = csvData.slice(1);
+            console.log(csvData, '===csvData');
+            const { name } = file;
+            // 如果文件名包含jd_，则认为是京东的文件
+            let data;
 
-              if (name.includes("jd")) {
-                data = formateToTableJd(csvContent, "jd");
-                console.log(data, "===data");
+            if (name.includes('jd')) {
+              data = formateToTableJd(csvContent, 'jd');
+              console.log(data, '===data');
 
-                if (needTransferData.hasJingdong) {
-                  onUploadSuccess("jd", data);
-                } else {
-                  setModalLoading(false);
-                  setLoading(false);
-                  message.error("上传错误文件");
-                }
-                //jd
-              } else if (name.includes("pdd")) {
-                if (needTransferData.hasPdd) {
-                  data = formateToTableJd(csvContent, "pdd");
-                  onUploadSuccess("pdd", data);
-                } else {
-                  setModalLoading(false);
-                  setLoading(false);
-                  message.error("上传错误文件");
-                }
-                // pdd
+              if (needTransferData.hasJingdong) {
+                onUploadSuccess('jd', data);
               } else {
-                message.error("上传错误文件");
                 setModalLoading(false);
                 setLoading(false);
+                message.error('上传错误文件');
               }
-
-              setFileList([file]);
-            } catch (error) {
-              console.log(error, "error");
+              //jd
+            } else if (name.includes('pdd')) {
+              if (needTransferData.hasPdd) {
+                data = formateToTableJd(csvContent, 'pdd');
+                onUploadSuccess('pdd', data);
+              } else {
+                setModalLoading(false);
+                setLoading(false);
+                message.error('上传错误文件');
+              }
+              // pdd
+            } else {
+              console.log(csvContent, '===csvContent');
+              // message.error('上传错误文件');
+              // setModalLoading(false);
+              // setLoading(false);
             }
-          },
-        });
-      }, 0);
+
+            setFileList([file]);
+          } catch (error) {
+            console.log(error, 'error');
+          }
+        },
+      });
 
       // Prevent upload
       return false;
@@ -89,10 +96,14 @@ const UploadModal = (props: {
 
   const jingdongDescription =
     jingdongData.length > 0
-      ? jingdongData.map((item: any) => `第${item.dataIndex + 1}条数据`).join(",")
-      : "";
+      ? jingdongData
+          .map((item: any) => `第${item.dataIndex + 1}条数据`)
+          .join(',')
+      : '';
   const pddDescription =
-    pddData.length > 0 ? pddData.map((item: any) => `第${item.dataIndex + 1}条数据`).join(",") : "";
+    pddData.length > 0
+      ? pddData.map((item: any) => `第${item.dataIndex + 1}条数据`).join(',')
+      : '';
   return (
     <Modal
       open={visible}
@@ -108,7 +119,7 @@ const UploadModal = (props: {
             <Alert
               style={{
                 maxHeight: 200,
-                overflow: "auto",
+                overflow: 'auto',
               }}
               message="请上传京东csv文件！"
               type="warning"
@@ -120,7 +131,7 @@ const UploadModal = (props: {
             <Alert
               style={{
                 maxHeight: 200,
-                overflow: "auto",
+                overflow: 'auto',
               }}
               message="请上传拼多多csv文件！"
               type="warning"
