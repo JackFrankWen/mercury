@@ -10,3 +10,7 @@
     height: 100%;
     overflow: scroll
 }
+.date-picker-col:hover {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}

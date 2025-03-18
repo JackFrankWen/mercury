@@ -63,7 +63,7 @@ const IconDate = (props: IconDateProps) => {
     updateDate(direction)
   }
   
-  const handleDateChange = (val: Dayjs) => {
+  const handleDateChange = (val: Dayjs,viewType: 'year' | 'month') => {
     const unit = viewType
     const dateFormat = viewType === 'year' ? 'YYYY' : 'YYYY-MM'
     
@@ -83,11 +83,11 @@ const IconDate = (props: IconDateProps) => {
     // Update date format if needed when switching view types
     if (type !== props.value.type) {
       const currentDate = dayjs(props.value.date)
-      handleDateChange(currentDate)
+      handleDateChange(currentDate,type)
     }
   }
   
-  return <Row>
+  return <Row align='middle'>
     <Col span={8} style={{textAlign: 'left'}}>
       <LeftCircleFilled style={{
         fontSize: 20,
@@ -95,8 +95,8 @@ const IconDate = (props: IconDateProps) => {
         cursor: 'pointer'
       }} onClick={() => clickHandler('left')} />
     </Col>
-    <Col span={8} style={{
-      borderRadius: 4,
+    <Col className='date-picker-col' span={8} style={{
+      padding: '4px 0',
       textAlign: 'center'}} onClick={() => setModalVisible(true)}>
       <Typography.Text>{
         viewType === 'year' 
@@ -128,7 +128,7 @@ const IconDate = (props: IconDateProps) => {
           </Radio.Group>
           <DatePicker 
             value={dayjs(props.value.date)}
-            onChange={handleDateChange}
+            onChange={(val) => handleDateChange(val,viewType)}
             picker={viewType}
             style={{ marginTop: 16, width: '100%' }}
           />
