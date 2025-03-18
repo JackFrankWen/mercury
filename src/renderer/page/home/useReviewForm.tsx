@@ -5,7 +5,7 @@ import { LeftCircleFilled, RightCircleFilled } from '@ant-design/icons'
 import { Radio } from 'antd/lib'
 
 // Define proper interfaces for better type safety
-interface FormData {
+export interface FormData {
   date: string;
   trans_time: string[];
   type: 'year' | 'month';
@@ -88,14 +88,14 @@ const IconDate = (props: IconDateProps) => {
   }
   
   return <Row align='middle'>
-    <Col span={8} style={{textAlign: 'left'}}>
+    <Col span={4}  style={{textAlign: 'left'}}>
       <LeftCircleFilled style={{
         fontSize: 20,
         color: theme.useToken().token.colorPrimary,
         cursor: 'pointer'
       }} onClick={() => clickHandler('left')} />
     </Col>
-    <Col className='date-picker-col' span={8} style={{
+    <Col className='date-picker-col' flex="auto" style={{
       padding: '4px 0',
       textAlign: 'center'}} onClick={() => setModalVisible(true)}>
       <Typography.Text>{
@@ -104,7 +104,7 @@ const IconDate = (props: IconDateProps) => {
           : `${dayjs(props.value.date).format('YYYY年M月')}`
       }</Typography.Text>
     </Col>
-    <Col span={8} style={{textAlign: 'right'}}>
+    <Col  span={4} style={{textAlign: 'right'}}>
       <RightCircleFilled style={{
         fontSize: 20,
         cursor: 'pointer',

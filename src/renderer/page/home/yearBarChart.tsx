@@ -66,7 +66,7 @@ function YearBarChart(props: {
                             formValue.type === 'year' ?
                                  <BarChart
                             data={data}
-                            /> : <LunarCalendar />
+                            /> : <LunarCalendar data={formValue} />
                         }
                             
                         </Card>
