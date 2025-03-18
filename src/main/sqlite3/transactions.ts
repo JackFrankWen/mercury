@@ -378,3 +378,44 @@ export async function deleteAllTransactions(): Promise<{ code: number; message: 
 }
 
 // 获取所有交易记录
+
+// 根据trans_time获取每天的amount,group by 天
+export async function getDailyTransactionAmounts(params: Params_Transaction): Promise<{date: string, total: number}[]> {
+  try {
+    const db = await getDbInstance()
+    
+    if (!params.trans_time) {
+      return []
+    }
+    
+    const { whereClause } = generateWhereClause(params)
+    
+    const sql = `
+      SELECT 
+        strftime('%Y-%m-%d', trans_time) as date,
+        SUM(amount) as total
+      FROM transactions
+      ${whereClause}
+      GROUP BY strftime('%Y-%m-%d', trans_time)
+      ORDER BY date ASC
+    `
+    
+    console.log('getDailyTransactionAmounts sql:', sql)
+    
+    const rows = await new Promise<{date: string, total: number}[]>((resolve, reject) => {
+      db.all(sql, (err, rows) => {
+        if (err) {
+          console.error('Error getting daily transaction amounts:', err)
+          reject(err)
+          return
+        }
+        resolve(rows || [])
+      })
+    })
+    
+    return rows
+  } catch (error) {
+    console.error('Error getting daily transaction amounts:', error)
+    throw error
+  }
+}

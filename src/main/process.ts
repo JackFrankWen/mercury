@@ -15,7 +15,8 @@ import {
     getTransactionsByMonth,
     getConsumerTotal,
     getAccountPaymentTotal,
-    deleteAllTransactions
+    deleteAllTransactions,
+    getDailyTransactionAmounts
 } from "./sqlite3/transactions";
 import { transferCategory, sortByValue } from "./controller/transController";
 import { generateRule } from "./controller/matchAutoRulesController";
@@ -208,6 +209,16 @@ export function handleProcessApi() {
         }
     });
 
+    ipcMain.handle('transactions:getDailyAmounts', async (event, params) => {
+        try {
+            const result = await getDailyTransactionAmounts(params);
+            return result;
+        } catch (error) {
+            console.error('Error getting daily transaction amounts:', error);
+            throw error;
+        }
+    });
+
     ipcMain.handle('export:csv', async () => {
         console.log('export:csv1');
         
@@ -275,4 +286,3 @@ export function handleProcessApi() {
         }
     });
 }
-

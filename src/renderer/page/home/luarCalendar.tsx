@@ -9,11 +9,12 @@ import { FormData } from "./useReviewForm";
 
 interface LunarCalendarProps {
   className?: string;
-  data: FormData;
+  formValue: FormData;
+  data: { date: string; total: number }[];
 }
 
 const LunarCalendar: React.FC<LunarCalendarProps> = (props) => {
-  const { data } = props;
+  const { formValue, data } = props;
 
   const cellRender: CalendarProps<Dayjs>["fullCellRender"] = (date, info) => {
     const d = Lunar.fromDate(date.toDate());
@@ -59,12 +60,12 @@ const LunarCalendar: React.FC<LunarCalendarProps> = (props) => {
       );
     }
   };
-  const calData = dayjs(data.date);
+  const calData = dayjs(formValue.date);
 
   return (
     <Calendar
       className={props.className}
-      fullCellRender={cellRender}
+      fullCellRender={(a,b)=>cellRender(a,b)}
       fullscreen={false}
       value={calData}
       headerRender={() => null}

@@ -68,6 +68,8 @@ contextBridge.exposeInMainWorld('mercury', {
         getConsumerTotal: (params: Params_Transaction) => ipcRenderer.invoke('transactions:getConsumerTotal', params),
         // 按账户类型和支付方式分组统计
         getAccountPaymentTotal: (params: Params_Transaction) => ipcRenderer.invoke('transactions:getAccountPaymentTotal', params),
+        // 获取每日交易金额统计
+        getDailyTransactionAmounts: (params: Params_Transaction) => ipcRenderer.invoke('transactions:getDailyAmounts', params),
         // 导出csv
         exportToCsv: () => ipcRenderer.invoke('export:csv'),
         // 高级规则 API

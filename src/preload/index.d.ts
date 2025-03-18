@@ -69,6 +69,8 @@ declare global {
                 getConsumerTotal: (params: Params_Transaction) => Promise<{item: string, total: number}[]>
                 // 按账户类型和支付方式分组统计
                 getAccountPaymentTotal: (params: Params_Transaction) => Promise<{account_type: string, payment_type: string, total: number}[]>
+                // 获取每日交易金额统计
+                getDailyTransactionAmounts: (params: Params_Transaction) => Promise<{date: string, total: number}[]>
                 // 导出csv
                 exportToCsv: () => Promise<{ code: number, message: string }>
                 // 高级规则 API 类型

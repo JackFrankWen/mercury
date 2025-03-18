@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import BarChart from 'src/renderer/components/barChart';
-import { Card, Space } from 'antd';
+import { Card, message, Space } from 'antd';
 import { useSelect } from '../../components/useSelect'
 import { cpt_const, } from 'src/renderer/const/web'
 import LunarCalendar from './luarCalendar';
+import {FormData} from './useReviewForm'
 
 function YearBarChart(props: {
-    formValue: any
+    formValue: FormData
 }) {
     const { formValue } = props;
     const [data, setData] = useState<{date: string, total: number}[]>([]);
+    const [daliyData, setDaliyData] = useState<{date: string, total: number}[]>([]);
 
     const [consumerVal, ConsumerCpt] = useSelect({
         options: cpt_const.consumer_type,
@@ -27,12 +29,21 @@ function YearBarChart(props: {
    
   
     useEffect(() => {
+        if (formValue.type === 'year') {                
         fetchData({
             ...formValue,
             consumer: consumerVal,
             account_type: accountTypeVal,
             payment_type: paymentTypeVal,
         });
+        } else {
+            fetchDailyAmount({
+              ...formValue,
+              consumer: consumerVal,
+              account_type: accountTypeVal,
+              payment_type: paymentTypeVal,
+            });
+        }
     }, [formValue,
         consumerVal,
         accountTypeVal,
@@ -49,9 +60,26 @@ function YearBarChart(props: {
     const fetchData = async (obj) => {
         if (!obj) return;
         
-        const result = await window.mercury.api.getTransactionsByMonth(obj);
+        try {
+            
+            const result = await window.mercury.api.getTransactionsByMonth(obj);
+            setData(result);
+        } catch (error) {
+            message.error(error)    
+        }
          
-        setData(result);
+    }
+    const fetchDailyAmount = async (obj)=>{
+        try {
+            const result = await window.mercury.api.getDailyTransactionAmounts(obj);
+            console.log(result, 'fetchDailyAmount')
+            setDaliyData(result);
+            
+        } catch (error) {
+            message.error(error)
+            
+        }
+
     }
     const cardTitle = () => {
         if (formValue.type === 'year') {
@@ -66,7 +94,10 @@ function YearBarChart(props: {
                             formValue.type === 'year' ?
                                  <BarChart
                             data={data}
-                            /> : <LunarCalendar data={formValue} />
+                            /> : <LunarCalendar
+                            formValue={formValue}
+                            data={daliyData}
+                             />
                         }
                             
                         </Card>

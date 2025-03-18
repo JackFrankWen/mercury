@@ -117,7 +117,7 @@ const CategoryCollaspe = (props: {
       getCategory(formValue, cate);
     }
   }, [formValue, cate, refreshTable]);
-  console.log(data, 'datappppp=====');
+
   const items: CollapseProps['items'] = data.map((item, index) => {
     const categoryInfo = findCategoryById(item.id);
     
