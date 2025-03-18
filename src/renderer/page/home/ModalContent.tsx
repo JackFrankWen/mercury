@@ -1,37 +1,49 @@
-import { Button, message, Space, Table, Tag, Tooltip, Typography, Input } from "antd";
-import type { InputRef, TableRowSelection } from "antd";
-import React, { useRef, useState, useCallback, useMemo } from "react";
-import dayjs from "dayjs";
-import { SelectionFooter } from "src/renderer/components/SelectionFooter";
-import { I_Transaction } from "src/main/sqlite3/transactions";
-import { payment_type, account_type, tag_type } from "../../const/web";
-import { formatMoney } from "../../components/utils";
-import { FilterDropdownProps } from "antd/es/table/interface";
+import {
+  Button,
+  message,
+  Space,
+  Table,
+  Tag,
+  Tooltip,
+  Typography,
+  Input,
+} from 'antd';
+import type { InputRef, TableRowSelection } from 'antd';
+import React, { useRef, useState, useCallback, useMemo } from 'react';
+import dayjs from 'dayjs';
+import { SelectionFooter } from 'src/renderer/components/SelectionFooter';
+import { I_Transaction } from 'src/main/sqlite3/transactions';
+import { payment_type, account_type, tag_type } from '../../const/web';
+import { formatMoney } from '../../components/utils';
+import { FilterDropdownProps } from 'antd/es/table/interface';
 
 interface ModalContentProps {
   modalData: I_Transaction[];
-  refresh: () => void;
+  refresh?: () => void;
 }
 
 // Define consumer types as a constant
 const CONSUMER_TYPES: Record<number, { label: string; color: string }> = {
-  1: { label: "老公", color: "cyan" },
-  2: { label: "老婆", color: "magenta" },
-  3: { label: "家庭", color: "geekblue" },
-  4: { label: "牧牧", color: "purple" },
-  5: { label: "爷爷奶奶", color: "lime" },
-  6: { label: "溪溪", color: "orange" },
+  1: { label: '老公', color: 'cyan' },
+  2: { label: '老婆', color: 'magenta' },
+  3: { label: '家庭', color: 'geekblue' },
+  4: { label: '牧牧', color: 'purple' },
+  5: { label: '爷爷奶奶', color: 'lime' },
+  6: { label: '溪溪', color: 'orange' },
 };
 
 // Create a reusable filter dropdown component
 const FilterDropdown: React.FC<{
   setSelectedKeys: (keys: React.Key[]) => void;
   selectedKeys: React.Key[];
-  confirm: FilterDropdownProps["confirm"];
+  confirm: FilterDropdownProps['confirm'];
   clearFilters: () => void;
   close: () => void;
   searchInput: React.RefObject<InputRef>;
-  handleSearch: (keys: string[], confirm: FilterDropdownProps["confirm"]) => void;
+  handleSearch: (
+    keys: string[],
+    confirm: FilterDropdownProps['confirm']
+  ) => void;
   handleReset: (clearFilters: () => void) => void;
 }> = ({
   setSelectedKeys,
@@ -50,7 +62,7 @@ const FilterDropdown: React.FC<{
       value={selectedKeys[0]}
       onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
       onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
-      style={{ marginBottom: 8, display: "block" }}
+      style={{ marginBottom: 8, display: 'block' }}
     />
     <Space>
       <Button
@@ -95,7 +107,7 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
   const searchInput = useRef<InputRef>(null);
 
   const handleSearch = useCallback(
-    (selectedKeys: string[], confirm: FilterDropdownProps["confirm"]) => {
+    (selectedKeys: string[], confirm: FilterDropdownProps['confirm']) => {
       confirm();
     },
     []
@@ -114,12 +126,12 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
       .deleteTransactions(selectedRowKeys as number[])
       .then(() => {
         setSelectedRowKeys([]);
-        message.success("删除成功");
+        message.success('删除成功');
         refresh();
       })
       .catch((error: Error) => {
-        console.error("删除失败:", error);
-        message.error("删除失败");
+        console.error('删除失败:', error);
+        message.error('删除失败');
       });
   }, [selectedRowKeys, refresh]);
 
@@ -134,12 +146,12 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
         .updateTransactions(selectedRowKeys as number[], obj)
         .then(() => {
           setSelectedRowKeys([]);
-          message.success("修改成功");
+          message.success('修改成功');
           refresh();
         })
         .catch((error: Error) => {
-          console.error("修改失败:", error);
-          message.error("修改失败");
+          console.error('修改失败:', error);
+          message.error('修改失败');
         });
     },
     [selectedRowKeys, refresh]
@@ -156,27 +168,32 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
   const modalTableCol = useMemo(
     () => [
       {
-        title: "交易时间",
+        title: '交易时间',
         width: 160,
-        dataIndex: "trans_time",
-        key: "trans_time",
-        render: (val: string) => dayjs(val).format("YYYY-MM-DD HH:mm:ss"),
+        dataIndex: 'trans_time',
+        key: 'trans_time',
+        render: (val: string) => dayjs(val).format('YYYY-MM-DD HH:mm:ss'),
       },
       {
-        title: "金额",
-        dataIndex: "amount",
+        title: '金额',
+        dataIndex: 'amount',
         width: 80,
-        sorter: (a: I_Transaction, b: I_Transaction) => Number(a.amount) - Number(b.amount),
+        sorter: (a: I_Transaction, b: I_Transaction) =>
+          Number(a.amount) - Number(b.amount),
         render: (txt: string) => {
           if (Number(txt) > 100) {
-            return <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>;
+            return (
+              <Typography.Text type="danger">
+                {formatMoney(txt)}
+              </Typography.Text>
+            );
           }
           return `¥${formatMoney(txt)}`;
         },
       },
       {
-        title: "交易对象",
-        dataIndex: "payee",
+        title: '交易对象',
+        dataIndex: 'payee',
         width: 120,
         filterDropdown: (props) => (
           <FilterDropdown
@@ -203,8 +220,8 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
         ),
       },
       {
-        title: "交易描述",
-        dataIndex: "description",
+        title: '交易描述',
+        dataIndex: 'description',
         ellipsis: true,
         filterDropdown: (props) => (
           <FilterDropdown
@@ -216,7 +233,10 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
         ),
         filterSearch: true,
         onFilter: (value: string, record: I_Transaction) =>
-          record.description.toString().toLowerCase().includes(value.toLowerCase()),
+          record.description
+            .toString()
+            .toLowerCase()
+            .includes(value.toLowerCase()),
         filterDropdownProps: {
           onOpenChange(open: boolean) {
             if (open) {
@@ -231,26 +251,28 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
         ),
       },
       {
-        title: "消费对象",
+        title: '消费对象',
         width: 80,
-        dataIndex: "consumer",
-        key: "consumer",
+        dataIndex: 'consumer',
+        key: 'consumer',
         render: (val: number) => {
           const consumerInfo = CONSUMER_TYPES[val] || CONSUMER_TYPES[6];
           return <Tag color={consumerInfo.color}>{consumerInfo.label}</Tag>;
         },
       },
       {
-        title: "账号",
-        dataIndex: "account_type",
+        title: '账号',
+        dataIndex: 'account_type',
         width: 100,
-        render: (val: string) => <Tag color="green">{account_type[Number(val)]}</Tag>,
+        render: (val: string) => (
+          <Tag color="green">{account_type[Number(val)]}</Tag>
+        ),
       },
       {
-        title: "标签",
-        dataIndex: "tag",
+        title: '标签',
+        dataIndex: 'tag',
         width: 90,
-        render: (val: number) => (val ? tag_type[val] : ""),
+        render: (val: number) => (val ? tag_type[val] : ''),
       },
     ],
     [handleSearch, handleReset]
@@ -260,7 +282,9 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
     return {
       onClick: () => {
         setSelectedRowKeys((prev) =>
-          prev.includes(record.id) ? prev.filter((id) => id !== record.id) : [...prev, record.id]
+          prev.includes(record.id)
+            ? prev.filter((id) => id !== record.id)
+            : [...prev, record.id]
         );
       },
     };
@@ -272,7 +296,7 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
 
   return (
     <>
-      <div style={{ padding: "8px 0" }}>
+      <div style={{ padding: '8px 0' }}>
         {selectedRowKeys.length > 0 && (
           <SelectionFooter
             onCancel={handleCancelSelection}
@@ -294,7 +318,7 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
         columns={modalTableCol}
         dataSource={modalData}
         size="small"
-        scroll={{ y: "calc(100vh - 400px)" }}
+        scroll={{ y: 'calc(100vh - 400px)' }}
       />
     </>
   );
