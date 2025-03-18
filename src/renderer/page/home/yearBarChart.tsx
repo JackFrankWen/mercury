@@ -9,9 +9,7 @@ import { FormData } from "./useReviewForm";
 function YearBarChart(props: { formValue: FormData }) {
   const { formValue } = props;
   const [data, setData] = useState<{ date: string; total: number }[]>([]);
-  const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>(
-    []
-  );
+  const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>([]);
 
   const [consumerVal, ConsumerCpt] = useSelect({
     options: cpt_const.consumer_type,
@@ -78,7 +76,7 @@ function YearBarChart(props: { formValue: FormData }) {
   };
   return (
     <div className="mt8">
-      <Card title={cardTitle()} bordered={false}  hoverable extra={extra}>
+      <Card title={cardTitle()} bordered={false} hoverable extra={extra}>
         {formValue.type === "year" ? (
           <BarChart data={data} />
         ) : (

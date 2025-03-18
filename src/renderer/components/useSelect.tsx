@@ -1,15 +1,14 @@
-import { Radio, Select } from 'antd'
-import React, { useEffect, useState } from 'react'
-import type { SelectProps, } from 'antd'
-
+import { Radio, Select } from "antd";
+import React, { useEffect, useState } from "react";
+import type { SelectProps } from "antd";
 
 export function useSelect(props: {
-  options: SelectProps['options']
-  placeholder?: string
-  style?: React.CSSProperties
+  options: SelectProps["options"];
+  placeholder?: string;
+  style?: React.CSSProperties;
 }) {
-  const { options, placeholder = '成员', style } = props
-  const [value, setValue] = useState()
+  const { options, placeholder = "成员", style } = props;
+  const [value, setValue] = useState();
   const cpt = (
     <Select
       allowClear
@@ -19,8 +18,8 @@ export function useSelect(props: {
       options={options}
       style={style}
     />
-  )
-  return [value, cpt]
+  );
+  return [value, cpt];
 }
 
-export default useSelect
+export default useSelect;

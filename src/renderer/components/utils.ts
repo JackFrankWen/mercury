@@ -1,42 +1,42 @@
 export function getDateTostring(obj: any): { start: string; end: string } {
   const returnV = {
     ...obj,
-    start: obj.date[0].format('YYYY-MM-DD HH:mm:ss'),
-    end: obj.date[1].format('YYYY-MM-DD HH:mm:ss'),
-  }
-  delete returnV.date
-  return returnV
+    start: obj.date[0].format("YYYY-MM-DD HH:mm:ss"),
+    end: obj.date[1].format("YYYY-MM-DD HH:mm:ss"),
+  };
+  delete returnV.date;
+  return returnV;
 }
 
 export function roundToTwoDecimalPlaces(number: any): string {
   // 判断参数是否为数字类型或可转化为数字类型
   if (number === null || number === undefined) {
-    return 'NaN'
+    return "NaN";
   }
 
-  const num = Number(number)
+  const num = Number(number);
   if (isNaN(num)) {
-    return 'NaN'
+    return "NaN";
   }
 
   // 处理特殊值
   if (!isFinite(num)) {
-    return 'NaN'
+    return "NaN";
   }
 
   // 使用Math.round确保四舍五入的准确性
-  return (Math.round(num * 100) / 100).toFixed(2)
+  return (Math.round(num * 100) / 100).toFixed(2);
 }
 export function toNumberOrUndefiend(number: any): number | undefined {
   if (!number) {
-    return undefined
+    return undefined;
   }
   // 判断参数是否为数字类型或可转化为数字类型
   if (isNaN(Number(number))) {
-    return undefined
+    return undefined;
   }
 
-  return Number(number)
+  return Number(number);
 }
 
 /**
@@ -56,52 +56,54 @@ export function toNumberOrUndefiend(number: any): number | undefined {
  * formatMoney(20000, undefined, true) // "2万"
  * formatMoney(300000000, undefined, true) // "3亿"
  */
-export function formatMoney(amount: number | string, unit?: '万' | '千' | '亿', autoUnit?: boolean): string {
-  if (typeof amount === 'string') {
+export function formatMoney(
+  amount: number | string,
+  unit?: "万" | "千" | "亿",
+  autoUnit?: boolean
+): string {
+  if (typeof amount === "string") {
     amount = parseFloat(amount);
   }
 
   // Handle auto unit selection
   if (autoUnit) {
     if (amount >= 100000000) {
-      unit = '亿';
+      unit = "亿";
     } else if (amount >= 10000) {
-      unit = '万';
+      unit = "万";
     } else if (amount >= 1000) {
-      unit = '千';
+      unit = "千";
     }
   }
 
   let result: number;
-  if (unit === '亿') {
+  if (unit === "亿") {
     result = amount / 100000000;
-  } else if (unit === '千') {
+  } else if (unit === "千") {
     result = amount / 1000;
-  } else if (unit === '万') {
+  } else if (unit === "万") {
     result = amount / 10000;
   } else {
     // No unit case
     const hasDecimal = amount % 1 !== 0;
-    return amount.toLocaleString('zh-CN', {
+    return amount.toLocaleString("zh-CN", {
       minimumFractionDigits: hasDecimal ? 2 : 0,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     });
   }
 
   // For units (万/千/亿), format with one decimal place
-  const formatted = result.toLocaleString('zh-CN', {
+  const formatted = result.toLocaleString("zh-CN", {
     minimumFractionDigits: 1,
-    maximumFractionDigits: 1
+    maximumFractionDigits: 1,
   });
 
   // Remove .0 if present
-  const finalAmount = formatted.endsWith('.0') 
-    ? formatted.slice(0, -2) 
-    : formatted;
+  const finalAmount = formatted.endsWith(".0") ? formatted.slice(0, -2) : formatted;
 
   return `${finalAmount}${unit}`;
 }
-type OS = 'Mac' | 'Windows' | 'Other';
+type OS = "Mac" | "Windows" | "Other";
 
 /**
  * 检测操作系统
@@ -110,12 +112,12 @@ type OS = 'Mac' | 'Windows' | 'Other';
 export function detectOS(): OS {
   const userAgent = navigator.userAgent.toLowerCase();
   const platform = navigator.platform.toLowerCase();
-  
-  if (userAgent.indexOf('mac') !== -1 || platform.indexOf('mac') !== -1) {
-    return 'Mac';
-  } else if (userAgent.indexOf('win') !== -1 || platform.indexOf('win') !== -1) {
-    return 'Windows';
+
+  if (userAgent.indexOf("mac") !== -1 || platform.indexOf("mac") !== -1) {
+    return "Mac";
+  } else if (userAgent.indexOf("win") !== -1 || platform.indexOf("win") !== -1) {
+    return "Windows";
   } else {
-    return 'Other';
+    return "Other";
   }
 }

@@ -1,9 +1,9 @@
 import React from "react";
 import { Upload, UploadProps, message } from "antd";
-import Papa from 'papaparse';
-import { handleToTable } from './classification';
-import { WechatOutlined, AlipayCircleOutlined, CloudUploadOutlined } from '@ant-design/icons';
-import './index.css';
+import Papa from "papaparse";
+import { handleToTable } from "./classification";
+import { WechatOutlined, AlipayCircleOutlined, CloudUploadOutlined } from "@ant-design/icons";
+import "./index.css";
 
 const { Dragger } = Upload;
 
@@ -14,22 +14,22 @@ interface UploadSectionProps {
 
 function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
   const uploadProps: UploadProps = {
-    name: 'file',
+    name: "file",
     fileList: [],
-    className: 'upload-cus',
+    className: "upload-cus",
     beforeUpload: (file) => {
       setLoading(true);
 
       setTimeout(() => {
         Papa.parse(file, {
           header: false,
-          encoding: 'gb18030',
+          encoding: "gb18030",
           skipEmptyLines: true,
           complete: function (results: any) {
             const csvData = results.data || [];
             const { tableHeader, tableData, success } = handleToTable(csvData);
             if (!success) {
-              message.error('上传错误文件')
+              message.error("上传错误文件");
               setLoading(false);
               return false;
             }
@@ -48,18 +48,15 @@ function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
     <div className="upload-wrap mt8">
       <Dragger {...uploadProps}>
         <div className="upload-cus-container">
-        
           <p className="ant-upload-drag-icon">
-          <CloudUploadOutlined />
+            <CloudUploadOutlined />
           </p>
           <p className="ant-upload-text">点击或拖拽上传csv文件</p>
-          <p className="ant-upload-hint">
-            目前支持微信、支付宝、两种模式csv文件
-          </p>
+          <p className="ant-upload-hint">目前支持微信、支付宝、两种模式csv文件</p>
         </div>
       </Dragger>
     </div>
   );
 }
 
-export default UploadSection; 
+export default UploadSection;

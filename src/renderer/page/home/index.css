@@ -1,23 +1,23 @@
 .home-page {
-    height: 100vh;
-    overflow: scroll;
+  height: 100vh;
+  overflow: scroll;
 }
 .home-page-left {
-    height: 100%;
-    overflow: scroll;
+  height: 100%;
+  overflow: scroll;
 }
 .home-page-right {
-    height: 100%;
-    overflow: scroll
+  height: 100%;
+  overflow: scroll;
 }
 .date-picker-col:hover {
-    background-color: #f0f0f0;
-    border-radius: 4px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
 }
-.lunar-calendar-cell{
-    border-top: 2px solid #f0f0f0;
+.lunar-calendar-cell {
+  border-top: 2px solid #f0f0f0;
 }
-.lunar-calendar-cell:hover   {
-    background-color: #f0f0f0;
-    border-top: 2px solid #eccf10;
+.lunar-calendar-cell:hover {
+  background-color: #f0f0f0;
+  border-top: 2px solid #eccf10;
 }

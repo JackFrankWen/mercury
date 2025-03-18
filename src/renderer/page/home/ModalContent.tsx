@@ -1,38 +1,38 @@
-import { Button, message, Space, Table, Tag, Tooltip, Typography, Input} from 'antd'
-import type { InputRef, TableRowSelection } from 'antd'
-import React, { useRef, useState, useCallback, useMemo } from 'react'
-import dayjs from 'dayjs'
-import { SelectionFooter } from 'src/renderer/components/SelectionFooter'
-import { I_Transaction } from 'src/main/sqlite3/transactions'
-import { payment_type, account_type, tag_type } from '../../const/web'
-import { formatMoney } from '../../components/utils'
-import { FilterDropdownProps } from 'antd/es/table/interface'
+import { Button, message, Space, Table, Tag, Tooltip, Typography, Input } from "antd";
+import type { InputRef, TableRowSelection } from "antd";
+import React, { useRef, useState, useCallback, useMemo } from "react";
+import dayjs from "dayjs";
+import { SelectionFooter } from "src/renderer/components/SelectionFooter";
+import { I_Transaction } from "src/main/sqlite3/transactions";
+import { payment_type, account_type, tag_type } from "../../const/web";
+import { formatMoney } from "../../components/utils";
+import { FilterDropdownProps } from "antd/es/table/interface";
 
 interface ModalContentProps {
-  modalData: I_Transaction[]
-  refresh: () => void
+  modalData: I_Transaction[];
+  refresh: () => void;
 }
 
 // Define consumer types as a constant
-const CONSUMER_TYPES: Record<number, { label: string, color: string }> = {
-  1: { label: '老公', color: 'cyan' },
-  2: { label: '老婆', color: 'magenta' },
-  3: { label: '家庭', color: 'geekblue' },
-  4: { label: '牧牧', color: 'purple' },
-  5: { label: '爷爷奶奶', color: 'lime' },
-  6: { label: '溪溪', color: 'orange' },
-}
+const CONSUMER_TYPES: Record<number, { label: string; color: string }> = {
+  1: { label: "老公", color: "cyan" },
+  2: { label: "老婆", color: "magenta" },
+  3: { label: "家庭", color: "geekblue" },
+  4: { label: "牧牧", color: "purple" },
+  5: { label: "爷爷奶奶", color: "lime" },
+  6: { label: "溪溪", color: "orange" },
+};
 
 // Create a reusable filter dropdown component
 const FilterDropdown: React.FC<{
-  setSelectedKeys: (keys: React.Key[]) => void
-  selectedKeys: React.Key[]
-  confirm: FilterDropdownProps['confirm']
-  clearFilters: () => void
-  close: () => void
-  searchInput: React.RefObject<InputRef>
-  handleSearch: (keys: string[], confirm: FilterDropdownProps['confirm']) => void
-  handleReset: (clearFilters: () => void) => void
+  setSelectedKeys: (keys: React.Key[]) => void;
+  selectedKeys: React.Key[];
+  confirm: FilterDropdownProps["confirm"];
+  clearFilters: () => void;
+  close: () => void;
+  searchInput: React.RefObject<InputRef>;
+  handleSearch: (keys: string[], confirm: FilterDropdownProps["confirm"]) => void;
+  handleReset: (clearFilters: () => void) => void;
 }> = ({
   setSelectedKeys,
   selectedKeys,
@@ -50,7 +50,7 @@ const FilterDropdown: React.FC<{
       value={selectedKeys[0]}
       onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
       onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
-      style={{ marginBottom: 8, display: 'block' }}
+      style={{ marginBottom: 8, display: "block" }}
     />
     <Space>
       <Button
@@ -94,12 +94,12 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const searchInput = useRef<InputRef>(null);
 
-  const handleSearch = useCallback((
-    selectedKeys: string[],
-    confirm: FilterDropdownProps['confirm'],
-  ) => {
-    confirm();
-  }, []);
+  const handleSearch = useCallback(
+    (selectedKeys: string[], confirm: FilterDropdownProps["confirm"]) => {
+      confirm();
+    },
+    []
+  );
 
   const handleReset = useCallback((clearFilters: () => void) => {
     clearFilters();
@@ -114,156 +114,155 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
       .deleteTransactions(selectedRowKeys as number[])
       .then(() => {
         setSelectedRowKeys([]);
-        message.success('删除成功');
+        message.success("删除成功");
         refresh();
       })
       .catch((error: Error) => {
-        console.error('删除失败:', error);
-        message.error('删除失败');
+        console.error("删除失败:", error);
+        message.error("删除失败");
       });
   }, [selectedRowKeys, refresh]);
 
-  const handleUpdateTransactions = useCallback((params: Partial<I_Transaction>) => {
-    const obj = { ...params };
-    if (params.category) {
-      obj.category = JSON.stringify(params.category);
-    }
-    
-    window.mercury.api
-      .updateTransactions(selectedRowKeys as number[], obj)
-      .then(() => {
-        setSelectedRowKeys([]);
-        message.success('修改成功');
-        refresh();
-      })
-      .catch((error: Error) => {
-        console.error('修改失败:', error);
-        message.error('修改失败');
-      });
-  }, [selectedRowKeys, refresh]);
+  const handleUpdateTransactions = useCallback(
+    (params: Partial<I_Transaction>) => {
+      const obj = { ...params };
+      if (params.category) {
+        obj.category = JSON.stringify(params.category);
+      }
 
-  const rowSelection: TableRowSelection<I_Transaction> = useMemo(() => ({
-    selectedRowKeys,
-    onChange: onSelectChange,
-  }), [selectedRowKeys, onSelectChange]);
-
-  const modalTableCol = useMemo(() => [
-    {
-      title: '交易时间',
-      width: 160,
-      dataIndex: 'trans_time',
-      key: 'trans_time',
-      render: (val: string) => dayjs(val).format('YYYY-MM-DD HH:mm:ss'),
+      window.mercury.api
+        .updateTransactions(selectedRowKeys as number[], obj)
+        .then(() => {
+          setSelectedRowKeys([]);
+          message.success("修改成功");
+          refresh();
+        })
+        .catch((error: Error) => {
+          console.error("修改失败:", error);
+          message.error("修改失败");
+        });
     },
-    {
-      title: '金额',
-      dataIndex: 'amount',
-      width: 80,
-      sorter: (a: I_Transaction, b: I_Transaction) => Number(a.amount) - Number(b.amount),
-      render: (txt: string) => {
-        if (Number(txt) > 100) {
-          return <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>;
-        }
-        return `¥${formatMoney(txt)}`;
+    [selectedRowKeys, refresh]
+  );
+
+  const rowSelection: TableRowSelection<I_Transaction> = useMemo(
+    () => ({
+      selectedRowKeys,
+      onChange: onSelectChange,
+    }),
+    [selectedRowKeys, onSelectChange]
+  );
+
+  const modalTableCol = useMemo(
+    () => [
+      {
+        title: "交易时间",
+        width: 160,
+        dataIndex: "trans_time",
+        key: "trans_time",
+        render: (val: string) => dayjs(val).format("YYYY-MM-DD HH:mm:ss"),
       },
-    },
-    {
-      title: '交易对象',
-      dataIndex: 'payee',
-      width: 120,
-      filterDropdown: (props) => (
-        <FilterDropdown
-          {...props}
-          searchInput={searchInput}
-          handleSearch={handleSearch}
-          handleReset={handleReset}
-        />
-      ),
-      filterSearch: true,
-      onFilter: (value: string, record: I_Transaction) =>
-        record.payee
-          .toString()
-          .toLowerCase()
-          .includes(value.toLowerCase()),
-      filterDropdownProps: {
-        onOpenChange(open: boolean) {
-          if (open) {
-            setTimeout(() => searchInput.current?.select(), 100);
+      {
+        title: "金额",
+        dataIndex: "amount",
+        width: 80,
+        sorter: (a: I_Transaction, b: I_Transaction) => Number(a.amount) - Number(b.amount),
+        render: (txt: string) => {
+          if (Number(txt) > 100) {
+            return <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>;
           }
+          return `¥${formatMoney(txt)}`;
         },
       },
-      render: (val: string) => (
-        <Tooltip placement="topLeft" title={val}>
-          {val}
-        </Tooltip>
-      ),
-    },
-    {
-      title: '交易描述',
-      dataIndex: 'description',
-      ellipsis: true,
-      filterDropdown: (props) => (
-        <FilterDropdown
-          {...props}
-          searchInput={searchInput}
-          handleSearch={handleSearch}
-          handleReset={handleReset}
-        />
-      ),
-      filterSearch: true,
-      onFilter: (value: string, record: I_Transaction) =>
-        record.description
-          .toString()
-          .toLowerCase()
-          .includes(value.toLowerCase()),
-      filterDropdownProps: {
-        onOpenChange(open: boolean) {
-          if (open) {
-            setTimeout(() => searchInput.current?.select(), 100);
-          }
+      {
+        title: "交易对象",
+        dataIndex: "payee",
+        width: 120,
+        filterDropdown: (props) => (
+          <FilterDropdown
+            {...props}
+            searchInput={searchInput}
+            handleSearch={handleSearch}
+            handleReset={handleReset}
+          />
+        ),
+        filterSearch: true,
+        onFilter: (value: string, record: I_Transaction) =>
+          record.payee.toString().toLowerCase().includes(value.toLowerCase()),
+        filterDropdownProps: {
+          onOpenChange(open: boolean) {
+            if (open) {
+              setTimeout(() => searchInput.current?.select(), 100);
+            }
+          },
+        },
+        render: (val: string) => (
+          <Tooltip placement="topLeft" title={val}>
+            {val}
+          </Tooltip>
+        ),
+      },
+      {
+        title: "交易描述",
+        dataIndex: "description",
+        ellipsis: true,
+        filterDropdown: (props) => (
+          <FilterDropdown
+            {...props}
+            searchInput={searchInput}
+            handleSearch={handleSearch}
+            handleReset={handleReset}
+          />
+        ),
+        filterSearch: true,
+        onFilter: (value: string, record: I_Transaction) =>
+          record.description.toString().toLowerCase().includes(value.toLowerCase()),
+        filterDropdownProps: {
+          onOpenChange(open: boolean) {
+            if (open) {
+              setTimeout(() => searchInput.current?.select(), 100);
+            }
+          },
+        },
+        render: (description: string) => (
+          <Tooltip placement="topLeft" title={description}>
+            {description}
+          </Tooltip>
+        ),
+      },
+      {
+        title: "消费对象",
+        width: 80,
+        dataIndex: "consumer",
+        key: "consumer",
+        render: (val: number) => {
+          const consumerInfo = CONSUMER_TYPES[val] || CONSUMER_TYPES[6];
+          return <Tag color={consumerInfo.color}>{consumerInfo.label}</Tag>;
         },
       },
-      render: (description: string) => (
-        <Tooltip placement="topLeft" title={description}>
-          {description}
-        </Tooltip>
-      ),
-    },
-    {
-      title: '消费对象',
-      width: 80,
-      dataIndex: 'consumer',
-      key: 'consumer',
-      render: (val: number) => {
-        const consumerInfo = CONSUMER_TYPES[val] || CONSUMER_TYPES[6];
-        return <Tag color={consumerInfo.color}>{consumerInfo.label}</Tag>;
+      {
+        title: "账号",
+        dataIndex: "account_type",
+        width: 100,
+        render: (val: string) => <Tag color="green">{account_type[Number(val)]}</Tag>,
       },
-    },
-    {
-      title: '账号',
-      dataIndex: 'account_type',
-      width: 100,
-      render: (val: string) => (
-        <Tag color="green">{account_type[Number(val)]}</Tag>  
-      ),
-    },
-    {
-      title: '标签',
-      dataIndex: 'tag',
-      width: 90,
-      render: (val: number) => (val ? tag_type[val] : ''),
-    },
-  ], [handleSearch, handleReset]);
+      {
+        title: "标签",
+        dataIndex: "tag",
+        width: 90,
+        render: (val: number) => (val ? tag_type[val] : ""),
+      },
+    ],
+    [handleSearch, handleReset]
+  );
 
   const handleRowClick = useCallback((record: I_Transaction) => {
     return {
       onClick: () => {
-        setSelectedRowKeys(prev => 
-          prev.includes(record.id) 
-            ? prev.filter(id => id !== record.id)
-            : [...prev, record.id]
+        setSelectedRowKeys((prev) =>
+          prev.includes(record.id) ? prev.filter((id) => id !== record.id) : [...prev, record.id]
         );
-      }
+      },
     };
   }, []);
 
@@ -273,7 +272,7 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
 
   return (
     <>
-      <div style={{ padding: '8px 0' }}>
+      <div style={{ padding: "8px 0" }}>
         {selectedRowKeys.length > 0 && (
           <SelectionFooter
             onCancel={handleCancelSelection}
@@ -295,7 +294,7 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
         columns={modalTableCol}
         dataSource={modalData}
         size="small"
-        scroll={{ y: 'calc(100vh - 400px)' }}
+        scroll={{ y: "calc(100vh - 400px)" }}
       />
     </>
   );

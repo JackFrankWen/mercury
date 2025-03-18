@@ -1,18 +1,17 @@
 .p-accounting {
- 
-    .ellipsis {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+  .ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-    .table-footer {
-        position: fixed;
-        bottom: 0;
-        width: calc(100% - 70px);
-        left: 70px;
-        background: white;
-        padding: 16px;
-        opacity: 0.9;
-    }
+  .table-footer {
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 70px);
+    left: 70px;
+    background: white;
+    padding: 16px;
+    opacity: 0.9;
+  }
 }

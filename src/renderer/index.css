@@ -1,78 +1,77 @@
-html, body, #root {
-    height: 100%;
-    margin: 0;
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
 }
 
 /* 解释下这个css */
 
 ::-webkit-scrollbar {
-    width: 6px;
-    background: transparent;
+  width: 6px;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-track {
-    border-radius: 4px;
-    background-color: transparent;
+  border-radius: 4px;
+  background-color: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .mercury-layout {
-    height: 100vh;
+  height: 100vh;
 }
 .mercury-sider {
-    /* display: flex; */
+  /* display: flex; */
 }
 .mercury-logo img {
-    width: 48px;
-    height: 48px;
-    margin: 0 0 24px;
+  width: 48px;
+  height: 48px;
+  margin: 0 0 24px;
 }
 .mercury-reload {
-    cursor: pointer;
+  cursor: pointer;
 }
-.mercury-sider .ant-layout-sider-children{
-    flex-direction: column;
-    justify-content: space-around
-    
+.mercury-sider .ant-layout-sider-children {
+  flex-direction: column;
+  justify-content: space-around;
 }
 .mercury-content {
-    height: 100%;
-    overflow: hidden;
-    padding: 16px 16px 0 16px;
-    
+  height: 100%;
+  overflow: hidden;
+  padding: 16px 16px 0 16px;
 }
-.ant-layout-sider-children{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
+.ant-layout-sider-children {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .mt16 {
-    margin-top: 16px;
+  margin-top: 16px;
 }
 .mt8 {
-    margin-top: 8px;
+  margin-top: 8px;
 }
 .mb8 {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 }
 
 .overflow-scroll {
-    overflow: scroll;
+  overflow: scroll;
 }
 
 .no-margin {
-    margin: 0 !important;
-    margin-inline-end: 0 !important;
+  margin: 0 !important;
+  margin-inline-end: 0 !important;
 }
 .ant-picker-panel {
-    border: none !important;
+  border: none !important;
 }

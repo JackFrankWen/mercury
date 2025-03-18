@@ -1,39 +1,34 @@
-import React, { useState } from 'react'
-import { Card, Cascader, Col, message, Row, Space, Switch, Table } from 'antd'
-import { Button, Form, Input, Radio } from 'antd'
-import SelectWrap from '../../components/selectWrap'
-import { cpt_const } from '../../const/web'
-import { category_type } from '../../const/categroy'
-import { toNumberOrUndefiend } from '../../components/utils'
-import useLoadingButton from '../../components/useButton'
-import { DefaultOptionType } from 'antd/es/cascader'
-import AdvancedRuleFormItem, { RuleItemList } from './advancedRuleFormItem'
-import { AdvancedRule } from 'src/main/sqlite3/advance-rules'
+import React, { useState } from "react";
+import { Card, Cascader, Col, message, Row, Space, Switch, Table } from "antd";
+import { Button, Form, Input, Radio } from "antd";
+import SelectWrap from "../../components/selectWrap";
+import { cpt_const } from "../../const/web";
+import { category_type } from "../../const/categroy";
+import { toNumberOrUndefiend } from "../../components/utils";
+import useLoadingButton from "../../components/useButton";
+import { DefaultOptionType } from "antd/es/cascader";
+import AdvancedRuleFormItem, { RuleItemList } from "./advancedRuleFormItem";
+import { AdvancedRule } from "src/main/sqlite3/advance-rules";
 export type RuleFormData = {
-  id?: number
-  name?: string
-  category?: string
-  consumer?: string
-  abc_type?: number
-  cost_type?: number
-  priority?: number
-  rule: string // 需要解析成 RuleItemList
-  tag?: string
-}
+  id?: number;
+  name?: string;
+  category?: string;
+  consumer?: string;
+  abc_type?: number;
+  cost_type?: number;
+  priority?: number;
+  rule: string; // 需要解析成 RuleItemList
+  tag?: string;
+};
 
-const RuleForm = (props: {
-  data?: AdvancedRule
-  onCancel: () => void
-  refresh: () => void
-}) => {
-  const [form] = Form.useForm()
-  const   [LoadingBtn, , setLoadingFalse ] = useLoadingButton()
+const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: () => void }) => {
+  const [form] = Form.useForm();
+  const [LoadingBtn, , setLoadingFalse] = useLoadingButton();
 
-  const { data = {
-  } as AdvancedRule } = props
+  const { data = {} as AdvancedRule } = props;
   const onFormLayoutChange = (value: { category: [number, number] }) => {
-    console.log(value,'onFormLayoutChange');
-    
+    console.log(value, "onFormLayoutChange");
+
     // if (category) {
     //   const found = category_type.find((val) => val.value === category[0])
     //   if (found) {
@@ -49,43 +44,43 @@ const RuleForm = (props: {
     //     }
     //   }
     // }
-  }
+  };
   const submitRule = async () => {
-    const { data, refresh } = props
+    const { data, refresh } = props;
 
-    const formValue = form.getFieldsValue()
-    let res: any
+    const formValue = form.getFieldsValue();
+    let res: any;
     try {
-      console.log(formValue, 'formValue ')
+      console.log(formValue, "formValue ");
       if (data?.id) {
-        res = await window.mercury.api.updateAdvancedRule(data.id,{
-            ...formValue,
-            active: formValue.active ? 1 : 0,
-            category: JSON.stringify(formValue.category),
-            rule: JSON.stringify(formValue.rule),
-        })
-        console.log(res, 'res')
+        res = await window.mercury.api.updateAdvancedRule(data.id, {
+          ...formValue,
+          active: formValue.active ? 1 : 0,
+          category: JSON.stringify(formValue.category),
+          rule: JSON.stringify(formValue.rule),
+        });
+        console.log(res, "res");
       } else {
         res = await window.mercury.api.addAdvancedRule({
-            ...formValue,
-            active: formValue.active ? 1 : 0,
-            category: JSON.stringify(formValue.category),
-            rule: JSON.stringify(formValue.rule),
-        })
-        console.log(res, 'res')
+          ...formValue,
+          active: formValue.active ? 1 : 0,
+          category: JSON.stringify(formValue.category),
+          rule: JSON.stringify(formValue.rule),
+        });
+        console.log(res, "res");
       }
       if (res?.code === 200) {
-        message.success('操作成功')
-        setLoadingFalse()
-        refresh()
+        message.success("操作成功");
+        setLoadingFalse();
+        refresh();
       }
-      console.log(res)
+      console.log(res);
     } catch (error) {
-      console.log(error)
-      message.error(error)
+      console.log(error);
+      message.error(error);
     }
-  }
-  console.log(data, 'data')
+  };
+  console.log(data, "data");
 
   return (
     <Form
@@ -114,9 +109,7 @@ const RuleForm = (props: {
             filter: (inputValue: string, path: DefaultOptionType[]) =>
               path.some(
                 (option) =>
-                  (option.label as string)
-                    .toLowerCase()
-                    .indexOf(inputValue.toLowerCase()) > -1
+                  (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1
               ),
           }}
         />
@@ -139,18 +132,22 @@ const RuleForm = (props: {
       <Form.Item name="rule">
         <AdvancedRuleFormItem />
       </Form.Item>
-      <Form.Item style={{textAlign: 'right'}}>
+      <Form.Item style={{ textAlign: "right" }}>
         <Space>
-          <Button  onClick={() => {
-            props.onCancel()
-          }}>取消</Button>
+          <Button
+            onClick={() => {
+              props.onCancel();
+            }}
+          >
+            取消
+          </Button>
           <LoadingBtn type="primary" onClick={submitRule}>
             提交
           </LoadingBtn>
         </Space>
       </Form.Item>
     </Form>
-  )
-}
+  );
+};
 
-export default RuleForm
+export default RuleForm;

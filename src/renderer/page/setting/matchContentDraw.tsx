@@ -1,78 +1,78 @@
-import React, { useState } from 'react'
-import { Card, Cascader, message } from 'antd'
-import { Button, Form, Input, Radio } from 'antd'
-import SelectWrap from '../../components/selectWrap'
-import { cpt_const } from '../../const/web'
-import { category_type } from '../../const/categroy'
-import { toNumberOrUndefiend } from '../../components/utils'
-import useLoadingButton from '../../components/useButton'
-import { DefaultOptionType } from 'antd/es/cascader'
+import React, { useState } from "react";
+import { Card, Cascader, message } from "antd";
+import { Button, Form, Input, Radio } from "antd";
+import SelectWrap from "../../components/selectWrap";
+import { cpt_const } from "../../const/web";
+import { category_type } from "../../const/categroy";
+import { toNumberOrUndefiend } from "../../components/utils";
+import useLoadingButton from "../../components/useButton";
+import { DefaultOptionType } from "antd/es/cascader";
 
 const RuleForm = (props: {
   data?: {
-    id: number
-    rule: string
-    category?: string
-    consumer?: string
-    abc_type?: number
-    cost_type?: number
-    tag?: string
-  }
-  refresh: () => void
+    id: number;
+    rule: string;
+    category?: string;
+    consumer?: string;
+    abc_type?: number;
+    cost_type?: number;
+    tag?: string;
+  };
+  refresh: () => void;
 }) => {
-  const [form] = Form.useForm()
-  const   [LoadingBtn, , setLoadingFalse ] = useLoadingButton()
+  const [form] = Form.useForm();
+  const [LoadingBtn, , setLoadingFalse] = useLoadingButton();
 
-  const { data } = props
+  const { data } = props;
   const onFormLayoutChange = ({ category }: { category: [number, number] }) => {
     if (category) {
-      const found = category_type.find((val) => val.value === category[0])
+      const found = category_type.find((val) => val.value === category[0]);
       if (found) {
         // @ts-ignore
-        const obj = found.children.find((val) => val.value === category[1])
+        const obj = found.children.find((val) => val.value === category[1]);
         if (obj) {
           Object.keys(obj).forEach((key) => {
-            console.log(key)
-            if (!['value', 'label'].includes(key)) {
-              form.setFieldValue(key, obj[key])
+            console.log(key);
+            if (!["value", "label"].includes(key)) {
+              form.setFieldValue(key, obj[key]);
             }
-          })
+          });
         }
       }
     }
-  }
+  };
   const submitRule = async () => {
-    const { data, refresh } = props
+    const { data, refresh } = props;
 
-    const formValue = form.getFieldsValue()
-    let res: any
+    const formValue = form.getFieldsValue();
+    let res: any;
     try {
-      console.log(formValue, 'formValue ')
+      console.log(formValue, "formValue ");
       if (data?.id) {
-        res = await window.mercury.api.updateMatchRule(data.id,{
-            ...formValue,
-            category: JSON.stringify(formValue.category),
-        })
-        console.log(res, 'res')
+        res = await window.mercury.api.updateMatchRule(data.id, {
+          ...formValue,
+          category: JSON.stringify(formValue.category),
+        });
+        console.log(res, "res");
       } else {
         res = await window.mercury.api.addMatchRule({
-            ...formValue,
-            category: JSON.stringify(formValue.category),
-        })
-        console.log(res, 'res')
+          ...formValue,
+          category: JSON.stringify(formValue.category),
+        });
+        console.log(res, "res");
       }
       if (res?.code === 200) {
-        message.success('操作成功')
-        setLoadingFalse()
-        refresh()
+        message.success("操作成功");
+        setLoadingFalse();
+        refresh();
       }
-      console.log(res)
+      console.log(res);
     } catch (error) {
-      console.log(error)
-      message.error(error)
+      console.log(error);
+      message.error(error);
     }
-  }
-  console.log(data, 'data')
+  };
+  console.log(data, "data");
 
   return (
     <Form
@@ -98,9 +98,7 @@ const RuleForm = (props: {
             filter: (inputValue: string, path: DefaultOptionType[]) =>
               path.some(
                 (option) =>
-                  (option.label as string)
-                    .toLowerCase()
-                    .indexOf(inputValue.toLowerCase()) > -1
+                  (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1
               ),
           }}
         />
@@ -136,7 +134,7 @@ const RuleForm = (props: {
         </LoadingBtn>
       </Form.Item>
     </Form>
-  )
-}
+  );
+};
 
-export default RuleForm
+export default RuleForm;
