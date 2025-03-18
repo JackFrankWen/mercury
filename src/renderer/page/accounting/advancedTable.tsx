@@ -15,6 +15,7 @@ import AddTransactionDrawer from './AddTransactionDrawer';
 import { formatMoney } from "../../components/utils";
 import { findCategoryById } from "../../const/categroy";    
 import { renderIcon } from "../../components/FontIcon";
+import { getCategoryCol } from "src/renderer/components/commonColums";
 
 interface DataType {
     trans_time_formate: string
@@ -69,20 +70,9 @@ const columns: ColumnsType<I_Transaction> = [
         render: renderTime,
 
     },
-    {
-        title: '分类',
-        dataIndex: 'category',
-        key: 'category',
-        width: 140,
-        render: (val: string) => {
-            const cate = JSON.parse(val)
-            const category = findCategoryById(cate[1])
-            return  <Space>
-                {renderIcon(category.icon, category.color)}
-                {getCategoryString(val)}
-              </Space>
-        }
-    },
+    getCategoryCol({
+        with: 140,
+    }),
      {
         title: '金额',
         dataIndex: 'amount',

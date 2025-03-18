@@ -5,6 +5,7 @@ import { getCategoryString } from '../../const/categroy'
 import useLoadingButton from '../../components/useButton'
 import { abc_type, cost_type, tag_type } from '../../const/web'
 import MatchContentDraw from './matchContentDraw'
+import { getCategoryCol } from 'src/renderer/components/commonColums'
 // Add type declarations at the top
 type TypeMap = { [key: string]: string }
 
@@ -39,16 +40,10 @@ const RuleTable = () => {
     // }
   }
   const columns: ColumnsType<DataType> = [
-    {
-      title: '分类',
-      dataIndex: 'category',
+    getCategoryCol({
       width: 100,
       fixed: 'left',
-      render: (val: string) => {
-
-        return <div>{getCategoryString(val)}</div>
-      },
-    },
+    }), 
     {
       title: '规则',
       dataIndex: 'rule',

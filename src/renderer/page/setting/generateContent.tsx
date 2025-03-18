@@ -5,6 +5,7 @@ import type { GetProp, TableColumnsType, TableProps, TransferProps } from 'antd'
 import dayjs from 'dayjs';
 type TransferItem = GetProp<TransferProps, 'dataSource'>[number];
 type TableRowSelection<T extends object> = TableProps<T>['rowSelection'];
+import { getCategoryCol } from 'src/renderer/components/commonColums';
 
 interface TableTransferProps extends TransferProps<TransferItem> {
   dataSource: any[];
@@ -50,14 +51,8 @@ export default function GenerateContent(): JSX.Element {
   const columns = [
 
 
-    {
-      title: '分类',
-      dataIndex: 'category',
-      defaultCheck: false,
-      render: (val: string) => {
-        return getCategoryString(val)
-      },
-    },
+    getCategoryCol({
+     }), 
     {
       title: '交易对方',
       dataIndex: 'payee',

@@ -31,6 +31,7 @@ import dayjs from 'dayjs'
 import { openNotification, } from 'src/renderer/components/notification'
 import {  ruleByAdvanced } from './ruleUtils'
 import { renderIcon } from 'src/renderer/components/FontIcon'
+import { getCategoryCol } from 'src/renderer/components/commonColums'
 
 
 function checkNeedTransferData(data: any) {
@@ -208,24 +209,11 @@ const BasicTable = (props: {
 
       },
       width: 140,
-      defaultCheck: true,
     },
-    {
-      title: '分类',
-      dataIndex: 'category',
+    getCategoryCol({
       width: 120,
       defaultCheck: false,
-      render: (val: string, obj: any) => {
-        const cate = JSON.parse(obj.category)
-        console.log(cate, 'cate====');
-        
-        const category = findCategoryById(cate[1])
-        return  <Space>
-            {renderIcon(category.icon, category.color)}
-            {getCategoryString(val)}
-          </Space>
-      },
-    },
+    }),
     {
       title: '交易对方',
       dataIndex: 'payee',

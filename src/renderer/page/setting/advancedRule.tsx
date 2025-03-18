@@ -9,6 +9,7 @@ import AdvancedRuleModal from './advancedRuleModal'
 import { RuleItem, RuleItemList, RuleItemListList } from './advancedRuleFormItem'
 import BatchReplaceModal from './batchReplaceModal'
 import { AdvancedRule } from 'src/main/sqlite3/advance-rules'
+import { getCategoryCol } from 'src/renderer/components/commonColums'
 
 // Add type declarations at the top
 type TypeMap = { [key: string]: string }
@@ -74,14 +75,7 @@ const RuleTable = () => {
         return <Typography.Text strong type="success">{val}</Typography.Text>
       },
     },
-    {
-      title: '分类',
-      dataIndex: 'category',
-      width: 100,
-      render: (val: string) => {
-        return <div>{getCategoryString(val)}</div>
-      },
-    },
+    getCategoryCol({width: 100}),   
     {
       title: '优先级',
       dataIndex: 'priority',
