@@ -1,5 +1,5 @@
 // global.d.ts
-export {};
+export { };
 
 import { CategoryReturnType, Params_Transaction } from "./type";
 import { MatchRule } from "../main/sqlite3/match-rules";
@@ -90,7 +90,11 @@ declare global {
           active?: number;
         }) => Promise<AdvancedRule[]>;
         addAdvancedRule: (rule: AdvancedRule) => Promise<{ code: number; id?: number }>;
+        // 批量插入高级规则
+        batchInsertAdvancedRule: (list: AdvancedRule[]) => Promise<any>;
+        // 更新高级规则 
         updateAdvancedRule: (id: number, rule: AdvancedRule) => Promise<{ code: number }>;
+        // 删除高级规则
         deleteAdvancedRule: (id: number) => Promise<{ code: number }>;
         // 删除所有交易数据
         deleteAllTransactions: () => Promise<{ code: number; message: string }>;

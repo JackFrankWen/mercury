@@ -31,6 +31,7 @@ import {
   addAdvancedRule,
   updateAdvancedRule,
   deleteAdvancedRule,
+  batchInsertAdvancedRule,
 } from "./sqlite3/advance-rules";
 
 export function handleProcessApi() {
@@ -248,6 +249,19 @@ export function handleProcessApi() {
     } catch (error) {
       console.error("Error adding advanced rule:", error);
       return { code: 500, error: error.message };
+    }
+  });
+
+  ipcMain.handle("advanced-rules:batchInsert", async (event, rules) => {
+    try {
+      const result = await batchInsertAdvancedRule(rules);
+      return result;
+    } catch (error) {
+      console.error("Error batch inserting advanced rules:", error);
+      return {
+        code: 500,
+        message: error instanceof Error ? error.message : "批量插入高级规则时发生未知错误"
+      };
     }
   });
 

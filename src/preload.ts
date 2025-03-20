@@ -90,6 +90,9 @@ contextBridge.exposeInMainWorld("mercury", {
       ipcRenderer.invoke("advanced-rules:getAll", params),
     // 添加高级规则
     addAdvancedRule: (rule: AdvancedRule) => ipcRenderer.invoke("advanced-rules:add", rule),
+    // 批量插入高级规则
+    batchInsertAdvancedRule: (rules: AdvancedRule[]) =>
+      ipcRenderer.invoke("advanced-rules:batchInsert", rules),
     // 更新高级规则
     updateAdvancedRule: (id: number, rule: AdvancedRule) =>
       ipcRenderer.invoke("advanced-rules:update", id, rule),

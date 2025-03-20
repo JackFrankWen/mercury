@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 type TransferItem = GetProp<TransferProps, "dataSource">[number];
 type TableRowSelection<T extends object> = TableProps<T>["rowSelection"];
 import { getCategoryCol } from "src/renderer/components/commonColums";
+import { RuleItem, RuleItemList, RuleItemListList } from "./advancedRuleFormItem";
 
 interface TableTransferProps extends TransferProps<TransferItem> {
   dataSource: any[];
@@ -25,12 +26,21 @@ export default function GenerateContent(): JSX.Element {
     const res = await window.mercury.api.generateRule({
       trans_time: [currentYear, dayjs().endOf("year").format("YYYY-MM-DD HH:mm:ss")],
     });
-    console.log(res, "res");
+    console.log(autoData, "autoData");
     // 过滤掉autoData中重复的数据 交易对方和描述一致
     const data = res.filter(
       (item) =>
         !autoData.some(
-          (autoItem) => autoItem.payee === item.payee && autoItem.description === item.description
+          (autoItem) => {
+            const rule: RuleItemListList = JSON.parse(autoItem.rule);
+            return rule.some((ruleItem: RuleItemList) => {
+              return ruleItem.every((ruleItem2: RuleItem) => {
+                return (ruleItem2.condition === "description" && ruleItem2.formula === "eq" && ruleItem2.value === item.description) ||
+                  (ruleItem2.condition === "payee" && ruleItem2.formula === "eq" && ruleItem2.value === item.payee)
+                  ;
+              });
+            });
+          }
         )
     );
     if (data.length > 0) {
@@ -42,7 +52,7 @@ export default function GenerateContent(): JSX.Element {
     setLoading(false);
   };
   const refreshAutoData = () => {
-    window.mercury.api.getAllMatchAutoRule().then((res) => {
+    window.mercury.api.getAllAdvancedRules({}).then((res) => {
       console.log(res, "=====res");
       setAutoData(res);
     });
@@ -52,7 +62,9 @@ export default function GenerateContent(): JSX.Element {
   }, []);
 
   const columns = [
-    getCategoryCol({}),
+    getCategoryCol({
+      width: 100,
+    }),
     {
       title: "交易对方",
       dataIndex: "payee",
@@ -93,7 +105,32 @@ export default function GenerateContent(): JSX.Element {
   const onSubmit = () => {
     const toSubmitData = generateData.filter((item) => targetKeys.includes(item.id));
     console.log(toSubmitData, "toSubmitData");
-    window.mercury.api.batchInsertAutoRule(toSubmitData).then((res) => {
+    const data = toSubmitData.map((item) => {
+      const rule: RuleItemListList = [[
+        {
+          condition: 'description',
+          formula: 'eq',
+          value: item.description,
+        },
+        {
+          condition: "payee",
+          formula: "eq",
+          value: item.payee,
+        },
+      ]]
+      return {
+        ...item,
+        active: 1,
+        priority: 100,
+        name: item.description,
+        rule: JSON.stringify(rule),
+        creation_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        modification_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+      };
+    });
+    console.log(data, "data====");
+
+    window.mercury.api.batchInsertAdvancedRule(data).then((res) => {
       console.log(res, "res");
       setTargetKeys([]);
       setGenerateData([]);
@@ -132,9 +169,7 @@ export default function GenerateContent(): JSX.Element {
           />
         </div>
       )}
-      {autoData.length > 0 && (
-        <Table rowKey={(record) => record.id} columns={columnsAuto} dataSource={autoData} />
-      )}
+
     </Spin>
   );
 }

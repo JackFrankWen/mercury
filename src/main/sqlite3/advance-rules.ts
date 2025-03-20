@@ -153,3 +153,64 @@ export async function deleteAdvancedRule(id: number): Promise<{ code: number }> 
     throw error;
   }
 }
+
+// 批量插入高级规则
+export async function batchInsertAdvancedRule(rules: AdvancedRule[]): Promise<{ code: number; message?: string }> {
+  try {
+    if (!rules || rules.length === 0) {
+      return { code: 400, message: '没有可插入的规则' };
+    }
+
+    const db = await getDbInstance();
+
+    return new Promise<{ code: number; message?: string }>((resolve, reject) => {
+      db.serialize(() => {
+        db.run('BEGIN TRANSACTION');
+
+        const stmt = db.prepare(`
+          INSERT INTO advanced_rules (name, rule, category, consumer, tag, priority, active)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
+        `);
+
+        let hasError = false;
+        for (const rule of rules) {
+          stmt.run(
+            [
+              rule.name,
+              rule.rule,
+              rule.category,
+              rule.consumer,
+              rule.tag || null,
+              rule.priority,
+              rule.active !== undefined ? rule.active : 1
+            ],
+            (err) => {
+              if (err) {
+                console.error('Error inserting advanced rule:', err);
+                hasError = true;
+              }
+            }
+          );
+        }
+
+        stmt.finalize();
+
+        if (hasError) {
+          db.run('ROLLBACK', () => {
+            reject({ code: 500, message: '批量插入高级规则失败' });
+          });
+        } else {
+          db.run('COMMIT', () => {
+            resolve({ code: 200, message: `成功插入${rules.length}条高级规则` });
+          });
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Error in batchInsertAdvancedRule:', error);
+    return {
+      code: 500,
+      message: error instanceof Error ? error.message : '批量插入高级规则时发生未知错误'
+    };
+  }
+}

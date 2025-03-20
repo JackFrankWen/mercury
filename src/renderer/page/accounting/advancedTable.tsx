@@ -92,13 +92,14 @@ const columns: ColumnsType<I_Transaction> = [
     dataIndex: "amount",
     render: renderBoldPrice,
     key: "amount",
-    width: 120,
+    width: 100,
     sorter: (a, b) => Number(a.amount) - Number(b.amount),
   },
   {
     title: "交易对方",
     width: 100,
     dataIndex: "payee",
+    ellipsis: true,
     key: "payee",
     render: (payee: string) => (
       <Tooltip placement="topLeft" title={payee}>
