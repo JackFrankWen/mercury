@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, message, Modal, Upload, UploadProps, Spin } from 'antd';
 import Papa from 'papaparse';
-import { formateToTableJd } from '../page/upload/csvUtil';
+import { formateToTableJd, parseExcelFile } from '../page/upload/csvUtil';
 const { Dragger } = Upload;
 
 const UploadModal = (props: {
@@ -35,6 +35,9 @@ const UploadModal = (props: {
     className: 'upload-cus mt8',
     beforeUpload: (file) => {
       console.log(file, '===aaa');
+
+
+      // 处理CSV文件
       Papa.parse(file, {
         header: false,
         // encoding: 'gb18030',
@@ -71,20 +74,27 @@ const UploadModal = (props: {
                 message.error('上传错误文件');
               }
               // pdd
-            } else {
+            } else if (name.includes('alipay1688')) {
               console.log(csvContent, '===csvContent');
-              // message.error('上传错误文件');
-              // setModalLoading(false);
-              // setLoading(false);
+              if (needTransferData.has1688) {
+                data = formateToTableJd(csvContent, 'alipay1688');
+                onUploadSuccess('alipay1688', data);
+              } else {
+                setModalLoading(false);
+                setLoading(false);
+                message.error('上传错误文件');
+              }
             }
 
             setFileList([file]);
           } catch (error) {
             console.log(error, 'error');
+            setModalLoading(false);
+            setLoading(false);
+            message.error('文件解析错误');
           }
         },
       });
-
       // Prevent upload
       return false;
     },
@@ -92,17 +102,22 @@ const UploadModal = (props: {
   const handleOk = () => {
     onOk();
   };
-  const { hasJingdong, hasPdd, jingdongData, pddData } = needTransferData;
+  const { hasJingdong, hasPdd, jingdongData, pddData, has1688, alipay1688 } =
+    needTransferData;
 
   const jingdongDescription =
     jingdongData.length > 0
       ? jingdongData
-          .map((item: any) => `第${item.dataIndex + 1}条数据`)
-          .join(',')
+        .map((item: any) => `第${item.dataIndex + 1}条数据`)
+        .join(',')
       : '';
   const pddDescription =
     pddData.length > 0
       ? pddData.map((item: any) => `第${item.dataIndex + 1}条数据`).join(',')
+      : '';
+  const alipay1688Description =
+    alipay1688.length > 0
+      ? alipay1688.map((item: any) => `第${item.dataIndex + 1}条数据`).join(',')
       : '';
   return (
     <Modal
@@ -125,6 +140,18 @@ const UploadModal = (props: {
               type="warning"
               showIcon
               description={`有问题数据：${jingdongDescription}`}
+            />
+          )}
+          {has1688 && (
+            <Alert
+              style={{
+                maxHeight: 200,
+                overflow: 'auto',
+              }}
+              message="请上传1688 csv文件！"
+              type="warning"
+              showIcon
+              description={`有问题数据：${alipay1688Description}`}
             />
           )}
           {hasPdd && (

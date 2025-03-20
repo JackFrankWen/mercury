@@ -137,13 +137,15 @@ const BasicTable = (props: {
 
   // 写一个方法缓存needTransferData，根据data
   const needTransferData = useMemo(() => {
-    const { hasJingdong, hasPdd, jingdongData, pddData } =
+    const { hasJingdong, hasPdd, jingdongData, pddData, has1688, alipay1688 } =
       checkNeedTransferData(data);
     return {
       hasJingdong,
       hasPdd,
       jingdongData,
       pddData,
+      has1688,
+      alipay1688,
     };
   }, [data]);
 
@@ -519,6 +521,12 @@ const BasicTable = (props: {
                 return obj;
               }
               if (type === 'pdd' && !obj.description?.includes('商户单号')) {
+                return obj;
+              }
+              if (
+                type === 'alipay1688' &&
+                !obj.description?.includes('先采后付还款')
+              ) {
                 return obj;
               }
 

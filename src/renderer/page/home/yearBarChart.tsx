@@ -3,7 +3,7 @@ import BarChart from 'src/renderer/components/barChart';
 import { Card, message, Space } from 'antd';
 import { useSelect } from '../../components/useSelect';
 import { cpt_const } from 'src/renderer/const/web';
-import LunarCalendar from './luarCalendar';
+import LunarCalendar from './lunarCalendar';
 import { FormData } from './useReviewForm';
 
 function YearBarChart(props: { formValue: FormData }) {
