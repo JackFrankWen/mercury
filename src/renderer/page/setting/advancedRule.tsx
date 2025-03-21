@@ -9,6 +9,7 @@ import {
   Typography,
   Input,
   Badge,
+  Tooltip,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
@@ -30,6 +31,14 @@ import {
 import BatchReplaceModal from './batchReplaceModal';
 import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
 import { getCategoryCol } from 'src/renderer/components/commonColums';
+import {
+  EditOutlined,
+  EyeOutlined,
+  DeleteOutlined,
+  SwapOutlined,
+  PoweroffOutlined,
+  CheckOutlined
+} from '@ant-design/icons';
 
 // Add type declarations at the top
 type TypeMap = { [key: string]: string };
@@ -206,68 +215,77 @@ const RuleTable = () => {
     {
       title: 'Action',
       key: 'action',
-      width: 200,
+      width: 180,
       render: (_, record) => (
-        <Space.Compact size="middle">
-          <Button
-            onClick={() => {
-              setVisiable(true);
-              setIsUpdate(true);
-              setRecord(record);
-              console.log(record);
-            }}
-          >
-            查看
-          </Button>
-          <Button
-            onClick={() => {
-              window.mercury.api
-                .updateAdvancedRule(record.id, {
-                  ...record,
-                  active: record.active === 1 ? 0 : 1,
-                })
-                .then((res: any) => {
-                  if (res.code === 200) {
-                    message.success('状态更新成功');
-                    getRuleData(
-                      searchValue ? { nameOrRule: searchValue } : undefined,
-                    );
-                  }
+        <Space size="middle">
+          <Tooltip title="查看">
+            <Button
+              type="text"
+              icon={<EyeOutlined />}
+              onClick={() => {
+                setVisiable(true);
+                setIsUpdate(true);
+                setRecord(record);
+                console.log(record);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title={record.active === 1 ? '禁用' : '启用'}>
+            <Button
+              type="text"
+              icon={record.active === 1 ? <PoweroffOutlined /> : <CheckOutlined style={{ color: '#52c41a' }} />}
+              onClick={() => {
+                window.mercury.api
+                  .updateAdvancedRule(record.id, {
+                    ...record,
+                    active: record.active === 1 ? 0 : 1,
+                  })
+                  .then((res: any) => {
+                    if (res.code === 200) {
+                      message.success('状态更新成功');
+                      getRuleData(
+                        searchValue ? { nameOrRule: searchValue } : undefined,
+                      );
+                    }
+                  });
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="批量替换">
+            <Button
+              type="text"
+              icon={<SwapOutlined />}
+              onClick={() => {
+                setSelectedRule(record);
+                setBatchReplaceVisible(true);
+              }}
+            />
+          </Tooltip>
+          <Tooltip title="删除">
+            <Button
+              type="text"
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => {
+                Modal.confirm({
+                  title: '确定要删除吗？',
+                  onOk: () => {
+                    window.mercury.api
+                      .deleteAdvancedRule(record.id)
+                      .then((res: any) => {
+                        if (res.code === 200) {
+                          message.success('删除成功');
+                          getRuleData(
+                            searchValue ? { nameOrRule: searchValue } : undefined,
+                          );
+                        }
+                      });
+                  },
                 });
-            }}
-          >
-            {record.active === 1 ? '禁用' : '启用'}
-          </Button>
-          <Button
-            onClick={() => {
-              setSelectedRule(record);
-              setBatchReplaceVisible(true);
-            }}
-          >
-            批量替换
-          </Button>
-          <Button
-            onClick={() => {
-              Modal.confirm({
-                title: '确定要删除吗？',
-                onOk: () => {
-                  window.mercury.api
-                    .deleteAdvancedRule(record.id)
-                    .then((res: any) => {
-                      if (res.code === 200) {
-                        message.success('删除成功');
-                        getRuleData(
-                          searchValue ? { nameOrRule: searchValue } : undefined,
-                        );
-                      }
-                    });
-                },
-              });
-            }}
-          >
-            删除
-          </Button>
-        </Space.Compact>
+              }}
+            />
+          </Tooltip>
+        </Space>
       ),
     },
   ];
