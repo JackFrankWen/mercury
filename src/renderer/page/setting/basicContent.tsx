@@ -1,6 +1,7 @@
 import { Form, Radio, Button, Breadcrumb, Space, message, Modal, DatePicker, Select } from "antd";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import emitter from "../../events";
 import RangePickerWrap from "../../components/rangePickerWrap";
 
 function BasicContent() {
@@ -112,6 +113,7 @@ function BasicContent() {
     const newEnv = e.target.value;
     await window.mercury.store.setEnvironment(newEnv);
     setEnvironment(newEnv);
+    emitter.emit("environmentChange", newEnv);
     message.success(`已切换到${newEnv === 'production' ? '生产' : '测试'}环境`);
   };
   return (

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { Layout, ConfigProvider, Menu, Flex, Tooltip } from "antd";
 import { AliveScope, KeepAlive } from "react-activation";
 import { BrowserRouter, Routes, Route, useNavigate, useLocation, Navigate } from "react-router-dom";
 import zhCN from "antd/locale/zh_CN";
+import emitter from "./events";
 import Home from "./page/home";
 import Accounting from "./page/accounting";
 import Setting from "./page/setting";
@@ -30,6 +31,34 @@ const { Header, Content, Footer, Sider } = Layout;
 
 // 主应用组件包装
 function App(props: any): JSX.Element {
+  const [environment, setEnvironment] = useState<'production' | 'test'>('production');
+
+  // 获取当前环境配置
+  useEffect(() => {
+    const getEnvironment = async () => {
+      try {
+        const env = await window.mercury.store.getEnvironment();
+        setEnvironment(env as 'production' | 'test');
+      } catch (error) {
+        console.error('Failed to get environment:', error);
+      }
+    };
+    
+    getEnvironment();
+    
+    // Subscribe to environment change events
+    const handleEnvChange = (env: 'production' | 'test') => {
+      setEnvironment(env);
+    };
+    
+    emitter.on('environmentChange', handleEnvChange);
+    
+    // Clean up subscription when component unmounts
+    return () => {
+      emitter.off('environmentChange', handleEnvChange);
+    };
+  }, []);
+
   return (
     <BrowserRouter>
       <ConfigProvider
@@ -59,7 +88,7 @@ function App(props: any): JSX.Element {
         }}
       >
         <AliveScope>
-          <MainLayout />
+          <MainLayout environment={environment} />
         </AliveScope>
       </ConfigProvider>
     </BrowserRouter>
@@ -67,7 +96,8 @@ function App(props: any): JSX.Element {
 }
 
 // 主布局组件
-function MainLayout(): JSX.Element {
+function MainLayout({ environment }: { environment: 'production' | 'test' }): JSX.Element {
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const pathToKey: Record<string, string> = {
@@ -86,26 +116,44 @@ function MainLayout(): JSX.Element {
     { key: "setting", icon: <SettingOutlined />, label: "设置" },
   ];
 
+  // 根据环境设置 Sider 样式
+  const siderStyle = {
+    // 生产环境：白色，测试环境：蓝色
+    backgroundColor: environment === 'production' ? '#ffffff' : '#1890ff',
+    // 根据背景色调整文字颜色
+    color: environment === 'production' ? 'rgba(0, 0, 0, 0.85)' : '#ffffff',
+  };
+  
+  // 如果使用 djeme 属性，也可以设置
+  const siderTheme = environment === 'production' ? 'light' : 'dark';
+  
+  // 环境标识样式
+  const environmentBadgeStyle = {
+    backgroundColor: environment === 'production' ? '#52c41a' : '#faad14',
+  };
+
   return (
     <Layout className="mercury-layout">
-      <Sider theme="light" collapsed={true} className="mercury-sider" collapsedWidth={70}>
+      <Sider theme="light" 
+      style={siderStyle}
+      collapsed={true} className="mercury-sider" collapsedWidth={70}>
         <Flex align="center" vertical>
           <div className="mercury-logo">
             <img src={icon} alt="logo" />
           </div>
-
-          <Menu
+        
+        <Menu
             mode="vertical"
-            onClick={({ key }) => {
-              const routes: Record<string, string> = {
-                home: "/",
-                accounting: "/accounting",
-                upload: "/upload",
-                setting: "/setting",
-              };
-              navigate(routes[key]);
-            }}
-            selectedKeys={[activeKey]}
+          onClick={({ key }) => {
+            const routes: Record<string, string> = {
+              home: "/",
+              accounting: "/accounting",
+              upload: "/upload",
+              setting: "/setting",
+            };
+            navigate(routes[key]);
+          }}
+        selectedKeys={[activeKey]}
             theme="light"
             items={items}
           />
