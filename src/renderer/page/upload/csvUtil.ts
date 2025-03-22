@@ -1,7 +1,6 @@
 import { I_Transaction } from 'src/main/sqlite3/transactions';
 import { getMatchCategory } from 'src/renderer/const/alipayMatch';
 import { category_type } from 'src/renderer/const/categroy';
-import * as XLSX from 'xlsx/xlsx.mjs';
 
 export interface tableHeaderI {
   name: string;
