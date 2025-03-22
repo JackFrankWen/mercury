@@ -1,7 +1,14 @@
-import { Form, Radio, Button, Breadcrumb, Space, message, Modal } from "antd";
-import React from "react";
+import { Form, Radio, Button, Breadcrumb, Space, message, Modal, DatePicker, Select } from "antd";
+import React, { useState } from "react";
+import dayjs from "dayjs";
+import RangePickerWrap from "../../components/rangePickerWrap";
 
 function BasicContent() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [timeRange, setTimeRange] = useState([null, null]);
+  const [timeType, setTimeType] = useState("trans_time");
+  const [form] = Form.useForm();
+
   const onExportCsv = async () => {
     try {
       const result = await window.mercury.api.exportToCsv();
@@ -37,6 +44,57 @@ function BasicContent() {
       },
     });
   };
+  const onDeleteAllTransactionsMatchRule = async () => {
+    setIsModalOpen(true);
+  };
+  
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setTimeRange([null, null]);
+    form.resetFields();
+  };
+  
+  const handleOk = async () => {
+    try {
+      const values = await form.validateFields();
+      
+      if (!timeRange[0] || !timeRange[1]) {
+        message.error("请选择完整的时间范围");
+        return;
+      }
+      
+      // 转换日期格式
+      const startDate = timeRange[0].format("YYYY-MM-DD");
+      const endDate = timeRange[1].format("YYYY-MM-DD");
+      
+      Modal.confirm({
+        title: "确认删除",
+        content: `确认删除${timeType === "trans_time" ? "交易" : "创建"}时间在 ${startDate} 至 ${endDate} 范围内的交易记录吗？`,
+        onOk: async () => {
+          try {
+            // 调用 API 删除指定时间范围内的交易
+            const params = {
+              [timeType]: [startDate, endDate]
+            }
+            const result = await window.mercury.api.deleteAllTransactions(params);
+            
+            if (result.code === 200) {
+              message.success(`成功删除 ${result.message || 0} 条交易记录`);
+              handleCancel(); // 关闭弹窗
+            } else {
+              message.error(result.message || "删除失败");
+            }
+          } catch (error) {
+            console.error("Error deleting transactions by time range:", error);
+            message.error("删除交易数据时发生错误");
+          }
+        }
+      });
+    } catch (error) {
+      console.error("Form validation error:", error);
+    }
+  };
+
   return (
     <Form style={{ height: "100%" }} layout="vertical">
       <Form.Item label="运行环境" name="requiredMarkValue">
@@ -47,6 +105,7 @@ function BasicContent() {
       </Form.Item>
       <Form.Item label="当前版本" tooltip="This is a required field">
         <Button onClick={onDeleteAllTransactions}>删除所有交易</Button>
+        <Button onClick={onDeleteAllTransactionsMatchRule} style={{ marginLeft: 8 }}>删除时间范围内的交易</Button>
       </Form.Item>
       <Form.Item label="导出" tooltip="This is a required field">
         <Space>
@@ -54,6 +113,45 @@ function BasicContent() {
           <Button onClick={onExportJson}>导出json</Button>
         </Space>
       </Form.Item>
+      
+      {/* 删除时间范围内交易的弹窗 */}
+      <Modal
+        title="删除时间范围内的交易"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        okText="删除"
+        cancelText="取消"
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item 
+            label="时间类型" 
+            name="timeType" 
+            initialValue="trans_time"
+            rules={[{ required: true, message: "请选择时间类型" }]}
+          >
+            <Select 
+              onChange={(value) => setTimeType(value)}
+              options={[
+                { value: "trans_time", label: "交易时间" },
+                { value: "creation_time", label: "创建时间" }
+              ]}
+            />
+          </Form.Item>
+          
+          <Form.Item 
+            label="时间范围" 
+            name="timeRange"
+            rules={[{ required: true, message: "请选择时间范围" }]}
+          >
+            <RangePickerWrap 
+              value={timeRange}
+              onChange={(dates) => setTimeRange(dates)}
+              bordered
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Form>
   );
 }
