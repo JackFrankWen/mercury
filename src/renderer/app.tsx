@@ -144,6 +144,7 @@ function MainLayout({ environment }: { environment: 'production' | 'test' }): JS
         
         <Menu
             mode="vertical"
+            style={siderStyle}
           onClick={({ key }) => {
             const routes: Record<string, string> = {
               home: "/",
