@@ -1,5 +1,13 @@
 {
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnPaste": true
+  "editor.formatOnPaste": true,
+  "vim.handleKeys": {
+
+    "<C-d>": true,
+    "<C-v>": false,
+    "<C-p>": false,
+    "<C-s>": false,
+    "<C-z>": false
+  }
 }

@@ -1,5 +1,6 @@
 import sqlite3 from "sqlite3";
 import path from "path";
+import store from "../store";
 
 /**
  * SQLite数据库连接工具类
@@ -22,7 +23,13 @@ import path from "path";
  * ```
  */
 export async function getConnection(): Promise<sqlite3.Database> {
-  const dbPath = path.join(__dirname, "../../data/database.db");
+  const environment = await store.get("environment");
+  let dbPath = "";
+  if (environment === "production") {
+    dbPath = path.join(__dirname, "../../data/database.db");
+  } else {
+    dbPath = path.join(__dirname, "../../data/database-test.db");
+  }
 
   // 使用同步方式创建数据库连接
   try {
@@ -53,9 +60,9 @@ let dbInstance: sqlite3.Database | null = null;
  * 如果连接不存在则创建新连接,否则返回已存在的连接
  */
 export async function getDbInstance(): Promise<sqlite3.Database> {
-  if (dbInstance) {
-    return dbInstance;
-  }
+  // if (dbInstance) {
+  //   return dbInstance;
+  // }
 
   dbInstance = await getConnection();
   return dbInstance;

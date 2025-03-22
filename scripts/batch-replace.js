@@ -5,7 +5,6 @@ const path = require("path");
 const fs = require("fs");
 const dayjs = require("dayjs");
 const { getCsvData } = require("./utils/csv-helper");
-const { log } = require("console");
 
 const db = new sqlite3.Database(path.join(__dirname, "../data/database.db"));
 

@@ -2,8 +2,6 @@
 const sqlite3 = require("sqlite3");
 const path = require("path");
 const fs = require("fs");
-const { create } = require("domain");
-/* eslint-enable */
 
 // 获取数据库路径
 function getDbPath() {
@@ -12,7 +10,21 @@ function getDbPath() {
   if (!fs.existsSync(dbDir)) {
     fs.mkdirSync(dbDir, { recursive: true });
   }
-  return path.join(dbDir, "database.db");
+  
+  // Check environment from either command line or stored preference
+  const isDev = process.argv.includes('--dev');
+  
+  // You can add a way to access the stored environment here
+  // For example, if you could require and use electron-store:
+  // const Store = require('electron-store');
+  // const store = new Store();
+  // const storedEnv = store.get('environment', 'production');
+  // const isTestEnv = isDev || storedEnv === 'test';
+  
+  const dbName = isDev ? "database-test.db" : "database.db";
+  console.log(`Using database: ${dbName} (Dev mode: ${isDev})`);
+  
+  return path.join(dbDir, dbName);
 }
 
 // 连接到SQLite数据库

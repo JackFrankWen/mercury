@@ -21,6 +21,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
     "fix": "npm run lint:fix && npm run format",
     "init": "node scripts/create-table.js",
+    "init:dev": "node scripts/create-table.js --dev",
     "import-rules": "node scripts/import-rules.js",
     "import-a": "node scripts/import-advanced-rules.js",
     "import-trans": "node scripts/import-trans.js",
@@ -28,7 +29,8 @@
     "import-json": "node scripts/import-json.js",
     "export": "node scripts/export-trans.js",
     "replace": "node scripts/batch-replace.js",
-    "pipeline": "node scripts/pipeline.js"
+    "pipeline": "node scripts/pipeline.js",
+    "pipeline:dev": "node scripts/pipeline.js --dev"
   },
   "dependencies": {
     "@antv/data-set": "^0.11.8",
