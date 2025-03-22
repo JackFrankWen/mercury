@@ -8,6 +8,10 @@ import { AdvancedRule } from "../main/sqlite3/advance-rules";
 declare global {
   interface Window {
     mercury: {
+      store: {
+        getEnvironment: () => Promise<string>;
+        setEnvironment: (environment: string) => Promise<void>;
+      };
       api: {
         // 批量插入自动规则
         batchInsertAutoRule: (list: MatchRule[]) => Promise<any>;

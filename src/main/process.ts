@@ -1,4 +1,5 @@
 import { ipcMain } from "electron";
+import store from "./store";
 import {
   getAllMatchRules,
   addMatchRule,
@@ -286,9 +287,9 @@ export function handleProcessApi() {
   });
 
   // 删除所有交易数据处理程序
-  ipcMain.handle("transactions:deleteAll", async () => {
+  ipcMain.handle("transactions:deleteAll", async (event, params) => {
     try {
-      const result = await deleteAllTransactions();
+      const result = await deleteAllTransactions(params);
       return result;
     } catch (error) {
       console.error("Error deleting all transactions:", error);
@@ -299,3 +300,14 @@ export function handleProcessApi() {
     }
   });
 }
+
+
+// 添加 IPC 处理器
+ipcMain.handle('get-environment', () => {
+  return store.get('environment');
+});
+
+ipcMain.handle('set-environment', (_, environment: 'production' | 'test') => {
+  store.set('environment', environment);
+  return { success: true };
+});

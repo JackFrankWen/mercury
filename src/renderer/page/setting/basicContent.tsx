@@ -1,5 +1,5 @@
 import { Form, Radio, Button, Breadcrumb, Space, message, Modal, DatePicker, Select } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import RangePickerWrap from "../../components/rangePickerWrap";
 
@@ -8,6 +8,18 @@ function BasicContent() {
   const [timeRange, setTimeRange] = useState([null, null]);
   const [timeType, setTimeType] = useState("trans_time");
   const [form] = Form.useForm();
+  const [environment, setEnvironment] = useState<string>();
+  useEffect(() => {
+    const loadEnvironment = async () => {
+      const env = await window.mercury.store.getEnvironment();
+      console.log(env, "env");
+      setEnvironment(env);
+      form.setFieldsValue({
+        env: env
+      });
+    };
+    loadEnvironment();
+  }, []);
 
   const onExportCsv = async () => {
     try {
@@ -93,14 +105,26 @@ function BasicContent() {
     } catch (error) {
       console.error("Form validation error:", error);
     }
+  
   };
 
+  const handleEnvironmentChange = async (e: any) => {
+    const newEnv = e.target.value;
+    await window.mercury.store.setEnvironment(newEnv);
+    setEnvironment(newEnv);
+    message.success(`已切换到${newEnv === 'production' ? '生产' : '测试'}环境`);
+  };
   return (
-    <Form style={{ height: "100%" }} layout="vertical">
-      <Form.Item label="运行环境" name="requiredMarkValue">
-        <Radio.Group>
-          <Radio value>生产环境</Radio>
-          <Radio value="optional">测试环境</Radio>
+    <Form style={{ height: "100%" }}
+    form={form}
+    initialValues={{
+      env: environment
+    }}
+     layout="vertical">
+      <Form.Item label="运行环境" name="env" >
+        <Radio.Group value={environment} onChange={handleEnvironmentChange}>
+          <Radio value="production">生产环境</Radio>
+          <Radio value="test">测试环境</Radio>
         </Radio.Group>
       </Form.Item>
       <Form.Item label="当前版本" tooltip="This is a required field">

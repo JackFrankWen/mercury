@@ -7,6 +7,12 @@ import { MatchRule } from "./main/sqlite3/match-rules";
 import { AdvancedRule } from "./main/sqlite3/advance-rules";
 
 contextBridge.exposeInMainWorld("mercury", {
+  // 获取环境
+  store: {
+    getEnvironment: () => ipcRenderer.invoke("get-environment"),
+    setEnvironment: (environment: "production" | "test") =>
+      ipcRenderer.invoke("set-environment", environment),
+  },
   api: {
     // 获取所有匹配规则
     getAllMatchRule: () => ipcRenderer.invoke("match-rules:getAll"),
@@ -99,11 +105,9 @@ contextBridge.exposeInMainWorld("mercury", {
     // 删除高级规则
     deleteAdvancedRule: (id: number) => ipcRenderer.invoke("advanced-rules:delete", id),
     // 删除所有交易数据
-    deleteAllTransactions: () => ipcRenderer.invoke("transactions:deleteAll"),
+    deleteAllTransactions: (params: Params_Transaction) => ipcRenderer.invoke("transactions:deleteAll", params),
   },
 
-  crawler: (param: { web: "pinduoduo"; action: "open" | "getList" }) =>
-    ipcRenderer.invoke("crawler", param),
-  getWebpageContent: (id: string) => ipcRenderer.invoke("get-webpage-content", id),
+ 
   // we can also expose variables, not just functions
 });

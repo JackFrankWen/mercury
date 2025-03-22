@@ -10,7 +10,7 @@ function Setting(): JSX.Element {
       <Card size="small" className="mb16">
         <Tabs
           size="small"
-          defaultActiveKey="4"
+          defaultActiveKey="1"
           tabPosition="left"
           className="setting-tabs"
           style={{ height: '100%' }}
@@ -19,9 +19,9 @@ function Setting(): JSX.Element {
             <BasicContent />
           </Tabs.TabPane>
 
-          <Tabs.TabPane tab="生成规则" key="3" style={{ height: '100%' }}>
+          {/* <Tabs.TabPane tab="生成规则" key="3" style={{ height: '100%' }}>
             <GenerateContent />
-          </Tabs.TabPane>
+          </Tabs.TabPane> */}
           <Tabs.TabPane tab="高级规则" key="4" style={{ height: '100%' }}>
             <AdvancedRule />
           </Tabs.TabPane>
