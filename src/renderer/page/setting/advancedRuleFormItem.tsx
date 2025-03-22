@@ -82,7 +82,7 @@ function AdvancedRuleItem(props: {
     {
       title: "操作",
       dataIndex: "action",
-      render: (text: string) => {
+      render: (text: string, record: any, index: number) => {
         return (
           <Space>
             <PlusCircleFilled
@@ -92,7 +92,7 @@ function AdvancedRuleItem(props: {
             />
             <MinusCircleFilled
               onClick={() => {
-                onChange(data.filter((_, i) => i !== rowKey));
+                onChange(data.filter((_, i) => i !== index));
               }}
             />
           </Space>
