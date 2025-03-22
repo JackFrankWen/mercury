@@ -720,7 +720,13 @@ export const getCategoryString = (str: string | undefined, type: number = 1): st
       return "";
     }
     const obj = getCategoryObj();
-    const arr = JSON.parse(str);
+    
+    let arr 
+    if (typeof str === 'string') {
+      arr = JSON.parse(str);
+    } else {
+      arr = str;
+    }
     if (type === 1) {
       return `${obj[arr[1]]}`;
     }

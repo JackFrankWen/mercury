@@ -14,7 +14,7 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
 import { getCategoryString } from '../../const/categroy';
-import { getAccountType } from '../../const/web';
+import { getAccountType, getConsumerType } from '../../const/web';
 import useLoadingButton from '../../components/useButton';
 import {
   getPriorityType,
@@ -39,6 +39,7 @@ import {
   PoweroffOutlined,
   CheckOutlined
 } from '@ant-design/icons';
+import { log } from 'node:console';
 
 // Add type declarations at the top
 type TypeMap = { [key: string]: string };
@@ -46,6 +47,12 @@ type TypeMap = { [key: string]: string };
 const renderValue = (value: RuleItem) => {
   if (value.condition === 'account_type') {
     return getAccountType(value.value);
+  } else if (value.condition === 'category') {
+    console.log(value.value, "value.value");
+    
+    return getCategoryString(value.value);
+  } else if (value.condition === 'consumer') {
+    return getConsumerType(value.value);
   }
   return value.value;
 };

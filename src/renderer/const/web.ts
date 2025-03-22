@@ -110,7 +110,8 @@ export const getFormulaType = (type: number | string): string => {
 };
 export const condition_type = {
   account_type: "账户",
-  // consumer: '消费者',
+  consumer: '消费者',
+  category: '分类',
   // payment_type: '支付方式',
   // abc_type: 'ABC分类',
   // tag_type: '标签类型',

@@ -1,4 +1,5 @@
-import { Col, Row, Space, Table, Button, Input, InputNumber } from "antd";
+import { Col, Row, Space, Table, Button, Input, InputNumber, Cascader } from "antd";
+import { category_type } from "src/renderer/const/categroy";
 import React from "react";
 import {
   PlusOutlined,
@@ -8,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import SelectWrap from "../../components/selectWrap";
 import { cpt_const } from "../../const/web";
+import { DefaultOptionType } from "antd/es/cascader";
 const { TextArea } = Input;
 
 export type RuleItem = {
@@ -138,6 +140,10 @@ function AdvancedRuleItem(props: {
           options = options.filter((item) => ["gte", "lt", "eq"].includes(item.value));
         } else if (["account_type"].includes(record.condition)) {
           options = options.filter((item) => ["eq"].includes(item.value));
+        } else if (["consumer"].includes(record.condition)) {
+          options = options.filter((item) => ["eq", "ne"].includes(item.value));
+        } else if (["category"].includes(record.condition)) {
+          options = options.filter((item) => ["eq",'ne'].includes(item.value));
         }
         console.log(options, "options");
 
@@ -197,6 +203,51 @@ function AdvancedRuleItem(props: {
                   data.map((item, i) => {
                     if (i === index) {
                       return { ...item, value: value };
+                    }
+                    return item;
+                  })
+                );
+              }}
+            />
+          );
+        } else if (record.condition === "consumer") {
+          return (
+            <SelectWrap
+              placeholder="值"
+              options={cpt_const.consumer_type}
+              onChange={(value) => {
+                onChange(
+                  data.map((item, i) => {
+                    if (i === index) {
+                      return { ...item, value: value };
+                    }
+                    return item;
+                  })
+                );
+              }}
+            />
+          );
+        } else if (record.condition === "category") {
+          return (
+            <Cascader
+              allowClear
+              showSearch={{
+                filter: (inputValue: string, path: DefaultOptionType[]) =>
+                  path.some(
+                    (option) =>
+                      (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+                  ),
+              }}
+              placeholder="值"
+              value={ typeof record.value === 'string' ? JSON.parse(record.value) : record.value}
+              options={category_type}
+              onChange={(value) => {
+                onChange(
+                  data.map((item, i) => {
+                    console.log(value, "value");
+                    
+                    if (i === index) {
+                      return { ...item, value: JSON.stringify(value) };
                     }
                     return item;
                   })

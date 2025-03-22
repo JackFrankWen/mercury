@@ -85,6 +85,9 @@ export const ruleByAi = async (arr: any, api: any) => {
   arr 交易列表
 */
 function matchRuleItem(transaction: I_Transaction, ruleItem: RuleItem): boolean {
+  // console.log(ruleItem, "ruleItem");
+  let transactionCategory = "";
+  let ruleItemValue = "";
   if (ruleItem.condition === "description" || ruleItem.condition === "payee") {
     if (ruleItem.formula === "like") {
       const reg = new RegExp(ruleItem.value);
@@ -93,6 +96,9 @@ function matchRuleItem(transaction: I_Transaction, ruleItem: RuleItem): boolean 
       return transaction[ruleItem.condition] === ruleItem.value;
     } else if (ruleItem.formula === "notlike") {
       const reg = new RegExp(ruleItem.value);
+      console.log(transaction[ruleItem.condition], "transaction[ruleItem.condition] is not like");
+        console.log(reg.test(transaction[ruleItem.condition]), "reg.test(transaction[ruleItem.condition])");
+        
       return !reg.test(transaction[ruleItem.condition]);
     }
   } else if (ruleItem.condition === "amount") {
@@ -109,6 +115,25 @@ function matchRuleItem(transaction: I_Transaction, ruleItem: RuleItem): boolean 
     }
   } else if (ruleItem.condition === "account_type") {
     return transaction.account_type === ruleItem.value;
+  } else if (ruleItem.condition === "consumer") {
+    switch (ruleItem.formula) {
+      case "eq":
+        return transaction.consumer === ruleItem.value;
+      case "ne":
+        return transaction.consumer !== ruleItem.value;
+    }
+  } else if (ruleItem.condition === "category") {
+    switch (ruleItem.formula) {
+      case "eq":
+         transactionCategory = typeof transaction.category === "string" ? transaction.category : JSON.stringify(transaction.category);
+         ruleItemValue = typeof ruleItem.value === "string" ? ruleItem.value : JSON.stringify(ruleItem.value);
+        return transactionCategory === ruleItemValue;
+      case "ne":
+        transactionCategory = typeof transaction.category === "string" ? transaction.category : JSON.stringify(transaction.category);
+        ruleItemValue = typeof ruleItem.value === "string" ? ruleItem.value : JSON.stringify(ruleItem.value);
+        
+        return transactionCategory !== ruleItemValue;
+    }
   }
   return false;
 }
@@ -117,10 +142,12 @@ export function findMatchList(transactions: I_Transaction[], rules: AdvancedRule
   const matchList: I_Transaction[] = [];
   transactions.forEach((transaction, index) => {
     const ruleGroups: RuleItemListList = JSON.parse(rules.rule);
-    const isMatch = ruleGroups.some((ruleGroup) =>
-      // All conditions within a group must match (AND condition)
-      ruleGroup.every((ruleItem) => matchRuleItem(transaction, ruleItem))
-    );
+    const isMatch = ruleGroups.some((ruleGroup) =>{
+      // All conditions within a group must match (AND condition)o
+    console.log(ruleGroup, "ruleGroup");
+    
+      return ruleGroup.every((ruleItem) => matchRuleItem(transaction, ruleItem))
+    });
     if (isMatch && rules.category !== transaction.category) {
       matchList.push(transaction);
     }

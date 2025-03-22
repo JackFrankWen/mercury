@@ -326,7 +326,7 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
   return (
     <>
       {contextHolder}
-      <Modal title="批量替换" open={visible} width={800} onCancel={onClose} footer={null}>
+      <Modal title="批量替换" open={visible} width={1000} onCancel={onClose} footer={null}>
         <Spin spinning={loading}>
           <Steps current={current} style={{ marginBottom: 20 }}>
             {steps.map((item) => (
