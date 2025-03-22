@@ -97,7 +97,7 @@ declare global {
         // 删除高级规则
         deleteAdvancedRule: (id: number) => Promise<{ code: number }>;
         // 删除所有交易数据
-        deleteAllTransactions: () => Promise<{ code: number; message: string }>;
+        deleteAllTransactions: (params: Params_Transaction) => Promise<{ code: number; message: string }>;
       };
     };
   }

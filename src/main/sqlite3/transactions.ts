@@ -373,12 +373,14 @@ export async function getAccountPaymentTotal(
 }
 
 // 删除所有交易数据
-export async function deleteAllTransactions(): Promise<{ code: number; message: string }> {
+export async function deleteAllTransactions(params: Params_Transaction): Promise<{ code: number; message: string }> {
   try {
     const db = await getDbInstance();
 
+    const { whereClause } = generateWhereClause(params);
+
     await new Promise<void>((resolve, reject) => {
-      db.run("DELETE FROM transactions", (err) => {
+      db.run(`DELETE FROM transactions ${whereClause}`, (err) => {
         if (err) {
           console.error("Error deleting all transactions:", err);
           reject(err);
