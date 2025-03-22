@@ -85,16 +85,19 @@ function AdvancedRuleItem(props: {
       render: (text: string, record: any, index: number) => {
         return (
           <Space>
+            
             <PlusCircleFilled
               onClick={() => {
                 onChange([...data, { condition: "", formula: "", value: "" }]);
               }}
             />
+            {data.length > 1 && (
             <MinusCircleFilled
               onClick={() => {
                 onChange(data.filter((_, i) => i !== index));
-              }}
-            />
+                }}
+              />
+            )}
           </Space>
         );
       },
