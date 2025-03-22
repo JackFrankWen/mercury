@@ -210,7 +210,7 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
               };
             }}
             virtual
-            scroll={{ y: 200, x: 900 }}
+            scroll={{ y: 300, x: 900 }}
             dataSource={previewData}
             rowKey="id"
             size="small"

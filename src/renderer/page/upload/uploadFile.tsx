@@ -51,7 +51,7 @@ function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
           <p className="ant-upload-drag-icon">
             <CloudUploadOutlined />
           </p>
-          <p className="ant-upload-text">点击或拖拽上传csv文件</p>
+          <p className="ant-upload-text">上传账单</p>
           <p className="ant-upload-hint">目前支持微信、支付宝、两种模式csv文件</p>
         </div>
       </Dragger>

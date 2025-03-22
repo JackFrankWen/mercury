@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Alert, message, Modal, Upload, UploadProps, Spin } from 'antd';
 import Papa from 'papaparse';
 import { formateToTableJd, parseExcelFile } from '../page/upload/csvUtil';
+import { CloudUploadOutlined } from '@ant-design/icons';
 const { Dragger } = Upload;
 
 const UploadModal = (props: {
@@ -108,25 +109,25 @@ const UploadModal = (props: {
   const jingdongDescription =
     jingdongData.length > 0
       ? jingdongData
-        .map((item: any) => `第${item.dataIndex + 1}条数据`)
-        .join(',')
+        .map((item: any) => `第${item.dataIndex + 1}条`)
+        .join('、')
       : '';
   const pddDescription =
     pddData.length > 0
-      ? pddData.map((item: any) => `第${item.dataIndex + 1}条数据`).join(',')
+      ? pddData.map((item: any) => `第${item.dataIndex + 1}条`).join('、')
       : '';
   const alipay1688Description =
     alipay1688.length > 0
-      ? alipay1688.map((item: any) => `第${item.dataIndex + 1}条数据`).join(',')
+      ? alipay1688.map((item: any) => `第${item.dataIndex + 1}条`).join('、')
       : '';
   return (
     <Modal
       open={visible}
-      title="上传文件"
+      title="替换订单描述"
       width={500}
       onCancel={onCancel}
       onOk={handleOk}
-      okText="直接跳过"
+      okText="跳过替换"
     >
       <Spin spinning={modalLoading}>
         <div className="mb8">
@@ -139,37 +140,41 @@ const UploadModal = (props: {
               message="请上传京东csv文件！"
               type="warning"
               showIcon
-              description={`有问题数据：${jingdongDescription}`}
+              description={`未显示交易详情：${jingdongDescription}`}
             />
           )}
           {has1688 && (
             <Alert
               style={{
                 maxHeight: 200,
+                marginTop: 10,
                 overflow: 'auto',
               }}
               message="请上传1688 csv文件！"
               type="warning"
               showIcon
-              description={`有问题数据：${alipay1688Description}`}
+              description={`未显示交易详情：${alipay1688Description}`}
             />
           )}
           {hasPdd && (
             <Alert
               style={{
                 maxHeight: 200,
+                marginTop: 10,
                 overflow: 'auto',
               }}
               message="请上传拼多多csv文件！"
               type="warning"
               showIcon
-              description={`有问题数据：${pddDescription}`}
+              description={`未显示交易详情：${pddDescription}`}
             />
           )}
         </div>
         <Dragger {...uploadProps}>
-          <p className="ant-upload-drag-icon"></p>
-          <p className="ant-upload-text">点击或拖拽文件到此处上传</p>
+          <p className="ant-upload-drag-icon">
+            <CloudUploadOutlined />
+          </p>
+          <p className="ant-upload-text">上传替换文件</p>
         </Dragger>
       </Spin>
     </Modal>
