@@ -16,6 +16,7 @@ import { I_Transaction } from 'src/main/sqlite3/transactions';
 import { payment_type, account_type, tag_type } from '../../const/web';
 import { formatMoney } from '../../components/utils';
 import { FilterDropdownProps } from 'antd/es/table/interface';
+import { getCategoryCol } from 'src/renderer/components/commonColums';
 
 interface ModalContentProps {
   modalData: I_Transaction[];
@@ -174,6 +175,9 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
         key: 'trans_time',
         render: (val: string) => dayjs(val).format('YYYY-MM-DD HH:mm:ss'),
       },
+      getCategoryCol({
+        width: 120,
+      }),
       {
         title: '金额',
         dataIndex: 'amount',

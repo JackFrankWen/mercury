@@ -49,6 +49,8 @@ function App(props: any): JSX.Element {
     // Subscribe to environment change events
     const handleEnvChange = (env: 'production' | 'test') => {
       setEnvironment(env);
+      // 刷新页面
+      window.location.reload();
     };
     
     emitter.on('environmentChange', handleEnvChange);
@@ -124,13 +126,7 @@ function MainLayout({ environment }: { environment: 'production' | 'test' }): JS
     color: environment === 'production' ? 'rgba(0, 0, 0, 0.85)' : '#ffffff',
   };
   
-  // 如果使用 djeme 属性，也可以设置
-  const siderTheme = environment === 'production' ? 'light' : 'dark';
-  
-  // 环境标识样式
-  const environmentBadgeStyle = {
-    backgroundColor: environment === 'production' ? '#52c41a' : '#faad14',
-  };
+ 
 
   return (
     <Layout className="mercury-layout">

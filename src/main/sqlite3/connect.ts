@@ -22,9 +22,9 @@ import store from "../store";
  * })
  * ```
  */
-export async function getConnection(): Promise<sqlite3.Database> {
-  const environment = await store.get("environment");
+export async function getConnection(environment: string): Promise<sqlite3.Database> {
   let dbPath = "";
+  let db = {}
   if (environment === "production") {
     dbPath = path.join(__dirname, "../../data/database.db");
   } else {
@@ -33,21 +33,23 @@ export async function getConnection(): Promise<sqlite3.Database> {
 
   // 使用同步方式创建数据库连接
   try {
-    const db = new sqlite3.Database(dbPath, (err) => {
+    if (!db[environment]) {
+      
+     db[environment] = new sqlite3.Database(dbPath, (err) => {
       if (err) {
         console.error("Could not connect to database:", err.message);
         throw err;
       }
       console.log("Connected to database successfully");
     });
-
+    }
     // 启用外键约束
-    db.run("PRAGMA foreign_keys = ON");
+    db[environment].run("PRAGMA foreign_keys = ON");
 
     // 设置繁忙超时时间为5000ms
-    db.configure("busyTimeout", 5000);
+    db[environment].configure("busyTimeout", 5000);
 
-    return db;
+    return db[environment];
   } catch (error) {
     console.error("Database connection error:", error);
     throw error;
@@ -64,7 +66,8 @@ export async function getDbInstance(): Promise<sqlite3.Database> {
   //   return dbInstance;
   // }
 
-  dbInstance = await getConnection();
+  const environment = await store.get("environment");
+  dbInstance = await getConnection(environment);
   return dbInstance;
 }
 
