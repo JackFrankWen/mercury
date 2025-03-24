@@ -21,6 +21,7 @@ import { getCategoryCol } from 'src/renderer/components/commonColums';
 interface ModalContentProps {
   modalData: I_Transaction[];
   refresh?: () => void;
+  withCategory?: boolean;
 }
 
 // Define consumer types as a constant
@@ -43,7 +44,7 @@ const FilterDropdown: React.FC<{
   searchInput: React.RefObject<InputRef>;
   handleSearch: (
     keys: string[],
-    confirm: FilterDropdownProps['confirm']
+    confirm: FilterDropdownProps['confirm'],
   ) => void;
   handleReset: (clearFilters: () => void) => void;
 }> = ({
@@ -103,7 +104,11 @@ const FilterDropdown: React.FC<{
     </div>
   );
 
-export function ModalContent({ modalData, refresh }: ModalContentProps) {
+export function ModalContent({
+  modalData,
+  refresh,
+  withCategory = false,
+}: ModalContentProps) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedAmount, setSelectedAmount] = useState(0);
   const searchInput = useRef<InputRef>(null);
@@ -112,19 +117,23 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
     (selectedKeys: string[], confirm: FilterDropdownProps['confirm']) => {
       confirm();
     },
-    []
+    [],
   );
 
   const handleReset = useCallback((clearFilters: () => void) => {
     clearFilters();
   }, []);
 
-  const onSelectChange = useCallback((newSelectedRowKeys: React.Key[], selectedRows: I_Transaction[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-    console.log("===selectedRows", selectedRows);
-    setSelectedAmount(selectedRows.reduce((acc, item) => acc + Number(item.amount), 0))
-
-  }, []);
+  const onSelectChange = useCallback(
+    (newSelectedRowKeys: React.Key[], selectedRows: I_Transaction[]) => {
+      setSelectedRowKeys(newSelectedRowKeys);
+      console.log('===selectedRows', selectedRows);
+      setSelectedAmount(
+        selectedRows.reduce((acc, item) => acc + Number(item.amount), 0),
+      );
+    },
+    [],
+  );
 
   const handleDeleteTransactions = useCallback(() => {
     window.mercury.api
@@ -159,7 +168,7 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
           message.error('修改失败');
         });
     },
-    [selectedRowKeys, refresh]
+    [selectedRowKeys, refresh],
   );
 
   const rowSelection: TableRowSelection<I_Transaction> = useMemo(
@@ -167,7 +176,7 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
       selectedRowKeys,
       onChange: onSelectChange,
     }),
-    [selectedRowKeys, onSelectChange]
+    [selectedRowKeys, onSelectChange],
   );
 
   const modalTableCol = useMemo(
@@ -284,24 +293,38 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
         render: (val: number) => (val ? tag_type[val] : ''),
       },
     ],
-    [handleSearch, handleReset]
+    [handleSearch, handleReset],
   );
 
-  const handleRowClick = useCallback((record: I_Transaction) => {
-    return {
-      onClick: () => {
-        // const newSelectedRowKeys = selectedRowKeys  [...selectedRowKeys, record.id]
-        const newSelectedRowKeys = selectedRowKeys.includes(record.id) ? selectedRowKeys.filter((id) => id !== record.id) : [...selectedRowKeys, record.id]
-        setSelectedRowKeys(newSelectedRowKeys)
-        setSelectedAmount(newSelectedRowKeys.reduce((acc, key) => acc + Number(modalData.find((item) => item.id === key)?.amount || 0), 0))
-      },
-    };
-  }, [selectedRowKeys, selectedAmount]);
+  const handleRowClick = useCallback(
+    (record: I_Transaction) => {
+      return {
+        onClick: () => {
+          // const newSelectedRowKeys = selectedRowKeys  [...selectedRowKeys, record.id]
+          const newSelectedRowKeys = selectedRowKeys.includes(record.id)
+            ? selectedRowKeys.filter((id) => id !== record.id)
+            : [...selectedRowKeys, record.id];
+          setSelectedRowKeys(newSelectedRowKeys);
+          setSelectedAmount(
+            newSelectedRowKeys.reduce(
+              (acc, key) =>
+                acc +
+                Number(modalData.find((item) => item.id === key)?.amount || 0),
+              0,
+            ),
+          );
+        },
+      };
+    },
+    [selectedRowKeys, selectedAmount],
+  );
 
   const handleCancelSelection = useCallback(() => {
     setSelectedRowKeys([]);
   }, []);
-
+  const tableCol = withCategory
+    ? modalTableCol
+    : modalTableCol.filter((item) => !item.dataIndex?.includes('category'));
   return (
     <>
       <div style={{ padding: '8px 0' }}>
@@ -324,7 +347,7 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
         rowSelection={rowSelection}
         onRow={handleRowClick}
         rowKey="id"
-        columns={modalTableCol}
+        columns={tableCol}
         dataSource={modalData}
         size="small"
         scroll={{ y: 'calc(100vh - 400px)' }}

@@ -122,7 +122,7 @@ const LunarCalendar: React.FC<LunarCalendarProps> = (props) => {
           onCancel={() => setVisible(false)}
           title="交易详情"
         >
-          <ModalContent modalData={modalData} refresh={refresh} />
+          <ModalContent modalData={modalData} withCategory refresh={refresh} />
         </Modal>
       )}
     </>
