@@ -53,7 +53,7 @@ function checkNeedTransferData(data: any) {
   const alipay1688 = data
     .map((obj: any, dataIndex: number) =>
       obj.payee?.includes('1688先采后付') &&
-      obj.description?.includes('先采后付还款')
+        obj.description?.includes('先采后付还款')
         ? { ...obj, dataIndex }
         : null,
     )
@@ -64,11 +64,13 @@ function checkNeedTransferData(data: any) {
   return {
     hasJingdong,
     hasPdd,
-    has1688,
+    // 1688 先采后付还款 数据 暂时没有
+    has1688: false,
 
     jingdongData,
     pddData,
-    alipay1688,
+    // 1688 先采后付还款 数据 暂时没有
+    alipay1688: [],
   };
 }
 
@@ -217,9 +219,9 @@ const BasicTable = (props: {
     onFilter: (value: string, record: any) => {
       return record[dataIndex]
         ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
         : false;
     },
     filteredValue: searchText[dataIndex] ? [searchText[dataIndex]] : null,
@@ -334,7 +336,7 @@ const BasicTable = (props: {
             <Popconfirm
               title="Are you sure to delete this task?"
               onConfirm={() => onDelete(record)}
-              onCancel={() => {}}
+              onCancel={() => { }}
               okText="Yes"
               cancelText="No"
             >

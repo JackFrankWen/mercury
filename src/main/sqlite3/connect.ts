@@ -22,9 +22,9 @@ import store from "../store";
  * })
  * ```
  */
+let db = {}
 export async function getConnection(environment: string): Promise<sqlite3.Database> {
   let dbPath = "";
-  let db = {}
   if (environment === "production") {
     dbPath = path.join(__dirname, "../../data/database.db");
   } else {
@@ -34,14 +34,14 @@ export async function getConnection(environment: string): Promise<sqlite3.Databa
   // 使用同步方式创建数据库连接
   try {
     if (!db[environment]) {
-      
-     db[environment] = new sqlite3.Database(dbPath, (err) => {
-      if (err) {
-        console.error("Could not connect to database:", err.message);
-        throw err;
-      }
-      console.log("Connected to database successfully");
-    });
+
+      db[environment] = new sqlite3.Database(dbPath, (err) => {
+        if (err) {
+          console.error("Could not connect to database:", err.message);
+          throw err;
+        }
+        console.log("Connected to database successfully");
+      });
     }
     // 启用外键约束
     db[environment].run("PRAGMA foreign_keys = ON");

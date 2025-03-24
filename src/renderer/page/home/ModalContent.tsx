@@ -56,55 +56,56 @@ const FilterDropdown: React.FC<{
   handleSearch,
   handleReset,
 }) => (
-  <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-    <Input
-      ref={searchInput}
-      placeholder="Search"
-      value={selectedKeys[0]}
-      onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-      onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
-      style={{ marginBottom: 8, display: 'block' }}
-    />
-    <Space>
-      <Button
-        type="primary"
-        onClick={() => handleSearch(selectedKeys as string[], confirm)}
-        size="small"
-        style={{ width: 90 }}
-      >
-        Search
-      </Button>
-      <Button
-        onClick={() => clearFilters && handleReset(clearFilters)}
-        size="small"
-        style={{ width: 90 }}
-      >
-        Reset
-      </Button>
-      <Button
-        type="link"
-        size="small"
-        onClick={() => {
-          confirm({ closeDropdown: false });
-        }}
-      >
-        Filter
-      </Button>
-      <Button
-        type="link"
-        size="small"
-        onClick={() => {
-          close();
-        }}
-      >
-        Close
-      </Button>
-    </Space>
-  </div>
-);
+    <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+      <Input
+        ref={searchInput}
+        placeholder="Search"
+        value={selectedKeys[0]}
+        onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+        onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
+        style={{ marginBottom: 8, display: 'block' }}
+      />
+      <Space>
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys as string[], confirm)}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => clearFilters && handleReset(clearFilters)}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+        <Button
+          type="link"
+          size="small"
+          onClick={() => {
+            confirm({ closeDropdown: false });
+          }}
+        >
+          Filter
+        </Button>
+        <Button
+          type="link"
+          size="small"
+          onClick={() => {
+            close();
+          }}
+        >
+          Close
+        </Button>
+      </Space>
+    </div>
+  );
 
 export function ModalContent({ modalData, refresh }: ModalContentProps) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedAmount, setSelectedAmount] = useState(0);
   const searchInput = useRef<InputRef>(null);
 
   const handleSearch = useCallback(
@@ -118,8 +119,11 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
     clearFilters();
   }, []);
 
-  const onSelectChange = useCallback((newSelectedRowKeys: React.Key[]) => {
+  const onSelectChange = useCallback((newSelectedRowKeys: React.Key[], selectedRows: I_Transaction[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
+    console.log("===selectedRows", selectedRows);
+    setSelectedAmount(selectedRows.reduce((acc, item) => acc + Number(item.amount), 0))
+
   }, []);
 
   const handleDeleteTransactions = useCallback(() => {
@@ -285,14 +289,13 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
   const handleRowClick = useCallback((record: I_Transaction) => {
     return {
       onClick: () => {
-        setSelectedRowKeys((prev) =>
-          prev.includes(record.id)
-            ? prev.filter((id) => id !== record.id)
-            : [...prev, record.id]
-        );
+        // const newSelectedRowKeys = selectedRowKeys  [...selectedRowKeys, record.id]
+        const newSelectedRowKeys = selectedRowKeys.includes(record.id) ? selectedRowKeys.filter((id) => id !== record.id) : [...selectedRowKeys, record.id]
+        setSelectedRowKeys(newSelectedRowKeys)
+        setSelectedAmount(newSelectedRowKeys.reduce((acc, key) => acc + Number(modalData.find((item) => item.id === key)?.amount || 0), 0))
       },
     };
-  }, []);
+  }, [selectedRowKeys, selectedAmount]);
 
   const handleCancelSelection = useCallback(() => {
     setSelectedRowKeys([]);
@@ -303,6 +306,7 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
       <div style={{ padding: '8px 0' }}>
         {selectedRowKeys.length > 0 && (
           <SelectionFooter
+            selectedAmount={selectedAmount}
             onCancel={handleCancelSelection}
             onDelete={handleDeleteTransactions}
             onUpdate={handleUpdateTransactions}

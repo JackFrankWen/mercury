@@ -180,10 +180,16 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
   const { data, fresh } = props;
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [addDrawerVisible, setAddDrawerVisible] = useState(false);
-
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
+  const [selectedAmount, setSelectedAmount] = useState(0);
+  const onSelectChange = (newSelectedRowKeys: React.Key[], selectedRows: I_Transaction[]) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
+    setSelectedAmount(
+      newSelectedRowKeys.reduce((acc, key) => {
+        const transaction = selectedRows.find((item) => item.id === key);
+        return acc + Number(transaction?.amount || 0);
+      }, 0)
+    );
   };
 
   const rowSelection: TableRowSelection<I_Transaction> = {
@@ -240,6 +246,7 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
       />
       {selectedRowKeys.length > 0 && (
         <SelectionFooter
+          selectedAmount={selectedAmount}
           onCancel={() => {
             setSelectedRowKeys([]);
           }}
@@ -257,14 +264,12 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
               });
           }}
           onUpdate={(params: Partial<I_Transaction>) => {
-            console.log("===params", params);
             const obj = {
               ...params,
             };
             if (params.category) {
               obj.category = JSON.stringify(params.category);
             }
-            console.log("===obj", obj);
 
             window.mercury.api
               .updateTransactions(selectedRowKeys as number[], obj)
