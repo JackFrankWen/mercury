@@ -6,6 +6,7 @@ import { formatMoney } from "./utils";
 interface SelectionFooterProps {
   selectedCount: number;
   selectedAmount: number;
+  className?: string;
   onCancel: () => void;
   onDelete: () => void;
   onUpdate: (params: Partial<I_Transaction>) => void;
@@ -17,13 +18,14 @@ export function SelectionFooter({
   onCancel,
   onDelete,
   onUpdate,
+  className,
 }: SelectionFooterProps) {
   const [formValues, setFormValues] = useState<any>({});
   const removeUndefined = (obj: any) => {
     return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== undefined));
   };
   return (
-    <Row className="table-footer">
+    <Row className={`table-footer ${className}`}>
       <Col span={24}>
         <BatchUpdateArea formValues={formValues} setFormValues={setFormValues} />
       </Col>

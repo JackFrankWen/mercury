@@ -246,6 +246,7 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
       />
       {selectedRowKeys.length > 0 && (
         <SelectionFooter
+          className="full-width-bottom-footer"
           selectedAmount={selectedAmount}
           onCancel={() => {
             setSelectedRowKeys([]);
