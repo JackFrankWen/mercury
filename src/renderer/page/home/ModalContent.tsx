@@ -203,6 +203,7 @@ export function ModalContent({ modalData, refresh }: ModalContentProps) {
         title: '交易对象',
         dataIndex: 'payee',
         width: 120,
+        ellipsis: true,
         filterDropdown: (props) => (
           <FilterDropdown
             {...props}
