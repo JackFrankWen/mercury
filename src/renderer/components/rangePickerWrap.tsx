@@ -59,8 +59,9 @@ const RangePickerWrap = (props: {
   bordered?: boolean;
   onChange?: (a: any) => void;
   value?: any;
+  type?: "month" | "year" | "quarter";
 }) => {
-  const { bordered = false, onChange, value, placeholder } = props;
+  const { bordered = false, onChange, value, placeholder, type = "month" } = props;
 
   const [date, setDate] = useState<any>(value);
   const [open, setOpen] = useState<boolean>(false);
@@ -111,7 +112,7 @@ const RangePickerWrap = (props: {
     <RangePicker
       value={date}
       open={open}
-      picker="month"
+      picker={type}
       format="YYYY-MM-DD"
       onChange={(dates) => setClickDate(dates)}
       bordered={bordered}

@@ -60,26 +60,26 @@ function BasicContent() {
   const onDeleteAllTransactionsMatchRule = async () => {
     setIsModalOpen(true);
   };
-  
+
   const handleCancel = () => {
     setIsModalOpen(false);
     setTimeRange([null, null]);
     form.resetFields();
   };
-  
+
   const handleOk = async () => {
     try {
       const values = await form.validateFields();
-      
+
       if (!timeRange[0] || !timeRange[1]) {
         message.error("请选择完整的时间范围");
         return;
       }
-      
+
       // 转换日期格式
-      const startDate = timeRange[0].format("YYYY-MM-DD");
-      const endDate = timeRange[1].format("YYYY-MM-DD");
-      
+      const startDate = timeRange[0].startOf("year").format("YYYY-MM-DD HH:mm:ss");
+      const endDate = timeRange[1].endOf("year").format("YYYY-MM-DD HH:mm:ss");
+
       Modal.confirm({
         title: "确认删除",
         content: `确认删除${timeType === "trans_time" ? "交易" : "创建"}时间在 ${startDate} 至 ${endDate} 范围内的交易记录吗？`,
@@ -90,9 +90,10 @@ function BasicContent() {
               [timeType]: [startDate, endDate]
             }
             const result = await window.mercury.api.deleteAllTransactions(params);
-            
+
             if (result.code === 200) {
               message.success(`成功删除 ${result.message || 0} 条交易记录`);
+
               handleCancel(); // 关闭弹窗
             } else {
               message.error(result.message || "删除失败");
@@ -106,7 +107,7 @@ function BasicContent() {
     } catch (error) {
       console.error("Form validation error:", error);
     }
-  
+
   };
 
   const handleEnvironmentChange = async (e: any) => {
@@ -118,11 +119,11 @@ function BasicContent() {
   };
   return (
     <Form style={{ height: "100%" }}
-    form={form}
-    initialValues={{
-      env: environment
-    }}
-     layout="vertical">
+      form={form}
+      initialValues={{
+        env: environment
+      }}
+      layout="vertical">
       <Form.Item label="运行环境" name="env" >
         <Radio.Group value={environment} onChange={handleEnvironmentChange}>
           <Radio value="production">生产环境</Radio>
@@ -139,7 +140,7 @@ function BasicContent() {
           <Button onClick={onExportJson}>导出json</Button>
         </Space>
       </Form.Item>
-      
+
       {/* 删除时间范围内交易的弹窗 */}
       <Modal
         title="删除时间范围内的交易"
@@ -150,13 +151,13 @@ function BasicContent() {
         cancelText="取消"
       >
         <Form form={form} layout="vertical">
-          <Form.Item 
-            label="时间类型" 
-            name="timeType" 
+          <Form.Item
+            label="时间类型"
+            name="timeType"
             initialValue="trans_time"
             rules={[{ required: true, message: "请选择时间类型" }]}
           >
-            <Select 
+            <Select
               onChange={(value) => setTimeType(value)}
               options={[
                 { value: "trans_time", label: "交易时间" },
@@ -164,13 +165,13 @@ function BasicContent() {
               ]}
             />
           </Form.Item>
-          
-          <Form.Item 
-            label="时间范围" 
+
+          <Form.Item
+            label="时间范围"
             name="timeRange"
             rules={[{ required: true, message: "请选择时间范围" }]}
           >
-            <RangePickerWrap 
+            <RangePickerWrap
               value={timeRange}
               onChange={(dates) => setTimeRange(dates)}
               bordered
