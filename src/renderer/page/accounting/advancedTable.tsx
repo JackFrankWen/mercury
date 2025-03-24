@@ -85,7 +85,7 @@ const columns: ColumnsType<I_Transaction> = [
     render: renderTime,
   },
   getCategoryCol({
-    with: 140,
+    with: 120,
   }),
   {
     title: "金额",
@@ -112,7 +112,7 @@ const columns: ColumnsType<I_Transaction> = [
     width: 250,
     dataIndex: "description",
     key: "description",
-    className: "ellipsis",
+    ellipsis: true,
     render: (description: string) => (
       <Tooltip placement="topLeft" title={description}>
         <div className="ellipsis">{description}</div>
@@ -232,8 +232,8 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
         }}
         dataSource={data}
         pagination={{
-          defaultPageSize: 30,
-          pageSizeOptions: [30, 50, 100],
+          defaultPageSize: 50,
+          pageSizeOptions: [50, 100, 200],
           showSizeChanger: true,
         }}
       />

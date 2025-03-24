@@ -114,10 +114,10 @@ async function updateTask(fileName) {
   }
 }
 async function main() {
-  // await updateTask("jd-orders-niu");
-  // await updateTask("pdd-orders-niu");
-  // await updateTask("jd-orders-wen");
-  // await updateTask("pdd-orders-wen");
+  await updateTask("jd-orders-niu");
+  await updateTask("pdd-orders-niu");
+  await updateTask("jd-orders-wen");
+  await updateTask("pdd-orders-wen");
   await splitData();
 }
 main();
