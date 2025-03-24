@@ -24,6 +24,7 @@ function importCSV(filepath) {
                     INSERT INTO "transactions" (
                         amount,
                         category,
+                        payee,
                         description,
                         account_type,
                         payment_type, 
@@ -33,7 +34,7 @@ function importCSV(filepath) {
                         abc_type,
                         cost_type,
                         trans_time
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 `);
 
         results.forEach((row) => {
@@ -42,6 +43,7 @@ function importCSV(filepath) {
               row.amount,
               row.category === "" ? "[100000,100003]" : row.category,
               row.description,
+              row.payee,
               row.account_type,
               row.payment_type,
               row.consumer,
@@ -68,7 +70,7 @@ function importCSV(filepath) {
 // Execute
 async function main() {
   try {
-    const dataDir = path.join(__dirname, "../exports/20250312-1523/transactions.csv");
+    const dataDir = path.join(__dirname, "../exports/stable/transactions.csv");
     if (!fs.existsSync(dataDir)) {
       throw new Error(`文件不存在: ${dataDir}`);
     }
