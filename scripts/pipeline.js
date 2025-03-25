@@ -6,6 +6,7 @@ const readline = require("readline");
 // 定义要执行的命令和描述
 const commands = [
   { cmd: "npm run init", desc: "初始化数据库表" },
+  { cmd: "npm run remove", desc: "删除所有数据" },
   // { cmd: 'npm run import-rules', desc: '导入基础规则' },
   { cmd: "npm run import-a", desc: "导入高级规则" },
   { cmd: "npm run import-json", desc: "导入交易数据" },

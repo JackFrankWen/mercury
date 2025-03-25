@@ -2,3 +2,13 @@
   height: 100vh;
   overflow: scroll;
 }
+.full-width-bottom-footer {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background-color: #fff;
+  padding: 10px 20px;
+}

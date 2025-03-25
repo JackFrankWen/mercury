@@ -9,7 +9,7 @@ const csv = require("csv-parser");
  */
 function getCsvData(fileName) {
   return new Promise((resolve, reject) => {
-    const filePath = path.join(__dirname, "../../data/description", `${fileName}.csv`);
+    const filePath = path.join(__dirname, '../../data/des', `${fileName}.csv`);
 
     if (!fs.existsSync(filePath)) {
       return reject(new Error(`文件 ${filePath} 不存在`));
