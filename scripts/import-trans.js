@@ -42,8 +42,8 @@ function importCSV(filepath) {
             stmt.run([
               row.amount,
               row.category === "" ? "[100000,100003]" : row.category,
-              row.description,
               row.payee,
+              row.description,
               row.account_type,
               row.payment_type,
               row.consumer,

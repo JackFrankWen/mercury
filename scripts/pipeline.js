@@ -9,8 +9,8 @@ const commands = [
   { cmd: 'npm run remove', desc: '删除所有数据' },
   // { cmd: 'npm run import-rules', desc: '导入基础规则' },
   { cmd: 'npm run import-a', desc: '导入高级规则' },
-  { cmd: 'npm run import-json', desc: '导入交易数据' },
-  { cmd: "npm run replace", desc: "替换交易数据" },
+  { cmd: 'npm run import-trans', desc: '导入交易数据' },
+  // { cmd: "npm run replace", desc: "替换交易数据" },
   // 如果有更多导入脚本，可以在这里添加
 ];
 
