@@ -40,87 +40,139 @@ function splitString(str) {
   return [str];
 }
 
-async function splitData(data) {
-  const transferData = await getTransferData();
-  const newTransferData = transferData.map((item) => {
-    // 将description 拆成  payee 和 description 分隔，利用正则 将description 拆成  payee 和 description 分隔
-    const result = splitString(item.description);
-    if (result.length === 2 && result[0] && result[1] && !item.payee) {
-      if (Number(item.payment_type) === 1) {
-        return {
-          ...item,
-          payee: result[0].replace('/', ''),
-          description: result[1],
-        };
-      } else {
-        return {
-          ...item,
-          payee: result[1].replace('/', ''),
-          description: result[0],
-        };
-      }
-    }
-    if (item.payee) {
-      return item;
-    }
-    return item;
-  });
+async function splitData() {
+  console.log('开始处理数据拆分...');
   try {
-    newTransferData.forEach(async (item) => {
-      db.run(
-        `UPDATE transactions SET payee = ?, description = ? WHERE id = ?`,
-        [item.payee, item.description, item.id],
-      );
+    const transferData = await getTransferData();
+    console.log(`获取到 ${transferData.length} 条转账记录`);
+    
+    // 过滤需要处理的数据
+    const dataToProcess = transferData.filter(item => !item.payee);
+    console.log(`需要处理 ${dataToProcess.length} 条记录`);
+    
+    // 使用事务进行批量更新
+    db.serialize(() => {
+      db.run('BEGIN TRANSACTION');
+      
+      let processedCount = 0;
+      let updatedCount = 0;
+      
+      dataToProcess.forEach((item) => {
+        processedCount++;
+        
+        // 每100条记录显示一次进度
+        if (processedCount % 100 === 0) {
+          console.log(`已处理 ${processedCount}/${dataToProcess.length} 条记录`);
+        }
+        
+        const result = splitString(item.description);
+        if (result.length === 2 && result[0] && result[1]) {
+          const isPaymentType1 = Number(item.payment_type) === 1;
+          const payee = isPaymentType1 ? result[0].replace('/', '') : result[1].replace('/', '');
+          const description = isPaymentType1 ? result[1] : result[0];
+          
+          db.run(
+            `UPDATE transactions SET payee = ?, description = ? WHERE id = ?`,
+            [payee, description, item.id],
+            (err) => {
+              if (err) {
+                console.error(`更新记录失败 ID: ${item.id}`, err);
+              } else {
+                updatedCount++;
+              }
+            }
+          );
+        }
+      });
+      
+      // 提交事务
+      db.run('COMMIT', (err) => {
+        if (err) {
+          console.error('提交事务失败:', err);
+          db.run('ROLLBACK');
+        } else {
+          console.log('数据拆分处理完成:');
+          console.log(`- 总记录数: ${transferData.length}`);
+          console.log(`- 需要处理: ${dataToProcess.length}`);
+          console.log(`- 成功更新: ${updatedCount}`);
+        }
+      });
     });
-    console.log('批量更新完成');
   } catch (error) {
-    console.error(error);
+    console.error('数据拆分处理失败:', error);
+    throw error;
   }
 }
 
 // 获取 csv 里面
 async function updateTask(fileName) {
+  console.log(`开始处理文件: ${fileName}`);
   try {
     const transferData = await getTransferData();
-    const toUpdateData = [];
     const csvData = await getCsvData(fileName);
-    // 改成包含
+    
+    // 过滤需要更新的数据
     const data = transferData.filter(
       (item) =>
         item.description.includes('订单编号') ||
         item.description.includes('商户单号'),
     );
-    // console.log(data, 'data');
-    data.forEach(async (item) => {
-      const matchingItem = csvData.find((csvItem) => {
-        // 时间误差在3分钟
-        const isSameTime =
-          dayjs(item.trans_time).diff(dayjs(csvItem.trans_time), 'minute') < 2;
-        const isSameAmount =
-          Math.round(Number(item.amount)) ===
-          Math.round(Number(csvItem.amount));
-
-        return isSameTime && isSameAmount;
-      });
-      if (matchingItem) {
-        toUpdateData.push({
-          id: item.id,
-          payee: matchingItem.payee,
-          description: matchingItem.description,
-          trans_time: item.trans_time,
+    
+    console.log(`找到 ${data.length} 条需要更新的记录`);
+    
+    // 使用事务进行批量更新
+    db.serialize(() => {
+      db.run('BEGIN TRANSACTION');
+      
+      let updatedCount = 0;
+      let matchedCount = 0;
+      
+      data.forEach((item) => {
+        const matchingItem = csvData.find((csvItem) => {
+          // 优化时间比较逻辑
+          const timeDiff = Math.abs(dayjs(item.trans_time).diff(dayjs(csvItem.trans_time), 'minute'));
+          const amountDiff = Math.abs(Number(item.amount) - Number(csvItem.amount));
+          
+          // 时间误差在2分钟内，金额误差在1元内
+          return timeDiff <= 2 && amountDiff <= 1;
         });
-      }
+        
+        if (matchingItem) {
+          matchedCount++;
+          db.run(
+            `UPDATE transactions SET payee = ?, description = ? WHERE id = ?`,
+            [matchingItem.payee, matchingItem.description, item.id],
+            (err) => {
+              if (err) {
+                console.error(`更新记录失败 ID: ${item.id}`, err);
+              } else {
+                updatedCount++;
+                // 每100条记录显示一次进度
+                if (updatedCount % 100 === 0) {
+                  console.log(`已更新 ${updatedCount}/${matchedCount} 条记录`);
+                }
+              }
+            }
+          );
+        }
+      });
+      
+      // 提交事务
+      db.run('COMMIT', (err) => {
+        if (err) {
+          console.error('提交事务失败:', err);
+          db.run('ROLLBACK');
+        } else {
+          console.log(`文件 ${fileName} 处理完成:`);
+          console.log(`- 总记录数: ${data.length}`);
+          console.log(`- 匹配记录: ${matchedCount}`);
+          console.log(`- 更新成功: ${updatedCount}`);
+        }
+      });
     });
-    // 更新数据库
-    toUpdateData.forEach(async (item) => {
-      db.run(
-        `UPDATE transactions SET payee = ?, description = ? WHERE id = ?`,
-        [item.payee, item.description, item.id],
-      );
-    });
-    console.log('批量更新完成', fileName);
   } catch (error) {
-    console.error(error);
+    console.error(`处理文件 ${fileName} 时发生错误:`, error);
+    throw error;
   }
 }
 async function main() {
