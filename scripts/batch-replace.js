@@ -56,13 +56,12 @@ async function splitData(data) {
   });
   try {
     newTransferData.forEach(async (item) => {
-      db.run(`UPDATE transactions SET payee = ?, description = ? WHERE id = ?`, [
-        item.payee,
-        item.description,
-        item.id,
-      ]);
+      db.run(
+        `UPDATE transactions SET payee = ?, description = ? WHERE id = ?`,
+        [item.payee, item.description, item.id],
+      );
     });
-    console.log("批量更新完成");
+    console.log('批量更新完成');
   } catch (error) {
     console.error(error);
   }
@@ -114,10 +113,10 @@ async function updateTask(fileName) {
   }
 }
 async function main() {
-  await updateTask("jd-orders-niu");
-  await updateTask("pdd-orders-niu");
-  await updateTask("jd-orders-wen");
-  await updateTask("pdd-orders-wen");
-  await splitData();
+  // await updateTask("jd-orders-niu");
+  // await updateTask("pdd-orders-niu");
+  // await updateTask("jd-orders-wen");
+  // await updateTask("pdd-orders-wen");
+  // await splitData();
 }
 main();
