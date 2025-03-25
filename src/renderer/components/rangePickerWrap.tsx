@@ -59,7 +59,7 @@ const RangePickerWrap = (props: {
   bordered?: boolean;
   onChange?: (a: any) => void;
   value?: any;
-  type?: "month" | "year" | "quarter";
+  type?: "month" | "year" | "quarter" | "date";
 }) => {
   const { bordered = false, onChange, value, placeholder, type = "month" } = props;
 

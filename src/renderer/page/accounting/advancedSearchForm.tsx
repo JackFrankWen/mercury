@@ -91,7 +91,7 @@ export const AdvancedSearchForm = (props: {
         )}
         <Col span={8}>
           <Form.Item name={`trans_time`} label="交易时间">
-            <RangePickerWrap bordered placeholder="placeholder" />
+            <RangePickerWrap bordered type="date" placeholder="placeholder" />
           </Form.Item>
         </Col>
         <Col span={8}>
