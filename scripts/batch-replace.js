@@ -5,6 +5,8 @@ const path = require('path');
 const fs = require('fs');
 const dayjs = require('dayjs');
 const { getCsvData } = require('./utils/csv-helper');
+const { log } = require('console');
+const chalk = require('chalk');
 
 const db = new sqlite3.Database(path.join(__dirname, '../data/database.db'));
 
@@ -60,10 +62,7 @@ async function splitData() {
       dataToProcess.forEach((item) => {
         processedCount++;
         
-        // 每100条记录显示一次进度
-        if (processedCount % 100 === 0) {
-          console.log(`已处理 ${processedCount}/${dataToProcess.length} 条记录`);
-        }
+      
         
         const result = splitString(item.description);
         if (result.length === 2 && result[0] && result[1]) {
@@ -118,7 +117,7 @@ async function updateTask(fileName) {
         item.description.includes('商户单号'),
     );
     
-    console.log(`找到 ${data.length} 条需要更新的记录`);
+    console.log(chalk.green(`找到 ${data.length} 条需要更新的记录`));
     
     // 使用事务进行批量更新
     db.serialize(() => {
@@ -130,8 +129,8 @@ async function updateTask(fileName) {
       data.forEach((item) => {
         const matchingItem = csvData.find((csvItem) => {
           // 优化时间比较逻辑
-          const timeDiff = Math.abs(dayjs(item.trans_time).diff(dayjs(csvItem.trans_time), 'minute'));
-          const amountDiff = Math.abs(Number(item.amount) - Number(csvItem.amount));
+          const timeDiff = dayjs(item.trans_time).diff(dayjs(csvItem.trans_time), 'minute');
+          const amountDiff = Number(item.amount) - Number(csvItem.amount);
           
           // 时间误差在2分钟内，金额误差在1元内
           return timeDiff <= 2 && amountDiff <= 1;
@@ -147,10 +146,6 @@ async function updateTask(fileName) {
                 console.error(`更新记录失败 ID: ${item.id}`, err);
               } else {
                 updatedCount++;
-                // 每100条记录显示一次进度
-                if (updatedCount % 100 === 0) {
-                  console.log(`已更新 ${updatedCount}/${matchedCount} 条记录`);
-                }
               }
             }
           );
@@ -166,7 +161,7 @@ async function updateTask(fileName) {
           console.log(`文件 ${fileName} 处理完成:`);
           console.log(`- 总记录数: ${data.length}`);
           console.log(`- 匹配记录: ${matchedCount}`);
-          console.log(`- 更新成功: ${updatedCount}`);
+          console.log(chalk.green(`- 更新成功: ${updatedCount}`));
         }
       });
     });
