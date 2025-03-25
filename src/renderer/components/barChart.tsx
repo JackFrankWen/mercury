@@ -45,7 +45,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150 }) => {
           if (Number(text) >= 10000) {
             return formatMoney(Number(text), "万", true);
           }
-          return formatMoney(Number(text), "千", true);
+          return formatMoney(Number(text), "", true);
         },
       },
     });
@@ -59,7 +59,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150 }) => {
           const value =
             item.data.total >= 10000
               ? formatMoney(item.data.total, "万", true)
-              : formatMoney(item.data.total, "千", true);
+              : formatMoney(item.data.total, "", true);
           return {
             ...item,
             value,
@@ -84,7 +84,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150 }) => {
           if (data.total >= 10000) {
             return formatMoney(data.total, "万", true);
           }
-          return formatMoney(data.total, "千", true);
+          return formatMoney(data.total, "", true);
         },
         style: {
           fill: "#666",
