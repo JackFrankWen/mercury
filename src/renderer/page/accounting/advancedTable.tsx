@@ -16,7 +16,7 @@ import {
   Select,
 } from "antd";
 import { ColumnsType } from "antd/es/table/interface";
-import { AlipayCircleOutlined, BankFilled, ControlOutlined, PlusOutlined, WechatOutlined } from "@ant-design/icons";
+import { AlipayCircleOutlined, BankFilled, ControlOutlined, PlusOutlined, WechatOutlined, SwapOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import { account_type, cost_type, payment_type, tag_type } from "../../const/web";
 import type { TableColumnsType, TableProps } from "antd";
@@ -29,6 +29,7 @@ import { formatMoney } from "../../components/utils";
 import { findCategoryById } from "../../const/categroy";
 import { renderIcon } from "../../components/FontIcon";
 import { getCategoryCol } from "src/renderer/components/commonColums";
+import AdvancedNewBtn from "src/renderer/components/advancedNewBtn";
 
 interface DataType {
   trans_time_formate: string;
@@ -210,13 +211,15 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
   return (
     <div className="p-accounting-table" style={{ height: "100%" }}>
       <Row justify={"space-between"}>
-        {/* <Breadcrumb items={[{
-                    title: '记账',
-                }]}/> */}
+        <Breadcrumb items={[{ title: '交易表格' }]} />
         <Space>
-          <Button icon={<PlusOutlined />} type="primary" onClick={() => setAddDrawerVisible(true)}>
-            新增
-          </Button>
+          <AdvancedNewBtn />
+          <Tooltip title="新增交易">
+            <PlusOutlined style={{ fontSize: 20 }} onClick={() => setAddDrawerVisible(true)} />
+          </Tooltip>
+          <Tooltip title="批量替换">
+            <SwapOutlined style={{ fontSize: 20 }} />
+          </Tooltip>
         </Space>
       </Row>
 

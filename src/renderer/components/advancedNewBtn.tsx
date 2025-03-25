@@ -2,7 +2,7 @@ import { Modal, Button } from 'antd';
 import React, { useState } from 'react';
 import AdvancedRuleModal from './advancedRuleModal';
 import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
-function AdvancedNewBtn(props: { refresh: () => void }) {
+function AdvancedNewBtn(props: { refresh?: () => void }) {
   const [visible, setVisible] = useState(false);
   const [record, setRecord] = useState<AdvancedRule>();
   return (
