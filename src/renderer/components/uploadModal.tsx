@@ -5,6 +5,78 @@ import { formateToTableJd, parseExcelFile } from '../page/upload/csvUtil';
 import { CloudUploadOutlined } from '@ant-design/icons';
 const { Dragger } = Upload;
 
+// 新增：抽象的 CSV 解析方法
+export interface CsvParseResult {
+  success: boolean;
+  data?: any[];
+  error?: string;
+  sourceType?: string;
+}
+
+export interface ParseOptions {
+  validateSourceType?: boolean;
+  needTransferData?: {
+    hasJingdong?: boolean;
+    hasPdd?: boolean;
+    has1688?: boolean;
+  };
+}
+
+// 导出此函数以便其他文件可以使用
+export async function parseCsvFile(file: File, options: ParseOptions = {}): Promise<CsvParseResult> {
+  return new Promise((resolve) => {
+    Papa.parse(file, {
+      header: false,
+      skipEmptyLines: true,
+      complete: function (results: any) {
+        try {
+          const csvData = results.data || [];
+          const csvContent = csvData.slice(1);
+          const { name } = file;
+          let data;
+          let sourceType = '';
+
+          // 根据文件名判断数据来源
+          if (name.includes('jd')) {
+            sourceType = 'jd';
+            if (options.validateSourceType && options.needTransferData && !options.needTransferData.hasJingdong) {
+              resolve({ success: false, error: '上传错误文件类型' });
+              return;
+            }
+            data = formateToTableJd(csvContent, 'jd');
+          } else if (name.includes('pdd')) {
+            sourceType = 'pdd';
+            if (options.validateSourceType && options.needTransferData && !options.needTransferData.hasPdd) {
+              resolve({ success: false, error: '上传错误文件类型' });
+              return;
+            }
+            data = formateToTableJd(csvContent, 'pdd');
+          } else if (name.includes('alipay1688')) {
+            sourceType = 'alipay1688';
+            if (options.validateSourceType && options.needTransferData && !options.needTransferData.has1688) {
+              resolve({ success: false, error: '上传错误文件类型' });
+              return;
+            }
+            data = formateToTableJd(csvContent, 'alipay1688');
+          } else {
+            resolve({ success: false, error: '不支持的文件类型' });
+            return;
+          }
+
+          resolve({ success: true, data, sourceType });
+        } catch (error) {
+          console.error('File parsing error:', error);
+          resolve({ success: false, error: '文件解析错误' });
+        }
+      },
+      error: function(error: any) {
+        console.error('CSV parsing error:', error);
+        resolve({ success: false, error: '文件解析错误' });
+      }
+    });
+  });
+}
+
 const UploadModal = (props: {
   onOk: () => void;
   onCancel: () => void;
@@ -30,76 +102,40 @@ const UploadModal = (props: {
   } = props;
   const [modalLoading, setModalLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
+  
   const uploadProps: UploadProps = {
     name: 'file',
     fileList: fileList,
     className: 'upload-cus mt8',
-    beforeUpload: (file) => {
+    beforeUpload: async (file) => {
       console.log(file, '===aaa');
-
-
-      // 处理CSV文件
-      Papa.parse(file, {
-        header: false,
-        // encoding: 'gb18030',
-        skipEmptyLines: true,
-        complete: function (results: any) {
-          const csvData = results.data || [];
-          // const csvHeader = csvData.slice(0, 1)
-          try {
-            const csvContent = csvData.slice(1);
-            console.log(csvData, '===csvData');
-            const { name } = file;
-            // 如果文件名包含jd_，则认为是京东的文件
-            let data;
-
-            if (name.includes('jd')) {
-              data = formateToTableJd(csvContent, 'jd');
-              console.log(data, '===data');
-
-              if (needTransferData.hasJingdong) {
-                onUploadSuccess('jd', data);
-              } else {
-                setModalLoading(false);
-                setLoading(false);
-                message.error('上传错误文件');
-              }
-              //jd
-            } else if (name.includes('pdd')) {
-              if (needTransferData.hasPdd) {
-                data = formateToTableJd(csvContent, 'pdd');
-                onUploadSuccess('pdd', data);
-              } else {
-                setModalLoading(false);
-                setLoading(false);
-                message.error('上传错误文件');
-              }
-              // pdd
-            } else if (name.includes('alipay1688')) {
-              console.log(csvContent, '===csvContent');
-              if (needTransferData.has1688) {
-                data = formateToTableJd(csvContent, 'alipay1688');
-                onUploadSuccess('alipay1688', data);
-              } else {
-                setModalLoading(false);
-                setLoading(false);
-                message.error('上传错误文件');
-              }
-            }
-
-            setFileList([file]);
-          } catch (error) {
-            console.log(error, 'error');
-            setModalLoading(false);
-            setLoading(false);
-            message.error('文件解析错误');
-          }
-        },
+      setModalLoading(true);
+      
+      // 使用新的抽象方法解析文件
+      const result = await parseCsvFile(file, {
+        validateSourceType: true,
+        needTransferData: {
+          hasJingdong: needTransferData.hasJingdong,
+          hasPdd: needTransferData.hasPdd,
+          has1688: needTransferData.has1688
+        }
       });
+      
+      if (result.success && result.data && result.sourceType) {
+        onUploadSuccess(result.sourceType, result.data);
+        setFileList([file]);
+      } else {
+        console.error(result.error);
+        setModalLoading(false);
+        setLoading(false);
+        message.error(result.error || '文件解析错误');
+      }
+      
       // Prevent upload
       return false;
     },
   };
+  
   const handleOk = () => {
     onOk();
   };
@@ -175,6 +211,7 @@ const UploadModal = (props: {
             <CloudUploadOutlined />
           </p>
           <p className="ant-upload-text">上传替换文件</p>
+          <p className="ant-upload-hint">支持单个 .csv 文件上传，文件大小不超过 10MB</p>
         </Dragger>
       </Spin>
     </Modal>
