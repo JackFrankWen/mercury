@@ -210,7 +210,7 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
               };
             }}
             virtual
-            scroll={{ y: 300, x: 900 }}
+            scroll={{ y: 300, x: 950 }}
             dataSource={previewData}
             rowKey="id"
             size="small"
@@ -220,13 +220,14 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
                 title: "现分类",
                 dataIndex: "category",
                 width: 100,
+                ellipsis: true,
                 render: (val) => <Typography.Text delete>{getCategoryString(val)}</Typography.Text>,
               },
               {
                 title: "交易对象",
                 dataIndex: "payee",
                 ellipsis: true,
-                width: 100,
+                width: 120,
               },
 
               {
@@ -262,7 +263,7 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
               {
                 title: "交易时间",
                 dataIndex: "trans_time",
-                width: 150,
+                width: 180,
                 render: (val) => dayjs(val).format("YYYY-MM-DD HH:mm:ss"),
               },
             ]}
