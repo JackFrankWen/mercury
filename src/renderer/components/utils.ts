@@ -64,6 +64,18 @@ export function formatMoney(
   if (typeof amount === "string") {
     amount = parseFloat(amount);
   }
+  if (isNaN(amount)) {
+    return "NaN";
+  }
+  if (amount === null) {
+    return "NaN";
+  }
+  if (amount === undefined) {
+    return "NaN";
+  }
+  if (amount === 0) {
+    return "0";
+  }
 
   // Handle auto unit selection
   if (autoUnit) {

@@ -20,6 +20,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { category_type, findCategoryById } from "../../const/categroy";
 import { formatMoney } from "../../components/utils";
 import { renderIcon } from "../../components/FontIcon";
+import BarChart from "src/renderer/components/barChart";
+import { FormData } from "./useReviewForm";
 // import BatchUpdateArea from '../views/accounting/batch-update'
 
 interface DataType {
@@ -72,7 +74,7 @@ const Item = (props: {
         </Col>
       </Row>
       <Col>
-        <Typography.Text>{formatMoney(total)}元</Typography.Text>
+        <Typography.Text>{formatMoney(total)}</Typography.Text>
       </Col>
     </Row>
   );
@@ -80,13 +82,14 @@ const Item = (props: {
 
 const CategoryCollaspe = (props: {
   data: DataType[];
-  formValue: any;
+  formValue: FormData;
   refreshTable: () => void;
 }) => {
   const { data, formValue, refreshTable } = props;
   const [show, toggle] = useModal();
   const [cate, setCate] = useState<string>("");
   const [modalData, setModaldata] = useState<any>();
+  const [barData, setBarData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   const getCategory = async (data: any, category: string) => {
@@ -112,10 +115,26 @@ const CategoryCollaspe = (props: {
       setLoading(false);
     }
   };
+  const fetchData = async (obj) => {
+    if (!obj) return;
+
+    try {
+      const result = await window.mercury.api.getTransactionsByMonth(obj);
+      setBarData(result);
+    } catch (error) {
+      message.error(error);
+    }
+  };
 
   useEffect(() => {
     if (cate && show) {
       getCategory(formValue, cate);
+    }
+    if (formValue.type === 'year' && show) {
+      fetchData({
+        category: cate,
+        trans_time: formValue.trans_time,
+      });
     }
   }, [formValue, cate, show]);
 
@@ -225,7 +244,12 @@ const CategoryCollaspe = (props: {
           {loading ? (
             <div style={{ textAlign: "center", padding: "20px" }}>Loading...</div>
           ) : (
-            <ModalContent modalData={modalData} refresh={refresh} />
+            <>
+              {formValue.type === 'year' && (
+                <BarChart data={barData} />
+              )}
+              <ModalContent modalData={modalData} refresh={refresh} />
+            </>
           )}
         </Modal>
       )}
