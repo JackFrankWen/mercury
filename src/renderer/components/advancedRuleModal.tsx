@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Card, Cascader, Col, message, Row, Space, Switch, Table } from "antd";
 import { Button, Form, Input, Radio } from "antd";
-import SelectWrap from "../../components/selectWrap";
-import { cpt_const } from "../../const/web";
-import { category_type } from "../../const/categroy";
-import { toNumberOrUndefiend } from "../../components/utils";
-import useLoadingButton from "../../components/useButton";
+import SelectWrap from "./selectWrap";
+import { cpt_const } from "../const/web";
+import { category_type } from "../const/categroy";
+import { toNumberOrUndefiend } from "./utils";
+import useLoadingButton from "./useButton";
 import { DefaultOptionType } from "antd/es/cascader";
-import AdvancedRuleFormItem, { RuleItemList } from "./advancedRuleFormItem";
+import AdvancedRuleFormItem, { RuleItemList } from "../page/setting/advancedRuleFormItem";
 import { AdvancedRule } from "src/main/sqlite3/advance-rules";
 export type RuleFormData = {
   id?: number;

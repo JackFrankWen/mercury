@@ -1,7 +1,7 @@
 import { message } from "antd";
 import { getCategoryString } from "src/renderer/const/categroy";
 import { openNotification } from "src/renderer/components/notification";
-import { RuleFormData } from "../setting/advancedRuleModal";
+import { RuleFormData } from "../../components/advancedRuleModal";
 import { AdvancedRule } from "src/main/sqlite3/advance-rules";
 import { RuleItem, RuleItemList, RuleItemListList } from "../setting/advancedRuleFormItem";
 import { I_Transaction } from "src/main/sqlite3/transactions";

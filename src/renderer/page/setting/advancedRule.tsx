@@ -13,16 +13,16 @@ import {
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
+import AdvancedNewBtn from '../../components/advancedNewBtn';
 import { getCategoryString } from '../../const/categroy';
 import { getAccountType, getConsumerType } from '../../const/web';
-import useLoadingButton from '../../components/useButton';
 import {
   getPriorityType,
   getConditionType,
   getFormulaType,
   priority_type,
 } from '../../const/web';
-import AdvancedRuleModal from './advancedRuleModal';
+import AdvancedRuleModal from '../../components/advancedRuleModal';
 import {
   RuleItem,
   RuleItemList,
@@ -95,8 +95,6 @@ export const renderRuleContent = (rule: RuleItemListList) => {
 };
 const RuleTable = () => {
   const [ruleData, setRuleData] = useState<any>();
-  const [isUpdate, setIsUpdate] = useState<boolean>();
-  const [LoadingBtn, , setLoadingFalse] = useLoadingButton();
   const [searchValue, setSearchValue] = useState<string>('');
 
   const getRuleData = async (rule?: {
@@ -231,9 +229,7 @@ const RuleTable = () => {
               icon={<EyeOutlined />}
               onClick={() => {
                 setVisiable(true);
-                setIsUpdate(true);
                 setRecord(record);
-                console.log(record);
               }}
             />
           </Tooltip>
@@ -324,24 +320,7 @@ const RuleTable = () => {
           enterButton
         />
 
-        <Button
-          type="primary"
-          onClick={() => {
-            setVisiable(true);
-            setIsUpdate(false);
-            setRecord({
-              active: 1,
-              consumer: '',
-              name: '',
-              priority: 1,
-              tag: '',
-              rule: '',
-              category: '',
-            });
-          }}
-        >
-          新增
-        </Button>
+        <AdvancedNewBtn refresh={refresh} />
       </Space>
       <Table
         size="middle"
