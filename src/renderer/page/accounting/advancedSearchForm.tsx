@@ -39,6 +39,7 @@ export const AdvancedSearchForm = (props: {
 
     console.log('params', params);
 
+    props.setFormValue(params);
     props.getTransactions(params);
   };
 
@@ -49,18 +50,18 @@ export const AdvancedSearchForm = (props: {
         ...formValue,
         trans_time: [dayjs(formValue.trans_time[0]), dayjs(formValue.trans_time[1])],
       }}
-      onValuesChange={(changedValues, allValues) => {
-        const new_allValues = { ...allValues };
-        const trans_time = allValues.trans_time;
-        if (Array.isArray(trans_time) && trans_time.length === 2) {
-          new_allValues.trans_time = [
-            dayjs(trans_time[0]).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
-            dayjs(trans_time[1]).endOf('month').format('YYYY-MM-DD HH:mm:ss'),
-          ];
-        }
-        console.log(new_allValues, 'new_allValues');
-        props.setFormValue(new_allValues);
-      }}
+      // onValuesChange={(changedValues, allValues) => {
+      //   const new_allValues = { ...allValues };
+      //   const trans_time = allValues.trans_time;
+      //   if (Array.isArray(trans_time) && trans_time.length === 2) {
+      //     new_allValues.trans_time = [
+      //       dayjs(trans_time[0]).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
+      //       dayjs(trans_time[1]).endOf('month').format('YYYY-MM-DD HH:mm:ss'),
+      //     ];
+      //   }
+      //   console.log(new_allValues, 'new_allValues');
+      //   props.setFormValue(new_allValues);
+      // }}
       name="advanced_search"
       style={formStyle}
       onFinish={onFinish}
