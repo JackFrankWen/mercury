@@ -45,12 +45,23 @@ async function splitData(data) {
   const newTransferData = transferData.map((item) => {
     // 将description 拆成  payee 和 description 分隔，利用正则 将description 拆成  payee 和 description 分隔
     const result = splitString(item.description);
-    if (!item.payee) {
-      return {
-        ...item,
-        payee: result.length === 2 ? result[0] : '',
-        description: result.length === 2 ? result[1] : item.description,
-      };
+    if (result.length === 2 && result[0] && result[1] && !item.payee) {
+      if (Number(item.payment_type) === 1) {
+        return {
+          ...item,
+          payee: result[0].replace('/', ''),
+          description: result[1],
+        };
+      } else {
+        return {
+          ...item,
+          payee: result[1].replace('/', ''),
+          description: result[0],
+        };
+      }
+    }
+    if (item.payee) {
+      return item;
     }
     return item;
   });
@@ -113,10 +124,10 @@ async function updateTask(fileName) {
   }
 }
 async function main() {
-  // await updateTask("jd-orders-niu");
-  // await updateTask("pdd-orders-niu");
-  // await updateTask("jd-orders-wen");
-  // await updateTask("pdd-orders-wen");
-  // await splitData();
+  await updateTask("jd-orders-niu");
+  await updateTask("pdd-orders-niu");
+  await updateTask("jd-orders-wen");
+  await updateTask("pdd-orders-wen");
+  await splitData();
 }
 main();
