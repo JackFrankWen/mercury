@@ -18,6 +18,7 @@ import {
   getAccountPaymentTotal,
   deleteAllTransactions,
   getDailyTransactionAmounts,
+  batchReplaceTransactions,
 } from "./sqlite3/transactions";
 import { transferCategory, sortByValue } from "./controller/transController";
 import { generateRule } from "./controller/matchAutoRulesController";
@@ -297,6 +298,15 @@ export function handleProcessApi() {
         code: 500,
         message: error instanceof Error ? error.message : "删除交易数据时发生未知错误",
       };
+    }
+  });
+
+  ipcMain.handle("transactions:batchReplace", async (event, list) => {
+    try {
+      await batchReplaceTransactions(list);
+      return { code: 200 };
+    } catch (error) {
+      return { code: 500, error: error.message };
     }
   });
 }

@@ -4,7 +4,7 @@ export { };
 import { CategoryReturnType, Params_Transaction } from "./type";
 import { MatchRule } from "../main/sqlite3/match-rules";
 import { AdvancedRule } from "../main/sqlite3/advance-rules";
-
+import { I_Transaction } from "../main/sqlite3/transactions";
 declare global {
   interface Window {
     mercury: {
@@ -54,6 +54,8 @@ declare global {
         updateTransactions: (ids: number[], params: Partial<Params_Transaction>) => Promise<any>;
         // 批量插入交易
         batchInsertTransactions: (list: Params_Transaction[]) => Promise<any>;
+        // 批量替换交易
+        batchReplaceTransactions: (list: I_Transaction[]) => Promise<any>;
         // 插入交易
         insertTransaction: (transaction: {
           amount: number;

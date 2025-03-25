@@ -2,7 +2,8 @@
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 
 import { contextBridge, ipcRenderer } from "electron";
-import { Params_Transaction } from "./preload";
+import { Params_Transaction } from "./preload/type";
+import { I_Transaction } from "./main/sqlite3/transactions";
 import { MatchRule } from "./main/sqlite3/match-rules";
 import { AdvancedRule } from "./main/sqlite3/advance-rules";
 
@@ -60,6 +61,9 @@ contextBridge.exposeInMainWorld("mercury", {
     // 批量插入
     batchInsertTransactions: (list: Params_Transaction[]) =>
       ipcRenderer.invoke("transactions:batchInsert", list),
+    // 批量替换数据
+    batchReplaceTransactions: (list: Params_Transaction[]) =>
+      ipcRenderer.invoke("transactions:batchReplace", list),
     // 获取category
     getCategoryTotalByDate: (params: { start_date: string; end_date: string }) =>
       ipcRenderer.invoke("transactions:getCategoryTotalByDate", params),
@@ -108,6 +112,6 @@ contextBridge.exposeInMainWorld("mercury", {
     deleteAllTransactions: (params: Params_Transaction) => ipcRenderer.invoke("transactions:deleteAll", params),
   },
 
- 
+
   // we can also expose variables, not just functions
 });
