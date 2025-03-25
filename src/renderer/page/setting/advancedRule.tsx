@@ -28,7 +28,7 @@ import {
   RuleItemList,
   RuleItemListList,
 } from './advancedRuleFormItem';
-import BatchReplaceModal from './batchReplaceModal';
+import BatchReplaceModal from './advancedRuleBatchReplaceModal';
 import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
 import { getCategoryCol } from 'src/renderer/components/commonColums';
 import {
@@ -49,7 +49,7 @@ const renderValue = (value: RuleItem) => {
     return getAccountType(value.value);
   } else if (value.condition === 'category') {
     console.log(value.value, "value.value");
-    
+
     return getCategoryString(value.value);
   } else if (value.condition === 'consumer') {
     return getConsumerType(value.value);

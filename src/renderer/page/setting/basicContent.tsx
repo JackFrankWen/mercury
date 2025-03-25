@@ -3,9 +3,11 @@ import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import emitter from "../../events";
 import RangePickerWrap from "../../components/rangePickerWrap";
+import BatchReplaceDrawer from './uploadBatchReplaceModal';
 
 function BasicContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBatchReplaceVisible, setIsBatchReplaceVisible] = useState(false);
   const [timeRange, setTimeRange] = useState([null, null]);
   const [timeType, setTimeType] = useState("trans_time");
   const [form] = Form.useForm();
@@ -117,6 +119,9 @@ function BasicContent() {
     emitter.emit("environmentChange", newEnv);
     message.success(`已切换到${newEnv === 'production' ? '生产' : '测试'}环境`);
   };
+  const onBatchReplaceTransactions = () => {
+    setIsBatchReplaceVisible(true);
+  };
   return (
     <Form style={{ height: "100%" }}
       form={form}
@@ -133,6 +138,7 @@ function BasicContent() {
       <Form.Item label="当前版本" tooltip="This is a required field">
         <Button onClick={onDeleteAllTransactions}>删除所有交易</Button>
         <Button onClick={onDeleteAllTransactionsMatchRule} style={{ marginLeft: 8 }}>删除时间范围内的交易</Button>
+        <Button onClick={onBatchReplaceTransactions} style={{ marginLeft: 8 }}>批量替换交易</Button>
       </Form.Item>
       <Form.Item label="导出" tooltip="This is a required field">
         <Space>
@@ -179,6 +185,15 @@ function BasicContent() {
           </Form.Item>
         </Form>
       </Modal>
+
+      <BatchReplaceDrawer
+        visible={isBatchReplaceVisible}
+        onClose={() => setIsBatchReplaceVisible(false)}
+        onSuccess={() => {
+          setIsBatchReplaceVisible(false);
+          // 可以在这里添加刷新数据的逻辑
+        }}
+      />
     </Form>
   );
 }
