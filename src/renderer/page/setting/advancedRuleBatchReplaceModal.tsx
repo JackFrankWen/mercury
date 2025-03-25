@@ -117,6 +117,12 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
         consumer: rule.consumer,
         tag: rule.tag,
       };
+      if (!rule.consumer) {
+        delete updateParams.consumer;
+      }
+      if (!rule.tag) {
+        delete updateParams.tag;
+      }
 
       // 执行批量更新
       await window.mercury.api.updateTransactions(ids, updateParams);

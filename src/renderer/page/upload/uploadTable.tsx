@@ -295,7 +295,7 @@ const BasicTable = (props: {
       ),
     },
     {
-      title: '消费成员',
+      title: '消费者',
       width: 80,
       dataIndex: 'consumer',
       defaultCheck: false,

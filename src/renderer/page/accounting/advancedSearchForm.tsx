@@ -1,15 +1,4 @@
-import {
-  Button,
-  Col,
-  Form,
-  Input,
-  InputNumber,
-  Radio,
-  Row,
-  Select,
-  Space,
-  theme,
-} from 'antd';
+import { Button, Col, Form, Input, InputNumber, Radio, Row, Select, Space, theme } from 'antd';
 import React, { useState } from 'react';
 import RangePickerWrap from '../../components/rangePickerWrap';
 import { cpt_const } from '../../const/web';
@@ -58,10 +47,7 @@ export const AdvancedSearchForm = (props: {
       form={form}
       initialValues={{
         ...formValue,
-        trans_time: [
-          dayjs(formValue.trans_time[0]),
-          dayjs(formValue.trans_time[1]),
-        ],
+        trans_time: [dayjs(formValue.trans_time[0]), dayjs(formValue.trans_time[1])],
       }}
       onValuesChange={(changedValues, allValues) => {
         const new_allValues = { ...allValues };
@@ -109,11 +95,7 @@ export const AdvancedSearchForm = (props: {
         </Col>
         <Col span={8}>
           <Form.Item name="payment_type" label="付款方式">
-            <Select
-              allowClear
-              placeholder="付款方式"
-              options={cpt_const.payment_type}
-            />
+            <Select allowClear placeholder="付款方式" options={cpt_const.payment_type} />
           </Form.Item>
         </Col>
 
@@ -142,22 +124,14 @@ export const AdvancedSearchForm = (props: {
 
         <Col span={8}>
           <Form.Item name="account_type" label="账户">
-            <Select
-              allowClear
-              placeholder="账户"
-              options={cpt_const.account_type}
-            />
+            <Select allowClear placeholder="账户" options={cpt_const.account_type} />
           </Form.Item>
         </Col>
         {expand && (
           <>
             <Col span={8}>
               <Form.Item name="consumer" label="消费成员">
-                <Select
-                  allowClear
-                  placeholder="消费成员"
-                  options={cpt_const.consumer_type}
-                />
+                <Select allowClear placeholder="消费成员" options={cpt_const.consumer_type} />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -174,12 +148,7 @@ export const AdvancedSearchForm = (props: {
         )}
         <Col span={8}>
           <Form.Item name="description">
-            <Input.Search
-              placeholder="请输入描述、交易对象"
-              onSearch={(val) => {
-                console.log(val, 'string');
-              }}
-            />
+            <Input.Search placeholder="请输入描述、交易对象" />
           </Form.Item>
         </Col>
 

@@ -13,7 +13,9 @@ export function generateWhereClause(params: Params_Transaction): {
   }
 
   if (params?.is_unclassified) {
-    conditions.push('(category IS NULL OR category = "" OR category = "[100000,100003]")');
+    conditions.push(
+      '(category IS NULL OR category = "" OR category = "[100000,100003]" OR consumer IS NULL OR consumer = "")'
+    );
   }
 
   if (params?.description) {

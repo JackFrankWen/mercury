@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Card,
-  Col,
-  Collapse,
-  CollapseProps,
-  Flex,
-  Progress,
-  Row,
-  Typography,
-} from 'antd';
+import { Card, Col, Collapse, CollapseProps, Flex, Progress, Row, Typography } from 'antd';
 import {
   AccountBookFilled,
   AlipayCircleOutlined,
@@ -35,9 +26,9 @@ const rainbowColors = [
   '#e77fc0', // 粉色
 ];
 const useAccountInfo = (formValue: any) => {
-  const [data, setData] = useState<
-    { account_type: string; total: number; payment_type: string }[]
-  >([]);
+  const [data, setData] = useState<{ account_type: string; total: number; payment_type: string }[]>(
+    []
+  );
   const getSumrize = async (obj: any) => {
     try {
       const res = await window.mercury.api.getAccountPaymentTotal(obj);
@@ -54,12 +45,7 @@ const useAccountInfo = (formValue: any) => {
     getSumrize,
   };
 };
-const Item = (props: {
-  name: string;
-  total: string;
-  percent: number;
-  color: string;
-}) => {
+const Item = (props: { name: string; total: string; percent: number; color: string }) => {
   const { name, total, percent, color } = props;
   let icon, progressColor;
   if (name === '支付宝') {
@@ -88,11 +74,7 @@ const Item = (props: {
         {icon}
       </Col>
       <Col flex="auto">
-        <Row
-          justify="space-between"
-          align="middle"
-          style={{ marginBottom: -8 }}
-        >
+        <Row justify="space-between" align="middle" style={{ marginBottom: -8 }}>
           <Typography.Text
             style={{
               fontSize: 12,
@@ -106,18 +88,10 @@ const Item = (props: {
         </Row>
         <Row justify="space-between">
           <Col flex="auto">
-            <Progress
-              size="small"
-              showInfo={false}
-              percent={percent}
-              strokeColor={progressColor}
-            />
+            <Progress size="small" showInfo={false} percent={percent} strokeColor={progressColor} />
           </Col>
           <Col>
-            <Typography.Text
-              style={{ fontSize: 12, paddingLeft: 10 }}
-              type="secondary"
-            >
+            <Typography.Text style={{ fontSize: 12, paddingLeft: 10 }} type="secondary">
               {percent}%
             </Typography.Text>
           </Col>
@@ -152,51 +126,38 @@ function AccountInfo(props: { formValue: any }) {
     }
     return acc;
   }, {});
-  const items: CollapseProps['items'] = Object.values(newData).map(
-    (item, index) => {
-      return {
-        key: index,
-        label: (
-          <Flex justify="space-between" align="center">
-            <Typography.Text style={{ fontSize: 12, fontWeight: 500 }}>
-              {item.account_type}
-            </Typography.Text>
-            <Typography.Text style={{ fontSize: 12, fontWeight: 500 }}>
-              {formatMoney(item.total, '万', true)}
-            </Typography.Text>
-          </Flex>
-        ),
-        children: item.children.map((child: any, childIndex: number) => {
-          // 百分号取整
-          const percent = Math.floor((child.total / item.total) * 100);
-          return (
-            <Item
-              name={child.payment_type}
-              total={formatMoney(child.total)}
-              percent={percent}
-              color={rainbowColors[childIndex]}
-            />
-          );
-        }),
-      };
-    },
-  );
+  const items: CollapseProps['items'] = Object.values(newData).map((item, index) => {
+    return {
+      key: index,
+      label: (
+        <Flex justify="space-between" align="center">
+          <Typography.Text style={{ fontSize: 12, fontWeight: 500 }}>
+            {item.account_type}
+          </Typography.Text>
+          <Typography.Text style={{ fontSize: 12, fontWeight: 500 }}>
+            {formatMoney(item.total, '万', true)}
+          </Typography.Text>
+        </Flex>
+      ),
+      children: item.children.map((child: any, childIndex: number) => {
+        // 百分号取整
+        const percent = Math.floor((child.total / item.total) * 100);
+        return (
+          <Item
+            name={child.payment_type}
+            total={formatMoney(child.total)}
+            percent={percent}
+            color={rainbowColors[childIndex]}
+          />
+        );
+      }),
+    };
+  });
   console.log(items, 'items====');
 
   return (
-    <Card
-      title={'账户信息'}
-      size="small"
-      className="mt8"
-      bordered={false}
-      hoverable
-    >
-      <Collapse
-        bordered={false}
-        size="small"
-        items={items}
-        defaultActiveKey={[0, 1]}
-      />
+    <Card title={'账户信息'} size="small" className="mt8" bordered={false} hoverable>
+      <Collapse bordered={false} size="small" items={items} defaultActiveKey={[0, 1]} />
     </Card>
   );
 }

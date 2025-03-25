@@ -16,7 +16,7 @@ import {
   Select,
 } from "antd";
 import { ColumnsType } from "antd/es/table/interface";
-import { ControlOutlined, PlusOutlined } from "@ant-design/icons";
+import { AlipayCircleOutlined, BankFilled, ControlOutlined, PlusOutlined, WechatOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import { account_type, cost_type, payment_type, tag_type } from "../../const/web";
 import type { TableColumnsType, TableProps } from "antd";
@@ -135,7 +135,17 @@ const columns: ColumnsType<I_Transaction> = [
     title: "付款方式",
     dataIndex: "payment_type",
     width: 90,
-    render: (val: number) => (val ? payment_type[val] : ""),
+    render: (val: number) => {
+      let icon;
+      if (payment_type[val] === "支付宝") {
+        icon = <AlipayCircleOutlined style={{ color: "#00A0E9" }} />;
+      } else if (payment_type[val] === "微信") {
+        icon = <WechatOutlined style={{ color: "#07C160" }} />;
+      } else {
+        icon = <BankFilled style={{ color: "#00A0E9" }} />;
+      }
+      return <span>{icon} {payment_type[val]}</span>;
+    },
   },
   {
     title: "账户",
