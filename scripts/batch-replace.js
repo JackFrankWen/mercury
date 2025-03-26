@@ -118,6 +118,7 @@ async function updateTask(fileName) {
     );
     
     console.log(chalk.green(`找到 ${data.length} 条需要更新的记录`));
+    console.log(chalk.blue(`CSV 文件中有 ${csvData.length} 条记录`));
     
     // 使用事务进行批量更新
     db.serialize(() => {
@@ -125,19 +126,51 @@ async function updateTask(fileName) {
       
       let updatedCount = 0;
       let matchedCount = 0;
+      let matchingItem;
+      
+      // 为调试添加一些记录
+      let notMatchedReasons = {
+        timeDiffTooLarge: 0,
+        amountDiffTooLarge: 0,
+        noMatch: 0
+      };
       
       data.forEach((item) => {
-        const matchingItem = csvData.find((csvItem) => {
-          // 优化时间比较逻辑
-          const timeDiff = dayjs(item.trans_time).diff(dayjs(csvItem.trans_time), 'minute');
-          const amountDiff = Number(item.amount) - Number(csvItem.amount);
+        // 格式化日期以便于比较和调试
+        const itemTime = dayjs(item.trans_time).format('YYYY-MM-DD HH:mm:ss');
+        const itemAmount = Number(item.amount);
+        
+        let bestMatch = null;
+        let smallestTimeDiff = Infinity;
+        let smallestAmountDiff = Infinity;
+        
+        csvData.forEach(csvItem => {
+          const csvTime = dayjs(csvItem.trans_time).format('YYYY-MM-DD HH:mm:ss');
+          const csvAmount = Number(csvItem.amount);
+          
+          // 计算绝对差值
+          const timeDiff = Math.abs(dayjs(itemTime).diff(dayjs(csvTime), 'minute'));
+          const amountDiff = Math.abs(itemAmount - csvAmount);
+          
+          // 记录最小差异，用于调试
+          if (timeDiff < smallestTimeDiff) smallestTimeDiff = timeDiff;
+          if (amountDiff < smallestAmountDiff) smallestAmountDiff = amountDiff;
           
           // 时间误差在2分钟内，金额误差在1元内
-          return timeDiff <= 2 && amountDiff <= 1;
+          if (timeDiff <= 2 && amountDiff <= 1) {
+            // 找到最佳匹配（时间差最小）
+            if (!bestMatch || timeDiff < Math.abs(dayjs(itemTime).diff(dayjs(bestMatch.trans_time), 'minute'))) {
+              bestMatch = csvItem;
+            }
+          }
         });
+        
+        matchingItem = bestMatch;
         
         if (matchingItem) {
           matchedCount++;
+          // console.log(chalk.green(`匹配成功: ${itemTime} (${itemAmount}) -> ${dayjs(matchingItem.trans_time).format('YYYY-MM-DD HH:mm:ss')} (${Number(matchingItem.amount)})`));
+          
           db.run(
             `UPDATE transactions SET payee = ?, description = ? WHERE id = ?`,
             [matchingItem.payee, matchingItem.description, item.id],
@@ -149,6 +182,17 @@ async function updateTask(fileName) {
               }
             }
           );
+        } else {
+          // 记录未匹配原因
+          if (smallestTimeDiff > 2) {
+            notMatchedReasons.timeDiffTooLarge++;
+          } else if (smallestAmountDiff > 1) {
+            notMatchedReasons.amountDiffTooLarge++;
+          } else {
+            notMatchedReasons.noMatch++;
+          }
+          
+          // console.log(chalk.yellow(`未找到匹配: ${itemTime} (${itemAmount}), 最小时间差: ${smallestTimeDiff}分钟, 最小金额差: ${smallestAmountDiff}元`));
         }
       });
       
@@ -162,6 +206,10 @@ async function updateTask(fileName) {
           console.log(`- 总记录数: ${data.length}`);
           console.log(`- 匹配记录: ${matchedCount}`);
           console.log(chalk.green(`- 更新成功: ${updatedCount}`));
+          console.log('未匹配原因统计:');
+          console.log(`- 时间差过大: ${notMatchedReasons.timeDiffTooLarge}`);
+          console.log(`- 金额差过大: ${notMatchedReasons.amountDiffTooLarge}`);
+          console.log(`- 其他原因: ${notMatchedReasons.noMatch}`);
         }
       });
     });

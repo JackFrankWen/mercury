@@ -248,6 +248,7 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
           defaultPageSize: 50,
           pageSizeOptions: [50, 100, 200],
           showSizeChanger: true,
+          showTotal: (total, range) => `共${total}条`,
         }}
       />
       <AddTransactionDrawer

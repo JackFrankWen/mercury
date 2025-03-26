@@ -2,8 +2,17 @@
 const fs = require("fs");
 const csv = require("csv-parser");
 const path = require("path");
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
 const { db, createTransactionTable, checkTableExists } = require("./utils/import-table");
 /* eslint-enable */
+
+// 配置 dayjs
+dayjs.extend(utc);
+dayjs.extend(timezone);
+// 设置默认时区为亚洲/上海
+dayjs.tz.setDefault("Asia/Shanghai");
 
 // Import JSON data
 function importJSON(filepath) {
@@ -35,10 +44,20 @@ function importJSON(filepath) {
 
       jsonData.forEach((row) => {
         try {
-          // Convert MongoDB timestamp to ISO string
-          let timestamp = new Date().toISOString();
+          // 使用 dayjs 处理时间戳并解决时区问题
+          let timestamp;
+          
           if (row.trans_time && row.trans_time.$date && row.trans_time.$date.$numberLong) {
-            timestamp = new Date(parseInt(row.trans_time.$date.$numberLong)).toISOString();
+            // MongoDB 时间戳处理 (毫秒)
+            const milliseconds = parseInt(row.trans_time.$date.$numberLong);
+            // 使用 dayjs 并确保时区正确
+            timestamp = dayjs(milliseconds).tz().format('YYYY-MM-DD HH:mm:ss');
+          } else if (row.trans_time && typeof row.trans_time === 'string') {
+            // 处理字符串格式时间
+            timestamp = dayjs(row.trans_time).tz().format('YYYY-MM-DD HH:mm:ss');
+          } else {
+            // 默认使用当前时间
+            timestamp = dayjs().tz().format('YYYY-MM-DD HH:mm:ss');
           }
 
           // Improved amount handling
