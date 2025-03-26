@@ -244,13 +244,15 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
             <Button
               type="primary"
               icon={<PlusOutlined />}
-              shape="circle"
+              shape="round"
               style={{
                 background: '#000',
                 boxShadow: '0 2px 6px rgba(82, 196, 26, 0.3)',
               }}
               onClick={() => setAddDrawerVisible(true)}
-            />
+            >
+              交易
+            </Button>
           </Tooltip>
         </Space>
       </Row>

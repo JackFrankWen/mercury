@@ -1,14 +1,14 @@
-import React, { useState } from "react";
-import { Card, Cascader, Col, message, Row, Space, Switch, Table } from "antd";
-import { Button, Form, Input, Radio } from "antd";
-import SelectWrap from "./selectWrap";
-import { cpt_const } from "../const/web";
-import { category_type } from "../const/categroy";
-import { toNumberOrUndefiend } from "./utils";
-import useLoadingButton from "./useButton";
-import { DefaultOptionType } from "antd/es/cascader";
-import AdvancedRuleFormItem, { RuleItemList } from "../page/setting/advancedRuleFormItem";
-import { AdvancedRule } from "src/main/sqlite3/advance-rules";
+import React, { useState } from 'react';
+import { Card, Cascader, Col, message, Row, Space, Switch, Table } from 'antd';
+import { Button, Form, Input, Radio } from 'antd';
+import SelectWrap from './selectWrap';
+import { cpt_const } from '../const/web';
+import { category_type } from '../const/categroy';
+import { toNumberOrUndefiend } from './utils';
+import useLoadingButton from './useButton';
+import { DefaultOptionType } from 'antd/es/cascader';
+import AdvancedRuleFormItem, { RuleItemList } from '../page/setting/advancedRuleFormItem';
+import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
 export type RuleFormData = {
   id?: number;
   name?: string;
@@ -27,7 +27,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
 
   const { data = {} as AdvancedRule } = props;
   const onFormLayoutChange = (value: { category: [number, number] }) => {
-    console.log(value, "onFormLayoutChange");
+    console.log(value, 'onFormLayoutChange');
 
     // if (category) {
     //   const found = category_type.find((val) => val.value === category[0])
@@ -48,29 +48,32 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
   const submitRule = async () => {
     const { data, refresh } = props;
 
-    const formValue = form.getFieldsValue();
     let res: any;
     try {
-      console.log(formValue, "formValue ");
+      const formValue = await form.validateFields();
+
+      console.log(formValue, 'formValue ');
       if (data?.id) {
         res = await window.mercury.api.updateAdvancedRule(data.id, {
           ...formValue,
           active: formValue.active ? 1 : 0,
           category: JSON.stringify(formValue.category),
           rule: JSON.stringify(formValue.rule),
+          active: formValue.active ? 1 : 0,
         });
-        console.log(res, "res");
+        console.log(res, 'res');
       } else {
         res = await window.mercury.api.addAdvancedRule({
           ...formValue,
           active: formValue.active ? 1 : 0,
           category: JSON.stringify(formValue.category),
           rule: JSON.stringify(formValue.rule),
+          active: formValue.active ? 1 : 0,
         });
-        console.log(res, "res");
+        console.log(res, 'res');
       }
       if (res?.code === 200) {
-        message.success("操作成功");
+        message.success('操作成功');
         setLoadingFalse();
         refresh();
       }
@@ -80,7 +83,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       message.error(error);
     }
   };
-  console.log(data, "data");
+  console.log(data, 'data');
 
   return (
     <Form
@@ -97,7 +100,6 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         priority: toNumberOrUndefiend(data?.priority) || 1,
         active: data?.active === 1,
       }}
-      onValuesChange={onFormLayoutChange}
       style={{ maxWidth: 600 }}
     >
       <Form.Item name="category">
@@ -108,13 +110,13 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
           showSearch={{
             filter: (inputValue: string, path: DefaultOptionType[]) =>
               path.some(
-                (option) =>
+                option =>
                   (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1
               ),
           }}
         />
       </Form.Item>
-      <Form.Item name="name">
+      <Form.Item name="name" rules={[{ required: true, message: '请输入规则名称' }]}>
         <Input placeholder="规则名称" />
       </Form.Item>
       <Form.Item name="tag">
@@ -132,7 +134,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       <Form.Item name="rule">
         <AdvancedRuleFormItem />
       </Form.Item>
-      <Form.Item style={{ textAlign: "right" }}>
+      <Form.Item style={{ textAlign: 'right' }}>
         <Space>
           <Button
             onClick={() => {

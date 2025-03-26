@@ -43,7 +43,7 @@ function AdvancedNewBtn(props: { refresh?: () => void }) {
         >
           <AdvancedRuleModal
             data={record}
-            refresh={props.refresh}
+            refresh={props.refresh || (() => {})}
             onCancel={() => setVisible(false)}
           />
         </Modal>

@@ -1,4 +1,4 @@
-import { ColumnsType } from "antd";
+import { ColumnsType, Tag } from "antd";
 import React from "react";
 import { getCategoryString } from "../const/categroy";
 import { findCategoryById } from "../const/categroy";
@@ -12,6 +12,9 @@ export function getCategoryCol(props: ColumnsType) {
     key: "category",
     width: 140,
     render: (val: string) => {
+      if (!val) {
+        return <Tag color="default">未分类</Tag>;
+      }
       const cate = JSON.parse(val);
       const category = findCategoryById(cate[1]);
       return (
