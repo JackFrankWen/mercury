@@ -221,8 +221,8 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
             <PlusOutlined style={{ fontSize: 20 }} onClick={() => setAddDrawerVisible(true)} />
           </Tooltip>
           <Tooltip title="批量替换">
-            <SwapOutlined 
-              style={{ fontSize: 20, cursor: 'pointer' }} 
+            <SwapOutlined
+              style={{ fontSize: 20, cursor: 'pointer' }}
               onClick={() => setBatchReplaceVisible(true)}
             />
           </Tooltip>
@@ -307,14 +307,17 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
           selectedCount={selectedRowKeys.length}
         />
       )}
-      <BatchStepReplace
-        visible={batchReplaceVisible}
-        onClose={() => setBatchReplaceVisible(false)}
-        onSuccess={() => {
-          setBatchReplaceVisible(false);
-          fresh();
-        }}
-      />
+      {batchReplaceVisible && (
+        <BatchStepReplace
+          data={data}
+          visible={batchReplaceVisible}
+          onClose={() => setBatchReplaceVisible(false)}
+          onSuccess={() => {
+            setBatchReplaceVisible(false);
+            fresh();
+          }}
+        />
+      )}
     </div>
   );
 }

@@ -101,6 +101,9 @@ const RuleTable = (props: {
         if (type === 'modal') {
           setSelectedRowKeys(res.map((item: AdvancedRule) => item.id));
           setSelectedRows(res);
+          if (onSelectChange) {
+            onSelectChange(res);
+          }
         }
       }
     });

@@ -367,7 +367,10 @@ const BasicTable = (props: {
     // 根据ai 分类
     // 根据规则分类
     try {
-      const newData = await ruleByAdvanced(data, api);
+      const rules = await window.mercury.api.getAllAdvancedRules({
+        active: 1,
+      });
+      const newData = await ruleByAdvanced(data, rules, api);
       // 根据用户手动分类
       setData(newData);
       setStep(4);

@@ -180,8 +180,12 @@ function applyRule(transactions: I_Transaction[], rules: AdvancedRule[]) {
         return {
           ...transaction,
           tag: rule.tag || transaction.tag,
+          beforeTag: transaction.tag,
           consumer: rule.consumer || transaction.consumer,
+          beforeConsumer: transaction.consumer,
           category: rule.category,
+          beforeCategory: transaction.category,
+          isChanged: true,
         };
       }
     }
@@ -194,11 +198,8 @@ function applyRule(transactions: I_Transaction[], rules: AdvancedRule[]) {
   };
 }
 
-export const ruleByAdvanced = async (arr: I_Transaction[], api: any) => {
+export const ruleByAdvanced = async (arr: I_Transaction[], rules: AdvancedRule[], api: any) => {
   try {
-    const rules: AdvancedRule[] = await window.mercury.api.getAllAdvancedRules({
-      active: 1,
-    });
     const p1Rules = rules.filter((item: any) => item.priority === 1);
     const p10Rules = rules.filter((item: any) => item.priority === 10);
     const p100Rules = rules.filter((item: any) => item.priority === 100);
@@ -207,6 +208,9 @@ export const ruleByAdvanced = async (arr: I_Transaction[], api: any) => {
     const { newData: p10NewData, messageList: p10MessageList } = applyRule(newData, p10Rules);
     const { newData: p100NewData, messageList: p100MessageList } = applyRule(p10NewData, p100Rules);
 
+    console.log(p1MessageList, "p1MessageList");
+    console.log(p10MessageList, "p10MessageList");
+    console.log(p100MessageList, "p100MessageList");
     if (p1MessageList.length > 0) {
       openNotification(p1MessageList, api, "规则【P3】");
     }
