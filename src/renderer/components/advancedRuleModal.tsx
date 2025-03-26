@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Cascader, Col, message, Row, Space, Switch, Table } from 'antd';
+import { Card, Cascader, Col, message, notification, Row, Space, Switch, Table } from 'antd';
 import { Button, Form, Input, Radio } from 'antd';
 import SelectWrap from './selectWrap';
 import { cpt_const } from '../const/web';
@@ -9,6 +9,9 @@ import useLoadingButton from './useButton';
 import { DefaultOptionType } from 'antd/es/cascader';
 import AdvancedRuleFormItem, { RuleItemList } from '../page/setting/advancedRuleFormItem';
 import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
+import { ruleByAdvanced } from '../page/upload/ruleUtils';
+
+import dayjs from 'dayjs';
 export type RuleFormData = {
   id?: number;
   name?: string;
@@ -23,6 +26,7 @@ export type RuleFormData = {
 
 const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: () => void }) => {
   const [form] = Form.useForm();
+  const [api, contextHolder] = notification.useNotification();
   const [LoadingBtn, , setLoadingFalse] = useLoadingButton();
 
   const { data = {} as AdvancedRule } = props;
@@ -51,6 +55,10 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
     let res: any;
     try {
       const formValue = await form.validateFields();
+      if (!formValue.category && !formValue.consumer && !formValue.tag) {
+        message.error('分类、消费者、标签至少选择一项');
+        return;
+      }
 
       console.log(formValue, 'formValue ');
       if (data?.id) {
@@ -59,7 +67,6 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
           active: formValue.active ? 1 : 0,
           category: JSON.stringify(formValue.category),
           rule: JSON.stringify(formValue.rule),
-          active: formValue.active ? 1 : 0,
         });
         console.log(res, 'res');
       } else {
@@ -68,7 +75,6 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
           active: formValue.active ? 1 : 0,
           category: JSON.stringify(formValue.category),
           rule: JSON.stringify(formValue.rule),
-          active: formValue.active ? 1 : 0,
         });
         console.log(res, 'res');
       }
@@ -84,6 +90,33 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
     }
   };
   console.log(data, 'data');
+  const testRule = async () => {
+    
+    try {
+      const formValue = await form.getFieldsValue();
+      const allData = await window.mercury.api.getTransactions({
+        is_unclassified: false,
+        flow_type: 1,
+        trans_time: [dayjs('2000-01-01').format('YYYY-MM-DD'), dayjs('2099-01-01').format('YYYY-MM-DD')],
+      });
+      console.log(allData, 'allData ');
+      await ruleByAdvanced(
+        allData,
+        [
+          {
+            ...formValue,
+            active: formValue.active ? 1 : 0,
+            category: JSON.stringify(formValue.category),
+            rule: JSON.stringify(formValue.rule),
+          },
+        ],
+        api
+      );
+    } catch (error) {
+      console.log(error);
+      message.error(error);
+    }
+  };
 
   return (
     <Form
@@ -102,6 +135,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       }}
       style={{ maxWidth: 600 }}
     >
+      {contextHolder}
       <Form.Item name="category">
         <Cascader
           options={category_type}
@@ -142,6 +176,9 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
             }}
           >
             取消
+          </Button>
+          <Button danger onClick={testRule}>
+            测试规则
           </Button>
           <LoadingBtn type="primary" onClick={submitRule}>
             提交

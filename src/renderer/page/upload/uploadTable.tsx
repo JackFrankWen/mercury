@@ -19,10 +19,7 @@ import {
   Typography,
 } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-  findCategoryById,
-  getCategoryString,
-} from 'src/renderer/const/categroy';
+import { findCategoryById, getCategoryString } from 'src/renderer/const/categroy';
 import { account_type } from 'src/renderer/const/web';
 import useLoadingButton from 'src/renderer/components/useButton';
 import { formatMoney } from 'src/renderer/components/utils';
@@ -40,22 +37,21 @@ function checkNeedTransferData(data: any) {
     .map((obj: any, dataIndex: number) =>
       obj.payee?.includes('京东') && obj.description?.includes('京东-订单编号')
         ? { ...obj, dataIndex }
-        : null,
+        : null
     )
     .filter(Boolean);
   const pddData = data
     .map((obj: any, dataIndex: number) =>
       obj.payee?.includes('拼多多') && obj.description?.includes('商户单号')
         ? { ...obj, dataIndex }
-        : null,
+        : null
     )
     .filter(Boolean);
   const alipay1688 = data
     .map((obj: any, dataIndex: number) =>
-      obj.payee?.includes('1688先采后付') &&
-        obj.description?.includes('先采后付还款')
+      obj.payee?.includes('1688先采后付') && obj.description?.includes('先采后付还款')
         ? { ...obj, dataIndex }
-        : null,
+        : null
     )
     .filter(Boolean);
   const hasJingdong = jingdongData.length > 0;
@@ -118,16 +114,8 @@ const BasicTable = (props: {
   setStep: (step: number) => void;
   setLoading: (loading: boolean) => void;
 }) => {
-  const {
-    tableData,
-    tableHeader,
-    onCancel,
-    onSubmitSuccess,
-    step,
-    setStep,
-    setLoading,
-    loading,
-  } = props;
+  const { tableData, tableHeader, onCancel, onSubmitSuccess, step, setStep, setLoading, loading } =
+    props;
   const [api, contextHolder] = notification.useNotification();
 
   const [form] = Form.useForm();
@@ -163,11 +151,7 @@ const BasicTable = (props: {
     setData(newData);
   };
 
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: () => void,
-    dataIndex: string,
-  ) => {
+  const handleSearch = (selectedKeys: string[], confirm: () => void, dataIndex: string) => {
     confirm();
     setSearchText({ ...searchText, [dataIndex]: selectedKeys[0] });
     setSearchedColumn(dataIndex);
@@ -179,19 +163,12 @@ const BasicTable = (props: {
   };
 
   const getColumnSearchProps = (dataIndex: string) => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }: any) => (
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
       <div style={{ padding: 8 }}>
         <Input
           placeholder={`搜索${dataIndex === 'payee' ? '交易对方' : '描述'}`}
           value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
+          onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{ marginBottom: 8, display: 'block' }}
         />
@@ -218,10 +195,7 @@ const BasicTable = (props: {
 
     onFilter: (value: string, record: any) => {
       return record[dataIndex]
-        ? record[dataIndex]
-          .toString()
-          .toLowerCase()
-          .includes(value.toLowerCase())
+        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
         : false;
     },
     filteredValue: searchText[dataIndex] ? [searchText[dataIndex]] : null,
@@ -251,9 +225,7 @@ const BasicTable = (props: {
         if (!flow_type) return 'flow_type 为空';
         // 金额如果包含中文，则返回警告
         if (/[\u4e00-\u9fa5]/.test(val)) {
-          return (
-            <Typography.Text type="warning">这条数据有问题</Typography.Text>
-          );
+          return <Typography.Text type="warning">这条数据有问题</Typography.Text>;
         }
         const child = flow_type === 1 ? '支：' : '收：';
         const type = flow_type === 1 ? 'danger' : 'success';
@@ -336,7 +308,7 @@ const BasicTable = (props: {
             <Popconfirm
               title="Are you sure to delete this task?"
               onConfirm={() => onDelete(record)}
-              onCancel={() => { }}
+              onCancel={() => {}}
               okText="Yes"
               cancelText="No"
             >
@@ -348,13 +320,7 @@ const BasicTable = (props: {
     },
   ];
 
-  const goStep2 = ({
-    hasJingdong,
-    hasPdd,
-  }: {
-    hasJingdong: boolean;
-    hasPdd: boolean;
-  }) => {
+  const goStep2 = ({ hasJingdong, hasPdd }: { hasJingdong: boolean; hasPdd: boolean }) => {
     if (!hasJingdong && !hasPdd && step === 2) {
       // 替换为京东-订单编号
       setStep(3);
@@ -431,9 +397,7 @@ const BasicTable = (props: {
         <Col span={24} style={{ textAlign: 'center' }}>
           <span style={{ fontSize: '24px', marginRight: '12px' }}>
             支出：
-            <Typography.Text type="danger">
-              {formatMoney(tableHeader.titleCost)}元
-            </Typography.Text>
+            <Typography.Text type="danger">{formatMoney(tableHeader.titleCost)}元</Typography.Text>
           </span>
           <span style={{ fontSize: '24px' }}>
             收入：
@@ -444,14 +408,10 @@ const BasicTable = (props: {
         </Col>
         <Col span={24} style={{ textAlign: 'center' }}>
           <span style={{ marginRight: '12px' }}>
-            <Typography.Text type="secondary">
-              {tableHeader.titleCostLabel}
-            </Typography.Text>
+            <Typography.Text type="secondary">{tableHeader.titleCostLabel}</Typography.Text>
           </span>
           <span>
-            <Typography.Text type="secondary">
-              {tableHeader.titleIncomeLabel}
-            </Typography.Text>
+            <Typography.Text type="secondary">{tableHeader.titleIncomeLabel}</Typography.Text>
           </span>
         </Col>
       </Row>
@@ -460,12 +420,12 @@ const BasicTable = (props: {
         <Table
           virtual
           rowKey="id"
-          onRow={(record) => {
+          onRow={record => {
             return {
               onDoubleClick: () => edit(record),
             };
           }}
-          rowClassName={(record) => {
+          rowClassName={record => {
             // 金额如果包含中文，则返回警告
             if (/[\u4e00-\u9fa5]/.test(record.amount)) {
               return 'mercury-warning';
@@ -487,11 +447,7 @@ const BasicTable = (props: {
           pagination={false}
         />
       </Form>
-      <Row
-        justify="space-between"
-        align="middle"
-        style={{ marginBottom: '10px' }}
-      >
+      <Row justify="space-between" align="middle" style={{ marginBottom: '10px' }}>
         <Space>
           <span style={{ fontSize: '12px' }}>{tableHeader?.fileName}</span>
           <span style={{ fontSize: '12px' }}>账号:{tableHeader?.name}</span>
@@ -528,22 +484,16 @@ const BasicTable = (props: {
               if (type === 'pdd' && !obj.description?.includes('商户单号')) {
                 return obj;
               }
-              if (
-                type === 'alipay1688' &&
-                !obj.description?.includes('先采后付还款')
-              ) {
+              if (type === 'alipay1688' && !obj.description?.includes('先采后付还款')) {
                 return obj;
               }
 
               // Find matching transfer data
               const matchingItem = transferData.find((item: any) => {
                 // 时间误差在3分钟
-                const isSameTime =
-                  dayjs(obj.trans_time).diff(dayjs(item.trans_time), 'minute') <
-                  3;
+                const isSameTime = dayjs(obj.trans_time).diff(dayjs(item.trans_time), 'minute') < 3;
                 const isSameAmount =
-                  Math.round(Number(obj.amount)) ===
-                  Math.round(Number(item.amount));
+                  Math.round(Number(obj.amount)) === Math.round(Number(item.amount));
 
                 return isSameTime && isSameAmount;
               });
