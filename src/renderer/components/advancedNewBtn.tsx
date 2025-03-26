@@ -29,7 +29,7 @@ function AdvancedNewBtn(props: { refresh?: () => void }) {
           });
         }}
       >
-        新增规则
+        规则
       </Button>
       {visible && (
         <Modal
