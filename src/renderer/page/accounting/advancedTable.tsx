@@ -30,6 +30,7 @@ import { findCategoryById } from "../../const/categroy";
 import { renderIcon } from "../../components/FontIcon";
 import { getCategoryCol } from "src/renderer/components/commonColums";
 import AdvancedNewBtn from "src/renderer/components/advancedNewBtn";
+import BatchStepReplace from './batchStepRepace';
 
 interface DataType {
   trans_time_formate: string;
@@ -192,6 +193,8 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [addDrawerVisible, setAddDrawerVisible] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState(0);
+  const [batchReplaceVisible, setBatchReplaceVisible] = useState(false);
+
   const onSelectChange = (newSelectedRowKeys: React.Key[], selectedRows: I_Transaction[]) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
@@ -218,7 +221,10 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
             <PlusOutlined style={{ fontSize: 20 }} onClick={() => setAddDrawerVisible(true)} />
           </Tooltip>
           <Tooltip title="批量替换">
-            <SwapOutlined style={{ fontSize: 20 }} />
+            <SwapOutlined 
+              style={{ fontSize: 20, cursor: 'pointer' }} 
+              onClick={() => setBatchReplaceVisible(true)}
+            />
           </Tooltip>
         </Space>
       </Row>
@@ -301,6 +307,14 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
           selectedCount={selectedRowKeys.length}
         />
       )}
+      <BatchStepReplace
+        visible={batchReplaceVisible}
+        onClose={() => setBatchReplaceVisible(false)}
+        onSuccess={() => {
+          setBatchReplaceVisible(false);
+          fresh();
+        }}
+      />
     </div>
   );
 }
