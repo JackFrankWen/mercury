@@ -217,15 +217,27 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
         <Breadcrumb items={[{ title: '交易表格' }]} />
         <Space>
           <AdvancedNewBtn />
-          <Tooltip title="新增交易">
-            <PlusOutlined style={{ fontSize: 20 }} onClick={() => setAddDrawerVisible(true)} />
-          </Tooltip>
-          <Tooltip title="批量替换">
-            <SwapOutlined
-              style={{ fontSize: 20, cursor: 'pointer' }}
-              onClick={() => setBatchReplaceVisible(true)}
-            />
-          </Tooltip>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            shape="circle"
+            style={{ 
+              background: '#52c41a', 
+              boxShadow: '0 2px 6px rgba(82, 196, 26, 0.3)' 
+            }}
+            onClick={() => setAddDrawerVisible(true)}
+          />
+          
+          <Button
+            type="primary"
+            icon={<SwapOutlined />}
+            shape="circle"
+            style={{ 
+              background: '#faad14', 
+              boxShadow: '0 2px 6px rgba(250, 173, 20, 0.3)' 
+            }}
+            onClick={() => setBatchReplaceVisible(true)}
+          />
         </Space>
       </Row>
 

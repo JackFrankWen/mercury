@@ -2,13 +2,20 @@ import { Modal, Button } from 'antd';
 import React, { useState } from 'react';
 import AdvancedRuleModal from './advancedRuleModal';
 import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
+import { PlusOutlined } from '@ant-design/icons';
 function AdvancedNewBtn(props: { refresh?: () => void }) {
   const [visible, setVisible] = useState(false);
   const [record, setRecord] = useState<AdvancedRule>();
   return (
     <>
       <Button
-        type="primary"
+        type="primary" 
+        icon={<PlusOutlined />} 
+        shape="round"
+        style={{ 
+          background: '#1890ff', 
+          boxShadow: '0 2px 6px rgba(24, 144, 255, 0.3)'
+        }}
         onClick={() => {
           setVisible(true);
           setRecord({
