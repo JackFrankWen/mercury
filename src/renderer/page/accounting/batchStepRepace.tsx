@@ -17,7 +17,7 @@ import dayjs from 'dayjs';
 import AdvancedRule from '../setting/advancedRule';
 import { formatMoney } from '../../components/utils';
 import { ruleByAdvanced } from '../upload/ruleUtils';
-
+import { getCategoryCol } from 'src/renderer/components/commonColums';
 interface BatchStepReplaceProps {
   data: I_Transaction[];
   visible: boolean;
@@ -62,9 +62,9 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({
       const filteredData = newData.filter((item: any) => item.isChanged);
       setMatchedData(filteredData);
       // 重置选择
-      setSelectedRowKeys([]);
-      setSelectedRows([]);
-      setCurrentStep(1);
+      setSelectedRowKeys(filteredData.map((item: any) => item.id));
+      setSelectedRows(filteredData);
+      setCurrentStep(2);
     } catch (error) {
       console.error('查找匹配数据失败:', error);
       message.error('查找匹配数据失败');
@@ -75,24 +75,30 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({
 
   // 处理提交
   const handleSubmit = async () => {
-    if (selectedRows.length === 0) {
-      message.warning('请至少选择一条记录');
-      return;
-    }
-    
-    setLoading(true);
-    try {
-      // 只提交选中的行
-      await window.mercury.api.batchReplaceTransactions(selectedRows);
-      message.success(`成功替换 ${selectedRows.length} 条记录`);
-      onSuccess();
-      handleReset();
-    } catch (error) {
-      console.error('批量替换失败:', error);
-      message.error('批量替换失败');
-    } finally {
-      setLoading(false);
-    }
+    Modal.confirm({
+      title: '确认替换',
+      content: `确认替换 ${selectedRows.length} 条记录吗？`,
+      onOk: async () => {
+        if (selectedRows.length === 0) {
+          message.warning('请至少选择一条记录');
+          return;
+        }
+
+        setLoading(true);
+        try {
+          // 只提交选中的行
+          await window.mercury.api.batchReplaceTransactions(selectedRows);
+          message.success(`成功替换 ${selectedRows.length} 条记录`);
+          onSuccess();
+          handleReset();
+        } catch (error) {
+          console.error('批量替换失败:', error);
+          message.error('批量替换失败');
+        } finally {
+          setLoading(false);
+        }
+      },
+    });
   };
 
   // 重置弹窗状态
@@ -129,6 +135,7 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({
       key: 'amount',
       render: (text: string) => formatMoney(text),
     },
+    getCategoryCol({ width: 100 }),
     {
       title: '交易对方',
       dataIndex: 'payee',
@@ -139,6 +146,11 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({
       dataIndex: 'description',
       key: 'description',
       ellipsis: true,
+    },
+    {
+      title: '消费者',
+      dataIndex: 'consumer',
+      key: 'consumer',
     },
   ];
 
@@ -158,32 +170,28 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({
       case 2:
         return (
           <div>
-            {currentStep === 2 && (
-              <div style={{ marginBottom: 16 }}>
-                <span style={{ marginRight: 8 }}>
-                  已选择 <strong>{selectedRowKeys.length}</strong> 条记录
-                </span>
-                {selectedRowKeys.length > 0 && (
-                  <Button 
-                    type="link" 
-                    onClick={() => {
-                      setSelectedRowKeys([]);
-                      setSelectedRows([]);
-                    }}
-                  >
-                    清除选择
-                  </Button>
-                )}
-              </div>
-            )}
             <Table
+              onRow={record => {
+                return {
+                  onClick: () => {
+                    // 如果当前行是选中状态，则取消选中
+                    if (selectedRowKeys.includes(record.id)) {
+                      setSelectedRowKeys(selectedRowKeys.filter(key => key !== record.id));
+                      setSelectedRows(selectedRows.filter(item => item.id !== record.id));
+                    } else {
+                      setSelectedRowKeys([...selectedRowKeys, record.id]);
+                      setSelectedRows([...selectedRows, record]);
+                    }
+                  },
+                };
+              }}
               dataSource={matchedData}
               columns={columns}
               rowSelection={rowSelection}
-              pagination={currentStep === 2 ? { pageSize: 5 } : false}
+              pagination={false}
               rowKey="id"
               size="small"
-              scroll={{ y: 300 }}
+              scroll={{ x: 700, y: 300 }}
             />
           </div>
         );
@@ -208,10 +216,10 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({
             下一步
           </Button>
         ) : (
-          <Button 
-            type="primary" 
-            onClick={handleSubmit} 
-            loading={loading} 
+          <Button
+            type="primary"
+            onClick={handleSubmit}
+            loading={loading}
             danger
             disabled={selectedRowKeys.length === 0}
           >
