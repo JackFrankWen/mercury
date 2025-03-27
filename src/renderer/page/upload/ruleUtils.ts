@@ -1,10 +1,10 @@
-import { message } from "antd";
-import { getCategoryString } from "src/renderer/const/categroy";
-import { openNotification } from "src/renderer/components/notification";
-import { RuleFormData } from "../../components/advancedRuleModal";
-import { AdvancedRule } from "src/main/sqlite3/advance-rules";
-import { RuleItem, RuleItemList, RuleItemListList } from "../setting/advancedRuleFormItem";
-import { I_Transaction } from "src/main/sqlite3/transactions";
+import { message } from 'antd';
+import { getCategoryString } from 'src/renderer/const/categroy';
+import { openNotification } from 'src/renderer/components/notification';
+import { RuleFormData } from '../../components/advancedRuleModal';
+import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
+import { RuleItem, RuleItemList, RuleItemListList } from '../setting/advancedRuleFormItem';
+import { I_Transaction } from 'src/main/sqlite3/transactions';
 /**
  * Apply user-defined classification rules to transaction data
  */
@@ -14,10 +14,10 @@ export const ruleByUser = async (arr: any, api: any) => {
 
   const newData = arr.map((obj: any, index: number) => {
     // Get the text to match against (description or payee)
-    const matchText = `${obj.description || ""} ${obj.payee || ""}`.trim();
+    const matchText = `${obj.description || ''} ${obj.payee || ''}`.trim();
 
     // Find the first matching rule
-    const matchingRule = rules.find((element) => {
+    const matchingRule = rules.find(element => {
       const reg = new RegExp(element.rule);
       return reg.test(matchText);
     });
@@ -53,7 +53,7 @@ export const ruleByAi = async (arr: any, api: any) => {
 
     const newData = arr.map((obj: any, index: number) => {
       // 当description 和 payee 都和autoData的 description 和 payee 匹配时，则更新category
-      const matchingRule = autoData.find((element) => {
+      const matchingRule = autoData.find(element => {
         return element.description === obj.description && element.payee === obj.payee;
       });
 
@@ -75,7 +75,7 @@ export const ruleByAi = async (arr: any, api: any) => {
     openNotification(messageList, api);
     return newData;
   } catch (error) {
-    message.error("分类失败");
+    message.error('分类失败');
     return arr;
   }
 };
@@ -86,52 +86,63 @@ export const ruleByAi = async (arr: any, api: any) => {
 */
 function matchRuleItem(transaction: I_Transaction, ruleItem: RuleItem): boolean {
   // console.log(ruleItem, "ruleItem");
-  let transactionCategory = "";
-  let ruleItemValue = "";
-  if (ruleItem.condition === "description" || ruleItem.condition === "payee") {
-    if (ruleItem.formula === "like") {
+  let transactionCategory = '';
+  let ruleItemValue = '';
+  if (ruleItem.condition === 'description' || ruleItem.condition === 'payee') {
+    if (ruleItem.formula === 'like') {
       const reg = new RegExp(ruleItem.value);
       return reg.test(transaction[ruleItem.condition]);
-    } else if (ruleItem.formula === "eq") {
+    } else if (ruleItem.formula === 'eq') {
       return transaction[ruleItem.condition] === ruleItem.value;
-    } else if (ruleItem.formula === "notlike") {
+    } else if (ruleItem.formula === 'notlike') {
       const reg = new RegExp(ruleItem.value);
-      console.log(transaction[ruleItem.condition], "transaction[ruleItem.condition] is not like");
-        console.log(reg.test(transaction[ruleItem.condition]), "reg.test(transaction[ruleItem.condition])");
-        
+      console.log(transaction[ruleItem.condition], 'transaction[ruleItem.condition] is not like');
+      console.log(
+        reg.test(transaction[ruleItem.condition]),
+        'reg.test(transaction[ruleItem.condition])'
+      );
+
       return !reg.test(transaction[ruleItem.condition]);
     }
-  } else if (ruleItem.condition === "amount") {
+  } else if (ruleItem.condition === 'amount') {
     const transactionAmount = Number(transaction.amount);
     const ruleValue = Number(ruleItem.value);
 
     switch (ruleItem.formula) {
-      case "gte":
+      case 'gte':
         return transactionAmount >= ruleValue;
-      case "lt":
+      case 'lt':
         return transactionAmount < ruleValue;
-      case "eq":
+      case 'eq':
         return transactionAmount === ruleValue;
     }
-  } else if (ruleItem.condition === "account_type") {
+  } else if (ruleItem.condition === 'account_type') {
     return transaction.account_type === ruleItem.value;
-  } else if (ruleItem.condition === "consumer") {
+  } else if (ruleItem.condition === 'consumer') {
     switch (ruleItem.formula) {
-      case "eq":
+      case 'eq':
         return transaction.consumer === ruleItem.value;
-      case "ne":
+      case 'ne':
         return transaction.consumer !== ruleItem.value;
     }
-  } else if (ruleItem.condition === "category") {
+  } else if (ruleItem.condition === 'category') {
     switch (ruleItem.formula) {
-      case "eq":
-         transactionCategory = typeof transaction.category === "string" ? transaction.category : JSON.stringify(transaction.category);
-         ruleItemValue = typeof ruleItem.value === "string" ? ruleItem.value : JSON.stringify(ruleItem.value);
+      case 'eq':
+        transactionCategory =
+          typeof transaction.category === 'string'
+            ? transaction.category
+            : JSON.stringify(transaction.category);
+        ruleItemValue =
+          typeof ruleItem.value === 'string' ? ruleItem.value : JSON.stringify(ruleItem.value);
         return transactionCategory === ruleItemValue;
-      case "ne":
-        transactionCategory = typeof transaction.category === "string" ? transaction.category : JSON.stringify(transaction.category);
-        ruleItemValue = typeof ruleItem.value === "string" ? ruleItem.value : JSON.stringify(ruleItem.value);
-        
+      case 'ne':
+        transactionCategory =
+          typeof transaction.category === 'string'
+            ? transaction.category
+            : JSON.stringify(transaction.category);
+        ruleItemValue =
+          typeof ruleItem.value === 'string' ? ruleItem.value : JSON.stringify(ruleItem.value);
+
         return transactionCategory !== ruleItemValue;
     }
   }
@@ -142,11 +153,11 @@ export function findMatchList(transactions: I_Transaction[], rules: AdvancedRule
   const matchList: I_Transaction[] = [];
   transactions.forEach((transaction, index) => {
     const ruleGroups: RuleItemListList = JSON.parse(rules.rule);
-    const isMatch = ruleGroups.some((ruleGroup) =>{
+    const isMatch = ruleGroups.some(ruleGroup => {
       // All conditions within a group must match (AND condition)o
-    console.log(ruleGroup, "ruleGroup");
-    
-      return ruleGroup.every((ruleItem) => matchRuleItem(transaction, ruleItem))
+      console.log(ruleGroup, 'ruleGroup');
+
+      return ruleGroup.every(ruleItem => matchRuleItem(transaction, ruleItem));
     });
     if (isMatch && rules.category !== transaction.category) {
       matchList.push(transaction);
@@ -163,9 +174,9 @@ function applyRule(transactions: I_Transaction[], rules: AdvancedRule[]) {
       const ruleGroups: RuleItemListList = JSON.parse(rule.rule);
 
       // Check if any rule group matches (OR condition between groups)
-      const isMatch = ruleGroups.some((ruleGroup) =>
+      const isMatch = ruleGroups.some(ruleGroup =>
         // All conditions within a group must match (AND condition)
-        ruleGroup.every((ruleItem) => matchRuleItem(transaction, ruleItem))
+        ruleGroup.every(ruleItem => matchRuleItem(transaction, ruleItem))
       );
 
       if (isMatch && rule.category !== transaction.category) {
@@ -208,22 +219,25 @@ export const ruleByAdvanced = async (arr: I_Transaction[], rules: AdvancedRule[]
     const { newData: p10NewData, messageList: p10MessageList } = applyRule(newData, p10Rules);
     const { newData: p100NewData, messageList: p100MessageList } = applyRule(p10NewData, p100Rules);
 
-    console.log(p1MessageList, "p1MessageList");
-    console.log(p10MessageList, "p10MessageList");
-    console.log(p100MessageList, "p100MessageList");
+    console.log(p1MessageList, 'p1MessageList');
+    console.log(p10MessageList, 'p10MessageList');
+    console.log(p100MessageList, 'p100MessageList');
     if (p1MessageList.length > 0) {
-      openNotification(p1MessageList, api, "规则【P3】");
+      openNotification(p1MessageList, api, '规则【P3】');
     }
     if (p10MessageList.length > 0) {
-      openNotification(p10MessageList, api, "规则【P2】");
+      openNotification(p10MessageList, api, '规则【P2】');
     }
     if (p100MessageList.length > 0) {
-      openNotification(p100MessageList, api, "规则【P1】");
+      openNotification(p100MessageList, api, '规则【P1】');
+    }
+    if (p100NewData.length === 0 && p10NewData.length === 0 && p1NewData.length === 0) {
+      message.info('没有符合条件的交易');
     }
 
     return p100NewData;
   } catch (error) {
-    message.error("分类失败");
+    message.error('分类失败');
     console.log(error);
 
     return arr;
