@@ -80,7 +80,7 @@ function YearBarChart(props: { formValue: FormData }) {
     <div className="mt8">
       <Card title={cardTitle()} bordered={false} hoverable extra={extra}>
         {formValue.type === 'year' ? (
-          <BarChart data={data} />
+          <BarChart data={data} hasElementClick={true} />
         ) : (
           <LunarCalendar
             formValue={{
