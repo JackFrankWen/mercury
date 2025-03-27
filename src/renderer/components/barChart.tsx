@@ -115,6 +115,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
     return () => {
       chart.destroy();
     };
+
   }, [data]); // 空依赖数组，仅在组件挂载时执行
 
   return <div ref={containerRef}></div>;
