@@ -14,7 +14,7 @@ import {
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
 import AdvancedNewBtn from '../../components/advancedNewBtn';
-import { getCategoryString } from '../../const/categroy';
+import { getCategoryString, getCategoryTypeByLabel } from '../../const/categroy';
 import { getAccountType, getConsumerType } from '../../const/web';
 import { getPriorityType, getConditionType, getFormulaType, priority_type } from '../../const/web';
 import AdvancedRuleModal from '../../components/advancedRuleModal';
@@ -310,6 +310,8 @@ const RuleTable = (props: {
   const onSearch = (value: string) => {
     console.log(value);
     setSearchValue(value);
+    const category = getCategoryTypeByLabel(value);
+    console.log(category, 'category');
     getRuleData({
       nameOrRule: value,
     });
@@ -336,11 +338,9 @@ const RuleTable = (props: {
         <Input.Search placeholder="请输入规则内容、名称" onSearch={onSearch} enterButton />
 
         {type !== 'modal' && <AdvancedNewBtn refresh={refresh} />}
-        {
-        selectedRowKeys.length > 0 && (
+        {selectedRowKeys.length > 0 && (
           <div>
             <span>选择了{selectedRowKeys.length}条</span>
-      
           </div>
         )}
       </Space>

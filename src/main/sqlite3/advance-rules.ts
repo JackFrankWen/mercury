@@ -1,5 +1,6 @@
-import { getDbInstance } from "./connect";
-import { RuleItemList } from "../../renderer/page/setting/advancedRuleFormItem";
+import { getDbInstance } from './connect';
+import { RuleItemList } from '../../renderer/page/setting/advancedRuleFormItem';
+import { getCategoryTypeByLabel } from 'src/renderer/const/categroy';
 export interface AdvancedRule {
   id?: number;
   name: string;
@@ -20,32 +21,59 @@ export async function getAllAdvancedRules(params?: {
 }): Promise<AdvancedRule[]> {
   try {
     const db = await getDbInstance();
+    
+    // 创建参数数组和 WHERE 子句片段
+    const whereConditions = [];
+    const queryParams: any[] = [];
+    
+    // 处理名称或规则搜索
+    if (params?.nameOrRule) {
+      // 尝试使用 getCategoryTypeByLabel 查找分类
+      const categoryMatch = getCategoryTypeByLabel(params.nameOrRule);
+      
+      if (categoryMatch && categoryMatch.length > 0) {
+        // 如果找到分类匹配
+        if (categoryMatch.length === 1) {
+          whereConditions.push(`(json_extract(category, '$[0]') = ? OR rule LIKE ? OR name LIKE ?)`);
+          queryParams.push(categoryMatch[0], `%${params.nameOrRule}%`, `%${params.nameOrRule}%`);
+        } else if (categoryMatch.length === 2) {
+          whereConditions.push(`(category = ? OR rule LIKE ? OR name LIKE ?)`);
+          queryParams.push(JSON.stringify(categoryMatch), `%${params.nameOrRule}%`, `%${params.nameOrRule}%`);
+        }
+      } else {
+        // 常规搜索
+        whereConditions.push(`(rule LIKE ? OR name LIKE ?)`);
+        queryParams.push(`%${params.nameOrRule}%`, `%${params.nameOrRule}%`);
+      }
+    }
+   
+
+    // 处理活动状态参数
+    if (params?.active !== undefined) {
+      whereConditions.push(`active = ?`);
+      queryParams.push(params.active);
+    }
+    
+    // 构建 WHERE 子句
+    const where = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
+    const sql = `SELECT * FROM advanced_rules ${where} ORDER BY priority DESC, category ASC`;
 
     return new Promise<AdvancedRule[]>((resolve, reject) => {
-      const whereConditions = [];
-      if (params?.nameOrRule) {
-        whereConditions.push(
-          `(rule LIKE '%${params.nameOrRule}%' OR name LIKE '%${params.nameOrRule}%')`
-        );
-      }
-      if (params?.active !== undefined) {
-        whereConditions.push(`active = ${params.active}`);
-      }
-
-      const where = whereConditions.length > 0 ? `WHERE ${whereConditions.join(" AND ")}` : "";
-      const sql = `SELECT * FROM advanced_rules ${where} ORDER BY category ASC`;
-
-      db.all(sql, (err, rows: AdvancedRule[]) => {
+      db.all(sql, queryParams, (err, rows: AdvancedRule[]) => {
         if (err) {
-          console.error("Error getting advanced rules:", err);
+          console.error('Error getting advanced rules:', err);
           reject(err);
           return;
         }
-        resolve(rows || []);
+        
+        // 添加简单的结果处理
+        const results = rows || [];
+        console.log(`Found ${results.length} advanced rules matching criteria`);
+        resolve(results);
       });
     });
   } catch (error) {
-    console.error("Error in getAllAdvancedRules:", error);
+    console.error('Error in getAllAdvancedRules:', error);
     throw error;
   }
 }
@@ -66,7 +94,7 @@ export async function addAdvancedRule(rule: AdvancedRule): Promise<{ code: numbe
         [rule.name, rule.rule, rule.category, rule.consumer, rule.tag, rule.priority],
         function (err) {
           if (err) {
-            console.error("Error adding advanced rule:", err);
+            console.error('Error adding advanced rule:', err);
             reject({ code: 500, error: err.message });
             return;
           }
@@ -75,7 +103,7 @@ export async function addAdvancedRule(rule: AdvancedRule): Promise<{ code: numbe
       );
     });
   } catch (error) {
-    console.error("Error in addAdvancedRule:", error);
+    console.error('Error in addAdvancedRule:', error);
     throw error;
   }
 }
@@ -109,7 +137,7 @@ export async function updateAdvancedRule(
         ],
         function (err) {
           if (err) {
-            console.error("Error updating advanced rule:", err);
+            console.error('Error updating advanced rule:', err);
             reject({ code: 500, error: err.message });
             return;
           }
@@ -123,7 +151,7 @@ export async function updateAdvancedRule(
       );
     });
   } catch (error) {
-    console.error("Error in updateAdvancedRule:", error);
+    console.error('Error in updateAdvancedRule:', error);
     throw error;
   }
 }
@@ -134,9 +162,9 @@ export async function deleteAdvancedRule(id: number): Promise<{ code: number }> 
     const db = await getDbInstance();
 
     return new Promise<{ code: number }>((resolve, reject) => {
-      db.run("DELETE FROM advanced_rules WHERE id = ?", [id], function (err) {
+      db.run('DELETE FROM advanced_rules WHERE id = ?', [id], function (err) {
         if (err) {
-          console.error("Error deleting advanced rule:", err);
+          console.error('Error deleting advanced rule:', err);
           reject({ code: 500, error: err.message });
           return;
         }
@@ -149,13 +177,15 @@ export async function deleteAdvancedRule(id: number): Promise<{ code: number }> 
       });
     });
   } catch (error) {
-    console.error("Error in deleteAdvancedRule:", error);
+    console.error('Error in deleteAdvancedRule:', error);
     throw error;
   }
 }
 
 // 批量插入高级规则
-export async function batchInsertAdvancedRule(rules: AdvancedRule[]): Promise<{ code: number; message?: string }> {
+export async function batchInsertAdvancedRule(
+  rules: AdvancedRule[]
+): Promise<{ code: number; message?: string }> {
   try {
     if (!rules || rules.length === 0) {
       return { code: 400, message: '没有可插入的规则' };
@@ -182,9 +212,9 @@ export async function batchInsertAdvancedRule(rules: AdvancedRule[]): Promise<{ 
               rule.consumer,
               rule.tag || null,
               rule.priority,
-              rule.active !== undefined ? rule.active : 1
+              rule.active !== undefined ? rule.active : 1,
             ],
-            (err) => {
+            err => {
               if (err) {
                 console.error('Error inserting advanced rule:', err);
                 hasError = true;
@@ -210,7 +240,7 @@ export async function batchInsertAdvancedRule(rules: AdvancedRule[]): Promise<{ 
     console.error('Error in batchInsertAdvancedRule:', error);
     return {
       code: 500,
-      message: error instanceof Error ? error.message : '批量插入高级规则时发生未知错误'
+      message: error instanceof Error ? error.message : '批量插入高级规则时发生未知错误',
     };
   }
 }

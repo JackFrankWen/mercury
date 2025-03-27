@@ -1,4 +1,16 @@
-import { Button, Col, Form, Input, InputNumber, Radio, Row, Select, Space, theme } from 'antd';
+import {
+  Button,
+  Cascader,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  Row,
+  Select,
+  Space,
+  theme,
+} from 'antd';
 import React, { useState } from 'react';
 import RangePickerWrap from '../../components/rangePickerWrap';
 import { cpt_const } from '../../const/web';
@@ -6,6 +18,8 @@ import { DownOutlined } from '@ant-design/icons';
 import { Params_Transaction } from 'src/preload/index';
 import dayjs from 'dayjs';
 import { I_FormValue } from './index';
+import { DefaultOptionType } from 'antd/es/cascader';
+import { category_type } from 'src/renderer/const/categroy';
 
 export const AdvancedSearchForm = (props: {
   getTransactions: (params: Params_Transaction) => void;
@@ -36,6 +50,7 @@ export const AdvancedSearchForm = (props: {
         }
       }),
     };
+    // 写个方法，根据description找到
 
     console.log('params', params);
 
@@ -141,8 +156,20 @@ export const AdvancedSearchForm = (props: {
               </Form.Item>
             </Col>
             <Col span={8}>
-              <Form.Item name="cost_type" label="消费目的">
-                <Select placeholder="消费目的" options={cpt_const.cost_type} />
+              <Form.Item name="category" label="交易分类">
+                <Cascader
+                  options={category_type}
+                  allowClear
+                  placeholder="请选择分类"
+                  showSearch={{
+                    filter: (inputValue: string, path: DefaultOptionType[]) =>
+                      path.some(
+                        option =>
+                          (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) >
+                          -1
+                      ),
+                  }}
+                />
               </Form.Item>
             </Col>
           </>
