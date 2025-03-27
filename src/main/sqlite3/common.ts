@@ -42,10 +42,14 @@ export function generateWhereClause(params: Params_Transaction): {
     conditions.push(`trans_time BETWEEN '${params.trans_time[0]}' AND '${params.trans_time[1]}'`);
   }
 
-  if (params?.creation_time && params?.creation_time[0] && params?.creation_time[1]) {
-    conditions.push(
-      `creation_time BETWEEN '${params.creation_time[0]}' AND '${params.creation_time[1]}'`
-    );
+  if (params?.creation_time) {
+    if (typeof params.creation_time === 'string') {
+      conditions.push(`datetime(creation_time) = datetime('${params.creation_time}')`);
+    } else if (params.creation_time[0] && params.creation_time[1]) {
+      conditions.push(
+        `creation_time BETWEEN '${params.creation_time[0]}' AND '${params.creation_time[1]}'`
+      );
+    }
   }
 
   if (params?.modification_time && params?.modification_time[0] && params?.modification_time[1]) {

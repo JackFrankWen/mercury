@@ -9,6 +9,7 @@ function BasicContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isBatchReplaceVisible, setIsBatchReplaceVisible] = useState(false);
   const [timeRange, setTimeRange] = useState([null, null]);
+  const [dateRange, setDateRange] = useState();
   const [timeType, setTimeType] = useState('trans_time');
   const [form] = Form.useForm();
   const [environment, setEnvironment] = useState<string>();
@@ -66,6 +67,7 @@ function BasicContent() {
   const handleCancel = () => {
     setIsModalOpen(false);
     setTimeRange([null, null]);
+    setDateRange(null);
     form.resetFields();
   };
 
@@ -73,24 +75,40 @@ function BasicContent() {
     try {
       const values = await form.validateFields();
 
-      if (!timeRange[0] || !timeRange[1]) {
+      if (timeType === 'trans_time' && (!values.trans_time[0] || !values.trans_time[1])) {
         message.error('请选择完整的时间范围');
         return;
       }
+      if (timeType === 'creation_time' && !values.creation_time) {
+        message.error('请选择完整的时间范围');
+        return;
+      }
+      let startDate: string;
+      let endDate: string;
+      let creationTime: string;
 
-      // 转换日期格式
-      const startDate = timeRange[0].startOf('year').format('YYYY-MM-DD HH:mm:ss');
-      const endDate = timeRange[1].endOf('year').format('YYYY-MM-DD HH:mm:ss');
+      if (timeType === 'trans_time') {
+        // 转换日期格式
+        startDate = values.trans_time[0].startOf('year').format('YYYY-MM-DD HH:mm:ss');
+        endDate = values.trans_time[1].endOf('year').format('YYYY-MM-DD HH:mm:ss');
+      } else {
+        creationTime = values.creation_time.format('YYYY-MM-DD HH:mm:ss');
+      }
 
       Modal.confirm({
         title: '确认删除',
-        content: `确认删除${timeType === 'trans_time' ? '交易' : '创建'}时间在 ${startDate} 至 ${endDate} 范围内的交易记录吗？`,
+        content: `确认删除${timeType === 'trans_time' ? '交易' : '创建'}时间  ${timeType === 'trans_time' ? `${startDate} 至 ${endDate}` : creationTime} 交易记录吗？`,
         onOk: async () => {
           try {
             // 调用 API 删除指定时间范围内的交易
             const params = {
-              [timeType]: [startDate, endDate],
+              [timeType]:
+                timeType === 'trans_time'
+                  ? [startDate, endDate]
+                  : creationTime,
             };
+            console.log(params, 'params');
+
             const result = await window.mercury.api.deleteAllTransactions(params);
 
             if (result.code === 200) {
@@ -175,13 +193,15 @@ function BasicContent() {
             />
           </Form.Item>
 
-          <Form.Item
-            label="时间范围"
-            name="timeRange"
-            rules={[{ required: true, message: '请选择时间范围' }]}
-          >
-            <RangePickerWrap value={timeRange} onChange={dates => setTimeRange(dates)} bordered />
-          </Form.Item>
+          {timeType === 'trans_time' ? (
+            <Form.Item label="交易时间" name="trans_time">
+              <RangePickerWrap bordered />
+            </Form.Item>
+          ) : (
+            <Form.Item label="创建时间" name="creation_time">
+              <DatePicker showTime  />
+            </Form.Item>
+          )}
         </Form>
       </Modal>
 

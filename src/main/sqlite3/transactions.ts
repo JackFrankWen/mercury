@@ -103,7 +103,6 @@ export const getAllTransactions = async (
       sql += ` LIMIT ${params.page_size} OFFSET ${offset}`;
     }
 
-    console.log("sql===", sql);
     const rows = await new Promise<I_Transaction[]>((resolve, reject) => {
       db.all(sql, (err, rows: I_Transaction[]) => {
         if (err) {
@@ -468,6 +467,7 @@ export async function deleteAllTransactions(
     const db = await getDbInstance();
 
     const { whereClause } = generateWhereClause(params);
+    console.log(whereClause, 'whereClause');
 
     await new Promise<void>((resolve, reject) => {
       db.run(`DELETE FROM transactions ${whereClause}`, (err) => {

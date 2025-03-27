@@ -21,8 +21,8 @@ export interface Params_Transaction {
   abc_type?: string;
   cost_type?: string;
   trans_time?: [string, string];
-  creation_time?: [string, string];
-  modification_time?: [string, string];
+  creation_time?: [string, string] | string;
+  modification_time?: [string, string] | string;
   category?: string;
   min_money?: number;
   max_money?: number;
