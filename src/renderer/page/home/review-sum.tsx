@@ -2,6 +2,7 @@ import { Card, Col, Divider, Progress, Row, Statistic, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { AccountType, PaymentType } from "src/renderer/const/web";
 import { formatMoney } from "src/renderer/components/utils";
+import { useFresh } from "src/renderer/components/useFresh";
 
 export default function Summarize(props: { formValue: any }) {
   const { formValue } = props;
@@ -97,7 +98,8 @@ export default function Summarize(props: { formValue: any }) {
       console.log(error);
     }
   };
-  useEffect(() => {
+
+  useFresh(() => {
     getSumrize(formValue);
   }, [formValue]);
   console.log(staticData, "staticData====aaa");

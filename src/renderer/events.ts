@@ -4,6 +4,7 @@ import { FormData } from './page/home/useReviewForm';
 type Events = {
   environmentChange: 'production' | 'test';
   updateDate: FormData;
+  refresh: void;
   // Add other event types here
 };
 

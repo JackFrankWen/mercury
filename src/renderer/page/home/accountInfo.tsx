@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import { getAccountType, getPaymentType } from 'src/renderer/const/web';
 import { formatMoney } from 'src/renderer/components/utils';
-
+import { useFresh } from 'src/renderer/components/useFresh';
 interface AccountInfoProps {
   accountType: string;
   total: number;
@@ -37,7 +37,7 @@ const useAccountInfo = (formValue: any) => {
       console.log(error);
     }
   };
-  useEffect(() => {
+  useFresh(() => {
     getSumrize(formValue);
   }, [formValue]);
   return {

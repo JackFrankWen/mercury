@@ -50,6 +50,7 @@ function BasicContent() {
           const result = await window.mercury.api.deleteAllTransactions();
           if (result.code === 200) {
             message.success(result.message);
+            emitter.emit('refresh');
           } else {
             message.error(result.message);
           }
@@ -112,6 +113,7 @@ function BasicContent() {
             const result = await window.mercury.api.deleteAllTransactions(params);
 
             if (result.code === 200) {
+              emitter.emit('refresh');
               message.success(`成功删除 ${result.message || 0} 条交易记录`);
 
               handleCancel(); // 关闭弹窗

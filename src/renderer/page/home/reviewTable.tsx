@@ -1,11 +1,13 @@
-import { Card, Col, Row, Space, Flex, Tabs } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
-import CategoryTable from "./categoryTable";
-import { useSelect } from "../../components/useSelect";
-import { cpt_const, payment_type } from "src/renderer/const/web";
-import DonutChart from "src/renderer/components/donutChart";
-import { CategoryReturnType } from "src/preload/index";
-import CategoryCollaspe from "./categoryCollaspe";
+import { Card, Col, Row, Space, Flex, Tabs } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import CategoryTable from './categoryTable';
+import { useSelect } from '../../components/useSelect';
+import { cpt_const, payment_type } from 'src/renderer/const/web';
+import DonutChart from 'src/renderer/components/donutChart';
+import { CategoryReturnType } from 'src/preload/index';
+import CategoryCollaspe from './categoryCollaspe';
+import { useFresh } from 'src/renderer/components/useFresh';
+import emitter from 'src/renderer/events';
 // 写一个方法  CategoryReturnType中 child 每一条数据    转化成 PieChart 的 data 用reduce
 // 转化 {value: item.child.value, name: item.child.name, type: item.    value}
 
@@ -35,7 +37,7 @@ const Tab2Content = ({ category, formValue, refreshTable }) => {
 // Tab2内容组件
 const Tab1Content = ({ category, formValue, refreshTable }) => {
   return (
-    <div style={{ minHeight: "400px" }}>
+    <div style={{ minHeight: '400px' }}>
       <CategoryCollaspe refreshTable={refreshTable} data={category} formValue={formValue} />
     </div>
   );
@@ -45,22 +47,22 @@ function TableSection(props: { formValue: any }) {
   const { formValue } = props;
   const [consumerVal, ConsumerCpt] = useSelect({
     options: cpt_const.consumer_type,
-    placeholder: "消费者",
+    placeholder: '消费者',
   });
 
   const [accountTypeVal, accountTypeCpt] = useSelect({
     options: cpt_const.account_type,
-    placeholder: "账户类型",
+    placeholder: '账户类型',
   });
   const [paymentVal, PaymentCpt] = useSelect({
     options: cpt_const.payment_type,
-    placeholder: "支付方式",
+    placeholder: '支付方式',
   });
 
   const [category, setCategory] = useState<CategoryReturnType>([]);
-  const [activeTabKey, setActiveTabKey] = useState("tab1");
+  const [activeTabKey, setActiveTabKey] = useState('tab1');
 
-  const handleTabChange = (key) => {
+  const handleTabChange = key => {
     setActiveTabKey(key);
   };
 
@@ -72,14 +74,14 @@ function TableSection(props: { formValue: any }) {
         ...data,
         trans_time,
       });
-      console.log(result, "result");
+      console.log(result, 'result');
 
       setCategory(result);
     } catch (error) {
       console.error(error);
     }
   };
-  useEffect(() => {
+  useFresh(() => {
     getCategory({
       ...formValue,
       consumer: consumerVal,
@@ -87,6 +89,7 @@ function TableSection(props: { formValue: any }) {
       payment_type: paymentVal,
     });
   }, [formValue, consumerVal, accountTypeVal, paymentVal]);
+
   const extra = (
     <>
       <Space>
@@ -103,17 +106,18 @@ function TableSection(props: { formValue: any }) {
       account_type: accountTypeVal,
       payment_type: paymentVal,
     });
+    emitter.emit('refresh');
   }, [formValue, consumerVal, accountTypeVal, paymentVal]);
 
   // 定义标签页配置
   const tabList = [
     {
-      key: "tab1",
-      tab: "图表",
+      key: 'tab1',
+      tab: '图表',
     },
     {
-      key: "tab2",
-      tab: "数据",
+      key: 'tab2',
+      tab: '数据',
     },
   ];
 

@@ -5,6 +5,7 @@ import { useSelect } from '../../components/useSelect';
 import { cpt_const } from 'src/renderer/const/web';
 import LunarCalendar from './lunarCalendar';
 import { FormData } from './useReviewForm';
+import { useFresh } from 'src/renderer/components/useFresh';
 
 function YearBarChart(props: { formValue: FormData }) {
   const { formValue } = props;
@@ -26,7 +27,7 @@ function YearBarChart(props: { formValue: FormData }) {
     placeholder: '支付方式',
   });
 
-  useEffect(() => {
+  useFresh(() => {
     if (formValue.type === 'year') {
       fetchData({
         ...formValue,
@@ -43,6 +44,7 @@ function YearBarChart(props: { formValue: FormData }) {
       });
     }
   }, [formValue, consumerVal, accountTypeVal, paymentTypeVal]);
+
   const extra = (
     <Space>
       {AccountTypeCpt}

@@ -3,8 +3,10 @@ import { Spin, message, Steps, Card } from "antd";
 import UploadTable, { tableHeaderI } from "./uploadTable";
 import UploadFile from "./uploadFile";
 import Done from "./done";
+import emitter from "src/renderer/events";
 
 import "./index.css";
+import { Params_Transaction } from "src/preload/type";
 // 上传中心
 // 第一步上传文件
 // 第二步
@@ -22,8 +24,9 @@ function UploadCenter(): JSX.Element {
 
   const uploadToDatabase = (tableData: Params_Transaction[]) => {
     window.mercury.api.batchInsertTransactions(tableData).then((res: any) => {
-      console.log(res, "res");
-      message.success("上传成功");
+      console.log(res, 'res');
+      message.success('上传成功');
+      emitter.emit('refresh');
       setDoneVisable(true);
       setLoading(false);
       setTableVisable(false);
