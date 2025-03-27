@@ -223,15 +223,88 @@ export async function batchInsertTransactions(
     throw error;
   }
 }
-// 帮我写个方法，计算'2001-11-1'到'2002-12-1' 之间的月份差
+// 计算两个日期之间的月份差
 export function getMonthsDiff(startDate: string, endDate: string): number {
-  const start = new Date(startDate);
-  const end = new Date(endDate);
-  return (
-    (end.getFullYear() - start.getFullYear()) * 12 +
-    (end.getMonth() - start.getMonth()) +
-    1
-  );
+  try {
+    // 处理输入参数
+    if (!startDate || !endDate) {
+      console.warn('getMonthsDiff: Invalid date inputs', { startDate, endDate });
+      return 0;
+    }
+
+    // 解析日期，确保使用 UTC 避免时区问题
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    // 检查日期有效性
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      console.warn('getMonthsDiff: Invalid date format', { startDate, endDate });
+      return 0;
+    }
+    
+    // 确保结束日期不早于开始日期
+    if (end < start) {
+      console.warn('getMonthsDiff: End date is earlier than start date', { startDate, endDate });
+      return 0;
+    }
+    
+    // 计算年差和月差
+    const yearDiff = end.getFullYear() - start.getFullYear();
+    const monthDiff = end.getMonth() - start.getMonth();
+    
+    // 计算总月差
+    let totalMonths = yearDiff * 12 + monthDiff;
+    
+    // 处理月内天数的边界情况
+    // 如果结束日期的天数小于开始日期的天数，且不是月末，则不计入完整一个月
+    if (end.getDate() < start.getDate()) {
+      // 检查是否是月末（例如，2月28日到3月30日应该算作整月）
+      const endMonth = new Date(end.getFullYear(), end.getMonth() + 1, 0);
+      if (end.getDate() < endMonth.getDate()) {
+        totalMonths -= 1;
+      }
+    }
+    
+    // 加1是为了包含起始月，例如1月到2月应该算2个月
+    return totalMonths + 1;
+  } catch (error) {
+    console.error('Error in getMonthsDiff:', error);
+    return 0; // 发生错误时返回默认值
+  }
+}
+
+// 更精确的月份差计算方法（可选，适用于需要按天比例计算的场景）
+export function getPreciseMonthsDiff(startDate: string, endDate: string): number {
+  try {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    // 检查日期有效性
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return 0;
+    }
+    
+    // 基础月差计算
+    const yearDiff = end.getFullYear() - start.getFullYear();
+    const monthDiff = end.getMonth() - start.getMonth();
+    let totalMonths = yearDiff * 12 + monthDiff;
+    
+    // 计算天数比例
+    const startDaysInMonth = new Date(start.getFullYear(), start.getMonth() + 1, 0).getDate();
+    const endDaysInMonth = new Date(end.getFullYear(), end.getMonth() + 1, 0).getDate();
+    
+    // 计算开始日期在月中的天数比例
+    const startDayRatio = (startDaysInMonth - start.getDate() + 1) / startDaysInMonth;
+    
+    // 计算结束日期在月中的天数比例
+    const endDayRatio = end.getDate() / endDaysInMonth;
+    
+    // 综合计算，加上按天比例的部分
+    return totalMonths + endDayRatio + startDayRatio;
+  } catch (error) {
+    console.error('Error in getPreciseMonthsDiff:', error);
+    return 0;
+  }
 }
 
 // 获取category 的 group by
@@ -268,6 +341,7 @@ export async function getCategoryTotal(
       GROUP BY category
       ORDER BY total DESC
     `;
+    console.log(sql, 'sql===');
 
     const rows = await new Promise<
       { category: string; total: number; avg: number; percent: number }[]
@@ -279,6 +353,7 @@ export async function getCategoryTotal(
     });
     return rows;
   } catch (error) {
+    console.log()
     console.error("Error getting category total by date:", error);
     throw error;
   }
