@@ -5,7 +5,7 @@ import { AdvancedTable } from './advancedTable';
 import { Params_Transaction } from 'src/preload/index';
 import './index.css';
 import dayjs from 'dayjs';
-
+import emitter from 'src/renderer/events';
 export interface I_FormValue extends Params_Transaction {
   chose_unclassified: string;
   trans_time: [string, string];
@@ -27,7 +27,6 @@ function Accounting(): JSX.Element {
     });
   }, []);
   const getTransactions = (params: Params_Transaction) => {
-    console.log('===params', params);
     // 如果 trans_time [object, object] 则转换为 [string, string]
 
     const params_new = {
@@ -57,6 +56,7 @@ function Accounting(): JSX.Element {
               ...formValue,
               is_unclassified: formValue.chose_unclassified === 'unclassified',
             });
+            emitter.emit('refresh');
           }}
         />
       </Card>
