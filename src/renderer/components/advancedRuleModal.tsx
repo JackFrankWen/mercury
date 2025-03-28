@@ -24,6 +24,50 @@ export type RuleFormData = {
   tag?: string;
 };
 
+// 添加校验规则值的函数
+const validateRuleValue = (rule: RuleItemList): { isValid: boolean; message: string } => {
+  // 遍历每个规则组（或条件组）
+  for (let i = 0; i < rule.length; i++) {
+    const ruleGroup = rule[i];
+    // 遍历每个规则项（且条件组）
+    for (let j = 0; j < ruleGroup.length; j++) {
+      const ruleItem = ruleGroup[j];
+
+      // 跳过特殊字段的验证（amount、category等）
+      if (['amount', 'category', 'account_type', 'consumer'].includes(ruleItem.condition)) {
+        continue;
+      }
+
+      if (typeof ruleItem.value === 'string') {
+        // 检查是否包含除了 | 以外的特殊字符
+        const specialCharsRegex = /[~!@#$%^&*()+=<>?:"{},.\/;'\\[\]]/;
+        if (specialCharsRegex.test(ruleItem.value.replace(/\|/g, ''))) {
+          return {
+            isValid: false,
+            message: `规则组 ${i + 1} 的第 ${j + 1} 项包含不允许的特殊字符`,
+          };
+        }
+
+        // 检查是否以 | 结尾
+        if (ruleItem.value.endsWith('|')) {
+          return {
+            isValid: false,
+            message: `规则组 ${i + 1} 的第 ${j + 1} 项不能以 | 符号结尾`,
+          };
+        }
+        if (ruleItem.value === '') {
+          return {
+            isValid: false,
+            message: `规则组 ${i + 1} 的第 ${j + 1} 项不能为空`,
+          };
+        }
+      }
+    }
+  }
+
+  return { isValid: true, message: '' };
+};
+
 const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: () => void }) => {
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
@@ -50,9 +94,8 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
     // }
   };
   const submitRule = async () => {
-    const { data,   refresh } = props;
+    const { data, refresh } = props;
 
-    let res: any;
     try {
       const formValue = await form.validateFields();
       if (!formValue.category && !formValue.consumer && !formValue.tag) {
@@ -61,7 +104,17 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         return;
       }
 
+      // 添加规则值的校验
+      const validation = validateRuleValue(formValue.rule);
+      if (!validation.isValid) {
+        message.error(validation.message);
+        setLoadingFalse();
+        return;
+      }
+
       console.log(formValue, 'formValue ');
+      let res: any;
+
       if (data?.id) {
         res = await window.mercury.api.updateAdvancedRule(data.id, {
           ...formValue,
@@ -79,6 +132,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         });
         console.log(res, 'res');
       }
+
       if (res?.code === 200) {
         message.success('操作成功');
         setLoadingFalse();
@@ -86,7 +140,6 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         form.resetFields();
         refresh();
       }
-      console.log(res);
     } catch (error) {
       console.log(error);
       setLoadingFalse();
@@ -95,9 +148,16 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
   };
 
   const testRule = async () => {
-    
+
     try {
       const formValue = await form.getFieldsValue();
+      // 添加规则值的校验
+      const validation = validateRuleValue(formValue.rule);
+      if (!validation.isValid) {
+        message.error(validation.message);
+        setLoadingFalse();
+        return;
+      }
       const allData = await window.mercury.api.getTransactions({
         is_unclassified: false,
         flow_type: 1,
