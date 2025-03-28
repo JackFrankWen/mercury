@@ -7,6 +7,7 @@ import emitter from 'src/renderer/events';
 
 import './index.css';
 import { Params_Transaction } from 'src/preload/type';
+import { I_Transaction } from 'src/main/sqlite3/transactions';
 import dayjs from 'dayjs';
 // 上传中心
 // 第一步上传文件
@@ -22,6 +23,7 @@ function UploadCenter(): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [doneVisable, setDoneVisable] = useState(false);
   const [fileName, setFileName] = useState('');
+  const [goYear, setGoYear] = useState('');
   const [step, setStep] = useState(1);
 
   const uploadToDatabase = async (tableData: Params_Transaction[]) => {
@@ -58,9 +60,10 @@ function UploadCenter(): JSX.Element {
     setStep(1);
   };
 
-  const handleSubmitSuccess = async (arr: Params_Transaction[]) => {
+  const handleSubmitSuccess = async (arr: I_Transaction[]) => {
     try {
       await uploadToDatabase(arr);
+      setGoYear(dayjs(arr[0]?.trans_time).format('YYYY'));
       const list = await window.mercury.store.getUploadFileList();
       const oldList = list ? list : [];
       await window.mercury.store.setUploadFileList([
@@ -121,7 +124,7 @@ function UploadCenter(): JSX.Element {
             setStep={setStep}
           />
         )}
-        {doneVisable && <Done reSubmit={handleReSubmit} />}
+        {doneVisable && <Done reSubmit={handleReSubmit} goYear={goYear} />}
       </Card>
     </Spin>
   );

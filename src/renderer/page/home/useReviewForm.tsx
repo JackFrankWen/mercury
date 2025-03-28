@@ -4,6 +4,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { LeftCircleFilled, RightCircleFilled } from '@ant-design/icons';
 import { Radio } from 'antd/lib';
 import emitter from 'src/renderer/events';
+import { useSearchParams } from 'react-router-dom';
 
 // Define proper interfaces for better type safety
 export interface FormData {
@@ -16,12 +17,24 @@ const useReviewForm = (): [FormData, React.ReactNode] => {
   const now = dayjs();
   const lastYear = now.format('YYYY');
 
+
+  // 直接解析 URL 查询字符串
+  const getYearFromUrl = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('year');
+  };
+
+  const yearFromUrl = getYearFromUrl();
+  console.log('Year directly from URL:', yearFromUrl);
+
   const [formData, setFormData] = useState<FormData>({
-    date: lastYear,
-    trans_time: [lastYear + '-01-01 00:00:00', lastYear + '-12-31 23:59:59'],
+    date: yearFromUrl || lastYear,
+    trans_time: [
+      (yearFromUrl || lastYear) + '-01-01 00:00:00',
+      (yearFromUrl || lastYear) + '-12-31 23:59:59'
+    ],
     type: 'year',
   });
-
 
   useEffect(() => {
     emitter.on('updateDate', (val: FormData) => {
@@ -31,6 +44,24 @@ const useReviewForm = (): [FormData, React.ReactNode] => {
       emitter.off('updateDate');
     };
   }, []);
+
+  // 监听 URL 参数变化
+  useEffect(() => {
+    console.log('Current URL:', window.location.href);
+
+    const year = getYearFromUrl();
+    if (year) {
+      console.log('Year parameter detected:', year);
+      setFormData({
+        date: year,
+        trans_time: [year + '-01-01 00:00:00', year + '-12-31 23:59:59'],
+        type: 'year',
+      });
+    } else {
+      console.log('No year parameter in URL');
+    }
+  }, [window.location.search]);
+
   const cpt = (
     <IconDate
       value={formData}

@@ -308,7 +308,7 @@ const BasicTable = (props: {
             <Popconfirm
               title="Are you sure to delete this task?"
               onConfirm={() => onDelete(record)}
-              onCancel={() => {}}
+              onCancel={() => { }}
               okText="Yes"
               cancelText="No"
             >

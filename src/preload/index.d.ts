@@ -1,20 +1,18 @@
 // global.d.ts
-export {};
+export { };
 
-import { CategoryReturnType, Params_Transaction } from './type';
-import { MatchRule } from '../main/sqlite3/match-rules';
-import { AdvancedRule } from '../main/sqlite3/advance-rules';
-import { I_Transaction } from '../main/sqlite3/transactions';
+import { CategoryReturnType, Params_Transaction } from "./type";
+import { MatchRule } from "../main/sqlite3/match-rules";
+import { AdvancedRule } from "../main/sqlite3/advance-rules";
+import { I_Transaction } from "../main/sqlite3/transactions";
 declare global {
   interface Window {
     mercury: {
       store: {
         getEnvironment: () => Promise<string>;
         setEnvironment: (environment: string) => Promise<void>;
-        getUploadFileList: () => Promise<{ fileName: string; fileType: string; time: string }[]>;
-        setUploadFileList: (
-          uploadFileList: { fileName: string; fileType: 'wechat' | 'alipay'; createTime: string }[]
-        ) => Promise<void>;
+        getUploadFileList: () => Promise<{ name: string; type: string; time: string }[]>;
+        setUploadFileList: (uploadFileList: { name: string; type: string; time: string }[]) => Promise<void>;
       };
       api: {
         // 批量插入自动规则
@@ -35,7 +33,7 @@ declare global {
           cost_type?: number;
         }) => Promise<any>;
         // 生成规则
-        generateRule: (pp?: Pick<Params_Transaction, 'trans_time'>) => Promise<any>;
+        generateRule: (pp?: Pick<Params_Transaction, "trans_time">) => Promise<any>;
         // 更新匹配规则
         updateMatchRule: (
           id: number,
@@ -102,14 +100,12 @@ declare global {
         addAdvancedRule: (rule: AdvancedRule) => Promise<{ code: number; id?: number }>;
         // 批量插入高级规则
         batchInsertAdvancedRule: (list: AdvancedRule[]) => Promise<any>;
-        // 更新高级规则
+        // 更新高级规则 
         updateAdvancedRule: (id: number, rule: AdvancedRule) => Promise<{ code: number }>;
         // 删除高级规则
         deleteAdvancedRule: (id: number) => Promise<{ code: number }>;
         // 删除所有交易数据
-        deleteAllTransactions: (
-          params: Params_Transaction
-        ) => Promise<{ code: number; message: string }>;
+        deleteAllTransactions: (params: Params_Transaction) => Promise<{ code: number; message: string }>;
       };
     };
   }

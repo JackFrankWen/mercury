@@ -157,7 +157,6 @@ function AccountInfo(props: { formValue: any }) {
       }),
     };
   });
-  console.log(items, 'items====');
 
   return (
     <Card title={'账户信息'} size="small" className="mt8" bordered={false} hoverable>

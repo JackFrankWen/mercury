@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 const Done: React.FC<{
   reSubmit: () => void;
+  goYear: string;
 }> = (prop) => {
   const navigate = useNavigate();
+  console.log(prop.goYear, 'goYear');
   return (
     <Result
       status="success"
@@ -18,7 +20,7 @@ const Done: React.FC<{
         <Button
           key="buy"
           onClick={() => {
-            navigate("/");
+            navigate(`/?year=${prop.goYear}`);
           }}
         >
           去首页

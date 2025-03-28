@@ -43,18 +43,18 @@ function App(props: any): JSX.Element {
         console.error('Failed to get environment:', error);
       }
     };
-    
+
     getEnvironment();
-    
+
     // Subscribe to environment change events
     const handleEnvChange = (env: 'production' | 'test') => {
       setEnvironment(env);
       // 刷新页面
       window.location.reload();
     };
-    
+
     emitter.on('environmentChange', handleEnvChange);
-    
+
     // Clean up subscription when component unmounts
     return () => {
       emitter.off('environmentChange', handleEnvChange);
@@ -125,32 +125,32 @@ function MainLayout({ environment }: { environment: 'production' | 'test' }): JS
     // 根据背景色调整文字颜色
     color: environment === 'production' ? 'rgba(0, 0, 0, 0.85)' : '#ffffff',
   };
-  
- 
+
+
 
   return (
     <Layout className="mercury-layout">
-      <Sider theme="light" 
-      style={siderStyle}
-      collapsed={true} className="mercury-sider" collapsedWidth={70}>
+      <Sider theme="light"
+        style={siderStyle}
+        collapsed={true} className="mercury-sider" collapsedWidth={70}>
         <Flex align="center" vertical>
           <div className="mercury-logo">
             <img src={icon} alt="logo" />
           </div>
-        
-        <Menu
+
+          <Menu
             mode="vertical"
             style={siderStyle}
-          onClick={({ key }) => {
-            const routes: Record<string, string> = {
-              home: "/",
-              accounting: "/accounting",
-              upload: "/upload",
-              setting: "/setting",
-            };
-            navigate(routes[key]);
-          }}
-        selectedKeys={[activeKey]}
+            onClick={({ key }) => {
+              const routes: Record<string, string> = {
+                home: "/",
+                accounting: "/accounting",
+                upload: "/upload",
+                setting: "/setting",
+              };
+              navigate(routes[key]);
+            }}
+            selectedKeys={[activeKey]}
             theme="light"
             items={items}
           />

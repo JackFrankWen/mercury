@@ -88,6 +88,7 @@ export const UploadFileList: React.FC = () => {
         <List
           loading={loading}
           itemLayout="horizontal"
+          style={{ overflow: 'auto', height: '500px' }}
           dataSource={fileList}
           renderItem={(item, index) => (
             <List.Item

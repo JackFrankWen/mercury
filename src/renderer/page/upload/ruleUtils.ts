@@ -219,9 +219,6 @@ export const ruleByAdvanced = async (arr: I_Transaction[], rules: AdvancedRule[]
     const { newData: p10NewData, messageList: p10MessageList } = applyRule(newData, p10Rules);
     const { newData: p100NewData, messageList: p100MessageList } = applyRule(p10NewData, p100Rules);
 
-    console.log(p1MessageList, 'p1MessageList');
-    console.log(p10MessageList, 'p10MessageList');
-    console.log(p100MessageList, 'p100MessageList');
     if (p1MessageList.length > 0) {
       openNotification(p1MessageList, api, '规则【P3】');
     }

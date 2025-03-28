@@ -74,7 +74,6 @@ function TableSection(props: { formValue: any }) {
         ...data,
         trans_time,
       });
-      console.log(result, 'result');
 
       setCategory(result);
     } catch (error) {

@@ -12,7 +12,6 @@ import AccountInfo from './accountInfo';
 import './index.css';
 function Index(): JSX.Element {
   const [formValue, cpt] = useReviewForm();
-  console.log(formValue, 'formValue====');
 
 
 
