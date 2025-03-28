@@ -15,7 +15,7 @@ contextBridge.exposeInMainWorld('mercury', {
       ipcRenderer.invoke('set-environment', environment),
     getUploadFileList: () => ipcRenderer.invoke('get-uploadFileList'),
     setUploadFileList: (
-      uploadFileList: { name: string; type: 'wechat' | 'alipay'; time: string }[]
+      uploadFileList: { fileName: string; fileType: 'wechat' | 'alipay'; createTime: string }[]
     ) => ipcRenderer.invoke('set-uploadFileList', uploadFileList),
   },
   api: {

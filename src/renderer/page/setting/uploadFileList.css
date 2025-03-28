@@ -1,0 +1,24 @@
+.upload-file-list-container {
+  padding: 16px;
+  height: 100%;
+  overflow: auto;
+}
+
+.upload-file-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.ant-list-item-meta-title {
+  margin-bottom: 4px !important;
+}
+
+.ant-list-item-meta-description {
+  font-size: 12px;
+}
+
+.ant-empty {
+  margin-top: 40px;
+}

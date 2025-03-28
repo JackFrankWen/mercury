@@ -1,9 +1,10 @@
 import React from 'react';
-import { Card, Tabs, Breadcrumb } from 'antd';
+import { Card, Tabs } from 'antd';
 import BasicContent from './basicContent';
-import GenerateContent from './generateContent';
 import './index.css';
 import AdvancedRule from './advancedRule';
+import { UploadFileList } from './uploadFileList';
+
 function Setting(): JSX.Element {
   return (
     <div className="setting-page">
@@ -24,6 +25,9 @@ function Setting(): JSX.Element {
           </Tabs.TabPane> */}
           <Tabs.TabPane tab="高级规则" key="4" style={{ height: '100%' }}>
             <AdvancedRule />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="已上传文件" key="5" style={{ height: '100%' }}>
+            <UploadFileList />
           </Tabs.TabPane>
         </Tabs>
       </Card>

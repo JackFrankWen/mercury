@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { Spin, message, Steps, Card } from "antd";
-import UploadTable, { tableHeaderI } from "./uploadTable";
-import UploadFile from "./uploadFile";
-import Done from "./done";
-import emitter from "src/renderer/events";
+import React, { useState } from 'react';
+import { Spin, message, Steps, Card } from 'antd';
+import UploadTable, { tableHeaderI } from './uploadTable';
+import UploadFile from './uploadFile';
+import Done from './done';
+import emitter from 'src/renderer/events';
 
-import "./index.css";
-import { Params_Transaction } from "src/preload/type";
+import './index.css';
+import { Params_Transaction } from 'src/preload/type';
+import dayjs from 'dayjs';
 // 上传中心
 // 第一步上传文件
 // 第二步
@@ -20,26 +21,32 @@ function UploadCenter(): JSX.Element {
   const [tableHeader, setTableHeader] = useState<tableHeaderI | null>(null);
   const [loading, setLoading] = useState(false);
   const [doneVisable, setDoneVisable] = useState(false);
+  const [fileName, setFileName] = useState('');
   const [step, setStep] = useState(1);
 
-  const uploadToDatabase = (tableData: Params_Transaction[]) => {
-    window.mercury.api.batchInsertTransactions(tableData).then((res: any) => {
-      console.log(res, 'res');
+  const uploadToDatabase = async (tableData: Params_Transaction[]) => {
+    try {
+      await window.mercury.api.batchInsertTransactions(tableData);
       message.success('上传成功');
       emitter.emit('refresh', 'transaction');
       setDoneVisable(true);
       setLoading(false);
       setTableVisable(false);
-    });
+    } catch (error) {
+      message.error('上传失败');
+      setLoading(false);
+    }
   };
 
   const handleUploadSuccess = (obj: {
     tableData: Params_Transaction[];
     tableHeader: tableHeaderI;
+    fileName: string;
   }) => {
     setUploadVisiable(false);
     setTableData(obj.tableData);
     setTableHeader(obj.tableHeader);
+    setFileName(obj.fileName);
     setTableVisable(true);
     setStep(step + 1);
   };
@@ -51,8 +58,24 @@ function UploadCenter(): JSX.Element {
     setStep(1);
   };
 
-  const handleSubmitSuccess = (arr: Params_Transaction[]) => {
-    uploadToDatabase(arr);
+  const handleSubmitSuccess = async (arr: Params_Transaction[]) => {
+    try {
+      await uploadToDatabase(arr);
+      const list = await window.mercury.store.getUploadFileList();
+      console.log(list, 'list');
+      const oldList = list ? list : [];
+      await window.mercury.store.setUploadFileList([
+        ...oldList,
+        {
+          fileName,
+          createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+          fileType: fileName.includes('微信') ? 'wechat' : 'alipay',
+        },
+      ]);
+    } catch (error) {
+      console.error('Failed to save file:', error);
+      message.error('保存文件失败');
+    }
   };
 
   const handleReSubmit = () => {
@@ -71,16 +94,16 @@ function UploadCenter(): JSX.Element {
           current={step - 1}
           items={[
             {
-              title: "上传",
-              description: "上传账单",
+              title: '上传',
+              description: '上传账单',
             },
             {
-              title: "替换",
-              description: "替换描述",
+              title: '替换',
+              description: '替换描述',
             },
             {
-              title: "分类",
-              description: "ai自动分类",
+              title: '分类',
+              description: 'ai自动分类',
             },
           ]}
         />
