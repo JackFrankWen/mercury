@@ -38,6 +38,9 @@ export function toNumberOrUndefiend(number: any): number | undefined {
 
   return Number(number);
 }
+export function formatMoney(amount: number | string, unit?: "万" | "千" | "亿", autoUnit?: boolean, decimalPlaces?: number): string {
+  return formatMoneyObj({ amount, unit, autoUnit, decimalPlaces });
+}
 
 /**
  * 格式化金额为中文货币格式字符串
@@ -56,11 +59,19 @@ export function toNumberOrUndefiend(number: any): number | undefined {
  * formatMoney(20000, undefined, true) // "2万"
  * formatMoney(300000000, undefined, true) // "3亿"
  */
-export function formatMoney(
+export function formatMoneyObj({
+  amount,
+  unit,
+  autoUnit,
+  // 保留几位小数
+  decimalPlaces = 2,
+}: {
   amount: number | string,
   unit?: "万" | "千" | "亿",
-  autoUnit?: boolean
-): string {
+  autoUnit?: boolean,
+  decimalPlaces?: number,
+}): string {
+  console.log(amount, unit, autoUnit, decimalPlaces, "formatMoneyObj");
   if (typeof amount === "string") {
     amount = parseFloat(amount);
   }
@@ -97,17 +108,16 @@ export function formatMoney(
     result = amount / 10000;
   } else {
     // No unit case
-    const hasDecimal = amount % 1 !== 0;
     return amount.toLocaleString("zh-CN", {
-      minimumFractionDigits: hasDecimal ? 2 : 0,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: decimalPlaces,
+      maximumFractionDigits: decimalPlaces,
     });
   }
 
   // For units (万/千/亿), format with one decimal place
   const formatted = result.toLocaleString("zh-CN", {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
+    minimumFractionDigits: decimalPlaces,
+    maximumFractionDigits: decimalPlaces,
   });
 
   // Remove .0 if present
