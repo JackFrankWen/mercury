@@ -16,22 +16,17 @@ export interface FormData {
 const useReviewForm = (): [FormData, React.ReactNode] => {
   const now = dayjs();
   const lastYear = now.format('YYYY');
+  const [searchParams] = useSearchParams();
+  const serachYear = searchParams.get('year');
+  console.log(serachYear, '===== reivew year');
 
 
-  // 直接解析 URL 查询字符串
-  const getYearFromUrl = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('year');
-  };
-
-  const yearFromUrl = getYearFromUrl();
-  console.log('Year directly from URL:', yearFromUrl);
 
   const [formData, setFormData] = useState<FormData>({
-    date: yearFromUrl || lastYear,
+    date: serachYear || lastYear,
     trans_time: [
-      (yearFromUrl || lastYear) + '-01-01 00:00:00',
-      (yearFromUrl || lastYear) + '-12-31 23:59:59'
+      (serachYear || lastYear) + '-01-01 00:00:00',
+      (serachYear || lastYear) + '-12-31 23:59:59'
     ],
     type: 'year',
   });
@@ -49,18 +44,17 @@ const useReviewForm = (): [FormData, React.ReactNode] => {
   useEffect(() => {
     console.log('Current URL:', window.location.href);
 
-    const year = getYearFromUrl();
-    if (year) {
-      console.log('Year parameter detected:', year);
+    if (serachYear) {
+      console.log('Year parameter detected:', serachYear);
       setFormData({
-        date: year,
-        trans_time: [year + '-01-01 00:00:00', year + '-12-31 23:59:59'],
+        date: serachYear,
+        trans_time: [serachYear + '-01-01 00:00:00', serachYear + '-12-31 23:59:59'],
         type: 'year',
       });
     } else {
       console.log('No year parameter in URL');
     }
-  }, [window.location.search]);
+  }, [serachYear]);
 
   const cpt = (
     <IconDate

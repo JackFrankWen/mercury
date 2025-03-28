@@ -10,10 +10,12 @@ import YearBarChart from './yearBarChart';
 import ConsumerChart from './consumerChart';
 import AccountInfo from './accountInfo';
 import './index.css';
+import { useSearchParams } from 'react-router-dom';
 function Index(): JSX.Element {
+
   const [formValue, cpt] = useReviewForm();
-
-
+  const [searchParams] = useSearchParams();
+  console.log(searchParams.get('year'), '===== home year');
 
   return (
     <Row gutter={12} className="home-page">

@@ -11,8 +11,8 @@ declare global {
       store: {
         getEnvironment: () => Promise<string>;
         setEnvironment: (environment: string) => Promise<void>;
-        getUploadFileList: () => Promise<{ name: string; type: string; time: string }[]>;
-        setUploadFileList: (uploadFileList: { name: string; type: string; time: string }[]) => Promise<void>;
+        getUploadFileList: () => Promise<{ fileName: string; fileType: string; createTime: string }[]>;
+        setUploadFileList: (uploadFileList: { fileName: string; fileType: string; createTime: string }[]) => Promise<void>;
       };
       api: {
         // 批量插入自动规则

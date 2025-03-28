@@ -19,8 +19,8 @@ function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
     className: 'upload-cus',
     beforeUpload: async file => {
       const fileList = await window.mercury.store.getUploadFileList();
-      console.log(fileList, 'fileList');
-      if (fileList.some(item => item.name === file.name)) {
+      console.log(fileList, '==fileList');
+      if (fileList.some(item => item.fileName === file.name)) {
         Modal.error({
           title: '提示',
           content: `文件【${file.name}】已存在, 如需继续上传请去设置中已经上传的文件列表删除`,
