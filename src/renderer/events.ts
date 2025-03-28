@@ -5,6 +5,9 @@ type Events = {
   environmentChange: 'production' | 'test';
   updateDate: FormData;
   refresh: 'transaction' | 'advancedRule' | 'fileList' | undefined;
+  changeYear: {
+    year: string;
+  };
   // Add other event types here
 };
 

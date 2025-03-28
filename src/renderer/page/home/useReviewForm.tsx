@@ -4,7 +4,6 @@ import dayjs, { Dayjs } from 'dayjs';
 import { LeftCircleFilled, RightCircleFilled } from '@ant-design/icons';
 import { Radio } from 'antd/lib';
 import emitter from 'src/renderer/events';
-import { useSearchParams } from 'react-router-dom';
 
 // Define proper interfaces for better type safety
 export interface FormData {
@@ -16,17 +15,14 @@ export interface FormData {
 const useReviewForm = (): [FormData, React.ReactNode] => {
   const now = dayjs();
   const lastYear = now.format('YYYY');
-  const [searchParams] = useSearchParams();
-  const serachYear = searchParams.get('year');
-  console.log(serachYear, '===== reivew year');
 
 
 
   const [formData, setFormData] = useState<FormData>({
-    date: serachYear || lastYear,
+    date: lastYear,
     trans_time: [
-      (serachYear || lastYear) + '-01-01 00:00:00',
-      (serachYear || lastYear) + '-12-31 23:59:59'
+      lastYear + '-01-01 00:00:00',
+      lastYear + '-12-31 23:59:59'
     ],
     type: 'year',
   });
@@ -35,27 +31,29 @@ const useReviewForm = (): [FormData, React.ReactNode] => {
     emitter.on('updateDate', (val: FormData) => {
       setFormData(val);
     });
+    emitter.on('changeYear', (val: { year: string }) => {
+      // 如果year 2025-01 则设置为2025年1月
+      if (val.year.includes('-')) {
+        setFormData({
+          date: val.year.split('-')[0],
+          trans_time: [val.year + '-01 00:00:00', val.year + '-31 23:59:59'],
+          type: 'month',
+        });
+      } else {
+        setFormData({
+          date: val.year,
+          trans_time: [val.year + '-01-01 00:00:00', val.year + '-12-31 23:59:59'],
+          type: 'year',
+        });
+      }
+    });
     return () => {
       emitter.off('updateDate');
+      emitter.off('changeYear');
     };
   }, []);
 
-  // 监听 URL 参数变化
-  useEffect(() => {
-    console.log('Current URL:', window.location.href);
-
-    if (serachYear) {
-      console.log('Year parameter detected:', serachYear);
-      setFormData({
-        date: serachYear,
-        trans_time: [serachYear + '-01-01 00:00:00', serachYear + '-12-31 23:59:59'],
-        type: 'year',
-      });
-    } else {
-      console.log('No year parameter in URL');
-    }
-  }, [serachYear]);
-
+  
   const cpt = (
     <IconDate
       value={formData}

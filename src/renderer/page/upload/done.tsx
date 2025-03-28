@@ -1,13 +1,13 @@
 import React from "react";
 import { Button, Result } from "antd";
 import { useNavigate } from "react-router-dom";
+import emitter from "src/renderer/events";
 
 const Done: React.FC<{
   reSubmit: () => void;
   goYear: string;
 }> = (prop) => {
   const navigate = useNavigate();
-  console.log(prop.goYear, 'goYear');
   return (
     <Result
       status="success"
@@ -21,9 +21,12 @@ const Done: React.FC<{
           key="buy"
           onClick={() => {
             navigate(`/?year=${prop.goYear}`);
+            emitter.emit('changeYear', {
+              year: prop.goYear,
+            });
           }}
         >
-          去首页
+          去查看
         </Button>,
       ]}
     />
