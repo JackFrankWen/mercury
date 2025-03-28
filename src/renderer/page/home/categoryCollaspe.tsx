@@ -10,18 +10,19 @@ import {
   Tag,
   Tooltip,
   Typography,
-} from "antd";
-import type { CollapseProps, TableColumnsType, TableRowSelection } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
-import useModal from "../../components/useModal";
-import { ModalContent } from "./ModalContent";
-import { AccountBookFilled } from "@ant-design/icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { category_type, findCategoryById } from "../../const/categroy";
-import { formatMoney } from "../../components/utils";
-import { renderIcon } from "../../components/FontIcon";
-import BarChart from "src/renderer/components/barChart";
-import { FormData } from "./useReviewForm";
+} from 'antd';
+import type { CollapseProps, TableColumnsType, TableRowSelection } from 'antd';
+import React, { useCallback, useEffect, useState } from 'react';
+import useModal from '../../components/useModal';
+import { ModalContent } from './ModalContent';
+import { AccountBookFilled } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { category_type, findCategoryById } from '../../const/categroy';
+import { formatMoney } from '../../components/utils';
+import { renderIcon } from '../../components/FontIcon';
+import BarChart from 'src/renderer/components/barChart';
+import { FormData } from './useReviewForm';
+import { useFresh } from 'src/renderer/components/useFresh';
 // import BatchUpdateArea from '../views/accounting/batch-update'
 
 interface DataType {
@@ -48,10 +49,10 @@ const Item = (props: {
       align="middle"
       onClick={onClick}
       style={{
-        margin: "0 10px 10px",
+        margin: '0 10px 10px',
         borderRadius: 8,
-        padding: "8px 10px",
-        background: "#fff",
+        padding: '8px 10px',
+        background: '#fff',
       }}
     >
       <Row justify="start" align="middle">
@@ -86,8 +87,9 @@ const CategoryCollaspe = (props: {
   refreshTable: () => void;
 }) => {
   const { data, formValue, refreshTable } = props;
-  const [show, toggle] = useModal();
-  const [cate, setCate] = useState<string>("");
+  // const [show, toggle] = useModal();
+  const [visible, setVisible] = useState<boolean>(false);
+  const [cate, setCate] = useState<string>('');
   const [modalData, setModaldata] = useState<any>();
   const [barData, setBarData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -109,13 +111,13 @@ const CategoryCollaspe = (props: {
         setModaldata(res);
       }
     } catch (error) {
-      console.error("Error fetching transactions:", error);
-      message.error("获取交易数据失败");
+      console.error('Error fetching transactions:', error);
+      message.error('获取交易数据失败');
     } finally {
       setLoading(false);
     }
   };
-  const fetchData = async (obj) => {
+  const fetchData = async (obj: any) => {
     if (!obj) return;
 
     try {
@@ -126,26 +128,23 @@ const CategoryCollaspe = (props: {
     }
   };
 
-  useEffect(() => {
-    if (cate && show) {
+  useFresh(() => {
+    if (cate && visible) {
       getCategory(formValue, cate);
     }
-    if (formValue.type === 'year' && show) {
+    if (formValue.type === 'year' && visible) {
       fetchData({
         category: cate,
         trans_time: formValue.trans_time,
       });
     }
-  }, [formValue, cate, show]);
+  }, [formValue, cate, visible],'transaction');
 
-  const refresh = useCallback(() => {
+  const refresh = () => {
     refreshTable();
-    if (cate) {
-      getCategory(formValue, cate);
-    }
-  }, [formValue, cate, refreshTable]);
+  };
 
-  const items: CollapseProps["items"] = data.map((item, index) => {
+  const items: CollapseProps['items'] = data.map((item, index) => {
     const categoryInfo = findCategoryById(item.id);
 
     return {
@@ -154,9 +153,9 @@ const CategoryCollaspe = (props: {
         <Row justify="start" align="bottom">
           <Col
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             {categoryInfo?.icon ? (
@@ -184,7 +183,7 @@ const CategoryCollaspe = (props: {
               >
                 {item.name}
               </Typography.Text>
-              <Typography.Text>{formatMoney(item.value, "万")}</Typography.Text>
+              <Typography.Text>{formatMoney(item.value, '万')}</Typography.Text>
             </Row>
             <Row justify="space-between">
               <Col flex="auto">
@@ -216,12 +215,12 @@ const CategoryCollaspe = (props: {
           <Item
             onClick={() => {
               setCate(child.category);
-              toggle();
+              setVisible(true);
             }}
             name={child.name}
             total={child.value}
             percent={parseFloat(child.avg)}
-            color={childCategoryInfo?.color || child.color || "#1677ff"}
+            color={childCategoryInfo?.color || child.color || '#1677ff'}
             icon={childCategoryInfo?.icon}
           />
         );
@@ -232,22 +231,20 @@ const CategoryCollaspe = (props: {
   return (
     <>
       {<Collapse bordered={false} expandIconPosition="end" items={items} />}
-      {show && (
+      {visible && (
         <Modal
           width={1000}
           closable={true}
           footer={null}
-          open={show}
-          onCancel={toggle}
+          open={visible}
+          onCancel={() => setVisible(false)}
           title="交易详情"
         >
           {loading ? (
-            <div style={{ textAlign: "center", padding: "20px" }}>Loading...</div>
+            <div style={{ textAlign: 'center', padding: '20px' }}>Loading...</div>
           ) : (
             <>
-              {formValue.type === 'year' && (
-                <BarChart data={barData} />
-              )}
+              {formValue.type === 'year' && <BarChart data={barData} />}
               <ModalContent modalData={modalData} refresh={refresh} />
             </>
           )}

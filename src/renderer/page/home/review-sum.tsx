@@ -1,14 +1,14 @@
-import { Card, Col, Divider, Progress, Row, Statistic, Typography } from "antd";
-import React, { useEffect, useState } from "react";
-import { AccountType, PaymentType } from "src/renderer/const/web";
-import { formatMoney } from "src/renderer/components/utils";
-import { useFresh } from "src/renderer/components/useFresh";
+import { Card, Col, Divider, Progress, Row, Statistic, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { AccountType, PaymentType } from 'src/renderer/const/web';
+import { formatMoney } from 'src/renderer/components/utils';
+import { useFresh } from 'src/renderer/components/useFresh';
 
 export default function Summarize(props: { formValue: any }) {
   const { formValue } = props;
   const gridStyle: React.CSSProperties = {
-    width: "25%",
-    textAlign: "center",
+    width: '25%',
+    textAlign: 'center',
   };
   const [staticData, setStaticData] = useState<any>({
     husband: {
@@ -25,7 +25,7 @@ export default function Summarize(props: { formValue: any }) {
     income: 0,
   });
 
-  const getSumrize = async (obj) => {
+  const getSumrize = async obj => {
     try {
       const res = await window.mercury.api.getAccountPaymentTotal(obj);
 
@@ -99,10 +99,13 @@ export default function Summarize(props: { formValue: any }) {
     }
   };
 
-  useFresh(() => {
-    getSumrize(formValue);
-  }, [formValue]);
-  console.log(staticData, "staticData====aaa");
+  useFresh(
+    () => {
+      getSumrize(formValue);
+    },
+    [formValue],
+    'transaction'
+  );
 
   //   const balance = staticData.income - staticData.total
   return (

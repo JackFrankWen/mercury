@@ -8,6 +8,7 @@ import { FormData } from './useReviewForm';
 import { formatMoney } from '../../components/utils';
 import { ModalContent } from './ModalContent';
 import { I_Transaction } from 'src/main/sqlite3/transactions';
+import { useFresh } from 'src/renderer/components/useFresh';
 
 interface LunarCalendarProps {
   className?: string;
@@ -20,7 +21,7 @@ interface LunarCalendarProps {
   refresh: () => void;
 }
 
-const LunarCalendar: React.FC<LunarCalendarProps> = (props) => {
+const LunarCalendar: React.FC<LunarCalendarProps> = props => {
   const { formValue, data, refresh } = props;
   const [visible, setVisible] = useState<boolean>(false);
   const [modalData, setModalData] = useState<I_Transaction[]>([]);
@@ -37,26 +38,35 @@ const LunarCalendar: React.FC<LunarCalendarProps> = (props) => {
       message.error(error);
     }
   };
+  useFresh(
+    async () => {
+      try {
+        const res = await window.mercury.api.getTransactions({
+          ...formValue,
+          trans_time: [`${data} 00:00:00`, `${data} 23:59:59`],
+          flow_type: '1',
+        });
+        setModalData(res);
+      } catch (error) {
+        message.error(error);
+      }
+    },
+    [],
+    'transaction'
+  );
   const cellRender = (date, info, fullData) => {
     const d = Lunar.fromDate(date.toDate());
     const lunar = d.getDayInChinese();
     const solarTerm = d.getJieQi();
     const isWeekend = date.day() === 6 || date.day() === 0;
-    const h = HolidayUtil.getHoliday(
-      date.get('year'),
-      date.get('month') + 1,
-      date.get('date'),
-    );
-    const displayHoliday =
-      h?.getTarget() === h?.getDay() ? h?.getName() : undefined;
+    const h = HolidayUtil.getHoliday(date.get('year'), date.get('month') + 1, date.get('date'));
+    const displayHoliday = h?.getTarget() === h?.getDay() ? h?.getName() : undefined;
     if (info.type === 'date') {
       // 如果不是这个月不渲染
       if (date.month() !== dayjs(formValue.date).month()) {
         return <></>;
       }
-      const total = fullData.find(
-        (item) => item.date === date.format('YYYY-MM-DD'),
-      )?.total;
+      const total = fullData.find(item => item.date === date.format('YYYY-MM-DD'))?.total;
       return React.cloneElement(info.originNode, {
         ...(info.originNode as React.ReactElement<any>).props,
         className: '',
@@ -78,9 +88,7 @@ const LunarCalendar: React.FC<LunarCalendarProps> = (props) => {
             }}
             className="lunar-calendar-cell"
           >
-            {info.type === 'date' && (
-              <Typography.Text strong>{date.get('date')}</Typography.Text>
-            )}
+            {info.type === 'date' && <Typography.Text strong>{date.get('date')}</Typography.Text>}
             {info.type === 'date' && (
               <Typography.Text type="secondary" style={{ fontSize: 12 }}>
                 {displayHoliday || solarTerm || lunar}

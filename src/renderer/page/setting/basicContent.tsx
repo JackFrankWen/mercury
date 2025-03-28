@@ -50,7 +50,7 @@ function BasicContent() {
           const result = await window.mercury.api.deleteAllTransactions();
           if (result.code === 200) {
             message.success(result.message);
-            emitter.emit('refresh');
+            emitter.emit('refresh', 'transaction');
           } else {
             message.error(result.message);
           }
@@ -113,7 +113,7 @@ function BasicContent() {
             const result = await window.mercury.api.deleteAllTransactions(params);
 
             if (result.code === 200) {
-              emitter.emit('refresh');
+              emitter.emit('refresh', 'transaction');
               message.success(`成功删除 ${result.message || 0} 条交易记录`);
 
               handleCancel(); // 关闭弹窗
@@ -201,7 +201,7 @@ function BasicContent() {
             </Form.Item>
           ) : (
             <Form.Item label="创建时间" name="creation_time">
-              <DatePicker showTime  />
+              <DatePicker showTime />
             </Form.Item>
           )}
         </Form>

@@ -30,7 +30,8 @@ import {
   PoweroffOutlined,
   CheckOutlined,
 } from '@ant-design/icons';
-
+import { useFresh } from 'src/renderer/components/useFresh';
+import emitter from 'src/renderer/events';
 // Add type declarations at the top
 type TypeMap = { [key: string]: string };
 
@@ -293,9 +294,9 @@ const RuleTable = (props: {
   // 根据类型过滤列
   const columns = type === 'modal' ? allColumns.filter(col => col.key !== 'action') : allColumns;
 
-  useEffect(() => {
+  useFresh(() => {
     getRuleData(searchValue ? { nameOrRule: searchValue } : undefined);
-  }, []);
+  }, [searchValue], 'advancedRule');
 
   const [visiable, setVisiable] = useState(false);
   const [record, setRecord] = useState<AdvancedRule>();
@@ -303,15 +304,11 @@ const RuleTable = (props: {
   const [selectedRule, setSelectedRule] = useState<any>(null);
 
   const refresh = () => {
-    setVisiable(false);
     getRuleData(searchValue ? { nameOrRule: searchValue } : undefined);
   };
 
   const onSearch = (value: string) => {
-    console.log(value);
     setSearchValue(value);
-    const category = getCategoryTypeByLabel(value);
-    console.log(category, 'category');
     getRuleData({
       nameOrRule: value,
     });
@@ -321,15 +318,15 @@ const RuleTable = (props: {
   const rowSelection =
     type === 'modal'
       ? {
-          selectedRowKeys,
-          onChange: (selectedKeys: React.Key[], selected: AdvancedRule[]) => {
-            setSelectedRowKeys(selectedKeys);
-            setSelectedRows(selected);
-            if (onSelectChange) {
-              onSelectChange(selected);
-            }
-          },
-        }
+        selectedRowKeys,
+        onChange: (selectedKeys: React.Key[], selected: AdvancedRule[]) => {
+          setSelectedRowKeys(selectedKeys);
+          setSelectedRows(selected);
+          if (onSelectChange) {
+            onSelectChange(selected);
+          }
+        },
+      }
       : undefined;
 
   return (
@@ -356,24 +353,24 @@ const RuleTable = (props: {
         onRow={
           type === 'modal'
             ? record => ({
-                onClick: () => {
-                  const key = record.id;
-                  const newSelectedRowKeys = selectedRowKeys.includes(key)
-                    ? selectedRowKeys.filter(k => k !== key)
-                    : [...selectedRowKeys, key];
+              onClick: () => {
+                const key = record.id;
+                const newSelectedRowKeys = selectedRowKeys.includes(key)
+                  ? selectedRowKeys.filter(k => k !== key)
+                  : [...selectedRowKeys, key];
 
-                  const newSelectedRows = selectedRowKeys.includes(key)
-                    ? selectedRows.filter(r => r.id !== key)
-                    : [...selectedRows, record];
+                const newSelectedRows = selectedRowKeys.includes(key)
+                  ? selectedRows.filter(r => r.id !== key)
+                  : [...selectedRows, record];
 
-                  setSelectedRowKeys(newSelectedRowKeys);
-                  setSelectedRows(newSelectedRows);
+                setSelectedRowKeys(newSelectedRowKeys);
+                setSelectedRows(newSelectedRows);
 
-                  if (onSelectChange) {
-                    onSelectChange(newSelectedRows);
-                  }
-                },
-              })
+                if (onSelectChange) {
+                  onSelectChange(newSelectedRows);
+                }
+              },
+            })
             : undefined
         }
       />
@@ -396,6 +393,7 @@ const RuleTable = (props: {
           rule={selectedRule}
           onClose={() => setBatchReplaceVisible(false)}
           onSuccess={() => {
+            emitter.emit('refresh', 'transaction');
             setBatchReplaceVisible(false);
           }}
         />

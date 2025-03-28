@@ -50,7 +50,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
     // }
   };
   const submitRule = async () => {
-    const { data, refresh } = props;
+    const { data,   refresh } = props;
 
     let res: any;
     try {
@@ -83,6 +83,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         message.success('操作成功');
         setLoadingFalse();
         props.onCancel();
+        form.resetFields();
         refresh();
       }
       console.log(res);
@@ -92,7 +93,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       message.error(error);
     }
   };
-  console.log(data, 'data');
+
   const testRule = async () => {
     
     try {
@@ -126,8 +127,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       layout="vertical"
       form={form}
       style={{
-        maxHeight: '80vh',
-        overflow: 'auto',
+        maxWidth: 600,
       }}
       initialValues={{
         name: data?.name,
@@ -138,8 +138,8 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         consumer: toNumberOrUndefiend(data?.consumer),
         rule: data?.rule ? JSON.parse(data?.rule) : [
           [{
-            condition: '',
-            formula: '',
+            condition: 'description',
+            formula: 'like',
             value: '',
           },
           ],
@@ -147,7 +147,6 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         priority: toNumberOrUndefiend(data?.priority) || 1,
         active: data?.active === 1,
       }}
-      style={{ maxWidth: 600 }}
     >
       {contextHolder}
       <Form.Item name="category">

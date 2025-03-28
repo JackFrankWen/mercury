@@ -26,7 +26,7 @@ function UploadCenter(): JSX.Element {
     window.mercury.api.batchInsertTransactions(tableData).then((res: any) => {
       console.log(res, 'res');
       message.success('上传成功');
-      emitter.emit('refresh');
+      emitter.emit('refresh', 'transaction');
       setDoneVisable(true);
       setLoading(false);
       setTableVisable(false);

@@ -127,7 +127,6 @@ export function ModalContent({
   const onSelectChange = useCallback(
     (newSelectedRowKeys: React.Key[], selectedRows: I_Transaction[]) => {
       setSelectedRowKeys(newSelectedRowKeys);
-      console.log('===selectedRows', selectedRows);
       setSelectedAmount(
         selectedRows.reduce((acc, item) => acc + Number(item.amount), 0),
       );
@@ -141,7 +140,9 @@ export function ModalContent({
       .then(() => {
         setSelectedRowKeys([]);
         message.success('删除成功');
-        refresh();
+        if (refresh) {
+          refresh();
+        }
       })
       .catch((error: Error) => {
         console.error('删除失败:', error);

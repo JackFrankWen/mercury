@@ -56,7 +56,7 @@ function Accounting(): JSX.Element {
               ...formValue,
               is_unclassified: formValue.chose_unclassified === 'unclassified',
             });
-            emitter.emit('refresh');
+            emitter.emit('refresh', 'transaction');
           }}
         />
       </Card>

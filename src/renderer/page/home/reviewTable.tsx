@@ -81,14 +81,18 @@ function TableSection(props: { formValue: any }) {
       console.error(error);
     }
   };
-  useFresh(() => {
-    getCategory({
-      ...formValue,
-      consumer: consumerVal,
-      account_type: accountTypeVal,
-      payment_type: paymentVal,
-    });
-  }, [formValue, consumerVal, accountTypeVal, paymentVal]);
+  useFresh(
+    () => {
+      getCategory({
+        ...formValue,
+        consumer: consumerVal,
+        account_type: accountTypeVal,
+        payment_type: paymentVal,
+      });
+    },
+    [formValue, consumerVal, accountTypeVal, paymentVal],
+    'transaction'
+  );
 
   const extra = (
     <>
@@ -100,13 +104,13 @@ function TableSection(props: { formValue: any }) {
     </>
   );
   const refreshTable = useCallback(() => {
-    getCategory({
-      ...formValue,
-      consumer: consumerVal,
-      account_type: accountTypeVal,
-      payment_type: paymentVal,
-    });
-    emitter.emit('refresh');
+    // getCategory({
+    //   ...formValue,
+    //   consumer: consumerVal,
+    //   account_type: accountTypeVal,
+    //   payment_type: paymentVal,
+    // });
+    emitter.emit('refresh', 'transaction');
   }, [formValue, consumerVal, accountTypeVal, paymentVal]);
 
   // 定义标签页配置

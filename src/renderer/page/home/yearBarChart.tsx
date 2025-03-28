@@ -2,17 +2,15 @@ import React, { useEffect, useState } from 'react';
 import BarChart from 'src/renderer/components/barChart';
 import { Card, message, Space } from 'antd';
 import { useSelect } from '../../components/useSelect';
-import { cpt_const } from 'src/renderer/const/web';
+import { cpt_const, payment_type } from 'src/renderer/const/web';
 import LunarCalendar from './lunarCalendar';
 import { FormData } from './useReviewForm';
 import { useFresh } from 'src/renderer/components/useFresh';
-
+import emitter from 'src/renderer/events';
 function YearBarChart(props: { formValue: FormData }) {
   const { formValue } = props;
   const [data, setData] = useState<{ date: string; total: number }[]>([]);
-  const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>(
-    [],
-  );
+  const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>([]);
 
   const [consumerVal, ConsumerCpt] = useSelect({
     options: cpt_const.consumer_type,
@@ -27,23 +25,34 @@ function YearBarChart(props: { formValue: FormData }) {
     placeholder: '支付方式',
   });
 
-  useFresh(() => {
-    if (formValue.type === 'year') {
-      fetchData({
-        ...formValue,
-        consumer: consumerVal,
-        account_type: accountTypeVal,
-        payment_type: paymentTypeVal,
-      });
-    } else {
-      fetchDailyAmount({
-        ...formValue,
-        consumer: consumerVal,
-        account_type: accountTypeVal,
-        payment_type: paymentTypeVal,
-      });
-    }
-  }, [formValue, consumerVal, accountTypeVal, paymentTypeVal]);
+  useFresh(
+    () => {
+      if (formValue.type === 'year') {
+        fetchData({
+          ...formValue,
+          consumer: consumerVal,
+          account_type: accountTypeVal,
+          payment_type: paymentTypeVal,
+        });
+      } else {
+        console.log({
+          ...formValue,
+          consumer: consumerVal,
+          account_type: accountTypeVal,
+          payment_type: paymentTypeVal,
+        });
+
+        fetchDailyAmount({
+          ...formValue,
+          consumer: consumerVal,
+          account_type: accountTypeVal,
+          payment_type: paymentTypeVal,
+        });
+      }
+    },
+    [formValue, consumerVal, accountTypeVal, paymentTypeVal],
+    'transaction'
+  );
 
   const extra = (
     <Space>
@@ -52,7 +61,7 @@ function YearBarChart(props: { formValue: FormData }) {
       {PaymentTypeCpt}
     </Space>
   );
-  const fetchData = async (obj) => {
+  const fetchData = async obj => {
     if (!obj) return;
 
     try {
@@ -62,10 +71,9 @@ function YearBarChart(props: { formValue: FormData }) {
       message.error(error);
     }
   };
-  const fetchDailyAmount = async (obj) => {
+  const fetchDailyAmount = async obj => {
     try {
       const result = await window.mercury.api.getDailyTransactionAmounts(obj);
-      console.log(result, 'fetchDailyAmount');
       setDaliyData(result);
     } catch (error) {
       message.error(error);
@@ -77,6 +85,9 @@ function YearBarChart(props: { formValue: FormData }) {
     } else if (formValue.type === 'month') {
       return '月度消费';
     }
+  };
+  const refresh = () => {
+    emitter.emit('refresh', 'transaction');
   };
   return (
     <div className="mt8">
@@ -92,14 +103,7 @@ function YearBarChart(props: { formValue: FormData }) {
               payment_type: paymentTypeVal,
             }}
             data={daliyData}
-            refresh={() =>
-              fetchDailyAmount({
-                ...formValue,
-                consumer: consumerVal,
-                account_type: accountTypeVal,
-                payment_type: paymentTypeVal,
-              })
-            }
+            refresh={refresh}
           />
         )}
       </Card>

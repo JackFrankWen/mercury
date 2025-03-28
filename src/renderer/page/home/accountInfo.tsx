@@ -37,9 +37,13 @@ const useAccountInfo = (formValue: any) => {
       console.log(error);
     }
   };
-  useFresh(() => {
-    getSumrize(formValue);
-  }, [formValue]);
+  useFresh(
+    () => {
+      getSumrize(formValue);
+    },
+    [formValue],
+    'transaction'
+  );
   return {
     data,
     getSumrize,

@@ -9,11 +9,10 @@ function ConsumerChart(props: { formValue: any }) {
 
   useFresh(() => {
     fetchData(formValue);
-  }, [formValue]);
+  }, [formValue],'transaction');
 
   const fetchData = async (obj) => {
     try {
-      console.log(obj, 'obj====');
       if (!obj) return;
 
       const result = await window.mercury.api.getConsumerTotal(obj);
