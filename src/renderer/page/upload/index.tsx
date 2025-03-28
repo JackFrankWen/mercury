@@ -62,7 +62,6 @@ function UploadCenter(): JSX.Element {
     try {
       await uploadToDatabase(arr);
       const list = await window.mercury.store.getUploadFileList();
-      console.log(list, 'list');
       const oldList = list ? list : [];
       await window.mercury.store.setUploadFileList([
         ...oldList,
@@ -72,6 +71,7 @@ function UploadCenter(): JSX.Element {
           fileType: fileName.includes('微信') ? 'wechat' : 'alipay',
         },
       ]);
+      emitter.emit('refresh', 'fileList');
     } catch (error) {
       console.error('Failed to save file:', error);
       message.error('保存文件失败');

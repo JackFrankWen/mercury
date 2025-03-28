@@ -1,5 +1,5 @@
 import React from 'react';
-import { Upload, UploadProps, message } from 'antd';
+import { Modal, Upload, UploadProps, message } from 'antd';
 import Papa from 'papaparse';
 import { handleToTable } from './classification';
 import { WechatOutlined, AlipayCircleOutlined, CloudUploadOutlined } from '@ant-design/icons';
@@ -17,7 +17,15 @@ function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
     name: 'file',
     fileList: [],
     className: 'upload-cus',
-    beforeUpload: file => {
+    beforeUpload: async file => {
+      const fileList = await window.mercury.store.getUploadFileList();
+      if (fileList.some(item => item.fileName === file.name)) {
+        Modal.error({
+          title: '提示',
+          content: '文件已存在, 如需继续上传请去设置中已经上传的文件列表删除',
+        });
+        return false;
+      }
       setLoading(true);
 
       Papa.parse(file, {

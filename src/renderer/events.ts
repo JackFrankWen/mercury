@@ -4,7 +4,7 @@ import { FormData } from './page/home/useReviewForm';
 type Events = {
   environmentChange: 'production' | 'test';
   updateDate: FormData;
-  refresh: 'transaction' | 'advancedRule' | undefined;
+  refresh: 'transaction' | 'advancedRule' | 'fileList' | undefined;
   // Add other event types here
 };
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { List, Button, Popconfirm, message, Typography, Empty } from 'antd';
 import { AlipayCircleOutlined, WechatOutlined, DeleteOutlined } from '@ant-design/icons';
 import './uploadFileList.css';
+import { useFresh } from 'src/renderer/components/useFresh';
 
 const { Title } = Typography;
 
@@ -30,9 +31,9 @@ export const UploadFileList: React.FC = () => {
     }
   };
 
-  useEffect(() => {
+  useFresh(() => {
     fetchFileList();
-  }, []);
+  }, [], 'fileList');
 
   const handleRemoveFile = async (file: UploadFile) => {
     try {
@@ -59,9 +60,9 @@ export const UploadFileList: React.FC = () => {
 
   const getFileIcon = (fileType: string) => {
     return fileType === 'alipay' ? (
-      <AlipayCircleOutlined style={{ color: '#1677FF', fontSize: '24px' }} />
+      <AlipayCircleOutlined style={{ color: '#1677FF', fontSize: '28px' }} />
     ) : (
-      <WechatOutlined style={{ color: '#07C160', fontSize: '24px' }} />
+      <WechatOutlined style={{ color: '#07C160', fontSize: '28px' }} />
     );
   };
 

@@ -321,7 +321,7 @@ export function handleProcessApi() {
   });
 
   ipcMain.handle('get-uploadFileList', () => {
-    return store.get('uploadFileList');
+    return store.get('uploadFileList') || [];
   });
 
   ipcMain.handle(
