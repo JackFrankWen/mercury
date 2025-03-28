@@ -220,10 +220,10 @@ const RuleTable = (props: {
       width: 180,
       render: (_, record) => (
         <Space size="middle">
-          <Tooltip title="查看">
+          <Tooltip title="编辑">
             <Button
               type="text"
-              icon={<EyeOutlined />}
+              icon={<EditOutlined />}
               onClick={() => {
                 setVisiable(true);
                 setRecord(record);
