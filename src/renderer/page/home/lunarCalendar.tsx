@@ -5,7 +5,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import classNames from 'classnames';
 import { HolidayUtil, Lunar } from 'lunar-typescript';
 import { FormData } from './useReviewForm';
-import { formatMoney } from '../../components/utils';
+import { formatMoneyObj } from '../../components/utils';
 import { ModalContent } from './ModalContent';
 import { I_Transaction } from 'src/main/sqlite3/transactions';
 import { useFresh } from 'src/renderer/components/useFresh';
@@ -96,11 +96,12 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
             )}
             <Typography.Text
               type={total ? 'danger' : 'secondary'}
+              ellipsis
               style={{
                 fontSize: 12,
               }}
             >
-              {total ? `-${formatMoney(total)}` : '0'}
+              {total ? `-${formatMoneyObj({ amount: total, decimalPlaces: 0 })}` : '0'}
             </Typography.Text>
           </Flex>
         ),

@@ -1,7 +1,7 @@
 import { Card, Col, Divider, Progress, Row, Statistic, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { AccountType, PaymentType } from 'src/renderer/const/web';
-import { formatMoney } from 'src/renderer/components/utils';
+import { formatMoney, formatMoneyObj } from 'src/renderer/components/utils';
 import { useFresh } from 'src/renderer/components/useFresh';
 
 export default function Summarize(props: { formValue: any }) {
@@ -113,7 +113,14 @@ export default function Summarize(props: { formValue: any }) {
       <Row className="home-section" gutter={12}>
         <Col span={8}>
           <Card hoverable size="small">
-            <Statistic title="总支出" prefix="¥" value={staticData.total} />
+            <Statistic
+              title="总支出"
+              prefix="¥"
+              value={formatMoneyObj({
+                amount: staticData.total,
+                decimalPlaces: 0,
+              })}
+            />
 
             {/* <Row>
               <Col span={24}>
@@ -127,7 +134,14 @@ export default function Summarize(props: { formValue: any }) {
         </Col>
         <Col span={8}>
           <Card hoverable size="small">
-            <Statistic title="老公钱包" prefix="¥" value={formatMoney(staticData.husband.total)} />
+            <Statistic
+              title="老公钱包"
+              prefix="¥"
+              value={formatMoneyObj({
+                amount: staticData.husband.total,
+                decimalPlaces: 0,
+              })}
+            />
 
             {/* <Row>
               <Col span={24}>
@@ -145,7 +159,14 @@ export default function Summarize(props: { formValue: any }) {
         </Col>
         <Col span={8}>
           <Card hoverable size="small">
-            <Statistic title="老婆钱包" prefix="¥" value={formatMoney(staticData.wife.total)} />
+            <Statistic
+              title="老婆钱包"
+              prefix="¥"
+              value={formatMoneyObj({
+                amount: staticData.wife.total,
+                decimalPlaces: 0,
+              })}
+            />
 
             {/* <Row>
               <Col span={24}>
