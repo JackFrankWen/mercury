@@ -294,9 +294,13 @@ const RuleTable = (props: {
   // 根据类型过滤列
   const columns = type === 'modal' ? allColumns.filter(col => col.key !== 'action') : allColumns;
 
-  useFresh(() => {
-    getRuleData(searchValue ? { nameOrRule: searchValue } : undefined);
-  }, [searchValue], 'advancedRule');
+  useFresh(
+    () => {
+      getRuleData(searchValue ? { nameOrRule: searchValue } : undefined);
+    },
+    [searchValue],
+    'advancedRule'
+  );
 
   const [visiable, setVisiable] = useState(false);
   const [record, setRecord] = useState<AdvancedRule>();

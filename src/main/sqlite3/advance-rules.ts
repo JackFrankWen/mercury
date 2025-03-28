@@ -21,24 +21,30 @@ export async function getAllAdvancedRules(params?: {
 }): Promise<AdvancedRule[]> {
   try {
     const db = await getDbInstance();
-    
+
     // 创建参数数组和 WHERE 子句片段
     const whereConditions = [];
     const queryParams: any[] = [];
-    
+
     // 处理名称或规则搜索
     if (params?.nameOrRule) {
       // 尝试使用 getCategoryTypeByLabel 查找分类
       const categoryMatch = getCategoryTypeByLabel(params.nameOrRule);
-      
+
       if (categoryMatch && categoryMatch.length > 0) {
         // 如果找到分类匹配
         if (categoryMatch.length === 1) {
-          whereConditions.push(`(json_extract(category, '$[0]') = ? OR rule LIKE ? OR name LIKE ?)`);
+          whereConditions.push(
+            `(json_extract(category, '$[0]') = ? OR rule LIKE ? OR name LIKE ?)`
+          );
           queryParams.push(categoryMatch[0], `%${params.nameOrRule}%`, `%${params.nameOrRule}%`);
         } else if (categoryMatch.length === 2) {
           whereConditions.push(`(category = ? OR rule LIKE ? OR name LIKE ?)`);
-          queryParams.push(JSON.stringify(categoryMatch), `%${params.nameOrRule}%`, `%${params.nameOrRule}%`);
+          queryParams.push(
+            JSON.stringify(categoryMatch),
+            `%${params.nameOrRule}%`,
+            `%${params.nameOrRule}%`
+          );
         }
       } else {
         // 常规搜索
@@ -46,17 +52,17 @@ export async function getAllAdvancedRules(params?: {
         queryParams.push(`%${params.nameOrRule}%`, `%${params.nameOrRule}%`);
       }
     }
-   
 
     // 处理活动状态参数
     if (params?.active !== undefined) {
       whereConditions.push(`active = ?`);
       queryParams.push(params.active);
     }
-    
+
     // 构建 WHERE 子句
     const where = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
-    const sql = `SELECT * FROM advanced_rules ${where} ORDER BY priority DESC, category ASC`;
+    const sql = `SELECT * FROM advanced_rules ${where} ORDER BY  category ASC , priority DESC`;
+
 
     return new Promise<AdvancedRule[]>((resolve, reject) => {
       db.all(sql, queryParams, (err, rows: AdvancedRule[]) => {
@@ -65,7 +71,7 @@ export async function getAllAdvancedRules(params?: {
           reject(err);
           return;
         }
-        
+
         // 添加简单的结果处理
         const results = rows || [];
         console.log(`Found ${results.length} advanced rules matching criteria`);
