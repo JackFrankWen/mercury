@@ -14,15 +14,14 @@ export interface FormData {
 
 const useReviewForm = (): [FormData, React.ReactNode] => {
   const now = dayjs();
-  const lastYear = now.subtract(1, 'year').format('YYYY');
+  const lastYear = now.format('YYYY');
 
   const [formData, setFormData] = useState<FormData>({
     date: lastYear,
     trans_time: [lastYear + '-01-01 00:00:00', lastYear + '-12-31 23:59:59'],
     type: 'year',
   });
-  console.log(formData, 'formData');
-  
+
 
   useEffect(() => {
     emitter.on('updateDate', (val: FormData) => {
@@ -60,11 +59,11 @@ const IconDate = (props: IconDateProps) => {
 
     const date = dayjs(value.date)[operation](1, unit).format(dateFormat);
     const startTime = dayjs(value.trans_time[0])
-      [operation](1, unit)
+    [operation](1, unit)
       .startOf(unit)
       .format('YYYY-MM-DD HH:mm:ss');
     const endTime = dayjs(value.trans_time[1])
-      [operation](1, unit)
+    [operation](1, unit)
       .endOf(unit)
       .format('YYYY-MM-DD HH:mm:ss');
 
