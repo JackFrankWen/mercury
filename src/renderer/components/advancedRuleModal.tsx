@@ -57,6 +57,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       const formValue = await form.validateFields();
       if (!formValue.category && !formValue.consumer && !formValue.tag) {
         message.error('分类、消费者、标签至少选择一项');
+        setLoadingFalse();
         return;
       }
 
@@ -87,6 +88,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       console.log(res);
     } catch (error) {
       console.log(error);
+      setLoadingFalse();
       message.error(error);
     }
   };
@@ -123,6 +125,10 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
     <Form
       layout="vertical"
       form={form}
+      style={{
+        maxHeight: '80vh',
+        overflow: 'auto',
+      }}
       initialValues={{
         name: data?.name,
         category: data?.category ? JSON.parse(data?.category) : undefined,

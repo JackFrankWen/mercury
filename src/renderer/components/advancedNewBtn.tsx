@@ -9,12 +9,12 @@ function AdvancedNewBtn(props: { refresh?: () => void }) {
   return (
     <>
       <Button
-        type="primary" 
-        icon={<PlusOutlined />} 
+        type="primary"
+        icon={<PlusOutlined />}
         shape="round"
-        style={{ 
-          background: '#1890ff', 
-          boxShadow: '0 2px 6px rgba(24, 144, 255, 0.3)'
+        style={{
+          background: '#1890ff',
+          boxShadow: '0 2px 6px rgba(24, 144, 255, 0.3)',
         }}
         onClick={() => {
           setVisible(true);
@@ -31,23 +31,21 @@ function AdvancedNewBtn(props: { refresh?: () => void }) {
       >
         规则
       </Button>
-      {visible && (
-        <Modal
-          title="新建规则"
-          open={visible}
-          footer={null}
-          width={700}
-          onCancel={() => {
-            setVisible(false);
-          }}
-        >
-          <AdvancedRuleModal
-            data={record}
-            refresh={props.refresh || (() => {})}
-            onCancel={() => setVisible(false)}
-          />
-        </Modal>
-      )}
+      <Modal
+        title="新建规则"
+        open={visible}
+        footer={null}
+        width={700}
+        onCancel={() => {
+          setVisible(false);
+        }}
+      >
+        <AdvancedRuleModal
+          data={record}
+          refresh={props.refresh || (() => {})}
+          onCancel={() => setVisible(false)}
+        />
+      </Modal>
     </>
   );
 }
