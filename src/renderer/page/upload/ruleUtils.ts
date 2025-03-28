@@ -218,6 +218,10 @@ export const ruleByAdvanced = async (arr: I_Transaction[], rules: AdvancedRule[]
     const { newData, messageList: p1MessageList } = applyRule(arr, p1Rules);
     const { newData: p10NewData, messageList: p10MessageList } = applyRule(newData, p10Rules);
     const { newData: p100NewData, messageList: p100MessageList } = applyRule(p10NewData, p100Rules);
+    console.log(p1MessageList, 'p1MessageList');
+    console.log(p10MessageList, 'p10MessageList');
+    console.log(p100MessageList, 'p100MessageList');
+
 
     if (p1MessageList.length > 0) {
       openNotification(p1MessageList, api, '规则【P3】');
@@ -228,7 +232,7 @@ export const ruleByAdvanced = async (arr: I_Transaction[], rules: AdvancedRule[]
     if (p100MessageList.length > 0) {
       openNotification(p100MessageList, api, '规则【P1】');
     }
-    if (p100NewData.length === 0 && p10NewData.length === 0 && p1NewData.length === 0) {
+    if (p1MessageList.length === 0 && p10MessageList.length === 0 && p100MessageList.length === 0) {
       message.info('没有符合条件的交易');
     }
 

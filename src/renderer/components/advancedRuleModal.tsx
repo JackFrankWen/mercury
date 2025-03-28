@@ -155,7 +155,10 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       const validation = validateRuleValue(formValue.rule);
       if (!validation.isValid) {
         message.error(validation.message);
-        setLoadingFalse();
+        return;
+      }
+      if (!formValue.category && !formValue.consumer && !formValue.tag) {
+        message.error('分类、消费者、标签至少选择一项');
         return;
       }
       const allData = await window.mercury.api.getTransactions({
