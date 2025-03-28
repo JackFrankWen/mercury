@@ -81,6 +81,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       if (res?.code === 200) {
         message.success('操作成功');
         setLoadingFalse();
+        props.onCancel();
         refresh();
       }
       console.log(res);
@@ -129,7 +130,14 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         cost_type: toNumberOrUndefiend(data?.cost_type),
         tag: toNumberOrUndefiend(data?.tag),
         consumer: toNumberOrUndefiend(data?.consumer),
-        rule: data?.rule ? JSON.parse(data?.rule) : [],
+        rule: data?.rule ? JSON.parse(data?.rule) : [
+          [{
+            condition: '',
+            formula: '',
+            value: '',
+          },
+          ],
+        ],
         priority: toNumberOrUndefiend(data?.priority) || 1,
         active: data?.active === 1,
       }}
