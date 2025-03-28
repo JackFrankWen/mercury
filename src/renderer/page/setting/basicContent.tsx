@@ -150,10 +150,10 @@ function BasicContent() {
       }}
       layout="vertical"
     >
-      <Form.Item label="运行环境" name="env">
+      <Form.Item label="数据源" name="env">
         <Radio.Group value={environment} onChange={handleEnvironmentChange}>
-          <Radio value="production">生产环境</Radio>
-          <Radio value="test">测试环境</Radio>
+          <Radio value="production">生产数据</Radio>
+          <Radio value="test">测试数据</Radio>
         </Radio.Group>
       </Form.Item>
       <Form.Item label="当前版本" tooltip="This is a required field">
