@@ -18,7 +18,7 @@ function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
     fileList: [],
     className: 'upload-cus',
     beforeUpload: async file => {
-      const fileList = await window.mercury.store.getUploadFileList();
+      const fileList = await window.mercury.store.getUploadFileList() || [];
       console.log(fileList, '==fileList');
       if (fileList.some(item => item.fileName === file.name)) {
         Modal.error({
