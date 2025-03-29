@@ -12,7 +12,7 @@ export function generateWhereClause(params: Params_Transaction): {
     conditions.push(`flow_type = '1'`);
   }
 
-  if (params?.is_unclassified) {
+  if (params?.is_unclassified && !params?.category) {
     conditions.push(
       '(category IS NULL OR category = "" OR category = "[100000,100003]" OR consumer IS NULL OR consumer = "")'
     );
@@ -52,10 +52,14 @@ export function generateWhereClause(params: Params_Transaction): {
     }
   }
 
-  if (params?.modification_time && params?.modification_time[0] && params?.modification_time[1]) {
-    conditions.push(
-      `modification_time BETWEEN '${params.modification_time[0]}' AND '${params.modification_time[1]}'`
-    );
+  if (params?.modification_time) {
+    if(typeof params.modification_time === 'string') {
+      conditions.push(`datetime(modification_time) = datetime('${params.modification_time}')`);
+    } else if (params.modification_time[0] && params.modification_time[1]) {
+      conditions.push(
+        `modification_time BETWEEN '${params.modification_time[0]}' AND '${params.modification_time[1]}'`
+      );
+    }
   }
 
   if (params?.account_type) {

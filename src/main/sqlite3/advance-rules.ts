@@ -63,6 +63,7 @@ export async function getAllAdvancedRules(params?: {
     const where = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
     const sql = `SELECT * FROM advanced_rules ${where} ORDER BY  category ASC , priority DESC`;
 
+    console.log(sql,queryParams,'sql av====');
 
     return new Promise<AdvancedRule[]>((resolve, reject) => {
       db.all(sql, queryParams, (err, rows: AdvancedRule[]) => {

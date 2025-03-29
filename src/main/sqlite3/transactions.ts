@@ -97,6 +97,7 @@ export const getAllTransactions = async (
       ${whereClause}
       ORDER BY trans_time DESC
     `;
+    console.log(sql,'sql=ooooooo===');
 
     if (params.page !== undefined && params.page_size !== undefined) {
       const offset = (params.page - 1) * params.page_size;

@@ -42,13 +42,15 @@ export const AdvancedSearchForm = (props: {
     const params = {
       ...values,
       is_unclassified: values.chose_unclassified === 'unclassified',
-      trans_time: values.trans_time?.map((date: any, index: number) => {
-        if (index === 0) {
-          return dayjs(date).startOf('month').format('YYYY-MM-DD HH:mm:ss');
-        } else {
-          return dayjs(date).endOf('month').format('YYYY-MM-DD HH:mm:ss');
-        }
-      }),
+      trans_time: values.trans_time?.map((date: any) => 
+        dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+      ),
+      creation_time: values.creation_time?.map((date: any) => 
+        dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+      ),
+      modify_time: values.modify_time?.map((date: any) => 
+        dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+      ),
     };
     // 写个方法，根据description找到
 
@@ -63,7 +65,9 @@ export const AdvancedSearchForm = (props: {
       form={form}
       initialValues={{
         ...formValue,
-        trans_time: [dayjs(formValue.trans_time[0]), dayjs(formValue.trans_time[1])],
+        trans_time: formValue.trans_time ? [dayjs(formValue.trans_time[0]), dayjs(formValue.trans_time[1])] : undefined,
+        creation_time: formValue.creation_time ? [dayjs(formValue.creation_time[0]), dayjs(formValue.creation_time[1])] : undefined,
+        modify_time: formValue.modify_time ? [dayjs(formValue.modify_time[0]), dayjs(formValue.modify_time[1])] : undefined,
       }}
       // onValuesChange={(changedValues, allValues) => {
       //   const new_allValues = { ...allValues };
