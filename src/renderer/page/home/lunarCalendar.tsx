@@ -25,11 +25,11 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
   const { formValue, data, refresh } = props;
   const [visible, setVisible] = useState<boolean>(false);
   const [modalData, setModalData] = useState<I_Transaction[]>([]);
-  const openModal = async (data: string) => {
+  const openModal = async (dateTime: string) => {
     try {
       const res = await window.mercury.api.getTransactions({
         ...formValue,
-        trans_time: [`${data} 00:00:00`, `${data} 23:59:59`],
+        trans_time: [`${dateTime} 00:00:00`, `${dateTime} 23:59:59`],
         flow_type: '1',
       });
       setModalData(res);
@@ -110,7 +110,6 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
     return info.originNode;
   };
   const calData = dayjs(formValue.date);
-
   return (
     <>
       <Calendar

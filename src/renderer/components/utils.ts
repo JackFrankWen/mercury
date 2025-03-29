@@ -71,7 +71,6 @@ export function formatMoneyObj({
   autoUnit?: boolean,
   decimalPlaces?: number,
 }): string {
-  console.log(amount, unit, autoUnit, decimalPlaces, "formatMoneyObj");
   if (typeof amount === "string") {
     amount = parseFloat(amount);
   }

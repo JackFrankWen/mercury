@@ -7,6 +7,7 @@ import LunarCalendar from './lunarCalendar';
 import { FormData } from './useReviewForm';
 import { useFresh } from 'src/renderer/components/useFresh';
 import emitter from 'src/renderer/events';
+
 function YearBarChart(props: { formValue: FormData }) {
   const { formValue } = props;
   const [data, setData] = useState<{ date: string; total: number }[]>([]);
@@ -35,12 +36,6 @@ function YearBarChart(props: { formValue: FormData }) {
           payment_type: paymentTypeVal,
         });
       } else {
-        console.log({
-          ...formValue,
-          consumer: consumerVal,
-          account_type: accountTypeVal,
-          payment_type: paymentTypeVal,
-        });
 
         fetchDailyAmount({
           ...formValue,
@@ -72,8 +67,10 @@ function YearBarChart(props: { formValue: FormData }) {
     }
   };
   const fetchDailyAmount = async obj => {
+    console.log(obj,'objaaaa====');
     try {
       const result = await window.mercury.api.getDailyTransactionAmounts(obj);
+      console.log(result,'result====');
       setDaliyData(result);
     } catch (error) {
       message.error(error);
@@ -89,6 +86,7 @@ function YearBarChart(props: { formValue: FormData }) {
   const refresh = () => {
     emitter.emit('refresh', 'transaction');
   };
+  console.log(daliyData,'aaaa====');
   return (
     <div className="mt8">
       <Card title={cardTitle()} bordered={false} hoverable extra={extra}>

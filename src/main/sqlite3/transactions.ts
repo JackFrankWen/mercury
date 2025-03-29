@@ -341,7 +341,6 @@ export async function getCategoryTotal(
       GROUP BY category
       ORDER BY total DESC
     `;
-    console.log(sql, 'sql===');
 
     const rows = await new Promise<
       { category: string; total: number; avg: number; percent: number }[]

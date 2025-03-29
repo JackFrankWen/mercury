@@ -31,25 +31,8 @@ const useReviewForm = (): [FormData, React.ReactNode] => {
     emitter.on('updateDate', (val: FormData) => {
       setFormData(val);
     });
-    emitter.on('changeYear', (val: { year: string }) => {
-      // 如果year 2025-01 则设置为2025年1月
-      if (val.year.includes('-')) {
-        setFormData({
-          date: val.year.split('-')[0],
-          trans_time: [val.year + '-01 00:00:00', val.year + '-31 23:59:59'],
-          type: 'month',
-        });
-      } else {
-        setFormData({
-          date: val.year,
-          trans_time: [val.year + '-01-01 00:00:00', val.year + '-12-31 23:59:59'],
-          type: 'year',
-        });
-      }
-    });
     return () => {
       emitter.off('updateDate');
-      emitter.off('changeYear');
     };
   }, []);
 

@@ -21,8 +21,10 @@ const Done: React.FC<{
           key="buy"
           onClick={() => {
             navigate(`/?year=${prop.goYear}`);
-            emitter.emit('changeYear', {
-              year: prop.goYear,
+            emitter.emit('updateDate', {
+              date: prop.goYear,
+              trans_time: [prop.goYear + '-01-01 00:00:00', prop.goYear + '-12-31 23:59:59'],
+              type: 'year',
             });
           }}
         >

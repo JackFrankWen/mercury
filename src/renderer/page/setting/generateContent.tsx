@@ -128,7 +128,6 @@ export default function GenerateContent(): JSX.Element {
         modification_time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
       };
     });
-    console.log(data, "data====");
 
     window.mercury.api.batchInsertAdvancedRule(data).then((res) => {
       console.log(res, "res");

@@ -20,6 +20,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
     const chart = new Chart({
       container: containerRef.current,
       autoFit: true,
+  
       height: height,
     });
 
@@ -41,6 +42,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
     chart.axis('total', {
       line: null,
       tickLine: null,
+      
       label: {
         formatter: text => {
           // 自动判断使用千或万
@@ -98,12 +100,12 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
     chart.on('element:click', event => {
       if (hasElementClick) {
         const date = event.data.data.date;
-        const trans_time = [date + '-01-01 00:00:00', date + '-12-31 23:59:59'];
+        const trans_time = [date + '-01 00:00:00', date + '-31 23:59:59'];
         const type = 'month';
 
         emitter.emit('updateDate', {
           date: date,
-          trans_time: trans_time,
+          trans_time,
           type: type,
         });
       }
