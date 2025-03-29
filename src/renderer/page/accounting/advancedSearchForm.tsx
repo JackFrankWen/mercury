@@ -156,7 +156,7 @@ export const AdvancedSearchForm = (props: {
             </Col>
             <Col span={8}>
               <Form.Item name="tag" label="标签">
-                <Select placeholder="标签" options={cpt_const.tag_type} />
+                <Select allowClear placeholder="标签" options={cpt_const.tag_type} />
               </Form.Item>
             </Col>
             <Col span={8}>

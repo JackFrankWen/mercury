@@ -28,13 +28,14 @@ export function generateWhereClause(params: Params_Transaction): {
     conditions.push(`consumer LIKE '%${params.consumer}%'`);
   }
 
-  if (params?.min_money !== undefined || params?.max_money !== undefined) {
-    if (params?.min_money !== undefined && params?.max_money !== undefined) {
-      conditions.push(`amount BETWEEN ${params.min_money} AND ${params.max_money}`);
-    } else if (params?.min_money !== undefined) {
-      conditions.push(`amount >= ${params.min_money}`);
-    } else if (params?.max_money !== undefined) {
-      conditions.push(`amount <= ${params.max_money}`);
+  if (params?.min_money  || params?.max_money ) {
+    const { min_money, max_money } = params;
+    if (min_money && max_money) {
+      conditions.push(`amount BETWEEN ${min_money} AND ${max_money}`);
+    } else if (min_money && !max_money) {
+      conditions.push(`amount >= ${min_money}`);
+    } else if (!min_money && max_money) {
+      conditions.push(`amount <= ${max_money}`);
     }
   }
 

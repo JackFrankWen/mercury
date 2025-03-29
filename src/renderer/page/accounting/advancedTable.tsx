@@ -64,6 +64,7 @@ const CONSUMER_TYPE_MAP = {
   4: { label: '牧牧', color: 'purple' },
   5: { label: '爷爷奶奶', color: 'lime' },
   6: { label: '二宝', color: 'orange' },
+  7: { label: '姥爷', color: 'gold' },
 } as const;
 
 // 优化渲染价格的函数
