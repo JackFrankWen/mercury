@@ -99,9 +99,7 @@ out/
 .idea/
 
 # 分词后的数据
-data/transactions.txt
-data/transactions.json
-data/transactions.csv
+data/
 
 # exports
-# exports/
+exports/
