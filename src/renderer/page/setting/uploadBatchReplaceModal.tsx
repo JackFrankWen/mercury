@@ -214,7 +214,7 @@ export function BatchReplaceDrawer({ visible, onClose, onSuccess }: BatchReplace
       title="批量替换交易"
       open={visible}
       onCancel={onClose}
-      width={800}
+      width={1000}
       footer={[
         <Button key="back" onClick={onClose}>
           取消

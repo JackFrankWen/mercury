@@ -23,7 +23,7 @@ export interface Params_Transaction {
   trans_time?: [string, string];
   creation_time?: [string, string] | string;
   modification_time?: [string, string] | string;
-  category?: string;
+  category?: string[][];
   min_money?: number;
   max_money?: number;
   is_unclassified?: boolean; // 是否未分类

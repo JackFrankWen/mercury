@@ -160,6 +160,7 @@ export const AdvancedSearchForm = (props: {
                 <Cascader
                   options={category_type}
                   allowClear
+                  multiple
                   placeholder="请选择分类"
                   showSearch={{
                     filter: (inputValue: string, path: DefaultOptionType[]) =>
