@@ -18,8 +18,6 @@ export interface Params_Transaction {
   payment_type?: string | number;
   consumer?: string | number;
   tag?: string;
-  abc_type?: string;
-  cost_type?: string;
   trans_time?: [string, string];
   creation_time?: [string, string] | string;
   modification_time?: [string, string] | string;

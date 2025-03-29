@@ -47,8 +47,6 @@ function createRuleAutoTable() {
         payment_type TEXT,
         consumer TEXT,
         tag TEXT,
-        abc_type TEXT,
-        cost_type TEXT,
         creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
         modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
     )
@@ -62,8 +60,6 @@ function createRuleTable() {
     rule TEXT, // 规则
     category TEXT,
     consumer TEXT,
-    abc_type TEXT,
-    cost_type TEXT,
     */
   const sql = `
         CREATE TABLE IF NOT EXISTS match_rules (
@@ -71,8 +67,6 @@ function createRuleTable() {
             rule TEXT,
             category TEXT,
             consumer TEXT,
-            abc_type TEXT,
-            cost_type TEXT,
             tag TEXT,
             creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
             modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -123,8 +117,6 @@ function createTransactionTable() {
             consumer TEXT,
             flow_type TEXT,
             tag TEXT,
-            abc_type TEXT,
-            cost_type TEXT,
             trans_time DATETIME,
             creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
             modification_time DATETIME DEFAULT CURRENT_TIMESTAMP

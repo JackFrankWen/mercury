@@ -17,8 +17,6 @@ export type RuleFormData = {
   name?: string;
   category?: string;
   consumer?: string;
-  abc_type?: number;
-  cost_type?: number;
   priority?: number;
   rule: string; // 需要解析成 RuleItemList
   tag?: string;
@@ -195,8 +193,6 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       initialValues={{
         name: data?.name,
         category: data?.category ? JSON.parse(data?.category) : undefined,
-        abc_type: toNumberOrUndefiend(data?.abc_type),
-        cost_type: toNumberOrUndefiend(data?.cost_type),
         tag: toNumberOrUndefiend(data?.tag),
         consumer: toNumberOrUndefiend(data?.consumer),
         rule: data?.rule ? JSON.parse(data?.rule) : [

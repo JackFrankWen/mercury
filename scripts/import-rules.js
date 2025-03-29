@@ -22,14 +22,14 @@ function importCSV(filepath) {
 
         const stmt = db.prepare(`
                     INSERT INTO match_rules (
-                        rule, category, consumer, abc_type, 
-                        cost_type, tag, creation_time, modification_time
-                    ) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                        rule, category, consumer, 
+                         tag, creation_time, modification_time
+                    ) VALUES ( ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
                 `);
 
         results.forEach((row) => {
           try {
-            stmt.run([row.rule, row.category, row.consumer, row.abc_type, row.cost_type, row.tag]);
+            stmt.run([row.rule, row.category, row.consumer, row.tag]);
             successCount++;
           } catch (err) {
             console.error("导入行数据失败:", err);

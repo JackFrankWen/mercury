@@ -9,15 +9,6 @@ const husband = 1,
 // 1: '生存开销',
 // 2: '发展开销',
 // 3: '享受开销',
-const basic = 1,
-  develop = 2,
-  chill = 3;
-// 1: '必要开支',
-// 2: '可有可无',
-// 3: '过度开支',// 买了重复不必要的东西
-const a = 1,
-  b = 2,
-  c = 3;
 
 export function getCategoryTypeByLabel(label: string): number[] | undefined {
   if (!label) return undefined;
@@ -70,8 +61,6 @@ export const category_type = [
         color: '#2ECC71', // 鲜绿色
         tag: general_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
         budget: 1800, // 2000 2500
       },
       {
@@ -81,8 +70,6 @@ export const category_type = [
         color: '#3498DB', // 亮蓝色
         tag: general_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
         budget: 500, // 589
       },
       {
@@ -92,8 +79,6 @@ export const category_type = [
         color: '#F39C12', // 亮橙色
         tag: general_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
         budget: 300, // 589
       },
       {
@@ -103,8 +88,6 @@ export const category_type = [
         color: '#9B59B6', // 亮紫色
         tag: variable_cost,
         consumer: undefined,
-        cost_type: chill,
-        abc_type: b,
         budget: 400, // 589
       },
       {
@@ -113,8 +96,6 @@ export const category_type = [
         icon: 'fa-solid fa-bowl-food',
         color: '#1ABC9C', // 亮青绿色
         tag: general_cost,
-        cost_type: basic,
-        abc_type: a,
         budget: 800, // 589
       },
       {
@@ -124,8 +105,6 @@ export const category_type = [
         color: '#8E44AD', // 深紫色
         tag: variable_cost,
         consumer: family,
-        cost_type: chill,
-        abc_type: b, // 489.39166666666665
         budget: 500, // 589
       },
       {
@@ -135,8 +114,6 @@ export const category_type = [
         color: '#F1C40F', // 亮黄色
         tag: variable_cost,
         consumer: family,
-        cost_type: chill,
-        abc_type: b, // 489.39166666666665
         budget: 500, // 5
       },
     ],
@@ -153,8 +130,6 @@ export const category_type = [
         icon: 'fa-solid fa-shirt',
         color: '#E67E22', // 亮橙色
         tag: variable_cost,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 50002,
@@ -163,8 +138,6 @@ export const category_type = [
         color: '#27AE60', // 深绿色
         tag: fix_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 50003,
@@ -172,8 +145,6 @@ export const category_type = [
         icon: 'fa-solid fa-mobile-screen',
         color: '#9B59B6', // 紫色
         tag: variable_cost,
-        cost_type: basic,
-        abc_type: b,
       },
       {
         value: 50004,
@@ -182,8 +153,6 @@ export const category_type = [
         color: '#F39C12', // 金橙色
         tag: fix_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 50005,
@@ -191,8 +160,6 @@ export const category_type = [
         icon: 'fa-solid fa-spray-can-sparkles',
         color: '#E91E63', // 粉红色
         tag: variable_cost,
-        cost_type: basic,
-        abc_type: a,
         consumer: wife,
       },
       {
@@ -202,8 +169,6 @@ export const category_type = [
         color: '#FF5722', // 深橙色
         tag: fix_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 50007,
@@ -211,8 +176,6 @@ export const category_type = [
         icon: 'fa-solid fa-baby',
         color: '#8E44AD', // 深紫色
         tag: variable_cost,
-        cost_type: fix_cost,
-        abc_type: a,
         consumer: family,
       },
       {
@@ -221,8 +184,6 @@ export const category_type = [
         icon: 'fa-solid fa-home',
         color: '#16A085', // 青色
         tag: fix_cost,
-        cost_type: basic,
-        abc_type: a,
         consumer: family,
       },
       {
@@ -231,8 +192,6 @@ export const category_type = [
         icon: 'fa-solid fa-music',
         color: '#D4AC0D', // 亮金色
         tag: variable_cost,
-        abc_type: b,
-        cost_type: develop,
       },
     ],
   },
@@ -249,8 +208,6 @@ export const category_type = [
         color: '#FF9800', // 亮橙色
         tag: general_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 20002,
@@ -259,8 +216,6 @@ export const category_type = [
         color: '#FF4081', // 粉红色
         tag: general_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 20003,
@@ -269,8 +224,6 @@ export const category_type = [
         color: '#4CAF50', // 绿色
         tag: general_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 20004,
@@ -279,8 +232,6 @@ export const category_type = [
         color: '#9C27B0', // 紫色
         tag: fix_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 20005,
@@ -289,17 +240,12 @@ export const category_type = [
         color: '#FFC107', // 琥珀色
         tag: general_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 20006,
         label: '理发费',
         icon: 'fa-solid fa-scissors',
         color: '#00BCD4', // 青色
-        tag: fix_cost,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 20007,
@@ -307,8 +253,6 @@ export const category_type = [
         icon: 'fa-solid fa-phone',
         color: '#F44336', // 红色
         tag: fix_cost,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 20008,
@@ -317,8 +261,6 @@ export const category_type = [
         color: '#2196F3', // 亮蓝色
         tag: fix_cost,
         consumer: family,
-        cost_type: develop,
-        abc_type: a,
       },
       {
         value: 20009,
@@ -327,8 +269,6 @@ export const category_type = [
         color: '#673AB7', // 深紫色
         tag: fix_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 20010,
@@ -337,8 +277,6 @@ export const category_type = [
         color: '#009688', // 青绿色
         tag: fix_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 20011,
@@ -347,8 +285,6 @@ export const category_type = [
         color: '#CDDC39', // 酸橙色
         tag: general_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
     ],
   },
@@ -370,8 +306,6 @@ export const category_type = [
         icon: 'fa-solid fa-train',
         color: '#9C27B0', // 紫色
         tag: general_cost,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 30003,
@@ -379,8 +313,6 @@ export const category_type = [
         icon: 'fa-solid fa-taxi',
         color: '#4CAF50', // 绿色
         tag: general_cost,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 30004,
@@ -388,8 +320,6 @@ export const category_type = [
         icon: 'fa-solid fa-bicycle',
         color: '#E91E63', // 粉红色
         tag: variable_cost,
-        cost_type: basic,
-        abc_type: b,
       },
       {
         value: 30005,
@@ -397,8 +327,6 @@ export const category_type = [
         icon: 'fa-solid fa-parking',
         color: '#673AB7', // 深紫色
         tag: general_cost,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 30006,
@@ -406,8 +334,6 @@ export const category_type = [
         icon: 'fa-solid fa-gas-pump',
         color: '#2196F3', // 亮蓝色
         tag: general_cost,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 30007,
@@ -415,8 +341,6 @@ export const category_type = [
         icon: 'fa-solid fa-car',
         color: '#009688', // 青绿色
         tag: variable_cost,
-        cost_type: basic,
-        abc_type: b,
       },
     ],
   },
@@ -432,8 +356,6 @@ export const category_type = [
         icon: 'fa-solid fa-glass-cheers',
         color: '#4CAF50', // 绿色
         tag: variable_cost,
-        cost_type: develop,
-        abc_type: b,
       },
       {
         value: 60002,
@@ -442,8 +364,6 @@ export const category_type = [
         color: '#2196F3', // 蓝色
         tag: variable_cost,
         consumer: family,
-        cost_type: develop,
-        abc_type: b,
       },
       {
         value: 60003,
@@ -451,8 +371,6 @@ export const category_type = [
         icon: 'fa-solid fa-heart',
         color: '#9C27B0', // 紫色
         tag: fix_cost,
-        cost_type: basic,
-        abc_type: a,
       },
     ],
   },
@@ -469,7 +387,6 @@ export const category_type = [
         icon: 'fa-solid fa-users',
         color: '#FF5722', // 深橙色
         tag: variable_cost,
-        abc_type: b,
       },
       {
         value: 70002,
@@ -478,8 +395,6 @@ export const category_type = [
         color: '#4CAF50', // 绿色
         tag: variable_cost,
         disabled: true,
-        cost_type: chill,
-        abc_type: b,
       },
       {
         value: 70003,
@@ -487,8 +402,6 @@ export const category_type = [
         icon: 'fa-solid fa-umbrella-beach',
         color: '#FFC107', // 琥珀色
         tag: variable_cost,
-        cost_type: chill,
-        abc_type: c,
       },
     ],
   },
@@ -505,8 +418,6 @@ export const category_type = [
         color: '#FF4081', // 亮粉色
         tag: fix_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: b,
       },
       {
         value: 80002,
@@ -514,8 +425,6 @@ export const category_type = [
         icon: 'fa-solid fa-stethoscope',
         color: '#4CAF50', // 绿色
         tag: variable_cost,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 80003,
@@ -524,8 +433,6 @@ export const category_type = [
         color: '#FFC107', // 琥珀色
         tag: fix_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
     ],
   },
@@ -542,8 +449,6 @@ export const category_type = [
         color: '#9C27B0', // 紫色
         tag: variable_cost,
         consumer: wife,
-        cost_type: develop,
-        abc_type: b,
       },
       {
         value: 90002,
@@ -551,8 +456,6 @@ export const category_type = [
         icon: 'fa-solid fa-book',
         color: '#FF5722', // 深橙色
         tag: variable_cost,
-        cost_type: develop,
-        abc_type: b,
       },
       {
         value: 90004,
@@ -560,8 +463,6 @@ export const category_type = [
         icon: 'fa-solid fa-graduation-cap',
         color: '#2196F3', // 蓝色
         tag: variable_cost,
-        cost_type: develop,
-        abc_type: b,
       },
       {
         value: 90003,
@@ -569,8 +470,6 @@ export const category_type = [
         icon: 'fa-solid fa-hand-holding-dollar',
         color: '#FF9800', // 橙色
         tag: variable_cost,
-        cost_type: develop,
-        abc_type: b,
       },
       {
         value: 90005,
@@ -578,8 +477,6 @@ export const category_type = [
         icon: 'fa-solid fa-trophy',
         color: '#E91E63', // 粉红色
         tag: variable_cost,
-        cost_type: develop,
-        abc_type: b,
       },
     ],
   },
@@ -596,8 +493,6 @@ export const category_type = [
         color: '#FF5722', // 深橙色
         tag: variable_cost,
         consumer: wife,
-        cost_type: develop,
-        abc_type: b,
       },
     ],
   },
@@ -614,8 +509,6 @@ export const category_type = [
         color: '#E91E63', // 粉红色
         tag: variable_cost,
         consumer: wife,
-        cost_type: develop,
-        abc_type: b,
       },
       {
         value: 92002,
@@ -624,8 +517,6 @@ export const category_type = [
         color: '#9C27B0', // 紫色
         tag: variable_cost,
         consumer: wife,
-        cost_type: develop,
-        abc_type: b,
       },
       {
         value: 92003,
@@ -634,8 +525,6 @@ export const category_type = [
         color: '#2196F3', // 蓝色
         tag: variable_cost,
         consumer: wife,
-        cost_type: develop,
-        abc_type: b,
       },
     ],
   },
@@ -651,8 +540,6 @@ export const category_type = [
         icon: 'fa-solid fa-bus',
         color: '#4CAF50', // 绿色
         tag: variable_cost,
-        cost_type: chill,
-        abc_type: b,
       },
       {
         value: 110002,
@@ -660,8 +547,6 @@ export const category_type = [
         icon: 'fa-solid fa-hotel',
         color: '#2196F3', // 蓝色
         tag: variable_cost,
-        cost_type: chill,
-        abc_type: b,
       },
       {
         value: 110003,
@@ -669,8 +554,6 @@ export const category_type = [
         icon: 'fa-solid fa-utensils',
         color: '#FF5722', // 深橙色
         tag: variable_cost,
-        cost_type: chill,
-        abc_type: b,
       },
       {
         value: 110004,
@@ -678,8 +561,6 @@ export const category_type = [
         icon: 'fa-solid fa-ticket',
         color: '#FFC107', // 琥珀色
         tag: variable_cost,
-        cost_type: chill,
-        abc_type: b,
       },
       {
         value: 110005,
@@ -687,8 +568,6 @@ export const category_type = [
         icon: 'fa-solid fa-suitcase',
         color: '#009688', // 青绿色
         tag: variable_cost,
-        cost_type: chill,
-        abc_type: b,
       },
     ],
   },
@@ -705,8 +584,6 @@ export const category_type = [
         color: '#FF5722', // 深橙色
         tag: general_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 100002,
@@ -715,8 +592,6 @@ export const category_type = [
         color: '#FFC107', // 琥珀色
         tag: general_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
       {
         value: 100003,
@@ -725,8 +600,6 @@ export const category_type = [
         color: '#2196F3', // 蓝色
         tag: general_cost,
         consumer: family,
-        cost_type: basic,
-        abc_type: a,
       },
     ],
   },

@@ -209,12 +209,7 @@ const RuleTable = (props: {
     //   width: 90,
     //   render: (val: string) => (val ? (tag_type as TypeMap)[val] : ''),
     // },
-    // {
-    //   title: 'ABC类',
-    //   dataIndex: 'abc_type',
-    //   width: 100,
-    //   render: (val: number) => (val ? (abc_type as TypeMap)[val] : ''),
-    // },
+  
     {
       title: 'Action',
       key: 'action',

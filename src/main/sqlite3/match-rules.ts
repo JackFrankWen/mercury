@@ -5,8 +5,6 @@ export interface MatchRule {
   rule: string;
   consumer: number;
   tag?: string;
-  abc_type?: number;
-  cost_type?: number;
 }
 
 // Get all match rules
@@ -32,9 +30,9 @@ export const addMatchRule = async (rule: MatchRule): Promise<{ code: number }> =
   try {
     const db = await getDbInstance();
     await db.run(
-      `INSERT INTO match_rules (category, rule, consumer, tag, abc_type, cost_type) 
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [rule.category, rule.rule, rule.consumer, rule.tag, rule.abc_type, rule.cost_type]
+      `INSERT INTO match_rules (category, rule, consumer, tag) 
+       VALUES (?, ?, ?, ?)`,
+      [rule.category, rule.rule, rule.consumer, rule.tag]
     );
     return { code: 200 };
   } catch (error) {
@@ -49,9 +47,9 @@ export const updateMatchRule = async (id: number, rule: MatchRule): Promise<{ co
     const db = await getDbInstance();
     await db.run(
       `UPDATE match_rules 
-       SET category = ?, rule = ?, consumer = ?, tag = ?, abc_type = ?, cost_type = ?
+       SET category = ?, rule = ?, consumer = ?, tag = ?
        WHERE id = ?`,
-      [rule.category, rule.rule, rule.consumer, rule.tag, rule.abc_type, rule.cost_type, id]
+      [rule.category, rule.rule, rule.consumer, rule.tag, id]
     );
     return { code: 200 };
   } catch (error) {

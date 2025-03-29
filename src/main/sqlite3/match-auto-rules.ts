@@ -21,8 +21,8 @@ export const batchInsertAutoRule = async (
     await db.run("BEGIN TRANSACTION");
 
     const stmt = await db.prepare(
-      `INSERT INTO match_rules_auto (category, payee, description, consumer, tag, abc_type, cost_type) 
-             VALUES (?, ?, ?, ?, ?, ?, ?)`
+      `INSERT INTO match_rules_auto (category, payee, description, consumer, tag) 
+             VALUES (?, ?, ?, ?, ?)`
     );
 
     // Process each item
@@ -33,8 +33,6 @@ export const batchInsertAutoRule = async (
         item.description,
         item.consumer,
         item.tag,
-        item.abc_type,
-        item.cost_type,
       ]);
     }
 

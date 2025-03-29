@@ -99,9 +99,7 @@ function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDra
 
                   form.setFieldsValue({
                     tag: toNumberOrUndefiend(obj?.tag),
-                    abc_type: toNumberOrUndefiend(obj?.abc_type),
                     consumer: toNumberOrUndefiend(obj?.consumer),
-                    cost_type: toNumberOrUndefiend(obj?.cost_type),
                   });
                 }
               }

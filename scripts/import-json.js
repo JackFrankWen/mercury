@@ -36,10 +36,8 @@ function importJSON(filepath) {
                     consumer,
                     flow_type,
                     tag,
-                    abc_type,
-                    cost_type,
                     trans_time
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime(?))
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime(?))
             `);
 
       jsonData.forEach((row) => {
@@ -79,8 +77,6 @@ function importJSON(filepath) {
             row.consumer || null,
             row.flow_type || "",
             row.tag || "",
-            row.abc_type || null,
-            parseInt(row.cost_type) || 1,
             timestamp,
           ]);
           successCount++;

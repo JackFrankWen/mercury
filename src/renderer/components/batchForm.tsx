@@ -53,9 +53,7 @@ const BatchUpdateArea = (props: { formValues: any; setFormValues: (values: any) 
                     account_type: undefined,
                     payment_type: undefined,
                     tag: toNumberOrUndefiend(obj?.tag),
-                    abc_type: toNumberOrUndefiend(obj?.abc_type),
                     consumer: toNumberOrUndefiend(obj?.consumer),
-                    cost_type: toNumberOrUndefiend(obj?.cost_type),
                   });
                 }
               }

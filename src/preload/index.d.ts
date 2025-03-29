@@ -29,8 +29,6 @@ declare global {
           rule: string;
           consumer: number;
           tag?: string;
-          abc_type?: number;
-          cost_type?: number;
         }) => Promise<any>;
         // 生成规则
         generateRule: (pp?: Pick<Params_Transaction, "trans_time">) => Promise<any>;
@@ -42,8 +40,6 @@ declare global {
             rule: string;
             consumer: number;
             tag?: string;
-            abc_type?: number;
-            cost_type?: number;
           }
         ) => Promise<any>;
         // 删除匹配规则
@@ -69,8 +65,6 @@ declare global {
           consumer?: string;
           flow_type?: string;
           tag?: string;
-          abc_type?: string;
-          cost_type?: string;
           trans_time?: string;
         }) => Promise<{ code: number }>;
         getCategoryTotalByDate: (params: Params_Transaction) => Promise<CategoryReturnType>;

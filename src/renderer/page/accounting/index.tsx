@@ -34,6 +34,8 @@ function Accounting(): JSX.Element {
       is_unclassified: params.chose_unclassified === 'unclassified',
     };
     window.mercury.api.getTransactions(params_new).then((res) => {
+      console.log(res,'res=ooooooo===');
+      
       if (res) {
         setTransactions(res);
       }

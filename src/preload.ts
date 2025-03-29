@@ -27,8 +27,7 @@ contextBridge.exposeInMainWorld('mercury', {
       rule: string;
       consumer: number;
       tag?: string;
-      abc_type?: number;
-      cost_type?: number;
+     
     }) => ipcRenderer.invoke('match-rules:add', rule),
     // 更新匹配规则
     updateMatchRule: (
@@ -38,8 +37,6 @@ contextBridge.exposeInMainWorld('mercury', {
         rule: string;
         consumer: number;
         tag?: string;
-        abc_type?: number;
-        cost_type?: number;
       }
     ) => ipcRenderer.invoke('match-rules:update', id, rule),
     // 批量插入自动规则
@@ -81,8 +78,6 @@ contextBridge.exposeInMainWorld('mercury', {
       consumer?: string;
       flow_type?: string;
       tag?: string;
-      abc_type?: string;
-      cost_type?: string;
       trans_time?: string;
     }) => ipcRenderer.invoke('transactions:insert', transaction),
     // 获取年月交易数据

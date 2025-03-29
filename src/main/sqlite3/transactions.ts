@@ -13,8 +13,6 @@ export interface I_Transaction {
   consumer: string;
   flow_type: string;
   tag: string;
-  abc_type: string;
-  cost_type: string;
   trans_time: Date;
   creation_time: Date;
   modification_time: Date;
@@ -36,9 +34,9 @@ export async function batchReplaceTransactions(
     const sql = `REPLACE INTO transactions (
       id, amount, category, description, payee, 
       account_type, payment_type, consumer, flow_type, 
-      tag, abc_type, cost_type, trans_time, 
+      tag, trans_time, 
       creation_time, modification_time
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     // 使用 Promise.all 并行处理插入操作
     await Promise.all(
@@ -58,8 +56,6 @@ export async function batchReplaceTransactions(
                 transaction.consumer,
                 transaction.flow_type,
                 transaction.tag,
-                transaction.abc_type,
-                transaction.cost_type,
                 transaction.trans_time,
                 transaction.creation_time,
                 transaction.modification_time,
@@ -190,9 +186,9 @@ export async function batchInsertTransactions(
     const db = await getDbInstance();
     const sql = `INSERT INTO transactions (
       amount, category, description, payee, account_type, 
-      payment_type, consumer, flow_type, tag, abc_type, 
-      cost_type, trans_time, creation_time, modification_time
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
+      payment_type, consumer, flow_type, tag, 
+      trans_time, creation_time, modification_time
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
 
     for (const transaction of list) {
       await new Promise<void>((resolve, reject) => {
@@ -208,8 +204,6 @@ export async function batchInsertTransactions(
             transaction.consumer,
             transaction.flow_type,
             transaction.tag,
-            transaction.abc_type,
-            transaction.cost_type,
             transaction.trans_time,
           ],
           (err) => {
@@ -367,9 +361,9 @@ export async function insertTransaction(
     const db = await getDbInstance();
     const sql = `INSERT INTO transactions (
       amount, category, description, payee, account_type, 
-      payment_type, consumer, flow_type, tag, abc_type, 
-      cost_type, trans_time, creation_time, modification_time
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
+      payment_type, consumer, flow_type, tag, 
+      trans_time, creation_time, modification_time
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
 
     await new Promise<void>((resolve, reject) => {
       db.run(
@@ -384,8 +378,6 @@ export async function insertTransaction(
           transaction.consumer,
           transaction.flow_type,
           transaction.tag,
-          transaction.abc_type,
-          transaction.cost_type,
           transaction.trans_time || new Date().toISOString(),
         ],
         (err) => {
@@ -513,7 +505,7 @@ export async function getAccountPaymentTotal(
       GROUP BY account_type, payment_type
       ORDER BY total DESC
     `;
-
+    console.log(sql,'sql=getAccountPaymentTotal===');
     const rows = await new Promise<
       { account_type: string; payment_type: string; total: number }[]
     >((resolve, reject) => {

@@ -15,7 +15,6 @@ function Index(): JSX.Element {
 
   const [formValue, cpt] = useReviewForm();
   const [searchParams] = useSearchParams();
-  console.log(searchParams.get('year'), '===== home year');
 
   return (
     <Row gutter={12} className="home-page">

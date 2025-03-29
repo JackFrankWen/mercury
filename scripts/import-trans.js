@@ -31,10 +31,8 @@ function importCSV(filepath) {
                         consumer,
                         flow_type,
                         tag,
-                        abc_type,
-                        cost_type,
                         trans_time
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 `);
 
         results.forEach((row) => {
@@ -49,8 +47,6 @@ function importCSV(filepath) {
               row.consumer,
               row.flow_type,
               row.tag,
-              row.abc_type || "",
-              row.cost_type || "",
               row.trans_time,
             ]);
             successCount++;

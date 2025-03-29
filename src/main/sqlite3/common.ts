@@ -75,13 +75,8 @@ export function generateWhereClause(params: Params_Transaction): {
     conditions.push(`tag = '${params.tag}'`);
   }
 
-  if (params?.abc_type) {
-    conditions.push(`abc_type = '${params.abc_type}'`);
-  }
 
-  if (params?.cost_type) {
-    conditions.push(`cost_type = '${params.cost_type}'`);
-  }
+
 
   if (params?.category) {
     if(typeof params.category === 'string') {

@@ -4,7 +4,7 @@ import { getDateTostring, roundToTwoDecimalPlaces, formatMoney } from "../../com
 import React, { useCallback, useEffect, useState } from "react";
 import { ColumnsType } from "antd/es/table/interface";
 import useModal from "../../components/useModal";
-import { abc_type, cost_type, tag_type } from "../../const/web";
+import {  tag_type } from "../../const/web";
 import dayjs from "dayjs";
 import { SelectionFooter } from "src/renderer/components/SelectionFooter";
 import { I_Transaction } from "src/main/sqlite3/transactions";

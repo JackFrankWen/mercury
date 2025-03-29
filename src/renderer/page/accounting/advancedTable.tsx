@@ -25,7 +25,7 @@ import {
   SwapOutlined,
 } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { account_type, cost_type, payment_type, tag_type } from '../../const/web';
+import { account_type, payment_type, tag_type } from '../../const/web';
 import type { TableColumnsType, TableProps } from 'antd';
 import { I_Transaction } from 'src/main/sqlite3/transactions';
 import dayjs from 'dayjs';
@@ -49,8 +49,6 @@ interface DataType {
   consumer: number;
   flow_type: number;
   tag: number;
-  abc_type: number;
-  cost_type: number;
   creation_time: Date;
   trans_time: Date;
   modification_time: Date;
@@ -173,12 +171,7 @@ const columns: ColumnsType<I_Transaction> = [
     width: 90,
     render: (val: number) => (val ? tag_type[val] : ''),
   },
-  // {
-  //     title: '消费方式',
-  //     dataIndex: 'cost_type',
-  //     width: 100,
-  //     render: (val: number) => (val ? cost_type[val] : ''),
-  // },
+
   {
     title: '创建日期',
     dataIndex: 'creation_time',
