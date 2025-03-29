@@ -106,6 +106,7 @@ const CategoryCollaspe = (props: {
         trans_time,
       };
 
+      console.log(params,'params=ooooooo===');
       const res = await window.mercury.api.getTransactions(params);
       if (res) {
         setModaldata(res);

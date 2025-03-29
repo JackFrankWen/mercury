@@ -84,9 +84,12 @@ export function generateWhereClause(params: Params_Transaction): {
   }
 
   if (params?.category) {
-    const categoryConditions = params.category.map(item => {
-      if (item.length === 1) {
-        // 单个分类的情况，匹配第一个元素
+    if(typeof params.category === 'string') {
+      conditions.push(`category = '${params.category}'`);
+    } else {
+      const categoryConditions = params.category.map(item => {
+        if (item.length === 1) {
+          // 单个分类的情况，匹配第一个元素
         return `json_extract(category, '$[0]') = ${item}`;
       }
       // 完整分类路径的情况，使用完整匹配
@@ -95,7 +98,8 @@ export function generateWhereClause(params: Params_Transaction): {
     
     // 如果有分类条件，添加到 conditions 中
     if (categoryConditions.length > 0) {
-      conditions.push(`(${categoryConditions.join(' OR ')})`);
+        conditions.push(`(${categoryConditions.join(' OR ')})`);
+      }
     }
   }
   
