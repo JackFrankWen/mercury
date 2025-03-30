@@ -122,6 +122,7 @@ function MainLayout({ environment }: { environment: 'production' | 'test' }): JS
   const siderStyle = {
     // 生产环境：白色，测试环境：蓝色
     backgroundColor: environment === 'production' ? '#ffffff' : '#1890ff',
+    zIndex: 15,
     // 根据背景色调整文字颜色
     color: environment === 'production' ? 'rgba(0, 0, 0, 0.85)' : '#ffffff',
   };

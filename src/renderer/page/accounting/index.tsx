@@ -50,7 +50,7 @@ function Accounting(): JSX.Element {
           formValue={formValue}
         />
       </Card>
-      <Card className="mt8 mb8">
+      <Card className="mt8 mb20">
         <AdvancedTable
           data={transactions}
           fresh={() => {

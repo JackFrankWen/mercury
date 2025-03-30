@@ -25,7 +25,7 @@ export const UploadFileList: React.FC = () => {
       setFileList(files || []);
     } catch (error) {
       console.error('Failed to fetch upload file list:', error);
-      message.error('获取上传文件列表失败');
+      message.error('获取导入文件列表失败');
     } finally {
       setLoading(false);
     }
@@ -69,7 +69,7 @@ export const UploadFileList: React.FC = () => {
   return (
     <div className="upload-file-list-container">
       <div className="upload-file-header">
-        <Title level={4}>已上传文件列表</Title>
+        <Title level={4}>已导入文件列表</Title>
         <Popconfirm
           title="确认删除所有文件？"
           description="此操作不可恢复！"
@@ -90,6 +90,11 @@ export const UploadFileList: React.FC = () => {
           itemLayout="horizontal"
           style={{ overflow: 'auto', height: '500px' }}
           dataSource={fileList}
+          pagination={{
+            pageSize: 10,
+            align: 'center',
+            showTotal: (total, range) => `${range[0]}-${range[1]} of ${total}`,
+          }}
           renderItem={(item, index) => (
             <List.Item
               key={`${item.fileName}-${index}`}
@@ -108,13 +113,13 @@ export const UploadFileList: React.FC = () => {
               <List.Item.Meta
                 avatar={getFileIcon(item.fileType)}
                 title={item.fileName}
-                description={item.createTime}
+                description={`导入时间：${item.createTime}`}
               />
             </List.Item>
           )}
         />
       ) : (
-        <Empty description="暂无上传文件" />
+        <Empty description="暂无导入文件" />
       )}
     </div>
   );

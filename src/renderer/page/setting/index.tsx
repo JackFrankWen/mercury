@@ -26,7 +26,7 @@ function Setting(): JSX.Element {
           <Tabs.TabPane tab="高级规则" key="4" style={{ height: '100%' }}>
             <AdvancedRule />
           </Tabs.TabPane>
-          <Tabs.TabPane tab="已上传文件" key="5" style={{ height: '100%' }}>
+          <Tabs.TabPane tab="已导入文件" key="5" style={{ height: '100%' }}>
             <UploadFileList />
           </Tabs.TabPane>
         </Tabs>
