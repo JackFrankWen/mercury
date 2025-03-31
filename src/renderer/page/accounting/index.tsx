@@ -8,17 +8,17 @@ import dayjs from 'dayjs';
 import emitter from 'src/renderer/events';
 export interface I_FormValue extends Params_Transaction {
   chose_unclassified: string;
-  trans_time: [string, string];
+  trans_time?: [string, string]
 }
 function Accounting(): JSX.Element {
   const [transactions, setTransactions] = useState([]);
   const [formValue, setFormValue] = useState<I_FormValue>({
     chose_unclassified: 'unclassified',
     // 默认查询当年
-    trans_time: [
-      dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss'),
-      dayjs().endOf('year').format('YYYY-MM-DD HH:mm:ss'),
-    ],
+    // trans_time: [
+    //   dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss'),
+    //   dayjs().endOf('year').format('YYYY-MM-DD HH:mm:ss'),
+    // ],
   });
   useEffect(() => {
     getTransactions({
@@ -34,8 +34,7 @@ function Accounting(): JSX.Element {
       is_unclassified: params.chose_unclassified === 'unclassified',
     };
     window.mercury.api.getTransactions(params_new).then((res) => {
-      console.log(res,'res=ooooooo===');
-      
+
       if (res) {
         setTransactions(res);
       }
