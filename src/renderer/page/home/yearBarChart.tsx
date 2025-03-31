@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { EllipsisOutlined } from '@ant-design/icons';
 import BarChart from 'src/renderer/components/barChart';
-import { Card, message, Space } from 'antd';
+import { Card, Cascader, Flex, message, Modal, Space } from 'antd';
 import { useSelect } from '../../components/useSelect';
 import { cpt_const, payment_type } from 'src/renderer/const/web';
 import LunarCalendar from './lunarCalendar';
 import { FormData } from './useReviewForm';
 import { useFresh } from 'src/renderer/components/useFresh';
 import emitter from 'src/renderer/events';
+import { category_type } from 'src/renderer/const/categroy';
 
 function YearBarChart(props: { formValue: FormData }) {
   const { formValue } = props;
   const [data, setData] = useState<{ date: string; total: number }[]>([]);
   const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>([]);
-
+  const [visible, setVisible] = useState(false);
+  const [categoryVal, setCategoryVal] = useState<string[]>([]);
   const [consumerVal, ConsumerCpt] = useSelect({
     options: cpt_const.consumer_type,
     placeholder: '消费者',
@@ -25,6 +28,10 @@ function YearBarChart(props: { formValue: FormData }) {
     options: cpt_const.payment_type,
     placeholder: '支付方式',
   });
+  const [tagVal, TagCpt] = useSelect({
+    options: cpt_const.tag_type,
+    placeholder: '标签',
+  });
 
   useFresh(
     () => {
@@ -34,6 +41,8 @@ function YearBarChart(props: { formValue: FormData }) {
           consumer: consumerVal,
           account_type: accountTypeVal,
           payment_type: paymentTypeVal,
+          category: categoryVal,
+          tag: tagVal,
         });
       } else {
 
@@ -42,10 +51,12 @@ function YearBarChart(props: { formValue: FormData }) {
           consumer: consumerVal,
           account_type: accountTypeVal,
           payment_type: paymentTypeVal,
+          tag: tagVal,
+          category: categoryVal,
         });
       }
     },
-    [formValue, consumerVal, accountTypeVal, paymentTypeVal],
+    [formValue, consumerVal, accountTypeVal, paymentTypeVal, tagVal, categoryVal],
     'transaction'
   );
 
@@ -53,7 +64,7 @@ function YearBarChart(props: { formValue: FormData }) {
     <Space>
       {AccountTypeCpt}
       {ConsumerCpt}
-      {PaymentTypeCpt}
+      <EllipsisOutlined style={{ color: '#999', fontSize: 16 }} onClick={() => setVisible(true)} />
     </Space>
   );
   const fetchData = async obj => {
@@ -67,10 +78,10 @@ function YearBarChart(props: { formValue: FormData }) {
     }
   };
   const fetchDailyAmount = async obj => {
-    console.log(obj,'objaaaa====');
+    console.log(obj, 'objaaaa====');
     try {
       const result = await window.mercury.api.getDailyTransactionAmounts(obj);
-      console.log(result,'result====');
+      console.log(result, 'result====');
       setDaliyData(result);
     } catch (error) {
       message.error(error);
@@ -86,10 +97,37 @@ function YearBarChart(props: { formValue: FormData }) {
   const refresh = () => {
     emitter.emit('refresh', 'transaction');
   };
-  console.log(daliyData,'aaaa====');
+  console.log(visible, 'aaaa====');
   return (
     <div className="mt8">
       <Card title={cardTitle()} bordered={false} hoverable extra={extra}>
+        {visible && (
+          <Modal
+            title="高级搜索"
+            open={visible}
+            onCancel={() => setVisible(false)} footer={null}>
+            <Flex vertical gap={16}>
+              {PaymentTypeCpt}
+              {TagCpt}
+              <Cascader
+                options={category_type}
+                allowClear
+                multiple
+                onChange={val => setCategoryVal(val)}
+                placeholder="请选择分类"
+                showSearch={{
+                  filter: (inputValue: string, path: DefaultOptionType[]) =>
+                    path.some(
+                      option =>
+                        (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) >
+                        -1
+                    ),
+                }}
+              />
+
+            </Flex>
+          </Modal>
+        )}
         {formValue.type === 'year' ? (
           <BarChart data={data} hasElementClick={true} />
         ) : (
@@ -99,6 +137,8 @@ function YearBarChart(props: { formValue: FormData }) {
               consumer: consumerVal,
               account_type: accountTypeVal,
               payment_type: paymentTypeVal,
+              category: categoryVal,
+              tag: tagVal,
             }}
             data={daliyData}
             refresh={refresh}

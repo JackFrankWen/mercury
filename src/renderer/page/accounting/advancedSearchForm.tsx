@@ -42,13 +42,13 @@ export const AdvancedSearchForm = (props: {
     const params = {
       ...values,
       is_unclassified: values.chose_unclassified === 'unclassified',
-      trans_time: values.trans_time?.map((date: any) => 
+      trans_time: values.trans_time?.map((date: any) =>
         dayjs(date).format('YYYY-MM-DD HH:mm:ss')
       ),
-      creation_time: values.creation_time?.map((date: any) => 
+      creation_time: values.creation_time?.map((date: any) =>
         dayjs(date).format('YYYY-MM-DD HH:mm:ss')
       ),
-      modify_time: values.modify_time?.map((date: any) => 
+      modify_time: values.modify_time?.map((date: any) =>
         dayjs(date).format('YYYY-MM-DD HH:mm:ss')
       ),
     };
@@ -128,14 +128,14 @@ export const AdvancedSearchForm = (props: {
                   name={`min_money`}
                   style={{ display: 'inline-block' }}
                 >
-                  <InputNumber />
+                  <InputNumber placeholder="最小金额" />
                 </Form.Item>
                 <Form.Item
                   className="no-margin"
                   name={`max_money`}
                   style={{ display: 'inline-block' }}
                 >
-                  <InputNumber />
+                  <InputNumber placeholder="最大金额" />
                 </Form.Item>
               </Space.Compact>
             </Form.Item>
