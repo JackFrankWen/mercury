@@ -277,7 +277,7 @@ const BasicTable = (props: {
           1: '老公',
           2: '老婆',
           3: '家庭',
-          4: '牧牧',
+          4: '哥哥',
         };
         if (val === 1) {
           return <Tag color="cyan">{consumer_type[val]}</Tag>;
