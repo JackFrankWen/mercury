@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { EllipsisOutlined } from '@ant-design/icons';
+import React, { useEffect, useMemo, useState } from 'react';
+import { EllipsisOutlined, FilterFilled } from '@ant-design/icons';
 import BarChart from 'src/renderer/components/barChart';
-import { Card, Cascader, Flex, message, Modal, Space } from 'antd';
+import { Card, Cascader, Flex, message, Modal, Space, theme } from 'antd';
 import { useSelect } from '../../components/useSelect';
 import { cpt_const, payment_type } from 'src/renderer/const/web';
 import LunarCalendar from './lunarCalendar';
@@ -9,9 +9,11 @@ import { FormData } from './useReviewForm';
 import { useFresh } from 'src/renderer/components/useFresh';
 import emitter from 'src/renderer/events';
 import { category_type } from 'src/renderer/const/categroy';
+import { DefaultOptionType } from 'antd/es/cascader';
 
 function YearBarChart(props: { formValue: FormData }) {
   const { formValue } = props;
+  const { token } = theme.useToken();
   const [data, setData] = useState<{ date: string; total: number }[]>([]);
   const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>([]);
   const [visible, setVisible] = useState(false);
@@ -45,7 +47,6 @@ function YearBarChart(props: { formValue: FormData }) {
           tag: tagVal,
         });
       } else {
-
         fetchDailyAmount({
           ...formValue,
           consumer: consumerVal,
@@ -60,11 +61,42 @@ function YearBarChart(props: { formValue: FormData }) {
     'transaction'
   );
 
+  const hasSearchInModal = useMemo(() => {
+    // 如果 paymentTypeVal, tagVal, categoryVal三个都没有值返回false
+    console.log(paymentTypeVal, tagVal, categoryVal, 'aaaa====');
+    if (!paymentTypeVal && !tagVal && categoryVal.length === 0) {
+      return false;
+    }
+    return true;
+  }, [paymentTypeVal, tagVal, categoryVal]);
   const extra = (
     <Space>
       {AccountTypeCpt}
       {ConsumerCpt}
-      <EllipsisOutlined style={{ color: '#999', fontSize: 16 }} onClick={() => setVisible(true)} />
+      {hasSearchInModal ? (
+        <FilterFilled
+          style={{
+            color: token.colorPrimary,
+            fontSize: 16,
+            cursor: 'pointer',
+            transition: 'all 0.3s'
+          }}
+          onClick={() => setVisible(true)}
+        />
+      ) : (
+        <EllipsisOutlined
+          style={{
+            color: '#999',
+            fontSize: 16,
+            cursor: 'pointer',
+            transition: 'all 0.3s',
+            '&:hover': {
+              color: token.colorPrimary
+            }
+          }}
+          onClick={() => setVisible(true)}
+        />
+      )}
     </Space>
   );
   const fetchData = async obj => {
@@ -102,10 +134,7 @@ function YearBarChart(props: { formValue: FormData }) {
     <div className="mt8">
       <Card title={cardTitle()} bordered={false} hoverable extra={extra}>
         {visible && (
-          <Modal
-            title="高级搜索"
-            open={visible}
-            onCancel={() => setVisible(false)} footer={null}>
+          <Modal title="高级搜索" open={visible} onCancel={() => setVisible(false)} footer={null}>
             <Flex vertical gap={16}>
               {PaymentTypeCpt}
               {TagCpt}
@@ -113,6 +142,8 @@ function YearBarChart(props: { formValue: FormData }) {
                 options={category_type}
                 allowClear
                 multiple
+                value={categoryVal}
+                style={{ width: '100%' }}
                 onChange={val => setCategoryVal(val)}
                 placeholder="请选择分类"
                 showSearch={{
@@ -124,7 +155,6 @@ function YearBarChart(props: { formValue: FormData }) {
                     ),
                 }}
               />
-
             </Flex>
           </Modal>
         )}
