@@ -1,4 +1,4 @@
-import { Button, message, Space, Table, Tag, Tooltip, Typography, Input } from 'antd';
+import { Button, message, Space, Table, Tag, Tooltip, Typography, Input, Spin } from 'antd';
 import type { InputRef, TableRowSelection } from 'antd';
 import React, { useRef, useState, useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
@@ -14,6 +14,7 @@ interface ModalContentProps {
   refresh?: () => void;
   withCategory?: boolean;
   onCancel: () => void;
+  loading?: boolean;
 }
 
 // Define consumer types as a constant
@@ -99,6 +100,7 @@ export function ModalContent({
   refresh,
   withCategory = false,
   onCancel,
+  loading = false,
 }: ModalContentProps) {
   console.log(modalData, 'modalData=ooooooo===');
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -322,7 +324,7 @@ export function ModalContent({
     ? modalTableCol
     : modalTableCol.filter(item => !item.dataIndex?.includes('category'));
   return (
-    <>
+    <Spin spinning={loading}>
       <div style={{ padding: '8px 0' }}>
         {selectedRowKeys.length > 0 && (
           <SelectionFooter
@@ -348,6 +350,6 @@ export function ModalContent({
         size="small"
         scroll={{ y: 'calc(100vh - 400px)' }}
       />
-    </>
+    </Spin>
   );
 }

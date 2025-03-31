@@ -26,8 +26,10 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
   const [visible, setVisible] = useState<boolean>(false);
   const [modalData, setModalData] = useState<I_Transaction[]>([]);
   const [dateTime, setDateTime] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const openModal = async (dateTime: string) => {
     try {
+      setLoading(true);
       const res = await window.mercury.api.getTransactions({
         ...formValue,
         trans_time: [`${dateTime} 00:00:00`, `${dateTime} 23:59:59`],
@@ -36,14 +38,18 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
       setModalData(res);
       setDateTime(dateTime);
       setVisible(true);
+      setLoading(false);
     } catch (error) {
       message.error(error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
   useFresh(
     async () => {
-      console.log(dateTime, 'dateTime');
       try {
+        setLoading(true);
         const res = await window.mercury.api.getTransactions({
           ...formValue,
           trans_time: [`${dateTime} 00:00:00`, `${dateTime} 23:59:59`],
@@ -51,7 +57,10 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
         });
         setModalData(res);
       } catch (error) {
+        setLoading(false);
         message.error(error);
+      } finally {
+        setLoading(false);
       }
     },
     [],
@@ -131,10 +140,11 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
           footer={null}
           open={visible}
           onCancel={() => setVisible(false)}
-          title="交易详情"
+          title={`交易详情【${dayjs(dateTime).format('YYYY-MM-DD')}】`}
         >
           <ModalContent
             onCancel={() => setVisible(false)}
+            loading={loading}
             modalData={modalData}
             withCategory
             refresh={refresh}

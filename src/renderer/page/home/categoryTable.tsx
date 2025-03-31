@@ -186,7 +186,12 @@ const CategoryTable = (props: { data: DataType[]; formValue: any; refreshTable: 
           title="交易详情"
         >
           {modalData.length > 0 && (
-            <ModalContent onCancel={toggle} modalData={modalData} refresh={refresh} />
+            <ModalContent
+              loading={loading}
+              onCancel={toggle}
+              modalData={modalData}
+              refresh={refresh}
+            />
           )}
         </Modal>
       )}
