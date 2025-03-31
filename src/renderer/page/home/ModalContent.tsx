@@ -1,13 +1,4 @@
-import {
-  Button,
-  message,
-  Space,
-  Table,
-  Tag,
-  Tooltip,
-  Typography,
-  Input,
-} from 'antd';
+import { Button, message, Space, Table, Tag, Tooltip, Typography, Input } from 'antd';
 import type { InputRef, TableRowSelection } from 'antd';
 import React, { useRef, useState, useCallback, useMemo } from 'react';
 import dayjs from 'dayjs';
@@ -22,6 +13,7 @@ interface ModalContentProps {
   modalData: I_Transaction[];
   refresh?: () => void;
   withCategory?: boolean;
+  onCancel: () => void;
 }
 
 // Define consumer types as a constant
@@ -42,10 +34,7 @@ const FilterDropdown: React.FC<{
   clearFilters: () => void;
   close: () => void;
   searchInput: React.RefObject<InputRef>;
-  handleSearch: (
-    keys: string[],
-    confirm: FilterDropdownProps['confirm'],
-  ) => void;
+  handleSearch: (keys: string[], confirm: FilterDropdownProps['confirm']) => void;
   handleReset: (clearFilters: () => void) => void;
 }> = ({
   setSelectedKeys,
@@ -57,12 +46,12 @@ const FilterDropdown: React.FC<{
   handleSearch,
   handleReset,
 }) => (
-    <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+    <div style={{ padding: 8 }} onKeyDown={e => e.stopPropagation()}>
       <Input
         ref={searchInput}
         placeholder="Search"
         value={selectedKeys[0]}
-        onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+        onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
         onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
         style={{ marginBottom: 8, display: 'block' }}
       />
@@ -108,8 +97,11 @@ export function ModalContent({
   modalData,
   refresh,
   withCategory = false,
+  onCancel,
 }: ModalContentProps) {
+  console.log(modalData, 'modalData=ooooooo===');
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [tableData, setTableData] = useState<I_Transaction[]>(modalData);
   const [selectedAmount, setSelectedAmount] = useState(0);
   const searchInput = useRef<InputRef>(null);
 
@@ -117,7 +109,7 @@ export function ModalContent({
     (selectedKeys: string[], confirm: FilterDropdownProps['confirm']) => {
       confirm();
     },
-    [],
+    []
   );
 
   const handleReset = useCallback((clearFilters: () => void) => {
@@ -127,11 +119,9 @@ export function ModalContent({
   const onSelectChange = useCallback(
     (newSelectedRowKeys: React.Key[], selectedRows: I_Transaction[]) => {
       setSelectedRowKeys(newSelectedRowKeys);
-      setSelectedAmount(
-        selectedRows.reduce((acc, item) => acc + Number(item.amount), 0),
-      );
+      setSelectedAmount(selectedRows.reduce((acc, item) => acc + Number(item.amount), 0));
     },
-    [],
+    []
   );
 
   const handleDeleteTransactions = useCallback(() => {
@@ -140,6 +130,11 @@ export function ModalContent({
       .then(() => {
         setSelectedRowKeys([]);
         message.success('删除成功');
+        const newTableData = tableData.filter(item => !selectedRowKeys.includes(item.id));
+        setTableData(newTableData);
+        if (newTableData.length === 0) {
+          onCancel();
+        }
         if (refresh) {
           refresh();
         }
@@ -163,13 +158,20 @@ export function ModalContent({
           setSelectedRowKeys([]);
           message.success('修改成功');
           refresh();
+          const newTableData = modalData.map(item => {
+            if (selectedRowKeys.includes(item.id)) {
+              return { ...item, ...obj };
+            }
+            return item;
+          });
+          setTableData(newTableData);
         })
         .catch((error: Error) => {
           console.error('修改失败:', error);
           message.error('修改失败');
         });
     },
-    [selectedRowKeys, refresh],
+    [selectedRowKeys, refresh]
   );
 
   const rowSelection: TableRowSelection<I_Transaction> = useMemo(
@@ -177,7 +179,7 @@ export function ModalContent({
       selectedRowKeys,
       onChange: onSelectChange,
     }),
-    [selectedRowKeys, onSelectChange],
+    [selectedRowKeys, onSelectChange]
   );
 
   const modalTableCol = useMemo(
@@ -196,15 +198,10 @@ export function ModalContent({
         title: '金额',
         dataIndex: 'amount',
         width: 80,
-        sorter: (a: I_Transaction, b: I_Transaction) =>
-          Number(a.amount) - Number(b.amount),
+        sorter: (a: I_Transaction, b: I_Transaction) => Number(a.amount) - Number(b.amount),
         render: (txt: string) => {
           if (Number(txt) > 100) {
-            return (
-              <Typography.Text type="danger">
-                {formatMoney(txt)}
-              </Typography.Text>
-            );
+            return <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>;
           }
           return `¥${formatMoney(txt)}`;
         },
@@ -214,7 +211,7 @@ export function ModalContent({
         dataIndex: 'payee',
         width: 120,
         ellipsis: true,
-        filterDropdown: (props) => (
+        filterDropdown: props => (
           <FilterDropdown
             {...props}
             searchInput={searchInput}
@@ -242,7 +239,7 @@ export function ModalContent({
         title: '交易描述',
         dataIndex: 'description',
         ellipsis: true,
-        filterDropdown: (props) => (
+        filterDropdown: props => (
           <FilterDropdown
             {...props}
             searchInput={searchInput}
@@ -252,10 +249,7 @@ export function ModalContent({
         ),
         filterSearch: true,
         onFilter: (value: string, record: I_Transaction) =>
-          record.description
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase()),
+          record.description.toString().toLowerCase().includes(value.toLowerCase()),
         filterDropdownProps: {
           onOpenChange(open: boolean) {
             if (open) {
@@ -283,9 +277,7 @@ export function ModalContent({
         title: '账号',
         dataIndex: 'account_type',
         width: 100,
-        render: (val: string) => (
-          <Tag color="green">{account_type[Number(val)]}</Tag>
-        ),
+        render: (val: string) => <Tag color="green">{account_type[Number(val)]}</Tag>,
       },
       {
         title: '标签',
@@ -294,7 +286,7 @@ export function ModalContent({
         render: (val: number) => (val ? tag_type[val] : ''),
       },
     ],
-    [handleSearch, handleReset],
+    [handleSearch, handleReset]
   );
 
   const handleRowClick = useCallback(
@@ -303,21 +295,19 @@ export function ModalContent({
         onClick: () => {
           // const newSelectedRowKeys = selectedRowKeys  [...selectedRowKeys, record.id]
           const newSelectedRowKeys = selectedRowKeys.includes(record.id)
-            ? selectedRowKeys.filter((id) => id !== record.id)
+            ? selectedRowKeys.filter(id => id !== record.id)
             : [...selectedRowKeys, record.id];
           setSelectedRowKeys(newSelectedRowKeys);
           setSelectedAmount(
             newSelectedRowKeys.reduce(
-              (acc, key) =>
-                acc +
-                Number(modalData.find((item) => item.id === key)?.amount || 0),
-              0,
-            ),
+              (acc, key) => acc + Number(modalData.find(item => item.id === key)?.amount || 0),
+              0
+            )
           );
         },
       };
     },
-    [selectedRowKeys, selectedAmount],
+    [selectedRowKeys, selectedAmount]
   );
 
   const handleCancelSelection = useCallback(() => {
@@ -325,7 +315,7 @@ export function ModalContent({
   }, []);
   const tableCol = withCategory
     ? modalTableCol
-    : modalTableCol.filter((item) => !item.dataIndex?.includes('category'));
+    : modalTableCol.filter(item => !item.dataIndex?.includes('category'));
   return (
     <>
       <div style={{ padding: '8px 0' }}>
@@ -349,7 +339,7 @@ export function ModalContent({
         onRow={handleRowClick}
         rowKey="id"
         columns={tableCol}
-        dataSource={modalData}
+        dataSource={tableData}
         size="small"
         scroll={{ y: 'calc(100vh - 400px)' }}
       />

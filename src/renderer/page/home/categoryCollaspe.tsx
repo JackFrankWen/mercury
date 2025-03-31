@@ -90,7 +90,7 @@ const CategoryCollaspe = (props: {
   // const [show, toggle] = useModal();
   const [visible, setVisible] = useState<boolean>(false);
   const [cate, setCate] = useState<string>('');
-  const [modalData, setModaldata] = useState<any>();
+  const [modalData, setModaldata] = useState<any>([]);
   const [barData, setBarData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -106,8 +106,8 @@ const CategoryCollaspe = (props: {
         trans_time,
       };
 
-      console.log(params,'params=ooooooo===');
       const res = await window.mercury.api.getTransactions(params);
+      console.log(res, 'res=ooooooo===');
       if (res) {
         setModaldata(res);
       }
@@ -139,7 +139,7 @@ const CategoryCollaspe = (props: {
         trans_time: formValue.trans_time,
       });
     }
-  }, [formValue, cate, visible],'transaction');
+  }, [formValue, cate, visible], 'transaction');
 
   const refresh = () => {
     refreshTable();
@@ -241,13 +241,13 @@ const CategoryCollaspe = (props: {
           onCancel={() => setVisible(false)}
           title="交易详情"
         >
-          {loading ? (
-            <div style={{ textAlign: 'center', padding: '20px' }}>Loading...</div>
-          ) : (
-            <>
-              {formValue.type === 'year' && <BarChart data={barData} />}
-              <ModalContent modalData={modalData} refresh={refresh} />
-            </>
+          {formValue.type === 'year' && <BarChart data={barData} />}
+          {modalData.length > 0 && (
+            <ModalContent
+              onCancel={() => setVisible(false)}
+              modalData={modalData}
+              refresh={refresh}
+            />
           )}
         </Modal>
       )}
