@@ -21,9 +21,10 @@ const CONSUMER_TYPES: Record<number, { label: string; color: string }> = {
   1: { label: '老公', color: 'cyan' },
   2: { label: '老婆', color: 'magenta' },
   3: { label: '家庭', color: 'geekblue' },
-  4: { label: '牧牧', color: 'purple' },
+  4: { label: '哥哥', color: 'purple' },
   5: { label: '爷爷奶奶', color: 'lime' },
-  6: { label: '溪溪', color: 'orange' },
+  6: { label: '妹妹', color: 'orange' },
+  7: { label: '姥爷', color: 'gold' },
 };
 
 // Create a reusable filter dropdown component
@@ -158,11 +159,15 @@ export function ModalContent({
           setSelectedRowKeys([]);
           message.success('修改成功');
           refresh();
-          const newTableData = modalData.map(item => {
+          const newTableData: I_Transaction[] = []
+          modalData.forEach(item => {
             if (selectedRowKeys.includes(item.id)) {
-              return { ...item, ...obj };
+              if (item.category === obj.category) {
+                newTableData.push({ ...item, ...obj });
+              }
+            } else {
+              newTableData.push(item);
             }
-            return item;
           });
           setTableData(newTableData);
         })
@@ -339,7 +344,7 @@ export function ModalContent({
         onRow={handleRowClick}
         rowKey="id"
         columns={tableCol}
-        dataSource={tableData}
+        dataSource={modalData}
         size="small"
         scroll={{ y: 'calc(100vh - 400px)' }}
       />

@@ -93,7 +93,7 @@ export const getAllTransactions = async (
       ${whereClause}
       ORDER BY trans_time DESC
     `;
-    console.log(sql,'sql=ooooooo===');
+    console.log(sql, 'sql=ooooooo===');
 
     if (params.page !== undefined && params.page_size !== undefined) {
       const offset = (params.page - 1) * params.page_size;
@@ -230,26 +230,26 @@ export function getMonthsDiff(startDate: string, endDate: string): number {
     // 解析日期，确保使用 UTC 避免时区问题
     const start = new Date(startDate);
     const end = new Date(endDate);
-    
+
     // 检查日期有效性
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
       console.warn('getMonthsDiff: Invalid date format', { startDate, endDate });
       return 0;
     }
-    
+
     // 确保结束日期不早于开始日期
     if (end < start) {
       console.warn('getMonthsDiff: End date is earlier than start date', { startDate, endDate });
       return 0;
     }
-    
+
     // 计算年差和月差
     const yearDiff = end.getFullYear() - start.getFullYear();
     const monthDiff = end.getMonth() - start.getMonth();
-    
+
     // 计算总月差
     let totalMonths = yearDiff * 12 + monthDiff;
-    
+
     // 处理月内天数的边界情况
     // 如果结束日期的天数小于开始日期的天数，且不是月末，则不计入完整一个月
     if (end.getDate() < start.getDate()) {
@@ -259,7 +259,7 @@ export function getMonthsDiff(startDate: string, endDate: string): number {
         totalMonths -= 1;
       }
     }
-    
+
     // 加1是为了包含起始月，例如1月到2月应该算2个月
     return totalMonths + 1;
   } catch (error) {
@@ -273,27 +273,27 @@ export function getPreciseMonthsDiff(startDate: string, endDate: string): number
   try {
     const start = new Date(startDate);
     const end = new Date(endDate);
-    
+
     // 检查日期有效性
     if (isNaN(start.getTime()) || isNaN(end.getTime())) {
       return 0;
     }
-    
+
     // 基础月差计算
     const yearDiff = end.getFullYear() - start.getFullYear();
     const monthDiff = end.getMonth() - start.getMonth();
     let totalMonths = yearDiff * 12 + monthDiff;
-    
+
     // 计算天数比例
     const startDaysInMonth = new Date(start.getFullYear(), start.getMonth() + 1, 0).getDate();
     const endDaysInMonth = new Date(end.getFullYear(), end.getMonth() + 1, 0).getDate();
-    
+
     // 计算开始日期在月中的天数比例
     const startDayRatio = (startDaysInMonth - start.getDate() + 1) / startDaysInMonth;
-    
+
     // 计算结束日期在月中的天数比例
     const endDayRatio = end.getDate() / endDaysInMonth;
-    
+
     // 综合计算，加上按天比例的部分
     return totalMonths + endDayRatio + startDayRatio;
   } catch (error) {
@@ -505,7 +505,7 @@ export async function getAccountPaymentTotal(
       GROUP BY account_type, payment_type
       ORDER BY total DESC
     `;
-    console.log(sql,'sql=getAccountPaymentTotal===');
+    console.log(sql, 'sql=getAccountPaymentTotal===');
     const rows = await new Promise<
       { account_type: string; payment_type: string; total: number }[]
     >((resolve, reject) => {

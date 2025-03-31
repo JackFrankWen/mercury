@@ -33,9 +33,9 @@ export const consumer_type: { [key: number]: string } = {
   1: "老公",
   2: "老婆",
   3: "家庭",
-  4: "牧牧",
+  4: "哥哥",
   5: "爷爷奶奶",
-  6: "溪溪",
+  6: "妹妹",
   7: "姥爷",
 };
 export enum ConsumerType {
