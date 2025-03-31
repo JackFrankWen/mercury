@@ -14,7 +14,13 @@ interface MessageItem {
 }
 
 export function changeCategoryModal(messageList: MessageItem[], title: string) {
-  const content = messageList.map((item) => {
+  // 先保存原始记录数量
+  const totalCount = messageList.length;
+
+  // 如果记录超过200条，则只显示200条
+  const displayedMessages = messageList.length > 200 ? messageList.slice(0, 200) : messageList;
+
+  const content = displayedMessages.map((item) => {
     const extra = item.extra ? JSON.parse(item.extra.rule) : "";
     const name = item.extra ? item.extra.name : "";
     return (
@@ -39,11 +45,21 @@ export function changeCategoryModal(messageList: MessageItem[], title: string) {
     okText: "知道了",
     icon: <></>,
     content: (
-      <Alert
-        style={{}}
-        message={<div style={{ maxHeight: "200px", overflow: "auto" }}>{content}</div>}
-        type="success"
-      />
+      <>
+        {totalCount > 200 && (
+          <Alert
+            style={{ marginBottom: "10px" }}
+            message={`共有 ${totalCount} 条记录，限制显示前 200 条`}
+            type="warning"
+            showIcon
+          />
+        )}
+        <Alert
+          style={{}}
+          message={<div style={{ maxHeight: "400px", overflow: "auto" }}>{content}</div>}
+          type="success"
+        />
+      </>
     ),
   });
 }
@@ -52,6 +68,7 @@ export function openNotification(messageList: MessageItem[], api: any, title: st
   if (messageList.length === 0) {
     return;
   }
+
 
   api.open({
     message: title || "替换成功",

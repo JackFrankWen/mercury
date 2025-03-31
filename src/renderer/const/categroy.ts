@@ -12,16 +12,16 @@ const husband = 1,
 
 export function getCategoryTypeByLabel(label: string): number[] | undefined {
   if (!label) return undefined;
-  
+
   // 转换为小写以进行不区分大小写的搜索
   const searchLabel = label.toLowerCase().trim();
-  
+
   // 先检查顶级类别
   for (const category of category_type) {
     if (category.label.toLowerCase().includes(searchLabel)) {
       return [category.value];
     }
-    
+
     // 检查子类别
     for (const child of category.children) {
       if (child.label.toLowerCase().includes(searchLabel)) {
@@ -29,13 +29,13 @@ export function getCategoryTypeByLabel(label: string): number[] | undefined {
       }
     }
   }
-  
+
   // 如果没有精确匹配，尝试模糊匹配
   for (const category of category_type) {
     if (searchLabel.includes(category.label.toLowerCase())) {
       return [category.value];
     }
-    
+
     // 检查子类别
     for (const child of category.children) {
       if (searchLabel.includes(child.label.toLowerCase())) {
@@ -115,6 +115,13 @@ export const category_type = [
         tag: variable_cost,
         consumer: family,
         budget: 500, // 5
+      },
+      {
+        value: 10008,
+        label: '肯德基',
+        icon: 'fa-solid fa-burger',
+        color: '#FF5722', // 亮橙色
+        tag: variable_cost,
       },
     ],
   },

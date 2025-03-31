@@ -28,8 +28,8 @@ function convertCategoryReturnTypeToPieChartData(category: CategoryReturnType) {
 const Tab2Content = ({ category, formValue, refreshTable }) => {
   return (
     <>
-      <CategoryTable refreshTable={refreshTable} data={category} formValue={formValue} />
       <DonutChart data={convertCategoryReturnTypeToPieChartData(category)} />
+      <CategoryTable refreshTable={refreshTable} data={category} formValue={formValue} />
     </>
   );
 };
