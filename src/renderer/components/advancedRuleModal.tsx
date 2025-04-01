@@ -220,7 +220,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
           marginBottom: '12px',
         }}
       >
-        <Title level={5}>基本信息</Title>
+        <Title level={5} style={{ marginTop: 4 }}>基本信息</Title>
         <Row gutter={12}>
           <Col span={12}>
             <Form.Item name="name" label="规则名称" rules={[{ required: true, message: '请输入规则名称' }]}>
@@ -234,12 +234,12 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
           </Col>
         </Row>
 
-        <Title level={5}>当满足下面任何一个规则组时</Title>
+        <Title level={5} style={{ marginTop: 10 }}>当满足下面任何一个规则组时</Title>
         <Form.Item name="rule">
           <AdvancedRuleFormItem />
         </Form.Item>
 
-        <Title level={5}>可更换交易数据中的</Title>
+        <Title level={5} style={{ marginTop: 10 }}>可更换交易数据中的</Title>
 
         <Form.Item name="category" style={{ marginBottom: '12px' }} label="分类" layout={'horizontal'}>
           <Cascader
