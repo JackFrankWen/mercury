@@ -35,7 +35,7 @@ import AddTransactionDrawer from './AddTransactionDrawer';
 import { formatMoney } from '../../components/utils';
 import { findCategoryById } from '../../const/categroy';
 import { renderIcon } from '../../components/FontIcon';
-import { getCategoryCol } from 'src/renderer/components/commonColums';
+import { getCategoryCol, getPaymentAccountCol } from 'src/renderer/components/commonColums';
 import AdvancedNewBtn from 'src/renderer/components/advancedNewBtn';
 import BatchStepReplace from './batchStepRepace';
 
@@ -159,6 +159,9 @@ const columns: ColumnsType<I_Transaction> = [
       );
     },
   },
+  getPaymentAccountCol({
+    width: 100,
+  }),
   {
     title: '账户',
     dataIndex: 'account_type',
@@ -227,7 +230,7 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
             shape="round"
             style={{
               background: '#faad14',
-              boxShadow: '0 2px 6px rgba(250, 173, 20, 0.3)' 
+              boxShadow: '0 2px 6px rgba(250, 173, 20, 0.3)'
             }}
             onClick={() => setBatchReplaceVisible(true)}
           >

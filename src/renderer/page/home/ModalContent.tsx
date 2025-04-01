@@ -323,6 +323,8 @@ export function ModalContent({
   const tableCol = withCategory
     ? modalTableCol
     : modalTableCol.filter(item => !item.dataIndex?.includes('category'));
+
+
   return (
     <Spin spinning={loading}>
       <div style={{ padding: '8px 0' }}>

@@ -90,9 +90,6 @@ export function handleToTable(csvData: any): {
       case ClassificationEnum.ALIPAY_MOBILE:
         csvHeader = csvData.slice(0, 22);
 
-        console.log(csvData, "csvData.slice(22)[0]");
-        const os = detectOS();
-        console.log(os, "os");
         if (csvData.slice(22)[0].length === 0) {
           csvContent = csvData.slice(22);
         } else {

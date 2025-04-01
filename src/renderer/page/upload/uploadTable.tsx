@@ -29,7 +29,7 @@ import dayjs from 'dayjs';
 import { openNotification } from 'src/renderer/components/notification';
 import { ruleByAdvanced } from './ruleUtils';
 import { renderIcon } from 'src/renderer/components/FontIcon';
-import { getCategoryCol } from 'src/renderer/components/commonColums';
+import { getCategoryCol, getPaymentAccountCol } from 'src/renderer/components/commonColums';
 
 function checkNeedTransferData(data: any) {
   // 返回data中所有payee包含京东和拼多多，并且description包含京东-订单编号和商户单号的数据 ,返回index
@@ -290,12 +290,14 @@ const BasicTable = (props: {
         }
       },
     },
+    getPaymentAccountCol({
+      width: 100,
+    }),
 
     {
       title: '账户',
       dataIndex: 'account_type',
       width: 80,
-      defaultCheck: false,
       render: (val: number) => (val ? account_type[val] : ''),
     },
     {

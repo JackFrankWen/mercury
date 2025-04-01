@@ -107,14 +107,22 @@ export function formateToTableDataAlipayMobile(
     // 9: "交易订单号"
     // 10: "商家订单号"
     // 11: "备注"
-
+    // flow_type 1: 支出 2: 收入 3.不计指出 将不计支出改
+    let flow_type = 0;
+    if (/不计收支/.test(subArr[5])) {
+      flow_type = 3;
+    } else if (/支出/.test(subArr[5])) {
+      flow_type = 1;
+    } else {
+      flow_type = 2;
+    }
     return {
       id: subArr[9].replace(/[^0-9]/g, ''),
       amount: subArr[6].trim(),
       description: `${subArr[4]};${subArr[11]}`,
       account_type: account_type,
       payment_type: payment_type,
-      flow_type: /支出/.test(subArr[5]) ? 1 : 2,
+      flow_type: flow_type,
       // 根据alipayMatch.ts 获取category
       category: getMatchCategory(subArr[1]) || JSON.stringify([100000, 100003]),
       payee: subArr[2],
@@ -124,6 +132,7 @@ export function formateToTableDataAlipayMobile(
       trans_time: (subArr[0] || '').trim().replace(/\n/g, ''),
       modification_time: undefined,
       categoryLabel: subArr[1],
+      account_name: subArr[7],
       // 交易状态
     };
   });
@@ -167,6 +176,7 @@ export function formateToTableDataWechat(
       creation_time: undefined,
       trans_time: subArr[0],
       modification_time: undefined,
+      account_name: subArr[6],
     };
   });
 }
