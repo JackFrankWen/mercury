@@ -208,7 +208,18 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       }}
     >
       {contextHolder}
-      <Form.Item name="category">
+      <Form.Item name="name" label="规则名称" rules={[{ required: true, message: '请输入规则名称' }]}>
+        <Input placeholder="规则名称" />
+      </Form.Item>
+      <Form.Item name="priority" label="规则优先级">
+        <SelectWrap placeholder="优先级" options={cpt_const.priority_type} />
+      </Form.Item>
+      <Form.Item name="rule" label="当条件满足">
+        <AdvancedRuleFormItem />
+      </Form.Item>
+
+
+      <Form.Item name="category" label="将替换">
         <Cascader
           options={category_type}
           allowClear
@@ -222,23 +233,12 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
           }}
         />
       </Form.Item>
-      <Form.Item name="name" rules={[{ required: true, message: '请输入规则名称' }]}>
-        <Input placeholder="规则名称" />
-      </Form.Item>
-      <Form.Item name="tag">
+
+      <Form.Item name="tag" label="标签">
         <SelectWrap placeholder="标签" options={cpt_const.tag_type} />
       </Form.Item>
-      <Form.Item name="consumer">
+      <Form.Item name="consumer" label="消费者" >
         <SelectWrap placeholder="消费者" options={cpt_const.consumer_type} />
-      </Form.Item>
-      <Form.Item name="priority">
-        <SelectWrap placeholder="优先级" options={cpt_const.priority_type} />
-      </Form.Item>
-      <Form.Item name="active" valuePropName="checked">
-        <Switch />
-      </Form.Item>
-      <Form.Item name="rule">
-        <AdvancedRuleFormItem />
       </Form.Item>
       <Form.Item style={{ textAlign: 'right' }}>
         <Space>
