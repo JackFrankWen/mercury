@@ -32,7 +32,8 @@
     "replace": "node scripts/batch-replace.js",
     "replace-name": "node scripts/batch-replace-name.js",
     "pipe": "node scripts/pipeline.js",
-    "pipe:dev": "node scripts/pipeline.js --dev"
+    "pipe:dev": "node scripts/pipeline.js --dev",
+    "del-all-tables": "node scripts/del-all-tables.js"
   },
   "dependencies": {
     "@antv/data-set": "^0.11.8",
