@@ -102,7 +102,7 @@ function TableSection(props: { formValue: any }) {
       </Space>
     </>
   );
-  const refreshTable = useCallback(() => {
+  const refreshTable = () => {
     // getCategory({
     //   ...formValue,
     //   consumer: consumerVal,
@@ -110,8 +110,7 @@ function TableSection(props: { formValue: any }) {
     //   payment_type: paymentVal,
     // });
     emitter.emit('refresh', 'transaction');
-  }, [formValue, consumerVal, accountTypeVal, paymentVal]);
-
+  }
   // 定义标签页配置
   const tabList = [
     {
