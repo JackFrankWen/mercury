@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-const csv = require("csv-parser");
+const fs = require('fs');
+const path = require('path');
+const csv = require('csv-parser');
 
 /**
  * 从CSV文件读取数据并格式化
@@ -19,8 +19,8 @@ function getCsvData(fileName) {
 
     fs.createReadStream(filePath)
       .pipe(csv())
-      .on("data", (data) => results.push(data))
-      .on("end", () => {
+      .on('data', data => results.push(data))
+      .on('end', () => {
         try {
           // 根据文件名前缀处理不同类型的数据
           const formattedData = formatCsvData(results, fileName);
@@ -29,9 +29,65 @@ function getCsvData(fileName) {
           reject(error);
         }
       })
-      .on("error", (error) => {
+      .on('error', error => {
         reject(error);
       });
+  });
+}
+function getCsvDataAipay(fileName, time) {
+  return new Promise((resolve, reject) => {
+    const filePath = path.join(__dirname, '../../data/des', `${fileName}.csv`);
+
+    if (!fs.existsSync(filePath)) {
+      return reject(new Error(`文件 ${filePath} 不存在`));
+    }
+
+    const results = [];
+
+    fs.createReadStream(filePath)
+      .pipe(
+        csv({
+          headers: false,
+          skip_empty_lines: true,
+          skip_headers: true,
+          skip_records: true,
+          skip_records_error: true,
+          columns: true,
+          encoding: 'gb18030',
+        })
+      )
+      .on('data', data => results.push(data))
+      .on('end', () => {
+        try {
+          // 根据文件名前缀处理不同类型的数据
+          const formattedData = formatCsvDataAlipay(results);
+          resolve(formattedData);
+        } catch (error) {
+          reject(error);
+        }
+      })
+      .on('error', error => {
+        reject(error);
+      });
+  });
+}
+/**
+ * 格式化支付宝CSV数据
+ * @param {Array} data - 原始CSV数据
+ * @returns {Array} - 格式化后的数据
+ */
+function formatCsvDataAlipay(data) {
+  // 过滤掉表头信息行
+
+  return data.map(item => {
+    console.log(item, '===');
+
+    return {
+      id: item['交易单号']?.trim() || '',
+      amount: item['金额']?.replace(/[^0-9.-]/g, '') || '0',
+      trans_time: item['交易时间']?.trim() || '',
+      account_name: item['收/付款方式']?.trim() || '',
+    };
   });
 }
 
@@ -43,35 +99,34 @@ function getCsvData(fileName) {
  */
 function formatCsvData(data, fileName) {
   // 判断数据类型
-  const isJd = fileName.includes("jd");
-  const isPdd = fileName.includes("pdd");
+  const isJd = fileName.includes('jd');
+  const isPdd = fileName.includes('pdd');
 
   if (!isJd && !isPdd) {
-    throw new Error("不支持的文件类型，仅支持京东(jd)或拼多多(pdd)订单");
+    throw new Error('不支持的文件类型，仅支持京东(jd)或拼多多(pdd)订单');
   }
 
   // 根据数据类型筛选和格式化数据
   let filtered = data;
   if (isJd) {
-    filtered = data.filter(
-      (item) => item["订单状态"] === "已完成" || item["订单状态"] === "等待收货"
-    );
+    filtered = data.filter(item => item['订单状态'] === '已完成' || item['订单状态'] === '等待收货');
   } else if (isPdd) {
-    filtered = data.filter((item) => item["订单状态"] === "交易成功");
+    filtered = data.filter(item => item['订单状态'] === '交易成功');
   }
 
   // 两个文件一样的字段
-  return filtered.map((item) => {
+  return filtered.map(item => {
     return {
-      id: item["订单号"],
-      payee: isJd ? "京东" : "拼多多",
-      amount: item["订单总价"].replace(/[^0-9.]/g, ""),
-      description: item["商品名称"],
-      trans_time: item["下单时间"],
+      id: item['订单号'],
+      payee: isJd ? '京东' : '拼多多',
+      amount: item['订单总价'].replace(/[^0-9.]/g, ''),
+      description: item['商品名称'],
+      trans_time: item['下单时间'],
     };
   });
 }
 
 module.exports = {
   getCsvData,
+  getCsvDataAipay,
 };

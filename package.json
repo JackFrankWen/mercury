@@ -30,6 +30,7 @@
     "import-json": "node scripts/import-json.js",
     "export": "node scripts/export-trans.js",
     "replace": "node scripts/batch-replace.js",
+    "replace-name": "node scripts/batch-replace-name.js",
     "pipe": "node scripts/pipeline.js",
     "pipe:dev": "node scripts/pipeline.js --dev"
   },

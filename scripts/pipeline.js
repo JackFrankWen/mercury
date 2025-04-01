@@ -11,6 +11,7 @@ const commands = [
   { cmd: 'npm run import-a', desc: '导入高级规则' },
   // { cmd: 'npm run import-json', desc: '导入交易数据' },
   { cmd: 'npm run import-trans', desc: '导入交易数据' },
+  { cmd: 'npm run replace-name', desc: '替换交易数据' },
   // { cmd: "npm run replace", desc: "替换交易数据" },
   // 如果有更多导入脚本，可以在这里添加
 ];
@@ -22,7 +23,7 @@ const commands = [
  * @returns {Promise<boolean>} 命令是否成功执行
  */
 function executeCommand(command, description) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     console.log(chalk.cyan(`\n[执行] ${description}`));
     console.log(chalk.gray(`> ${command}`));
 
@@ -50,8 +51,8 @@ function promptContinue(message) {
     output: process.stdout,
   });
 
-  return new Promise((resolve) => {
-    rl.question(chalk.yellow(`${message} (y/n): `), (answer) => {
+  return new Promise(resolve => {
+    rl.question(chalk.yellow(`${message} (y/n): `), answer => {
       rl.close();
       resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes');
     });
@@ -65,9 +66,7 @@ async function runPipeline() {
   console.log(chalk.bold.blue('=== 数据库初始化和导入管道开始 ==='));
 
   // 提示用户确认是否开始
-  const confirmStart = await promptContinue(
-    '这将重新初始化数据库并导入所有数据。确认继续吗?',
-  );
+  const confirmStart = await promptContinue('这将重新初始化数据库并导入所有数据。确认继续吗?');
   if (!confirmStart) {
     console.log(chalk.yellow('操作已取消'));
     return;
@@ -85,8 +84,7 @@ async function runPipeline() {
 
     if (!success) {
       allSuccess = false;
-      const continueAfterError =
-        await promptContinue('上一步失败，是否继续执行后续步骤?');
+      const continueAfterError = await promptContinue('上一步失败，是否继续执行后续步骤?');
       if (!continueAfterError) {
         console.log(chalk.yellow('管道执行中断'));
         break;
@@ -107,7 +105,7 @@ async function runPipeline() {
 }
 
 // 执行管道
-runPipeline().catch((error) => {
+runPipeline().catch(error => {
   console.error(chalk.red('管道执行出现未处理的错误:'));
   console.error(error);
   process.exit(1);
