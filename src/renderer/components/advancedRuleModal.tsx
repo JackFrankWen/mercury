@@ -146,7 +146,6 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
   };
 
   const testRule = async () => {
-
     try {
       const formValue = await form.getFieldsValue();
       // 添加规则值的校验
@@ -195,65 +194,167 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         category: data?.category ? JSON.parse(data?.category) : undefined,
         tag: toNumberOrUndefiend(data?.tag),
         consumer: toNumberOrUndefiend(data?.consumer),
-        rule: data?.rule ? JSON.parse(data?.rule) : [
-          [{
-            condition: 'description',
-            formula: 'like',
-            value: '',
-          },
+        rule: data?.rule
+          ? JSON.parse(data?.rule)
+          : [
+            [
+              {
+                condition: 'description',
+                formula: 'like',
+                value: '',
+              },
+            ],
           ],
-        ],
         priority: toNumberOrUndefiend(data?.priority) || 1,
         active: data?.active === 1,
       }}
     >
       {contextHolder}
-      <Form.Item name="name" label="规则名称" rules={[{ required: true, message: '请输入规则名称' }]}>
-        <Input placeholder="规则名称" />
-      </Form.Item>
-      <Form.Item name="priority" label="规则优先级">
-        <SelectWrap placeholder="优先级" options={cpt_const.priority_type} />
-      </Form.Item>
-      <Form.Item name="rule" label="当条件满足">
-        <AdvancedRuleFormItem />
-      </Form.Item>
-
-
-      <Form.Item name="category" label="将替换">
-        <Cascader
-          options={category_type}
-          allowClear
-          placeholder="请选择分类"
-          showSearch={{
-            filter: (inputValue: string, path: DefaultOptionType[]) =>
-              path.some(
-                option =>
-                  (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1
-              ),
+      {/* 基本信息区块 */}
+      <div
+        style={{
+          backgroundColor: '#fafafa',
+          padding: '8px 16px',
+          borderRadius: '8px',
+          marginBottom: '12px',
+        }}
+      >
+        <h3
+          style={{
+            fontSize: '16px',
+            fontWeight: 500,
+            color: '#333',
           }}
-        />
-      </Form.Item>
+        >
+          基本信息
+        </h3>
+        <Form.Item name="name" label="规则名称" rules={[{ required: true, message: '请输入规则名称' }]}>
+          <Input placeholder="请输入规则名称" />
+        </Form.Item>
+        <Form.Item name="priority" label="规则优先级">
+          <SelectWrap placeholder="请选择优先级" options={cpt_const.priority_type} />
+        </Form.Item>
+      </div>
 
-      <Form.Item name="tag" label="标签">
-        <SelectWrap placeholder="标签" options={cpt_const.tag_type} />
-      </Form.Item>
-      <Form.Item name="consumer" label="消费者" >
-        <SelectWrap placeholder="消费者" options={cpt_const.consumer_type} />
-      </Form.Item>
-      <Form.Item style={{ textAlign: 'right' }}>
-        <Space>
-          <Button
-            onClick={() => {
-              props.onCancel();
+      {/* 条件区块 */}
+      <div
+        style={{
+          backgroundColor: '#fafafa',
+          padding: '8px 16px',
+          borderRadius: '8px',
+          marginBottom: '24px',
+        }}
+      >
+        <h3
+          style={{
+            marginBottom: '16px',
+            fontSize: '16px',
+            fontWeight: 500,
+            color: '#333',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <span
+            style={{
+              width: '4px',
+              height: '16px',
+              backgroundColor: '#1890ff',
+              borderRadius: '2px',
+              display: 'inline-block',
             }}
-          >
-            取消
-          </Button>
-          <Button danger onClick={testRule}>
+          ></span>
+          匹配条件
+        </h3>
+        <Form.Item name="rule">
+          <AdvancedRuleFormItem />
+        </Form.Item>
+      </div>
+
+      {/* 替换区块 */}
+      <div
+        style={{
+          backgroundColor: '#fafafa',
+          padding: '16px',
+          borderRadius: '8px',
+          marginBottom: '24px',
+        }}
+      >
+        <h3
+          style={{
+            marginBottom: '16px',
+            fontSize: '16px',
+            fontWeight: 500,
+            color: '#333',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <span
+            style={{
+              width: '4px',
+              height: '16px',
+              backgroundColor: '#52c41a',
+              borderRadius: '2px',
+              display: 'inline-block',
+            }}
+          ></span>
+          替换设置
+        </h3>
+        <div
+          style={{
+            background: '#fff',
+            padding: '16px',
+            borderRadius: '6px',
+            border: '1px solid #f0f0f0',
+          }}
+        >
+          <Form.Item name="category" style={{ marginBottom: '12px' }} label="将替换分类" layout={'horizontal'}>
+            <Cascader
+              options={category_type}
+              allowClear
+              placeholder="请选择分类"
+              style={{ width: '100%' }}
+              showSearch={{
+                filter: (inputValue: string, path: DefaultOptionType[]) =>
+                  path.some(option => (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1),
+              }}
+            />
+          </Form.Item>
+
+          <Form.Item name="tag" style={{ marginBottom: '12px' }} label="将替换标签" layout={'horizontal'}>
+            <SelectWrap placeholder="请选择标签" options={cpt_const.tag_type} />
+          </Form.Item>
+
+          <Form.Item name="consumer" style={{ marginBottom: '0' }} label="将替换消费者" layout={'horizontal'}>
+            <SelectWrap placeholder="请选择消费者" options={cpt_const.consumer_type} />
+          </Form.Item>
+        </div>
+      </div>
+
+      {/* 操作按钮区 */}
+      <Form.Item
+        style={{
+          textAlign: 'right',
+          marginTop: '24px',
+          marginBottom: '0',
+          borderTop: '1px solid #f0f0f0',
+          paddingTop: '16px',
+        }}
+      >
+        <Space size="middle">
+          <Button onClick={props.onCancel}>取消</Button>
+          <Button danger onClick={testRule} icon={<span className="fas fa-vial" style={{ marginRight: '4px' }} />}>
             测试规则
           </Button>
-          <LoadingBtn type="primary" onClick={submitRule}>
-            提交
+          <LoadingBtn
+            type="primary"
+            onClick={submitRule}
+            icon={<span className="fas fa-save" style={{ marginRight: '4px' }} />}
+          >
+            保存规则
           </LoadingBtn>
         </Space>
       </Form.Item>
