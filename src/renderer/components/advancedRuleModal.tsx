@@ -242,12 +242,11 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
           backgroundColor: '#fafafa',
           padding: '8px 16px',
           borderRadius: '8px',
-          marginBottom: '24px',
+          marginBottom: '8px',
         }}
       >
-        <h3
+        <p
           style={{
-            marginBottom: '16px',
             fontSize: '16px',
             fontWeight: 500,
             color: '#333',
@@ -256,17 +255,8 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
             gap: '8px',
           }}
         >
-          <span
-            style={{
-              width: '4px',
-              height: '16px',
-              backgroundColor: '#1890ff',
-              borderRadius: '2px',
-              display: 'inline-block',
-            }}
-          ></span>
-          匹配条件
-        </h3>
+          当条件满足时
+        </p>
         <Form.Item name="rule">
           <AdvancedRuleFormItem />
         </Form.Item>
@@ -276,15 +266,14 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       <div
         style={{
           backgroundColor: '#fafafa',
-          padding: '16px',
+          padding: '8px',
           borderRadius: '8px',
           marginBottom: '24px',
         }}
       >
-        <h3
+        <p
           style={{
-            marginBottom: '16px',
-            fontSize: '16px',
+            ontSize: '16px',
             fontWeight: 500,
             color: '#333',
             display: 'flex',
@@ -292,17 +281,9 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
             gap: '8px',
           }}
         >
-          <span
-            style={{
-              width: '4px',
-              height: '16px',
-              backgroundColor: '#52c41a',
-              borderRadius: '2px',
-              display: 'inline-block',
-            }}
-          ></span>
-          替换设置
-        </h3>
+
+          可修改以下设置
+        </p>
         <div
           style={{
             background: '#fff',
@@ -311,7 +292,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
             border: '1px solid #f0f0f0',
           }}
         >
-          <Form.Item name="category" style={{ marginBottom: '12px' }} label="将替换分类" layout={'horizontal'}>
+          <Form.Item name="category" style={{ marginBottom: '12px' }} label="将分类替换为" layout={'horizontal'}>
             <Cascader
               options={category_type}
               allowClear
@@ -324,11 +305,11 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
             />
           </Form.Item>
 
-          <Form.Item name="tag" style={{ marginBottom: '12px' }} label="将替换标签" layout={'horizontal'}>
+          <Form.Item name="tag" style={{ marginBottom: '12px' }} label="将标签替换为" layout={'horizontal'}>
             <SelectWrap placeholder="请选择标签" options={cpt_const.tag_type} />
           </Form.Item>
 
-          <Form.Item name="consumer" style={{ marginBottom: '0' }} label="将替换消费者" layout={'horizontal'}>
+          <Form.Item name="consumer" style={{ marginBottom: '0' }} label="将消费者替换为" layout={'horizontal'}>
             <SelectWrap placeholder="请选择消费者" options={cpt_const.consumer_type} />
           </Form.Item>
         </div>

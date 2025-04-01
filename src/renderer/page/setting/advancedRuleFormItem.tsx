@@ -1,7 +1,7 @@
 import { Col, Row, Space, Table, Button, Input, InputNumber, Cascader } from 'antd';
 import { category_type } from 'src/renderer/const/categroy';
 import React from 'react';
-import { PlusOutlined, MinusOutlined, PlusCircleFilled, MinusCircleFilled } from '@ant-design/icons';
+import { PlusOutlined, DeleteOutlined, PlusCircleFilled, MinusCircleFilled } from '@ant-design/icons';
 import SelectWrap from '../../components/selectWrap';
 import { cpt_const } from '../../const/web';
 import { DefaultOptionType } from 'antd/es/cascader';
@@ -23,7 +23,7 @@ function AdvancedRuleFormItem(props: { value: RuleItemListList; onChange: (value
           <Row key={index}>
             {index > 0 && (
               <Col span={24} style={{ textAlign: 'left' }}>
-                <h3>或者</h3>
+                <h4>或者</h4>
               </Col>
             )}
             <Col span={24}>
@@ -271,11 +271,23 @@ function AdvancedRuleItem(props: {
         且
       </Col> */}
       <Col flex="1">
-        <h4>规则{rowKey + 1}</h4>
+        <span style={{
+        }}>规则{rowKey + 1}</span>
         <Table columns={columns} dataSource={data} pagination={false} size="small" bordered />
       </Col>
       <Col span={1} style={{ textAlign: 'center' }}>
-        <MinusOutlined onClick={onDelete} />{' '}
+        <DeleteOutlined
+          onClick={onDelete}
+          style={{
+            color: '#ff4d4f',
+            fontSize: '16px',
+            cursor: 'pointer',
+            transition: 'all 0.3s',
+            '&:hover': {
+              opacity: 0.8
+            }
+          }}
+        />
       </Col>
     </Row>
   );
