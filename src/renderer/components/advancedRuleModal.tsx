@@ -234,14 +234,14 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
           </Col>
         </Row>
 
-        <Title level={5}>当条件满足时</Title>
+        <Title level={5}>当满足下面任何一个规则组时</Title>
         <Form.Item name="rule">
           <AdvancedRuleFormItem />
         </Form.Item>
 
-        <Title level={5}>可修改以下设置</Title>
+        <Title level={5}>可更换交易数据中的</Title>
 
-        <Form.Item name="category" style={{ marginBottom: '12px' }} label="将分类替换为" layout={'horizontal'}>
+        <Form.Item name="category" style={{ marginBottom: '12px' }} label="分类" layout={'horizontal'}>
           <Cascader
             options={category_type}
             allowClear
@@ -254,12 +254,12 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
           />
         </Form.Item>
 
-        <Form.Item name="tag" style={{ marginBottom: '12px' }} label="将标签替换为" layout={'horizontal'}>
+        <Form.Item name="tag" style={{ marginBottom: '12px' }} label="标签" layout={'horizontal'}>
           <SelectWrap placeholder="请选择标签" options={cpt_const.tag_type} />
         </Form.Item>
 
-        <Form.Item name="consumer" style={{ marginBottom: '0' }} label="将消费者替换为" layout={'horizontal'}>
-          <SelectWrap placeholder="请选择消费者" options={cpt_const.consumer_type} />
+        <Form.Item name="consumer" style={{ marginBottom: '0' }} label="消费者" layout={'horizontal'}>
+          <SelectWrap placeholder="请选择消费者" options={cpt_const.consumes_type} />
         </Form.Item>
       </div>
 

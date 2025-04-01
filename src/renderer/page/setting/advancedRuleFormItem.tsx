@@ -1,4 +1,4 @@
-import { Col, Row, Space, Table, Button, Input, InputNumber, Cascader } from 'antd';
+import { Col, Row, Space, Table, Button, Input, InputNumber, Cascader, Typography } from 'antd';
 import { category_type } from 'src/renderer/const/categroy';
 import React from 'react';
 import { PlusOutlined, DeleteOutlined, PlusCircleFilled, MinusCircleFilled } from '@ant-design/icons';
@@ -6,6 +6,7 @@ import SelectWrap from '../../components/selectWrap';
 import { cpt_const } from '../../const/web';
 import { DefaultOptionType } from 'antd/es/cascader';
 const { TextArea } = Input;
+const { Text } = Typography
 
 export type RuleItem = {
   condition: string;
@@ -267,10 +268,10 @@ function AdvancedRuleItem(props: {
   ];
   return (
     <Row align="middle" style={{ backgroundColor: '#fff', padding: 10, borderRadius: 12 }} gutter={10}>
-      <Col span={1}>同时满足</Col>
+
       <Col flex="1">
         <span style={{
-        }}>规则{rowKey + 1}</span>
+        }}>规则组[{rowKey + 1}]</span><Typography.Text type={'secondary'}> 表格中所有等式必须同时满足，规则组[{rowKey + 1}]才能生效</Typography.Text>
         <Table columns={columns} dataSource={data} pagination={false} size="small" bordered />
       </Col>
       <Col span={1} style={{ textAlign: 'center' }}>
