@@ -10,6 +10,7 @@ import { useFresh } from 'src/renderer/components/useFresh';
 import emitter from 'src/renderer/events';
 import { category_type } from 'src/renderer/const/categroy';
 import { DefaultOptionType } from 'antd/es/cascader';
+import { renderIcon } from 'src/renderer/components/FontIcon';
 
 function YearBarChart(props: { formValue: FormData }) {
   const { formValue } = props;
@@ -18,6 +19,7 @@ function YearBarChart(props: { formValue: FormData }) {
   const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>([]);
   const [visible, setVisible] = useState(false);
   const [categoryVal, setCategoryVal] = useState<string[]>([]);
+  const [year, setYear] = useState('')
   const [consumerVal, ConsumerCpt] = useSelect({
     options: cpt_const.consumer_type,
     placeholder: '消费者',
@@ -159,20 +161,59 @@ function YearBarChart(props: { formValue: FormData }) {
           </Modal>
         )}
         {formValue.type === 'year' ? (
-          <BarChart data={data} hasElementClick={true} />
+          <>
+            <BarChart data={data} hasElementClick={true} setYear={setYear} />
+          </>
         ) : (
-          <LunarCalendar
-            formValue={{
-              ...formValue,
-              consumer: consumerVal,
-              account_type: accountTypeVal,
-              payment_type: paymentTypeVal,
-              category: categoryVal,
-              tag: tagVal,
-            }}
-            data={daliyData}
-            refresh={refresh}
-          />
+          <>
+            {
+              year && (
+                <Flex justify='center'>
+                  <span style={{
+                    cursor: 'pointer',
+                    padding: '4px 10px',
+                    marginTop: -14,
+                    borderRadius: 8,
+                    background: '#f5f5f5',
+                    color: '#888888',
+                    fontSize: '13px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    transition: 'all 0.2s',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+                  }} onClick={() => {
+                    setYear('')
+                    emitter.emit('updateDate', {
+                      date: year,
+                      trans_time: [`${year}-01-01 00:00:00`, `${year}-12-31 23:59:59`],
+                      type: 'year',
+                    })
+
+                  }}
+                    onMouseOver={(e) => e.currentTarget.style.background = '#ececec'}
+                    onMouseOut={(e) => e.currentTarget.style.background = '#f5f5f5'}
+                  >
+                    {renderIcon('fas fa-arrow-rotate-left', '#888888')}
+                    返回年度
+                  </span>
+                </Flex>
+              )
+            }
+
+            <LunarCalendar
+              formValue={{
+                ...formValue,
+                consumer: consumerVal,
+                account_type: accountTypeVal,
+                payment_type: paymentTypeVal,
+                category: categoryVal,
+                tag: tagVal,
+              }}
+              data={daliyData}
+              refresh={refresh}
+            />
+          </>
         )}
       </Card>
     </div>

@@ -9,9 +9,10 @@ interface LineChartProps {
   }[];
   height?: number;
   hasElementClick?: boolean;
+  setYear?: (year: string) => void;
 }
 
-const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementClick = false }) => {
+const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementClick = false, setYear }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
     const chart = new Chart({
       container: containerRef.current,
       autoFit: true,
-  
+
       height: height,
     });
 
@@ -42,7 +43,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
     chart.axis('total', {
       line: null,
       tickLine: null,
-      
+
       label: {
         formatter: text => {
           // 自动判断使用千或万
@@ -108,6 +109,8 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
           trans_time,
           type: type,
         });
+        // 2002-12 替换 -12
+        setYear(date.split('-')[0]);
       }
     });
 
