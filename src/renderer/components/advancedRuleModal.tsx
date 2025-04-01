@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, Cascader, Col, message, notification, Row, Space, Switch, Table } from 'antd';
+import { Card, Cascader, Col, message, notification, Row, Space, Switch, Table, Typography } from 'antd';
 import { Button, Form, Input, Radio } from 'antd';
 import SelectWrap from './selectWrap';
 import { cpt_const } from '../const/web';
@@ -10,6 +10,7 @@ import { DefaultOptionType } from 'antd/es/cascader';
 import AdvancedRuleFormItem, { RuleItemList } from '../page/setting/advancedRuleFormItem';
 import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
 import { ruleByAdvanced } from '../page/upload/ruleUtils';
+const { Title } = Typography;
 
 import dayjs from 'dayjs';
 export type RuleFormData = {
@@ -219,100 +220,47 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
           marginBottom: '12px',
         }}
       >
-        <h3
-          style={{
-            fontSize: '16px',
-            fontWeight: 500,
-            color: '#333',
-          }}
-        >
-          基本信息
-        </h3>
-        <Form.Item name="name" label="规则名称" rules={[{ required: true, message: '请输入规则名称' }]}>
-          <Input placeholder="请输入规则名称" />
-        </Form.Item>
-        <Form.Item name="priority" label="规则优先级">
-          <SelectWrap placeholder="请选择优先级" options={cpt_const.priority_type} />
-        </Form.Item>
-      </div>
+        <Title level={5}>基本信息</Title>
+        <Row gutter={12}>
+          <Col span={12}>
+            <Form.Item name="name" label="规则名称" rules={[{ required: true, message: '请输入规则名称' }]}>
+              <Input placeholder="请输入规则名称" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item name="priority" label="规则优先级">
+              <SelectWrap placeholder="请选择优先级" options={cpt_const.priority_type} />
+            </Form.Item>
+          </Col>
+        </Row>
 
-      {/* 条件区块 */}
-      <div
-        style={{
-          backgroundColor: '#fafafa',
-          padding: '8px 16px',
-          borderRadius: '8px',
-          marginBottom: '8px',
-        }}
-      >
-        <p
-          style={{
-            fontSize: '16px',
-            fontWeight: 500,
-            color: '#333',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-        >
-          当条件满足时
-        </p>
+        <Title level={5}>当条件满足时</Title>
         <Form.Item name="rule">
           <AdvancedRuleFormItem />
         </Form.Item>
-      </div>
 
-      {/* 替换区块 */}
-      <div
-        style={{
-          backgroundColor: '#fafafa',
-          padding: '8px',
-          borderRadius: '8px',
-          marginBottom: '24px',
-        }}
-      >
-        <p
-          style={{
-            ontSize: '16px',
-            fontWeight: 500,
-            color: '#333',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-        >
+        <Title level={5}>可修改以下设置</Title>
 
-          可修改以下设置
-        </p>
-        <div
-          style={{
-            background: '#fff',
-            padding: '16px',
-            borderRadius: '6px',
-            border: '1px solid #f0f0f0',
-          }}
-        >
-          <Form.Item name="category" style={{ marginBottom: '12px' }} label="将分类替换为" layout={'horizontal'}>
-            <Cascader
-              options={category_type}
-              allowClear
-              placeholder="请选择分类"
-              style={{ width: '100%' }}
-              showSearch={{
-                filter: (inputValue: string, path: DefaultOptionType[]) =>
-                  path.some(option => (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1),
-              }}
-            />
-          </Form.Item>
+        <Form.Item name="category" style={{ marginBottom: '12px' }} label="将分类替换为" layout={'horizontal'}>
+          <Cascader
+            options={category_type}
+            allowClear
+            placeholder="请选择分类"
+            style={{ width: '100%' }}
+            showSearch={{
+              filter: (inputValue: string, path: DefaultOptionType[]) =>
+                path.some(option => (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1),
+            }}
+          />
+        </Form.Item>
 
-          <Form.Item name="tag" style={{ marginBottom: '12px' }} label="将标签替换为" layout={'horizontal'}>
-            <SelectWrap placeholder="请选择标签" options={cpt_const.tag_type} />
-          </Form.Item>
+        <Form.Item name="tag" style={{ marginBottom: '12px' }} label="将标签替换为" layout={'horizontal'}>
+          <SelectWrap placeholder="请选择标签" options={cpt_const.tag_type} />
+        </Form.Item>
 
-          <Form.Item name="consumer" style={{ marginBottom: '0' }} label="将消费者替换为" layout={'horizontal'}>
-            <SelectWrap placeholder="请选择消费者" options={cpt_const.consumer_type} />
-          </Form.Item>
-        </div>
+        <Form.Item name="consumer" style={{ marginBottom: '0' }} label="将消费者替换为" layout={'horizontal'}>
+          <SelectWrap placeholder="请选择消费者" options={cpt_const.consumer_type} />
+        </Form.Item>
       </div>
 
       {/* 操作按钮区 */}

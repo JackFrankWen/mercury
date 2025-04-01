@@ -266,10 +266,8 @@ function AdvancedRuleItem(props: {
     },
   ];
   return (
-    <Row align="middle" style={{ backgroundColor: '#f5f5f5', padding: 10 }} gutter={10}>
-      {/* <Col span={1} style={{ textAlign: 'center' }}>
-        且
-      </Col> */}
+    <Row align="middle" style={{ backgroundColor: '#fff', padding: 10, borderRadius: 12 }} gutter={10}>
+      <Col span={1}>同时满足</Col>
       <Col flex="1">
         <span style={{
         }}>规则{rowKey + 1}</span>
