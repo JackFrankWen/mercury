@@ -158,7 +158,14 @@ export function findMatchList(transactions: I_Transaction[], rules: AdvancedRule
   return matchList;
 }
 
-function applyRule(transactions: I_Transaction[], rules: AdvancedRule[]) {
+function applyRule(
+  transactions: I_Transaction[],
+  rules: AdvancedRule[]
+): I_Transaction &
+  {
+    isChanged: true;
+    ruleInfo: AdvancedRule;
+  }[] {
   const messageList: any[] = [];
 
   const newData = transactions.map((transaction, index) => {
@@ -210,6 +217,7 @@ function applyRule(transactions: I_Transaction[], rules: AdvancedRule[]) {
           category: rule.category,
           beforeCategory: transaction.category,
           isChanged: true,
+          ruleInfo: rule,
         };
       }
     }

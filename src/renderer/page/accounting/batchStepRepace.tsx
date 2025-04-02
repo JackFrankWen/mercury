@@ -1,23 +1,14 @@
 // 一个弹窗，里面包含step
 import React, { useState } from 'react';
-import {
-  Modal,
-  Steps,
-  Button,
-  Form,
-  Radio,
-  Table,
-  Select,
-  Space,
-  message,
-  notification,
-} from 'antd';
+import { Modal, Steps, Button, Form, Radio, Table, Select, Space, message, notification, Popover, Tooltip } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 import type { I_Transaction } from 'src/main/sqlite3/transactions';
 import dayjs from 'dayjs';
-import AdvancedRule from '../setting/advancedRule';
+import AdvancedRule, { renderRuleContent } from '../setting/advancedRule';
 import { formatMoney } from '../../components/utils';
 import { ruleByAdvanced } from '../upload/ruleUtils';
 import { getCategoryCol } from 'src/renderer/components/commonColums';
+import { getConsumerType } from 'src/renderer/const/web';
 interface BatchStepReplaceProps {
   data: I_Transaction[];
   visible: boolean;
@@ -27,12 +18,7 @@ interface BatchStepReplaceProps {
 
 const { Step } = Steps;
 
-export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({
-  data,
-  visible,
-  onClose,
-  onSuccess,
-}) => {
+export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visible, onClose, onSuccess }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedRule, setSelectedRule] = useState<AdvancedRule[]>([]);
   const [matchedData, setMatchedData] = useState<I_Transaction[]>([]);
@@ -127,12 +113,32 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({
       title: '交易日期',
       dataIndex: 'trans_time',
       key: 'trans_time',
-      render: (text: Date) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
+      width: 190,
+      render: (text: Date, record: any) => {
+        let name = '';
+        let extra = '';
+        try {
+          const ruleInfo = record.ruleInfo || {};
+          name = ruleInfo.name;
+          extra = JSON.parse(ruleInfo.rule);
+        } catch (error) {
+          return <>{dayjs(text).format('YYYY-MM-DD HH:mm:ss')}</>;
+        }
+        return (
+          <>
+            {dayjs(text).format('YYYY-MM-DD HH:mm:ss')}
+            <Popover title={`规则名称【${name}】`} content={renderRuleContent(extra)}>
+              <ExclamationCircleFilled style={{ color: 'red', marginLeft: '10px' }} />
+            </Popover>
+          </>
+        );
+      },
     },
     {
       title: '金额',
       dataIndex: 'amount',
       key: 'amount',
+      width: 100,
       render: (text: string) => formatMoney(text),
     },
     getCategoryCol({ width: 100 }),
@@ -140,17 +146,33 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({
       title: '交易对方',
       dataIndex: 'payee',
       key: 'payee',
+      ellipsis: true,
+      render: (text: string) => {
+        return (
+          <>
+            <Tooltip title={text}>{text}</Tooltip>
+          </>
+        );
+      },
     },
     {
       title: '描述',
       dataIndex: 'description',
       key: 'description',
       ellipsis: true,
+      render: (text: string) => {
+        return (
+          <>
+            <Tooltip title={text}>{text}</Tooltip>
+          </>
+        );
+      },
     },
     {
       title: '消费者',
       dataIndex: 'consumer',
       key: 'consumer',
+      render: (text: string) => getConsumerType(text),
     },
   ];
 
@@ -191,7 +213,7 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({
               pagination={false}
               rowKey="id"
               size="small"
-              scroll={{ x: 700, y: 300 }}
+              scroll={{ x: 800, y: 300 }}
             />
           </div>
         );
@@ -232,7 +254,7 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({
 
   return (
     <Modal
-      title="批量替换交易"
+      title="快速分类"
       open={visible}
       onCancel={handleReset}
       footer={renderFooter()}
