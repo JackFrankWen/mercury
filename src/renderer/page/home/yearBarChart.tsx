@@ -73,6 +73,23 @@ function YearBarChart(props: { formValue: FormData }) {
   }, [paymentTypeVal, tagVal, categoryVal]);
   const extra = (
     <Space>
+      <Cascader
+        options={category_type}
+        allowClear
+        multiple
+        value={categoryVal}
+        style={{ width: '100px' }}
+        onChange={val => setCategoryVal(val)}
+        placeholder="请选择分类"
+        showSearch={{
+          filter: (inputValue: string, path: DefaultOptionType[]) =>
+            path.some(
+              option =>
+                (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) >
+                -1
+            ),
+        }}
+      />
       {AccountTypeCpt}
       {ConsumerCpt}
       {hasSearchInModal ? (
@@ -140,23 +157,7 @@ function YearBarChart(props: { formValue: FormData }) {
             <Flex vertical gap={16}>
               {PaymentTypeCpt}
               {TagCpt}
-              <Cascader
-                options={category_type}
-                allowClear
-                multiple
-                value={categoryVal}
-                style={{ width: '100%' }}
-                onChange={val => setCategoryVal(val)}
-                placeholder="请选择分类"
-                showSearch={{
-                  filter: (inputValue: string, path: DefaultOptionType[]) =>
-                    path.some(
-                      option =>
-                        (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) >
-                        -1
-                    ),
-                }}
-              />
+
             </Flex>
           </Modal>
         )}

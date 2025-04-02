@@ -48,9 +48,9 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
         formatter: text => {
           // 自动判断使用千或万
           if (Number(text) >= 10000) {
-            return formatMoney(Number(text), '万', true);
+            return formatMoney(Number(text), '万', true, 1);
           }
-          return formatMoney(Number(text), '', true);
+          return formatMoney(Number(text), '', true, 0);
         },
       },
     });
@@ -64,7 +64,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
           const value =
             item.data.total >= 10000
               ? formatMoney(item.data.total, '万', true)
-              : formatMoney(item.data.total, '', true);
+              : formatMoney(item.data.total, '', true, 0);
           return {
             ...item,
             value,
@@ -87,9 +87,9 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
         offset: 10,
         content: data => {
           if (data.total >= 10000) {
-            return formatMoney(data.total, '万', true);
+            return formatMoney(data.total, '万', true, 1);
           }
-          return formatMoney(data.total, '', true);
+          return formatMoney(data.total, '', true, 0);
         },
         style: {
           fill: '#666',

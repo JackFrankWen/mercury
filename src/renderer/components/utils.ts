@@ -67,7 +67,7 @@ export function formatMoneyObj({
   decimalPlaces = 2,
 }: {
   amount: number | string,
-  unit?: "万" | "千" | "亿",
+  unit?: "万" | "亿",
   autoUnit?: boolean,
   decimalPlaces?: number,
 }): string {
@@ -93,16 +93,16 @@ export function formatMoneyObj({
       unit = "亿";
     } else if (amount >= 10000) {
       unit = "万";
-    } else if (amount >= 1000) {
-      unit = "千";
     }
+
+    // } else if (amount >= 1000) {
+    //   unit = "千";
+    // }
   }
 
   let result: number;
   if (unit === "亿") {
     result = amount / 100000000;
-  } else if (unit === "千") {
-    result = amount / 1000;
   } else if (unit === "万") {
     result = amount / 10000;
   } else {

@@ -1,6 +1,6 @@
 // 一个弹窗，里面包含step
 import React, { useState } from 'react';
-import { Modal, Steps, Button, Form, Radio, Table, Select, Space, message, notification, Popover, Tooltip } from 'antd';
+import { Modal, Steps, Button, Form, Radio, Table, Select, Space, message, notification, Popover, Tooltip, Alert } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import type { I_Transaction } from 'src/main/sqlite3/transactions';
 import dayjs from 'dayjs';
@@ -192,6 +192,7 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
       case 2:
         return (
           <div>
+            <Alert message="注意：仅替换当前页面数据内符合条件的交易数据" type="warning" showIcon className="mb8 mt8" />
             <Table
               onRow={record => {
                 return {
