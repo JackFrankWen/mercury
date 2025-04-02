@@ -102,10 +102,14 @@ function AdvancedRuleItem(props: {
       title: '条件',
       dataIndex: 'condition',
       render: (text: string, record: any, index: number) => {
+        // 过滤已经选择了options
+        let options = cpt_const.condition_type;
+        const otherData = data.filter((item, i) => i !== index);
+        options = options.filter(item => !otherData.some(item2 => `${item2.condition}` === `${item.value}`));
         return (
           <SelectWrap
             placeholder="条件"
-            options={cpt_const.condition_type}
+            options={options}
             value={record.condition}
             onChange={value => {
               console.log(value, 'value');
