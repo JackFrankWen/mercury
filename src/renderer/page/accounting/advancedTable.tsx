@@ -204,12 +204,11 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
   const [batchReplaceVisible, setBatchReplaceVisible] = useState(false);
 
   const onSelectChange = (newSelectedRowKeys: React.Key[], selectedRows: I_Transaction[]) => {
-    console.log('selectedRowKeys changed: ', newSelectedRowKeys);
+    console.log('selectedRowKeys changed: ', selectedRows);
     setSelectedRowKeys(newSelectedRowKeys);
     setSelectedAmount(
-      newSelectedRowKeys.reduce((acc, key) => {
-        const transaction = selectedRows.find(item => item.id === key);
-        return acc + Number(transaction?.amount || 0);
+      selectedRows.reduce((acc, item) => {
+        return acc + Number(item?.amount || 0);
       }, 0)
     );
   };
@@ -264,13 +263,16 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
         onRow={record => {
           return {
             onClick: () => {
-              console.log('===record', record);
-              // 行选择
-              if (selectedRowKeys.includes(record.id)) {
-                onSelectChange(selectedRowKeys.filter(id => id !== record.id));
-              } else {
-                onSelectChange([...selectedRowKeys, record.id]);
-              }
+              const newSelectedRowKeys = selectedRowKeys.includes(record.id)
+                ? selectedRowKeys.filter(id => id !== record.id)
+                : [...selectedRowKeys, record.id];
+              setSelectedRowKeys(newSelectedRowKeys);
+              setSelectedAmount(
+                newSelectedRowKeys.reduce(
+                  (acc, key) => acc + Number(data.find(item => item.id === key)?.amount || 0),
+                  0
+                )
+              );
             },
           };
         }}
