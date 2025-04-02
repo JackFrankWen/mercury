@@ -46,7 +46,7 @@ export enum ConsumerType {
   GRANDPARENTS = 5,
 }
 export const getTagType = (type: number | string): string => {
-  return tag_type[Number(type)] || "未知标签";
+  return tag_type[Number(type)] || "无";
 };
 export const tag_type = {
   1: "日常支出",

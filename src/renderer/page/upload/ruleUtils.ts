@@ -5,6 +5,7 @@ import { RuleFormData } from '../../components/advancedRuleModal';
 import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
 import { RuleItem, RuleItemList, RuleItemListList } from '../setting/advancedRuleFormItem';
 import { I_Transaction } from 'src/main/sqlite3/transactions';
+import { getConsumerType, getTagType } from 'src/renderer/const/web';
 /**
  * Apply user-defined classification rules to transaction data
  */
@@ -97,10 +98,7 @@ function matchRuleItem(transaction: I_Transaction, ruleItem: RuleItem): boolean 
     } else if (ruleItem.formula === 'notlike') {
       const reg = new RegExp(ruleItem.value);
       console.log(transaction[ruleItem.condition], 'transaction[ruleItem.condition] is not like');
-      console.log(
-        reg.test(transaction[ruleItem.condition]),
-        'reg.test(transaction[ruleItem.condition])'
-      );
+      console.log(reg.test(transaction[ruleItem.condition]), 'reg.test(transaction[ruleItem.condition])');
 
       return !reg.test(transaction[ruleItem.condition]);
     }
@@ -129,19 +127,13 @@ function matchRuleItem(transaction: I_Transaction, ruleItem: RuleItem): boolean 
     switch (ruleItem.formula) {
       case 'eq':
         transactionCategory =
-          typeof transaction.category === 'string'
-            ? transaction.category
-            : JSON.stringify(transaction.category);
-        ruleItemValue =
-          typeof ruleItem.value === 'string' ? ruleItem.value : JSON.stringify(ruleItem.value);
+          typeof transaction.category === 'string' ? transaction.category : JSON.stringify(transaction.category);
+        ruleItemValue = typeof ruleItem.value === 'string' ? ruleItem.value : JSON.stringify(ruleItem.value);
         return transactionCategory === ruleItemValue;
       case 'ne':
         transactionCategory =
-          typeof transaction.category === 'string'
-            ? transaction.category
-            : JSON.stringify(transaction.category);
-        ruleItemValue =
-          typeof ruleItem.value === 'string' ? ruleItem.value : JSON.stringify(ruleItem.value);
+          typeof transaction.category === 'string' ? transaction.category : JSON.stringify(transaction.category);
+        ruleItemValue = typeof ruleItem.value === 'string' ? ruleItem.value : JSON.stringify(ruleItem.value);
 
         return transactionCategory !== ruleItemValue;
     }
@@ -179,12 +171,33 @@ function applyRule(transactions: I_Transaction[], rules: AdvancedRule[]) {
         ruleGroup.every(ruleItem => matchRuleItem(transaction, ruleItem))
       );
 
-      if (isMatch && rule.category !== transaction.category) {
+      if (
+        isMatch &&
+        (rule.category !== transaction.category ||
+          rule.tag !== transaction.tag ||
+          rule.consumer !== transaction.consumer)
+      ) {
+        let before = '';
+        let after = '';
+        if (rule.category !== transaction.category) {
+          before = getCategoryString(transaction.category);
+          after = getCategoryString(rule.category);
+        }
+        if (rule.tag !== transaction.tag) {
+          before = before ? before + '、' + getTagType(transaction.tag) : getTagType(transaction.tag);
+          after = after ? after + '、' + getTagType(rule.tag) : getTagType(rule.tag);
+        }
+        if (rule.consumer !== transaction.consumer) {
+          before = before
+            ? before + '、' + getConsumerType(transaction.consumer)
+            : getConsumerType(transaction.consumer);
+          after = after ? after + '、' + getConsumerType(rule.consumer) : getConsumerType(rule.consumer);
+        }
         messageList.push({
           index,
-          message: `第${index + 1}条:(${transaction.payee})(${transaction.description})`,
-          before: getCategoryString(transaction.category),
-          after: getCategoryString(rule.category),
+          message: `第${index + 1}条:${transaction.payee}【${transaction.description}】金额：${transaction.amount}元`,
+          before: before,
+          after: after,
           extra: rule,
         });
 
@@ -221,7 +234,6 @@ export const ruleByAdvanced = async (arr: I_Transaction[], rules: AdvancedRule[]
     console.log(p1MessageList, 'p1MessageList');
     console.log(p10MessageList, 'p10MessageList');
     console.log(p100MessageList, 'p100MessageList');
-
 
     if (p1MessageList.length > 0) {
       openNotification(p1MessageList, api, '规则【P3】');

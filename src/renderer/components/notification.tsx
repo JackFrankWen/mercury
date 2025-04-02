@@ -3,7 +3,7 @@ import { Modal, Alert, Typography, notification, Popover } from "antd";
 import { ExclamationCircleFilled } from "@ant-design/icons";
 import { renderRuleContent } from "src/renderer/page/setting/advancedRule";
 import { AdvancedRule } from "src/main/sqlite3/advance-rules";
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 interface MessageItem {
   index: number;
@@ -24,18 +24,24 @@ export function changeCategoryModal(messageList: MessageItem[], title: string) {
     const extra = item.extra ? JSON.parse(item.extra.rule) : "";
     const name = item.extra ? item.extra.name : "";
     return (
-      <div key={item.index}>
-        <span>{item.message}</span>
-        <Text delete style={{ width: "50px", marginRight: "10px" }}>
-          {item.before}
-        </Text>
-        <Text type="warning">{item.after}</Text>
-        {extra && (
-          <Popover title={`规则名称【${name}】`} content={renderRuleContent(extra)}>
-            <ExclamationCircleFilled style={{ color: "red", marginLeft: "10px" }} />
-          </Popover>
-        )}
-      </div>
+      <Typography key={item.index}>
+        <Paragraph>{item.message}</Paragraph>
+        <Paragraph>
+          <pre>
+            <Text delete>
+              {item.before}
+            </Text>
+            <Text>将替换为</Text>
+
+            <Text mark>{item.after}</Text>
+            {extra && (
+              <Popover title={`规则名称【${name}】`} content={renderRuleContent(extra)}>
+                <ExclamationCircleFilled style={{ color: "red", marginLeft: "10px" }} />
+              </Popover>
+            )}
+          </pre>
+        </Paragraph>
+      </Typography>
     );
   });
 

@@ -234,12 +234,12 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
           </Col>
         </Row>
 
-        <Title level={5} style={{ marginTop: 10 }}>当满足下面任何一个规则组时</Title>
+        <Title level={5} style={{ marginTop: 0 }}>当满足下面任何一个规则组时</Title>
         <Form.Item name="rule">
           <AdvancedRuleFormItem />
         </Form.Item>
 
-        <Title level={5} style={{ marginTop: 10 }}>可更换交易数据中的</Title>
+        <Title level={5} style={{ marginTop: 0 }}>可更换交易数据中的</Title>
 
         <Form.Item name="category" style={{ marginBottom: '12px' }} label="分类" layout={'horizontal'}>
           <Cascader
@@ -259,7 +259,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         </Form.Item>
 
         <Form.Item name="consumer" style={{ marginBottom: '0' }} label="消费者" layout={'horizontal'}>
-          <SelectWrap placeholder="请选择消费者" options={cpt_const.consumes_type} />
+          <SelectWrap placeholder="请选择消费者" options={cpt_const.consumer_type} />
         </Form.Item>
       </div>
 
