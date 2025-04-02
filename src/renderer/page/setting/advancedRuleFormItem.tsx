@@ -29,6 +29,7 @@ function AdvancedRuleFormItem(props: { value: RuleItemListList; onChange: (value
             )}
             <Col span={24}>
               <AdvancedRuleItem
+                groupLength={value.length}
                 data={item}
                 rowKey={index}
                 onChange={newValue => {
@@ -65,13 +66,14 @@ function AdvancedRuleFormItem(props: { value: RuleItemListList; onChange: (value
   );
 }
 function AdvancedRuleItem(props: {
+  groupLength: number;
   onDelete: () => void;
   onAdd: () => void;
   onChange: (newValue: RuleItemList) => void;
   rowKey: number;
   data: RuleItemList;
 }) {
-  const { data, onDelete, onAdd, onChange, rowKey } = props;
+  const { data, onDelete, onAdd, onChange, rowKey, groupLength } = props;
 
   const columns = [
     {
@@ -285,20 +287,22 @@ function AdvancedRuleItem(props: {
         <Typography.Text type={'secondary'}> 表格中所有等式必须同时满足，规则组[{rowKey + 1}]才能生效</Typography.Text>
         <Table columns={columns} dataSource={data} pagination={false} size="small" bordered />
       </Col>
-      <Col span={1} style={{ textAlign: 'center' }}>
-        <DeleteOutlined
-          onClick={onDelete}
-          style={{
-            color: '#ff4d4f',
-            fontSize: '16px',
-            cursor: 'pointer',
-            transition: 'all 0.3s',
-            '&:hover': {
-              opacity: 0.8,
-            },
-          }}
-        />
-      </Col>
+      {groupLength > 1 && (
+        <Col span={1} style={{ textAlign: 'center' }}>
+          <DeleteOutlined
+            onClick={onDelete}
+            style={{
+              color: '#ff4d4f',
+              fontSize: '16px',
+              cursor: 'pointer',
+              transition: 'all 0.3s',
+              '&:hover': {
+                opacity: 0.8,
+              },
+            }}
+          />
+        </Col>
+      )}
     </Row>
   );
 }
