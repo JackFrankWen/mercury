@@ -220,6 +220,18 @@ function AdvancedRuleItem(props: {
             />
           );
         } else if (record.condition === 'category') {
+          console.log(record.value, 'record.value');
+          let calValue = record.value;
+          try {
+            if (record.value && typeof record.value === 'string') {
+              calValue = JSON.parse(record.value);
+            } else {
+              calValue = record.value;
+            }
+          } catch (error) {
+            console.log(error, 'error');
+          }
+
           return (
             <Cascader
               allowClear
@@ -228,7 +240,7 @@ function AdvancedRuleItem(props: {
                   path.some(option => (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1),
               }}
               placeholder="值"
-              value={typeof record.value === 'string' ? JSON.parse(record.value) : record.value}
+              value={calValue}
               options={category_type}
               onChange={value => {
                 onChange(

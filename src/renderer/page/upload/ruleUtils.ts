@@ -81,13 +81,13 @@ function matchRuleItem(transaction: I_Transaction, ruleItem: RuleItem): boolean 
         return transactionAmount === ruleValue;
     }
   } else if (ruleItem.condition === 'account_type') {
-    return transaction.account_type === ruleItem.value;
+    return `${transaction.account_type}` === `${ruleItem.value}`;
   } else if (ruleItem.condition === 'consumer') {
     switch (ruleItem.formula) {
       case 'eq':
-        return transaction.consumer === ruleItem.value;
+        return `${transaction.consumer}` === `${ruleItem.value}`;
       case 'ne':
-        return transaction.consumer !== ruleItem.value;
+        return `${transaction.consumer}` !== `${ruleItem.value}`;
     }
   } else if (ruleItem.condition === 'category') {
     switch (ruleItem.formula) {
@@ -154,19 +154,19 @@ function applyRule(
           rule.consumer !== transaction.consumer)
       ) {
         const changeContent = [];
-        if (rule.category !== transaction.category) {
+        if (rule.category && rule.category !== transaction.category) {
           changeContent.push({
             before: getCategoryString(transaction.category),
             after: getCategoryString(rule.category),
           });
         }
-        if (rule.tag !== transaction.tag) {
+        if (rule.tag && rule.tag !== transaction.tag) {
           changeContent.push({
             before: getTagType(transaction.tag),
             after: getTagType(rule.tag),
           });
         }
-        if (rule.consumer !== transaction.consumer) {
+        if (rule.consumer && rule.consumer !== transaction.consumer) {
           changeContent.push({
             before: getConsumerType(transaction.consumer),
             after: getConsumerType(rule.consumer),

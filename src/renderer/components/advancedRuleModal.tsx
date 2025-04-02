@@ -81,7 +81,7 @@ const validateRuleValue = (rule: RuleItemList): ValidationResult => {
         }
 
         // 验证值的格式（仅当值为字符串时）
-        if (typeof ruleItem.value === 'string') {
+        if (typeof ruleItem.value === 'string' && ruleItem.condition !== 'category') {
           const valueWithoutPipes = ruleItem.value.replace(/\|/g, '');
 
           // 验证特殊字符
