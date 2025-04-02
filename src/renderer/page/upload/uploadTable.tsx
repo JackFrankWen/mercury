@@ -504,8 +504,12 @@ const BasicTable = (props: {
                 messageList.push({
                   index,
                   message: `第 ${index + 1} 条：`,
-                  before: obj.description,
-                  after: matchingItem.description,
+                  changeContent: [
+                    {
+                      before: obj.description,
+                      after: matchingItem.description,
+                    },
+                  ],
                 });
                 return {
                   ...obj,

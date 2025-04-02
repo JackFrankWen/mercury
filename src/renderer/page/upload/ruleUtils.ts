@@ -1,49 +1,11 @@
 import { message } from 'antd';
 import { getCategoryString } from 'src/renderer/const/categroy';
-import { openNotification } from 'src/renderer/components/notification';
+import { MessageItem, openNotification } from 'src/renderer/components/notification';
 import { RuleFormData } from '../../components/advancedRuleModal';
 import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
 import { RuleItem, RuleItemList, RuleItemListList } from '../setting/advancedRuleFormItem';
 import { I_Transaction } from 'src/main/sqlite3/transactions';
 import { getConsumerType, getTagType } from 'src/renderer/const/web';
-/**
- * Apply user-defined classification rules to transaction data
- */
-export const ruleByUser = async (arr: any, api: any) => {
-  const rules = await window.mercury.api.getAllMatchRule();
-  const messageList = [];
-
-  const newData = arr.map((obj: any, index: number) => {
-    // Get the text to match against (description or payee)
-    const matchText = `${obj.description || ''} ${obj.payee || ''}`.trim();
-
-    // Find the first matching rule
-    const matchingRule = rules.find(element => {
-      const reg = new RegExp(element.rule);
-      return reg.test(matchText);
-    });
-
-    // If a rule matches, update the category and notify
-    if (matchingRule && matchingRule.category !== obj.category) {
-      messageList.push({
-        index,
-        message: `第${index + 1}条:(${obj.payee})(${obj.description})`,
-        before: getCategoryString(obj.category),
-        after: getCategoryString(matchingRule.category),
-      });
-      return {
-        ...obj,
-        category: matchingRule.category,
-      };
-    }
-
-    return obj;
-  });
-
-  openNotification(messageList, api);
-  return newData;
-};
-
 /**
  * Apply AI-based classification rules to transaction data
  */
@@ -62,8 +24,12 @@ export const ruleByAi = async (arr: any, api: any) => {
         messageList.push({
           index,
           message: `第${index + 1}条:(${obj.payee})(${obj.description})`,
-          before: getCategoryString(obj.category),
-          after: getCategoryString(matchingRule.category),
+          changeContent: [
+            {
+              before: getCategoryString(obj.category),
+              after: getCategoryString(matchingRule.category),
+            },
+          ],
         });
         return {
           ...obj,
@@ -161,11 +127,14 @@ export function findMatchList(transactions: I_Transaction[], rules: AdvancedRule
 function applyRule(
   transactions: I_Transaction[],
   rules: AdvancedRule[]
-): I_Transaction &
+): {
+  newData: I_Transaction &
   {
     isChanged: true;
     ruleInfo: AdvancedRule;
-  }[] {
+  }[];
+  messageList: MessageItem[];
+}[] {
   const messageList: any[] = [];
 
   const newData = transactions.map((transaction, index) => {
@@ -184,27 +153,31 @@ function applyRule(
           rule.tag !== transaction.tag ||
           rule.consumer !== transaction.consumer)
       ) {
-        let before = '';
-        let after = '';
+        const changeContent = [];
         if (rule.category !== transaction.category) {
-          before = getCategoryString(transaction.category);
-          after = getCategoryString(rule.category);
+          changeContent.push({
+            before: getCategoryString(transaction.category),
+            after: getCategoryString(rule.category),
+          });
         }
         if (rule.tag !== transaction.tag) {
-          before = before ? before + '、' + getTagType(transaction.tag) : getTagType(transaction.tag);
-          after = after ? after + '、' + getTagType(rule.tag) : getTagType(rule.tag);
+          changeContent.push({
+            before: getTagType(transaction.tag),
+            after: getTagType(rule.tag),
+          });
         }
         if (rule.consumer !== transaction.consumer) {
-          before = before
-            ? before + '、' + getConsumerType(transaction.consumer)
-            : getConsumerType(transaction.consumer);
-          after = after ? after + '、' + getConsumerType(rule.consumer) : getConsumerType(rule.consumer);
+          changeContent.push({
+            before: getConsumerType(transaction.consumer),
+            after: getConsumerType(rule.consumer),
+          });
         }
+        console.log(changeContent, 'changeContent');
+
         messageList.push({
           index,
           message: `第${index + 1}条:${transaction.payee}【${transaction.description}】金额：${transaction.amount}元`,
-          before: before,
-          after: after,
+          changeContent,
           extra: rule,
         });
 

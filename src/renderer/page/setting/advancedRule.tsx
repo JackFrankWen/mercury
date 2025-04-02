@@ -209,7 +209,7 @@ const RuleTable = (props: {
     //   width: 90,
     //   render: (val: string) => (val ? (tag_type as TypeMap)[val] : ''),
     // },
-  
+
     {
       title: 'Action',
       key: 'action',
@@ -334,11 +334,7 @@ const RuleTable = (props: {
         <Input.Search placeholder="请输入规则内容、名称" onSearch={onSearch} enterButton />
 
         {type !== 'modal' && <AdvancedNewBtn refresh={refresh} />}
-        {selectedRowKeys.length > 0 && (
-          <div>
-            <span>选择了{selectedRowKeys.length}条</span>
-          </div>
-        )}
+
       </Space>
       <Table
         size="middle"

@@ -227,7 +227,7 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
     return (
       <Space>
         <Button onClick={handleReset}>取消</Button>
-        {currentStep > 0 && <Button onClick={() => setCurrentStep(currentStep - 1)}>上一步</Button>}
+        {currentStep > 0 && <Button onClick={() => setCurrentStep(0)}>上一步</Button>}
         {currentStep < 2 ? (
           <Button
             type="primary"
@@ -235,7 +235,7 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
             disabled={currentStep === 0 && (selectedRule.length === 0 || data.length === 0)}
             loading={loading}
           >
-            下一步
+            下一步 ({selectedRule.length})
           </Button>
         ) : (
           <Button
@@ -264,8 +264,8 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
       {contextHolder}
       <Steps current={currentStep} className="mb-8">
         <Step title="选择规则" />
-        <Step title="查看数据" />
-        <Step title="确认提交" />
+        <Step title="选择数据" />
+        <Step title="" />
       </Steps>
       <div className="step-content">{renderStepContent()}</div>
     </Modal>

@@ -21,7 +21,7 @@ import { renderRuleContent } from "./advancedRule";
 import type { Params_Transaction } from "src/preload/type";
 import dayjs from "dayjs";
 import { getCategoryString } from "../../const/categroy";
-import { openNotification, changeCategoryModal } from "../../components/notification";
+import { changeCategoryModal, MessageItem } from "../../components/notification";
 import RangePickerWrap from "../../components/rangePickerWrap";
 import { findMatchList } from "../upload/ruleUtils";
 import { getConsumerType, getTagType } from "src/renderer/const/web";
@@ -43,14 +43,6 @@ interface DataPreviewItem {
   trans_time: string;
 }
 
-interface ResultItem {
-  index: number;
-  message: string;
-  before: string;
-  after: string;
-  extra?: any;
-}
-
 const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
   visible,
   rule,
@@ -61,7 +53,7 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const [previewData, setPreviewData] = useState<DataPreviewItem[]>([]);
-  const [results, setResults] = useState<ResultItem[]>([]);
+  const [results, setResults] = useState<MessageItem[]>([]);
   const [api, contextHolder] = message.useMessage();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [dataSource, setDataSource] = useState<any[]>([]);
