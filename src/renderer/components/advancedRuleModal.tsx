@@ -23,85 +23,118 @@ export type RuleFormData = {
   tag?: string;
 };
 
-// 添加校验规则值的函数
-const validateRuleValue = (rule: RuleItemList): { isValid: boolean; message: string } => {
-  // 遍历每个规则组（或条件组）
-  for (let i = 0; i < rule.length; i++) {
-    const ruleGroup = rule[i];
-    // 遍历每个规则项（且条件组）
-    for (let j = 0; j < ruleGroup.length; j++) {
-      const ruleItem = ruleGroup[j];
+// 定义验证错误类型
+type ValidationResult = {
+  isValid: boolean;
+  message: string;
+};
 
-      // 跳过特殊字段的验证（amount、category等）
-      if (['amount', 'category', 'account_type', 'consumer'].includes(ruleItem.condition)) {
-        continue;
-      }
 
-      if (typeof ruleItem.value === 'string') {
-        // 检查是否包含除了 | 以外的特殊字符
-        const specialCharsRegex = /[~!@#$%^&*()+=<>?:"{},.\/;'\\[\]]/;
-        if (specialCharsRegex.test(ruleItem.value.replace(/\|/g, ''))) {
-          return {
-            isValid: false,
-            message: `规则组 ${i + 1} 的第 ${j + 1} 项包含不允许的特殊字符`,
-          };
+// 定义特殊字符验证规则
+const VALIDATION_RULES = {
+  specialChars: {
+    pattern: /[~!@#$%^&*()+=<>?:"{},.\/;'\\[\]]/,
+    message: '包含不允许的特殊字符',
+  },
+  chinesePipe: {
+    pattern: /｜/,
+    message: '包含中文的｜符号，请使用英文的|符号',
+  },
+  endingPipe: {
+    pattern: /\|$/,
+    message: '不能以 | 符号结尾',
+  },
+};
+
+const validateRuleValue = (rule: RuleItemList): ValidationResult => {
+  console.log(rule, 'rule===');
+
+  try {
+    // 遍历每个规则组（或条件组）
+    for (const [groupIndex, ruleGroup] of rule.entries()) {
+      // 遍历每个规则项（且条件组）
+      console.log(ruleGroup, 'ruleGroup==');
+      for (const [itemIndex, ruleItem] of ruleGroup.entries()) {
+        const rulePosition = `规则组 ${groupIndex + 1} 的第 ${itemIndex + 1} 行`;
+
+        // 跳过特殊字段的验证
+        // if (SKIP_VALIDATION_FIELDS.includes(ruleItem.condition as any)) {
+        //   continue;
+        // }
+
+        // 检查必填字段
+        const requiredFields = {
+          condition: '条件',
+          formula: '公式',
+          value: '值',
+        } as const;
+        console.log(ruleItem, '检查第', itemIndex, '行');
+
+        for (const [field, fieldName] of Object.entries(requiredFields)) {
+
+          if (!ruleItem[field as keyof typeof requiredFields]) {
+            return {
+              isValid: false,
+              message: `${rulePosition} 【${fieldName}】不能为空`,
+            };
+          }
         }
 
-        // 检查是否以 | 结尾
-        if (ruleItem.value.endsWith('|')) {
-          return {
-            isValid: false,
-            message: `规则组 ${i + 1} 的第 ${j + 1} 项不能以 | 符号结尾`,
-          };
-        }
-        if (ruleItem.value === '') {
-          return {
-            isValid: false,
-            message: `规则组 ${i + 1} 的第 ${j + 1} 项不能为空`,
-          };
+        // 验证值的格式（仅当值为字符串时）
+        if (typeof ruleItem.value === 'string') {
+          const valueWithoutPipes = ruleItem.value.replace(/\|/g, '');
+
+          // 验证特殊字符
+          for (const [key, { pattern, message }] of Object.entries(VALIDATION_RULES)) {
+            const testValue = key === 'endingPipe' ? ruleItem.value : valueWithoutPipes;
+            if (pattern.test(testValue)) {
+              return {
+                isValid: false,
+                message: `${rulePosition}中值${message}`,
+              };
+            }
+          }
         }
       }
     }
-  }
 
-  return { isValid: true, message: '' };
+    return { isValid: true, message: '' };
+  } catch (error) {
+    console.error('Rule validation error:', error);
+    return {
+      isValid: false,
+      message: '规则验证过程中发生错误',
+    };
+  }
 };
 
 const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: () => void }) => {
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+  const [messageApi, contextHolderMsg] = message.useMessage();
+
   const [LoadingBtn, , setLoadingFalse] = useLoadingButton();
 
   const { data = {} as AdvancedRule } = props;
-  const onFormLayoutChange = (value: { category: [number, number] }) => {
-    console.log(value, 'onFormLayoutChange');
 
-    // if (category) {
-    //   const found = category_type.find((val) => val.value === category[0])
-    //   if (found) {
-    //     // @ts-ignore
-    //     const obj = found.children.find((val) => val.value === category[1])
-    //     if (obj) {
-    //       Object.keys(obj).forEach((key) => {
-    //         console.log(key)
-    //         if (!['value', 'label'].includes(key)) {
-    //           form.setFieldValue(key, obj[key])
-    //         }
-    //       })
-    //     }
-    //   }
-    // }
-  };
   const submitRule = async () => {
-    const { data, refresh } = props;
 
     try {
-      const formValue = await form.validateFields();
+
+      const { data, refresh } = props;
+      const formValue = await form.getFieldsValue();
+      if (!formValue.name) {
+        setLoadingFalse();
+        messageApi.error('规则名称未填写')
+        return;
+      }
+
       if (!formValue.category && !formValue.consumer && !formValue.tag) {
-        message.error('分类、消费者、标签至少选择一项');
+        messageApi.error('分类、消费者、标签至少选择一项');
         setLoadingFalse();
         return;
       }
+
 
       // 添加规则值的校验
       const validation = validateRuleValue(formValue.rule);
@@ -111,7 +144,6 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         return;
       }
 
-      console.log(formValue, 'formValue ');
       let res: any;
 
       if (data?.id) {
@@ -133,16 +165,16 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       }
 
       if (res?.code === 200) {
-        message.success('操作成功');
+        messageApi.success('操作成功');
         setLoadingFalse();
         props.onCancel();
         form.resetFields();
         refresh();
       }
     } catch (error) {
+      message.error(error);
       console.log(error);
       setLoadingFalse();
-      message.error(error);
     }
   };
 
@@ -211,6 +243,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       }}
     >
       {contextHolder}
+      {contextHolderMsg}
       {/* 基本信息区块 */}
       <div
         style={{
@@ -275,13 +308,14 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       >
         <Space size="middle">
           <Button onClick={props.onCancel}>取消</Button>
-          <Button danger onClick={testRule} icon={<span className="fas fa-vial" style={{ marginRight: '4px' }} />}>
-            测试规则
+          <Button danger onClick={testRule}>
+            测试规则1
           </Button>
           <LoadingBtn
             type="primary"
-            onClick={submitRule}
-            icon={<span className="fas fa-save" style={{ marginRight: '4px' }} />}
+            onClick={() => {
+              submitRule()
+            }}
           >
             保存规则
           </LoadingBtn>
