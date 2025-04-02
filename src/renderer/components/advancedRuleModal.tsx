@@ -309,7 +309,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
         <Space size="middle">
           <Button onClick={props.onCancel}>取消</Button>
           <Button danger onClick={testRule}>
-            测试规则1
+            测试规则
           </Button>
           <LoadingBtn
             type="primary"
