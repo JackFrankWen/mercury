@@ -18,7 +18,7 @@ import { ModalContent } from './ModalContent';
 import { AccountBookFilled } from '@ant-design/icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { category_type, findCategoryById } from '../../const/categroy';
-import { formatMoney } from '../../components/utils';
+import { formatMoneyObj } from '../../components/utils';
 import { renderIcon } from '../../components/FontIcon';
 import BarChart from 'src/renderer/components/barChart';
 import { FormData } from './useReviewForm';
@@ -75,7 +75,7 @@ const Item = (props: {
         </Col>
       </Row>
       <Col>
-        <Typography.Text>{formatMoney(total)}</Typography.Text>
+        <Typography.Text>{formatMoneyObj({ amount: total })}</Typography.Text>
       </Col>
     </Row>
   );
@@ -184,7 +184,11 @@ const CategoryCollaspe = (props: {
               >
                 {item.name}
               </Typography.Text>
-              <Typography.Text>{formatMoney(item.value, '万')}</Typography.Text>
+              <Typography.Text>{formatMoneyObj({
+                amount: item.value,
+                autoUnit: true,
+                decimalPlaces: 0,
+              })}</Typography.Text>
             </Row>
             <Row justify="space-between">
               <Col flex="auto">

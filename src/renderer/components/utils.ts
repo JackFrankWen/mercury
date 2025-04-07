@@ -115,8 +115,8 @@ export function formatMoneyObj({
 
   // For units (万/千/亿), format with one decimal place
   const formatted = result.toLocaleString("zh-CN", {
-    minimumFractionDigits: decimalPlaces,
-    maximumFractionDigits: decimalPlaces,
+    minimumFractionDigits: amount > 10000 ? 2 : decimalPlaces,
+    maximumFractionDigits: amount > 10000 ? 2 : decimalPlaces,
   });
 
   // Remove .0 if present
