@@ -11,6 +11,7 @@ import emitter from 'src/renderer/events';
 import { category_type } from 'src/renderer/const/categroy';
 import { DefaultOptionType } from 'antd/es/cascader';
 import { renderIcon } from 'src/renderer/components/FontIcon';
+import useExtraControls from 'src/renderer/components/useExtraControls';
 
 function YearBarChart(props: { formValue: FormData }) {
   const { formValue } = props;
@@ -18,23 +19,14 @@ function YearBarChart(props: { formValue: FormData }) {
   const [data, setData] = useState<{ date: string; total: number }[]>([]);
   const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>([]);
   const [visible, setVisible] = useState(false);
-  const [categoryVal, setCategoryVal] = useState<string[]>([]);
-  const [year, setYear] = useState('')
-  const [consumerVal, ConsumerCpt] = useSelect({
-    options: cpt_const.consumer_type,
-    placeholder: '消费者',
-  });
-  const [accountTypeVal, AccountTypeCpt] = useSelect({
-    options: cpt_const.account_type,
-    placeholder: '账户类型',
-  });
-  const [paymentTypeVal, PaymentTypeCpt] = useSelect({
-    options: cpt_const.payment_type,
-    placeholder: '支付方式',
-  });
-  const [tagVal, TagCpt] = useSelect({
-    options: cpt_const.tag_type,
-    placeholder: '标签',
+  const [year, setYear] = useState('');
+
+  const [
+    extraComponent,
+    { categoryVal, accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt },
+  ] = useExtraControls({
+    category_type,
+    onFilterClick: () => setVisible(true),
   });
 
   useFresh(
@@ -63,61 +55,6 @@ function YearBarChart(props: { formValue: FormData }) {
     'transaction'
   );
 
-  const hasSearchInModal = useMemo(() => {
-    // 如果 paymentTypeVal, tagVal, categoryVal三个都没有值返回false
-    console.log(paymentTypeVal, tagVal, categoryVal, 'aaaa====');
-    if (!paymentTypeVal && !tagVal) {
-      return false;
-    }
-    return true;
-  }, [paymentTypeVal, tagVal, categoryVal]);
-  const extra = (
-    <Space>
-      <Cascader
-        options={category_type}
-        allowClear
-        multiple
-        value={categoryVal}
-        style={{ width: '100px' }}
-        onChange={val => setCategoryVal(val)}
-        placeholder="分类"
-        showSearch={{
-          filter: (inputValue: string, path: DefaultOptionType[]) =>
-            path.some(
-              option =>
-                (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) >
-                -1
-            ),
-        }}
-      />
-      {AccountTypeCpt}
-      {ConsumerCpt}
-      {hasSearchInModal ? (
-        <FilterFilled
-          style={{
-            color: token.colorPrimary,
-            fontSize: 16,
-            cursor: 'pointer',
-            transition: 'all 0.3s'
-          }}
-          onClick={() => setVisible(true)}
-        />
-      ) : (
-        <EllipsisOutlined
-          style={{
-            color: '#999',
-            fontSize: 16,
-            cursor: 'pointer',
-            transition: 'all 0.3s',
-            '&:hover': {
-              color: token.colorPrimary
-            }
-          }}
-          onClick={() => setVisible(true)}
-        />
-      )}
-    </Space>
-  );
   const fetchData = async obj => {
     if (!obj) return;
 
@@ -128,11 +65,9 @@ function YearBarChart(props: { formValue: FormData }) {
       message.error(error);
     }
   };
-  const fetchDailyAmount = async obj => {
-    console.log(obj, 'objaaaa====');
+  const fetchDailyAmount = async (obj: any) => {
     try {
       const result = await window.mercury.api.getDailyTransactionAmounts(obj);
-      console.log(result, 'result====');
       setDaliyData(result);
     } catch (error) {
       message.error(error);
@@ -151,13 +86,12 @@ function YearBarChart(props: { formValue: FormData }) {
   console.log(visible, 'aaaa====');
   return (
     <div className="mt8">
-      <Card title={cardTitle()} bordered={false} hoverable extra={extra}>
+      <Card title={cardTitle()} bordered={false} hoverable extra={extraComponent}>
         {visible && (
           <Modal title="高级搜索" open={visible} onCancel={() => setVisible(false)} footer={null}>
             <Flex vertical gap={16}>
               {PaymentTypeCpt}
               {TagCpt}
-
             </Flex>
           </Modal>
         )}
@@ -167,10 +101,10 @@ function YearBarChart(props: { formValue: FormData }) {
           </>
         ) : (
           <>
-            {
-              year && (
-                <Flex justify='center'>
-                  <span style={{
+            {year && (
+              <Flex justify="center">
+                <span
+                  style={{
                     cursor: 'pointer',
                     padding: '4px 10px',
                     marginTop: -14,
@@ -183,24 +117,23 @@ function YearBarChart(props: { formValue: FormData }) {
                     gap: '4px',
                     transition: 'all 0.2s',
                     boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
-                  }} onClick={() => {
-                    setYear('')
+                  }}
+                  onClick={() => {
+                    setYear('');
                     emitter.emit('updateDate', {
                       date: year,
                       trans_time: [`${year}-01-01 00:00:00`, `${year}-12-31 23:59:59`],
                       type: 'year',
-                    })
-
+                    });
                   }}
-                    onMouseOver={(e) => e.currentTarget.style.background = '#ececec'}
-                    onMouseOut={(e) => e.currentTarget.style.background = '#f5f5f5'}
-                  >
-                    {renderIcon('fas fa-arrow-rotate-left', '#888888')}
-                    返回年度
-                  </span>
-                </Flex>
-              )
-            }
+                  onMouseOver={e => (e.currentTarget.style.background = '#ececec')}
+                  onMouseOut={e => (e.currentTarget.style.background = '#f5f5f5')}
+                >
+                  {renderIcon('fas fa-arrow-rotate-left', '#888888')}
+                  返回年度
+                </span>
+              </Flex>
+            )}
 
             <LunarCalendar
               formValue={{

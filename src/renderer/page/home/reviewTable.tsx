@@ -1,4 +1,4 @@
-import { Card, Col, Row, Space, Flex, Tabs } from 'antd';
+import { Card, Col, Row, Space, Flex, Tabs, Modal } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import CategoryTable from './categoryTable';
 import { useSelect } from '../../components/useSelect';
@@ -8,6 +8,8 @@ import { CategoryReturnType } from 'src/preload/index';
 import CategoryCollaspe from './categoryCollaspe';
 import { useFresh } from 'src/renderer/components/useFresh';
 import emitter from 'src/renderer/events';
+import { category_type } from 'src/renderer/const/categroy';
+import useExtraControls from 'src/renderer/components/useExtraControls';
 // 写一个方法  CategoryReturnType中 child 每一条数据    转化成 PieChart 的 data 用reduce
 // 转化 {value: item.child.value, name: item.child.name, type: item.    value}
 
@@ -45,18 +47,16 @@ const Tab1Content = ({ category, formValue, refreshTable }) => {
 
 function TableSection(props: { formValue: any }) {
   const { formValue } = props;
-  const [consumerVal, ConsumerCpt] = useSelect({
-    options: cpt_const.consumer_type,
-    placeholder: '消费者',
-  });
+  const [visible, setVisible] = useState(false);
 
-  const [accountTypeVal, accountTypeCpt] = useSelect({
-    options: cpt_const.account_type,
-    placeholder: '账户类型',
-  });
-  const [paymentVal, PaymentCpt] = useSelect({
-    options: cpt_const.payment_type,
-    placeholder: '支付方式',
+  const [
+    extraComponent,
+    { categoryVal, accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt },
+  ] = useExtraControls({
+    category_type,
+    showCategory: false,
+
+    onFilterClick: () => setVisible(true),
   });
 
   const [category, setCategory] = useState<CategoryReturnType>([]);
@@ -86,31 +86,18 @@ function TableSection(props: { formValue: any }) {
         ...formValue,
         consumer: consumerVal,
         account_type: accountTypeVal,
-        payment_type: paymentVal,
+        payment_type: paymentTypeVal,
+        category: categoryVal,
+        tag: tagVal,
       });
     },
-    [formValue, consumerVal, accountTypeVal, paymentVal],
+    [formValue, consumerVal, accountTypeVal, paymentTypeVal, categoryVal, tagVal],
     'transaction'
   );
 
-  const extra = (
-    <>
-      <Space>
-        {accountTypeCpt}
-        {ConsumerCpt}
-        {PaymentCpt}
-      </Space>
-    </>
-  );
   const refreshTable = () => {
-    // getCategory({
-    //   ...formValue,
-    //   consumer: consumerVal,
-    //   account_type: accountTypeVal,
-    //   payment_type: paymentVal,
-    // });
     emitter.emit('refresh', 'transaction');
-  }
+  };
   // 定义标签页配置
   const tabList = [
     {
@@ -132,7 +119,9 @@ function TableSection(props: { formValue: any }) {
           ...formValue,
           consumer: consumerVal,
           account_type: accountTypeVal,
-          payment_type: paymentVal,
+          payment_type: paymentTypeVal,
+          category: categoryVal,
+          tag: tagVal,
         }}
         refreshTable={refreshTable}
       />
@@ -144,24 +133,35 @@ function TableSection(props: { formValue: any }) {
           ...formValue,
           consumer: consumerVal,
           account_type: accountTypeVal,
-          payment_type: paymentVal,
+          payment_type: paymentTypeVal,
+          category: categoryVal,
+          tag: tagVal,
         }}
         refreshTable={refreshTable}
       />
     ),
   };
 
-  return (
+  return (<>
+    {visible && (
+      <Modal title="高级搜索" open={visible} onCancel={() => setVisible(false)} footer={null}>
+        <Flex vertical gap={16}>
+          {PaymentTypeCpt}
+          {TagCpt}
+        </Flex>
+      </Modal>
+    )}
     <Card
       hoverable
       bordered={false}
-      tabBarExtraContent={extra}
+      tabBarExtraContent={extraComponent}
       tabList={tabList}
       activeTabKey={activeTabKey}
       onTabChange={handleTabChange}
     >
       {contentList[activeTabKey]}
     </Card>
-  );
+  </>);
+
 }
 export default TableSection;
