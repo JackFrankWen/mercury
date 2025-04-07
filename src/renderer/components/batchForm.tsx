@@ -51,7 +51,7 @@ const BatchUpdateArea = (props: { formValues: any; setFormValues: (values: any) 
 
                   form.setFieldsValue({
                     account_type: undefined,
-                    payment_type: undefined,
+                    // payment_type: undefined,
                     tag: toNumberOrUndefiend(obj?.tag),
                     consumer: toNumberOrUndefiend(obj?.consumer),
                   });
@@ -59,17 +59,17 @@ const BatchUpdateArea = (props: { formValues: any; setFormValues: (values: any) 
               }
             }}
             allowClear
-            placeholder="请选择分类"
+            placeholder="分类"
           />
         </Form.Item>
         <Form.Item name="tag" className="no-margin">
-          <SelectWrap placeholder="标签" options={cpt_const.tag_type} />
+          <SelectWrap placeholder="标签" options={cpt_const.tag_type} style={{ minWidth: "100px" }} />
         </Form.Item>
-        <Form.Item name="payment_type" className="no-margin">
+        {/* <Form.Item name="payment_type" className="no-margin">
           <SelectWrap placeholder="付款方式" options={cpt_const.payment_type} />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item name="consumer" className="no-margin">
-          <SelectWrap placeholder="消费成员" options={cpt_const.consumer_type} />
+          <SelectWrap placeholder="消费成员" options={cpt_const.consumer_type} style={{ minWidth: "100px" }} />
         </Form.Item>
         <Form.Item name="amount" className="no-margin">
           <InputNumber placeholder="金额" />

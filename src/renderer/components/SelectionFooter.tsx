@@ -1,4 +1,4 @@
-import { Button, Col, Row, Space, Popconfirm, Typography } from "antd";
+import { Button, Col, Row, Space, Popconfirm, Typography, Flex } from "antd";
 import React, { useState } from "react";
 import { I_Transaction } from "src/main/sqlite3/transactions";
 import BatchUpdateArea from "src/renderer/components/batchForm";
@@ -26,23 +26,23 @@ export function SelectionFooter({
   };
   return (
     <Row className={`table-footer ${className}`}>
-      <Col span={24}>
+      <Row justify="space-between" style={{ width: "100%" }}>
         <BatchUpdateArea formValues={formValues} setFormValues={setFormValues} />
-      </Col>
+        <Space.Compact style={{ textAlign: "right" }}>
+          <Button onClick={onCancel}>取消</Button>
+          <Popconfirm title="确定删除吗？" onConfirm={onDelete}>
+            <Button danger>批量删除</Button>
+          </Popconfirm>
+          <Button type="primary" onClick={() => onUpdate(removeUndefined(formValues))}>
+            批量修改
+          </Button>
+        </Space.Compact>
+      </Row>
       <Col span={24} className="mt8">
-        <Row justify="space-between">
+        <Row justify="space-between" >
           <div>
             选择 {selectedCount}个，金额：<Typography.Text strong>¥{formatMoney(selectedAmount)}</Typography.Text>
           </div>
-          <Space.Compact>
-            <Button onClick={onCancel}>取消</Button>
-            <Popconfirm title="确定删除吗？" onConfirm={onDelete}>
-              <Button danger>批量删除</Button>
-            </Popconfirm>
-            <Button type="primary" onClick={() => onUpdate(removeUndefined(formValues))}>
-              批量修改
-            </Button>
-          </Space.Compact>
         </Row>
       </Col>
     </Row>

@@ -80,7 +80,7 @@ function YearBarChart(props: { formValue: FormData }) {
         value={categoryVal}
         style={{ width: '100px' }}
         onChange={val => setCategoryVal(val)}
-        placeholder="请选择分类"
+        placeholder="分类"
         showSearch={{
           filter: (inputValue: string, path: DefaultOptionType[]) =>
             path.some(
