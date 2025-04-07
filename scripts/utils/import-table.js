@@ -47,7 +47,7 @@ function createRuleAutoTable() {
         payment_type TEXT,
         consumer TEXT,
         tag TEXT,
-        creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+        creation_time DATETIME DEFAULT (datetime('now', '+8 hours')),
         modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
     )
 `;
@@ -68,7 +68,7 @@ function createRuleTable() {
             category TEXT,
             consumer TEXT,
             tag TEXT,
-            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+            creation_time DATETIME DEFAULT (datetime('now', '+8 hours')),
             modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     `;
@@ -97,8 +97,8 @@ function createAdvancedRuleTable() {
             tag TEXT,
             active INTEGER,
             priority INTEGER,
-            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-            modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
+            creation_time DATETIME DEFAULT (datetime('now', '+8 hours')),
+            modification_time DATETIME DEFAULT (datetime('now', '+8 hours'))
         )
     `;
   return executeSQL(sql);
@@ -119,8 +119,8 @@ function createTransactionTable() {
             account_name TEXT,
             tag TEXT,
             trans_time DATETIME,
-            creation_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-            modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
+            creation_time DATETIME DEFAULT (datetime('now', '+8 hours')),
+            modification_time DATETIME DEFAULT (datetime('now', '+8 hours'))
         )
     `;
   return executeSQL(sql);
@@ -142,10 +142,14 @@ function executeSQL(sql) {
 // 检查表是否存在
 async function checkTableExists(tableName) {
   return new Promise((resolve, reject) => {
-    db.get("SELECT name FROM sqlite_master WHERE type='table' AND name=?", [tableName], (err, row) => {
-      if (err) reject(err);
-      resolve(!!row);
-    });
+    db.get(
+      "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+      [tableName],
+      (err, row) => {
+        if (err) reject(err);
+        resolve(!!row);
+      }
+    );
   });
 }
 
