@@ -182,7 +182,7 @@ const columns: ColumnsType<I_Transaction> = [
     width: 200,
     key: 'creation_time',
     ellipsis: true,
-    render: renderTimeSqlite,
+    render: renderTime,
   },
   {
     title: '最后修改',
@@ -191,7 +191,7 @@ const columns: ColumnsType<I_Transaction> = [
     width: 200,
     key: 'modification_time',
     ellipsis: true,
-    render: renderTimeSqlite,
+    render: renderTime,
   },
 ];
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];

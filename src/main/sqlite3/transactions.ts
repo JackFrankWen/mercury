@@ -37,7 +37,7 @@ export async function batchReplaceTransactions(
       account_type, payment_type, consumer, flow_type, 
       tag, trans_time, account_name,
       creation_time, modification_time
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', '+8 hours'))`;
 
     // 使用 Promise.all 并行处理插入操作
     await Promise.all(
@@ -161,7 +161,7 @@ export async function updateTransactions(
       .map((key) => `${key} = ?`)
       .join(
         ",",
-      )}, modification_time = CURRENT_TIMESTAMP WHERE id IN (${placeholders})`;
+      )}, modification_time = datetime('now', '+8 hours') WHERE id IN (${placeholders})`;
 
     // Execute the SQL query to update the transactions
     await new Promise<void>((resolve, reject) => {
