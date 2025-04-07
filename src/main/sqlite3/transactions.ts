@@ -60,7 +60,6 @@ export async function batchReplaceTransactions(
                 transaction.trans_time,
                 transaction.account_name || '',
                 transaction.creation_time,
-                transaction.modification_time,
               ],
               (err) => (err ? reject(err) : resolve()),
             );
