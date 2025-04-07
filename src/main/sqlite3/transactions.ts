@@ -95,7 +95,6 @@ export const getAllTransactions = async (
       ${whereClause}
       ORDER BY trans_time DESC
     `;
-    console.log(sql, 'sql=ooooooo===');
 
     if (params.page !== undefined && params.page_size !== undefined) {
       const offset = (params.page - 1) * params.page_size;
@@ -190,8 +189,8 @@ export async function batchInsertTransactions(
       amount, category, description, payee, account_type, 
       payment_type, consumer, flow_type, tag, 
       account_name,
-      trans_time, creation_time, modification_time
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
+      trans_time
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     for (const transaction of list) {
       await new Promise<void>((resolve, reject) => {
@@ -361,41 +360,76 @@ export async function getCategoryTotal(
 // 新增单条交易记录
 export async function insertTransaction(
   transaction: Partial<I_Transaction>,
-): Promise<void> {
+): Promise<{ id: number; success: boolean; message: string }> {
   try {
     const db = await getDbInstance();
+
+    // 修复SQL语句：添加missing字段(creation_time, modification_time)并调整字段数量
     const sql = `INSERT INTO transactions (
       amount, category, description, payee, account_type, 
       payment_type, consumer, flow_type, tag, account_name,
       trans_time, creation_time, modification_time
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`;
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', '+8 hours'), datetime('now', '+8 hours'))`;
 
-    await new Promise<void>((resolve, reject) => {
+    // 数据验证
+    if (transaction.amount === undefined || transaction.amount === null) {
+      return { id: 0, success: false, message: '金额不能为空' };
+    }
+
+    // 获取插入的ID和执行结果
+    const result = await new Promise<{ lastID: number; changes: number }>((resolve, reject) => {
       db.run(
         sql,
         [
           transaction.amount,
-          transaction.category || "[100000,100003]",
-          transaction.description,
-          transaction.payee,
-          transaction.account_type,
-          transaction.payment_type,
-          transaction.consumer,
-          transaction.flow_type,
-          transaction.tag,
+          transaction.category || '[100000,100003]',
+          transaction.description || '',
+          transaction.payee || '',
+          transaction.account_type || '',
+          transaction.payment_type || '',
+          transaction.consumer || '',
+          transaction.flow_type || '',
+          transaction.tag || '',
           transaction.account_name || '',
-          transaction.trans_time || new Date().toISOString(),
+          transaction.trans_time || datetime('now', '+8 hours'), // 使用上海时区
         ],
-        (err) => {
-          if (err) reject(err);
-          else resolve();
-        },
+        function (err) {
+          if (err) {
+            console.error('Error inserting transaction:', err);
+            reject(err);
+            return;
+          }
+          // this.lastID 包含新插入记录的ID
+          // this.changes 包含受影响的行数
+          resolve({ lastID: this.lastID, changes: this.changes });
+        }
       );
     });
+
+    console.log(`Transaction inserted successfully with ID: ${result.lastID}`);
+    return {
+      id: result.lastID,
+      success: true,
+      message: `交易记录已成功添加，ID: ${result.lastID}`
+    };
   } catch (error) {
-    console.error("Error inserting transaction:", error);
-    throw error;
+    console.error('Error inserting transaction:', error);
+    return {
+      id: 0,
+      success: false,
+      message: error instanceof Error ? error.message : '添加交易记录时发生未知错误'
+    };
   }
+}
+
+// 帮助函数：获取上海时区的日期时间
+function datetime(modifier: string, timezone: string): string {
+  const date = new Date();
+  if (timezone === '+8 hours') {
+    // 调整为中国上海时区 (UTC+8)
+    date.setHours(date.getHours() + 8);
+  }
+  return date.toISOString().replace('T', ' ').split('.')[0];
 }
 
 // 查询transaction 的所有数据，并且返回 [{date: '2022-02', total: 111}]
