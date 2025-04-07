@@ -106,7 +106,7 @@ function BasicContent() {
               [timeType]:
                 timeType === 'trans_time'
                   ? [startDate, endDate]
-                  : creationTime,
+                  : dayjs(creationTime).subtract(8, 'hours').format('YYYY-MM-DD HH:mm:ss'),
             };
             console.log(params, 'params');
 

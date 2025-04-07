@@ -6,6 +6,7 @@ import { Params_Transaction } from 'src/preload/index';
 import './index.css';
 import dayjs from 'dayjs';
 import emitter from 'src/renderer/events';
+import { useFresh } from 'src/renderer/components/useFresh';
 export interface I_FormValue extends Params_Transaction {
   chose_unclassified: string;
   trans_time?: [string, string]
@@ -20,12 +21,12 @@ function Accounting(): JSX.Element {
     //   dayjs().endOf('year').format('YYYY-MM-DD HH:mm:ss'),
     // ],
   });
-  useEffect(() => {
+  useFresh(() => {
     getTransactions({
       ...formValue,
       is_unclassified: formValue.chose_unclassified === 'unclassified',
     });
-  }, []);
+  }, [], 'transaction');
   const getTransactions = (params: Params_Transaction) => {
     // 如果 trans_time [object, object] 则转换为 [string, string]
 

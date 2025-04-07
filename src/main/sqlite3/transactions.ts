@@ -535,31 +535,37 @@ export async function getAccountPaymentTotal(
 // 删除所有交易数据
 export async function deleteAllTransactions(
   params: Params_Transaction,
-): Promise<{ code: number; message: string }> {
+): Promise<{ code: number; message: string; deletedCount: number }> {
   try {
     const db = await getDbInstance();
 
     const { whereClause } = generateWhereClause(params);
     console.log(whereClause, 'whereClause');
 
-    await new Promise<void>((resolve, reject) => {
-      db.run(`DELETE FROM transactions ${whereClause}`, (err) => {
+    // 使用db.run的回调函数中的this.changes来获取删除的行数
+    const deletedCount = await new Promise<number>((resolve, reject) => {
+      db.run(`DELETE FROM transactions ${whereClause}`, function (err) {
         if (err) {
-          console.error("Error deleting all transactions:", err);
+          console.error('Error deleting all transactions:', err);
           reject(err);
           return;
         }
-        resolve();
+        // this.changes包含受影响的行数
+        resolve(this.changes);
       });
     });
 
-    return { code: 200, message: "所有交易数据已成功删除" };
+    return {
+      code: 200,
+      message: `成功删除 ${deletedCount} 条交易数据`,
+      deletedCount
+    };
   } catch (error) {
-    console.error("Error deleting all transactions:", error);
+    console.error('Error deleting all transactions:', error);
     return {
       code: 500,
-      message:
-        error instanceof Error ? error.message : "删除交易数据时发生未知错误",
+      message: error instanceof Error ? error.message : '删除交易数据时发生未知错误',
+      deletedCount: 0
     };
   }
 }
