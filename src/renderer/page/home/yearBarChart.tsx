@@ -66,7 +66,7 @@ function YearBarChart(props: { formValue: FormData }) {
   const hasSearchInModal = useMemo(() => {
     // 如果 paymentTypeVal, tagVal, categoryVal三个都没有值返回false
     console.log(paymentTypeVal, tagVal, categoryVal, 'aaaa====');
-    if (!paymentTypeVal && !tagVal && categoryVal.length === 0) {
+    if (!paymentTypeVal && !tagVal) {
       return false;
     }
     return true;

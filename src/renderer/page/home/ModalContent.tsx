@@ -193,7 +193,7 @@ export function ModalContent({
     () => [
       {
         title: '交易时间',
-        width: 160,
+        width: 170,
         dataIndex: 'trans_time',
         key: 'trans_time',
         render: (val: string) => dayjs(val).format('YYYY-MM-DD HH:mm:ss'),
@@ -204,7 +204,7 @@ export function ModalContent({
       {
         title: '金额',
         dataIndex: 'amount',
-        width: 80,
+        width: 90,
         sorter: (a: I_Transaction, b: I_Transaction) => Number(a.amount) - Number(b.amount),
         render: (txt: string) => {
           if (Number(txt) > 100) {
