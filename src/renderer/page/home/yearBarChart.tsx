@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { EllipsisOutlined, FilterFilled } from '@ant-design/icons';
 import BarChart from 'src/renderer/components/barChart';
 import { Card, Cascader, Flex, message, Modal, Space, theme } from 'antd';
@@ -13,21 +13,22 @@ import { DefaultOptionType } from 'antd/es/cascader';
 import { renderIcon } from 'src/renderer/components/FontIcon';
 import useExtraControls from 'src/renderer/components/useExtraControls';
 
-function YearBarChart(props: { formValue: FormData }) {
-  const { formValue } = props;
+function YearBarChart(props: {
+  formValue: FormData;
+  extraState: any;
+  extraComponent: React.ReactNode;
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
+}) {
+  const { formValue, extraState, extraComponent, visible, setVisible } = props;
   const { token } = theme.useToken();
   const [data, setData] = useState<{ date: string; total: number }[]>([]);
   const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>([]);
-  const [visible, setVisible] = useState(false);
   const [year, setYear] = useState('');
+  const [categoryVal, setCategoryVal] = useState<string[]>([]);
 
-  const [
-    extraComponent,
-    { categoryVal, accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt },
-  ] = useExtraControls({
-    category_type,
-    onFilterClick: () => setVisible(true),
-  });
+
+  const { accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt } = extraState;
 
   useFresh(
     () => {
@@ -55,7 +56,7 @@ function YearBarChart(props: { formValue: FormData }) {
     'transaction'
   );
 
-  const fetchData = async obj => {
+  const fetchData = async (obj: any) => {
     if (!obj) return;
 
     try {
@@ -65,6 +66,7 @@ function YearBarChart(props: { formValue: FormData }) {
       message.error(error);
     }
   };
+
   const fetchDailyAmount = async (obj: any) => {
     try {
       const result = await window.mercury.api.getDailyTransactionAmounts(obj);
@@ -73,6 +75,7 @@ function YearBarChart(props: { formValue: FormData }) {
       message.error(error);
     }
   };
+
   const cardTitle = () => {
     if (formValue.type === 'year') {
       return '年消费';
@@ -80,13 +83,35 @@ function YearBarChart(props: { formValue: FormData }) {
       return '月度消费';
     }
   };
+
   const refresh = () => {
     emitter.emit('refresh', 'transaction');
   };
-  console.log(visible, 'aaaa====');
+  const extra = (<Space>
+    <Cascader
+      options={category_type}
+      allowClear
+      multiple
+      value={categoryVal}
+      style={{ width: '100px' }}
+      onChange={val => setCategoryVal(val as string[])}
+      placeholder="分类"
+      showSearch={{
+        filter: (inputValue: string, path: DefaultOptionType[]) =>
+          path.some(
+            option =>
+              (option.label as string)
+                .toLowerCase()
+                .indexOf(inputValue.toLowerCase()) > -1
+          ),
+      }}
+    />
+    {extraComponent}
+  </Space>
+  )
   return (
     <div className="mt8">
-      <Card title={cardTitle()} bordered={false} hoverable extra={extraComponent}>
+      <Card title={cardTitle()} bordered={false} hoverable extra={extra}>
         {visible && (
           <Modal title="高级搜索" open={visible} onCancel={() => setVisible(false)} footer={null}>
             <Flex vertical gap={16}>

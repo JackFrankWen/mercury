@@ -6,13 +6,10 @@ import { useSelect } from './useSelect';
 import { cpt_const } from '../const/web';
 
 export function useExtraControls(props: {
-    showCategory?: boolean;
-    category_type: any[];
     onFilterClick: () => void;
 }) {
-    const { showCategory = true, category_type, onFilterClick } = props;
+    const { onFilterClick } = props;
     const { token } = theme.useToken();
-    const [categoryVal, setCategoryVal] = useState<string[]>([]);
 
     const [accountTypeVal, AccountTypeCpt] = useSelect({
         options: cpt_const.account_type,
@@ -43,26 +40,7 @@ export function useExtraControls(props: {
 
     const extraComponent = (
         <Space>
-            {showCategory && (
-                <Cascader
-                    options={category_type}
-                    allowClear
-                    multiple
-                    value={categoryVal}
-                    style={{ width: '100px' }}
-                    onChange={val => setCategoryVal(val as string[])}
-                    placeholder="分类"
-                    showSearch={{
-                        filter: (inputValue: string, path: DefaultOptionType[]) =>
-                            path.some(
-                                option =>
-                                    (option.label as string)
-                                        .toLowerCase()
-                                        .indexOf(inputValue.toLowerCase()) > -1
-                            ),
-                    }}
-                />
-            )}
+
             {AccountTypeCpt}
             {ConsumerCpt}
             {hasSearchInModal ? (
@@ -92,7 +70,6 @@ export function useExtraControls(props: {
     return [
         extraComponent,
         {
-            categoryVal,
             accountTypeVal,
             consumerVal,
             paymentTypeVal,

@@ -16,6 +16,7 @@ interface LunarCalendarProps {
     consumer: number;
     account_type: number;
     payment_type: number;
+    category: string;
   };
   data: { date: string; total: number }[];
   refresh: () => void;

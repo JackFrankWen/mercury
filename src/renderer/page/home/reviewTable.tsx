@@ -1,8 +1,7 @@
 import { Card, Col, Row, Space, Flex, Tabs, Modal } from 'antd';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import CategoryTable from './categoryTable';
-import { useSelect } from '../../components/useSelect';
-import { cpt_const, payment_type } from 'src/renderer/const/web';
+import { cpt_const } from 'src/renderer/const/web';
 import DonutChart from 'src/renderer/components/donutChart';
 import { CategoryReturnType } from 'src/preload/index';
 import CategoryCollaspe from './categoryCollaspe';
@@ -45,19 +44,18 @@ const Tab1Content = ({ category, formValue, refreshTable }) => {
   );
 };
 
-function TableSection(props: { formValue: any }) {
-  const { formValue } = props;
-  const [visible, setVisible] = useState(false);
+// 添加新的 props 类型定义
+function TableSection(props: {
+  formValue: any;
+  extraState: any;
+  extraComponent: React.ReactNode;
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
+}) {
+  const { formValue, extraState, extraComponent, visible, setVisible } = props;
 
-  const [
-    extraComponent,
-    { categoryVal, accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt },
-  ] = useExtraControls({
-    category_type,
-    showCategory: false,
-
-    onFilterClick: () => setVisible(true),
-  });
+  // 从 extraState 中解构出需要的状态
+  const { categoryVal, accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt } = extraState;
 
   const [category, setCategory] = useState<CategoryReturnType>([]);
   const [activeTabKey, setActiveTabKey] = useState('tab1');
@@ -80,6 +78,7 @@ function TableSection(props: { formValue: any }) {
       console.error(error);
     }
   };
+
   useFresh(
     () => {
       getCategory({
@@ -98,6 +97,7 @@ function TableSection(props: { formValue: any }) {
   const refreshTable = () => {
     emitter.emit('refresh', 'transaction');
   };
+
   // 定义标签页配置
   const tabList = [
     {
@@ -142,26 +142,28 @@ function TableSection(props: { formValue: any }) {
     ),
   };
 
-  return (<>
-    {visible && (
-      <Modal title="高级搜索" open={visible} onCancel={() => setVisible(false)} footer={null}>
-        <Flex vertical gap={16}>
-          {PaymentTypeCpt}
-          {TagCpt}
-        </Flex>
-      </Modal>
-    )}
-    <Card
-      hoverable
-      bordered={false}
-      tabBarExtraContent={extraComponent}
-      tabList={tabList}
-      activeTabKey={activeTabKey}
-      onTabChange={handleTabChange}
-    >
-      {contentList[activeTabKey]}
-    </Card>
-  </>);
-
+  return (
+    <>
+      {visible && (
+        <Modal title="高级搜索" open={visible} onCancel={() => setVisible(false)} footer={null}>
+          <Flex vertical gap={16}>
+            {PaymentTypeCpt}
+            {TagCpt}
+          </Flex>
+        </Modal>
+      )}
+      <Card
+        hoverable
+        bordered={false}
+        tabBarExtraContent={extraComponent}
+        tabList={tabList}
+        activeTabKey={activeTabKey}
+        onTabChange={handleTabChange}
+      >
+        {contentList[activeTabKey]}
+      </Card>
+    </>
+  );
 }
+
 export default TableSection;
