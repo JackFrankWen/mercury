@@ -180,19 +180,21 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
-        return (
+        
+        return (<div>
+          <Alert message={`注意：仅替换当前页面数据内符合条件数据,共${data.length}条`} type="warning" showIcon className="mb8 mt8" />
           <AdvancedRule
             type="modal"
             onSelectChange={(res: AdvancedRule[]) => {
               setSelectedRule(res);
             }}
-          />
+          /></div>
         );
       case 1:
       case 2:
         return (
           <div>
-            <Alert message="注意：仅替换当前页面数据内符合条件的交易数据" type="warning" showIcon className="mb8 mt8" />
+          <Alert message={`注意：仅替换当前页面数据内符合条件数据,共${data.length}条`} type="warning" showIcon className="mb8 mt8" />
             <Table
               onRow={record => {
                 return {
