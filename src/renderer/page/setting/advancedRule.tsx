@@ -64,16 +64,20 @@ export const renderRuleContent = (rule: RuleItemListList) => {
           >
             {item.map((item: RuleItem) => (
               <div>
-                <Typography.Text strong>{getConditionType(item.condition)}</Typography.Text>
-                <Typography.Text code>{getFormulaType(item.formula)}</Typography.Text>
-                <Typography.Text>{renderValue(item)}</Typography.Text>
+                <Typography.Text type="secondary">规则组{index + 1}</Typography.Text>
+                <Typography>
+
+                  <Typography.Text strong>{getConditionType(item.condition)}</Typography.Text>
+                  <Typography.Text code>{getFormulaType(item.formula)}</Typography.Text>
+                  <Typography.Text>{renderValue(item)}</Typography.Text>
+                </Typography>
               </div>
             ))}
           </div>
           {index !== rule.length - 1 && (
-            <span>
-              <Typography.Text strong>OR</Typography.Text>
-            </span>
+            <div style={{ padding: '5px' }}>
+              <Typography.Text type="secondary">或者</Typography.Text>
+            </div>
           )}
         </>
       ))}
