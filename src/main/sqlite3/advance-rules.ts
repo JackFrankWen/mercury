@@ -126,7 +126,7 @@ export async function updateAdvancedRule(
     return new Promise<{ code: number }>((resolve, reject) => {
       const sql = `
         UPDATE advanced_rules
-        SET name = ?, rule = ?, category = ?, consumer = ?, tag = ?, priority = ?, active = ?, modification_time = CURRENT_TIMESTAMP
+        SET name = ?, rule = ?, category = ?, consumer = ?, tag = ?, priority = ?, active = ?, modification_time = (datetime('now', '+8 hours'))
         WHERE id = ?
       `;
 

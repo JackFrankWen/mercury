@@ -69,7 +69,7 @@ function createRuleTable() {
             consumer TEXT,
             tag TEXT,
             creation_time DATETIME DEFAULT (datetime('now', '+8 hours')),
-            modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
+            modification_time DATETIME DEFAULT (datetime('now', '+8 hours'))
         )
     `;
   return executeSQL(sql);

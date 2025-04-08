@@ -214,8 +214,9 @@ const RuleTable = (props: {
     //   render: (val: string) => (val ? (tag_type as TypeMap)[val] : ''),
     // },
 
+
     {
-      title: 'Action',
+      title: '操作',
       key: 'action',
       width: 180,
       render: (_, record) => (
