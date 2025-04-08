@@ -1,6 +1,6 @@
 // 一个弹窗，里面包含step
-import React, { useState } from 'react';
-import { Modal, Steps, Button, Form, Radio, Table, Select, Space, message, notification, Popover, Tooltip, Alert } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Modal, Steps, Button, Form, Radio, Table, Select, Space, message, notification, Popover, Tooltip, Alert, Spin } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 import type { I_Transaction } from 'src/main/sqlite3/transactions';
 import dayjs from 'dayjs';
@@ -9,6 +9,7 @@ import { formatMoney } from '../../components/utils';
 import { ruleByAdvanced } from '../upload/ruleUtils';
 import { getCategoryCol } from 'src/renderer/components/commonColums';
 import { getConsumerType } from 'src/renderer/const/web';
+
 interface BatchStepReplaceProps {
   data: I_Transaction[];
   visible: boolean;
@@ -17,6 +18,8 @@ interface BatchStepReplaceProps {
 }
 
 const { Step } = Steps;
+
+
 
 export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visible, onClose, onSuccess }) => {
   const [currentStep, setCurrentStep] = useState(0);
@@ -34,23 +37,23 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
   const handleRuleSelect = (value: string) => {
     setSelectedRule(value);
   };
-
-  // 处理查找匹配数据
-  const handleFindMatchedData = async () => {
-    if (!selectedRule) {
-      message.error('请先选择规则');
-      return;
+  useEffect(() => {
+    console.log(data, 'data');
+    if (currentStep === 2) {
+      setTimeout(() => {
+        setStepTwoData(data);
+      }, 1000);
     }
-
-    setLoading(true);
+  }, [currentStep]);
+  const setStepTwoData = async (chunk: I_Transaction[]) => {
     try {
-      const newData = await ruleByAdvanced(data, selectedRule, api);
+      setLoading(true);
+      const newData = await ruleByAdvanced(chunk, selectedRule, api);
       const filteredData = newData.filter((item: any) => item.isChanged);
       setMatchedData(filteredData);
       // 重置选择
       setSelectedRowKeys(filteredData.map((item: any) => item.id));
       setSelectedRows(filteredData);
-      setCurrentStep(2);
     } catch (error) {
       console.error('查找匹配数据失败:', error);
       message.error('查找匹配数据失败');
@@ -58,6 +61,18 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
       setLoading(false);
     }
   };
+
+  // 处理查找匹配数据
+  const handleFindMatchedData = () => {
+    if (!selectedRule) {
+      message.error('请先选择规则');
+      return;
+    }
+
+    setLoading(true);
+    setCurrentStep(2);
+  }
+
 
   // 处理提交
   const handleSubmit = async () => {
@@ -180,9 +195,9 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
   const renderStepContent = () => {
     switch (currentStep) {
       case 0:
-        
+
         return (<div>
-          <Alert message={`注意：仅替换当前页面数据内符合条件数据,共${data.length}条`} type="warning" showIcon className="mb8 mt8" />
+          <Alert message={`注意：当页面数据${data.length}条，仅在这${data.length}条数据中查找符合规则的数据`} type="warning" showIcon className="mb8 mt8" />
           <AdvancedRule
             type="modal"
             onSelectChange={(res: AdvancedRule[]) => {
@@ -194,7 +209,7 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
       case 2:
         return (
           <div>
-          <Alert message={`注意：仅替换当前页面数据内符合条件数据,共${data.length}条`} type="warning" showIcon className="mb8 mt8" />
+            <Alert message={`注意：仅替换当前页面数据内符合条件数据,共${data.length}条`} type="warning" showIcon className="mb8 mt8" />
             <Table
               onRow={record => {
                 return {
@@ -230,7 +245,11 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
     return (
       <Space>
         <Button onClick={handleReset}>取消</Button>
-        {currentStep > 0 && <Button onClick={() => setCurrentStep(0)}>上一步</Button>}
+        {currentStep > 0 && <Button onClick={() => {
+          setCurrentStep(0); setSelectedRule([]);
+          setMatchedData([]); setSelectedRowKeys([]);
+          setSelectedRows([]);
+        }}>上一步</Button>}
         {currentStep < 2 ? (
           <Button
             type="primary"
@@ -265,12 +284,14 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
       maskClosable={false}
     >
       {contextHolder}
-      <Steps current={currentStep} className="mb-8">
-        <Step title="选择规则" />
-        <Step title="选择数据" />
-        <Step title="" />
-      </Steps>
-      <div className="step-content">{renderStepContent()}</div>
+      <Spin spinning={loading}>
+        <Steps current={currentStep} className="mb-8">
+          <Step title="选择规则" />
+          <Step title="选择数据" />
+          <Step title="" />
+        </Steps>
+        <div className="step-content">{renderStepContent()}</div>
+      </Spin>
     </Modal>
   );
 };

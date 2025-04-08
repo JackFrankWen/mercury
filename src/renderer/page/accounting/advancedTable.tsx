@@ -165,7 +165,7 @@ const columns: ColumnsType<I_Transaction> = [
     },
   },
   getPaymentAccountCol({
-    width: 100,
+    width: 180,
   }),
   {
     title: '账户',

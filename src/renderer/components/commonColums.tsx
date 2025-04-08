@@ -31,7 +31,8 @@ export function getPaymentAccountCol(props: ColumnsType) {
   return {
     title: '交易卡号',
     dataIndex: 'account_name',
-    width: 100,
+    width: 140,
+    ellipsis: true,
     ...props,
   };
 }

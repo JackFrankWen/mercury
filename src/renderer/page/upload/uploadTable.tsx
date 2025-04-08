@@ -291,7 +291,7 @@ const BasicTable = (props: {
       },
     },
     getPaymentAccountCol({
-      width: 100,
+      width: 180,
     }),
 
     {
