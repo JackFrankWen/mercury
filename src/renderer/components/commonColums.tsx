@@ -29,7 +29,7 @@ export function getCategoryCol(props: ColumnsType) {
 }
 export function getPaymentAccountCol(props: ColumnsType) {
   return {
-    title: '交易账号',
+    title: '交易卡号',
     dataIndex: 'account_name',
     width: 100,
     ...props,

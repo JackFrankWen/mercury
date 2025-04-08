@@ -91,6 +91,11 @@ const columns: ColumnsType<I_Transaction> = [
     dataIndex: 'trans_time',
     key: 'trans_time',
     render: renderTime,
+    sorter: (a, b) => {
+      const dateA = dayjs(a.trans_time);
+      const dateB = dayjs(b.trans_time);
+      return dateA.valueOf() - dateB.valueOf();
+    },
   },
   getCategoryCol({
     with: 120,
