@@ -34,7 +34,7 @@ type ValidationResult = {
 const VALIDATION_RULES = {
   specialChars: {
     pattern: /[~!@#$%^&*()+=<>?:"{},.\/;'\\[\]]/,
-    message: '包含不允许的特殊字符',
+    message: '包含不允许的特殊字符~!@#$%^&*()+=<>?:"{},.\/;\'\\[\]]',
   },
   chinesePipe: {
     pattern: /｜/,
@@ -43,6 +43,10 @@ const VALIDATION_RULES = {
   endingPipe: {
     pattern: /\|$/,
     message: '不能以 | 符号结尾',
+  },
+  consecutivePipes: {
+    pattern: /\|\|/,
+    message: '不能包含连续的 || 符号',
   },
 };
 
@@ -86,7 +90,7 @@ const validateRuleValue = (rule: RuleItemList): ValidationResult => {
 
           // 验证特殊字符
           for (const [key, { pattern, message }] of Object.entries(VALIDATION_RULES)) {
-            const testValue = key === 'endingPipe' ? ruleItem.value : valueWithoutPipes;
+            const testValue = key === 'endingPipe' || key === 'consecutivePipes' ? ruleItem.value : valueWithoutPipes;
             if (pattern.test(testValue)) {
               return {
                 isValid: false,
