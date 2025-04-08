@@ -84,7 +84,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
       .position('date*total')
       .style({ radius: [20, 20, 0, 0] })
       .label('total', {
-        offset: 10,
+        offset: 5,
         content: data => {
           if (data.total >= 10000) {
             return formatMoney(data.total, '万', true, 1);
