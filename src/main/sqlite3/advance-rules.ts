@@ -63,7 +63,7 @@ export async function getAllAdvancedRules(params?: {
     const where = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
     const sql = `SELECT * FROM advanced_rules ${where} ORDER BY  category ASC , priority DESC`;
 
-    console.log(sql,queryParams,'sql av====');
+    console.log(sql, queryParams, 'sql av====');
 
     return new Promise<AdvancedRule[]>((resolve, reject) => {
       db.all(sql, queryParams, (err, rows: AdvancedRule[]) => {
@@ -92,13 +92,13 @@ export async function addAdvancedRule(rule: AdvancedRule): Promise<{ code: numbe
 
     return new Promise<{ code: number; id?: number }>((resolve, reject) => {
       const sql = `
-        INSERT INTO advanced_rules (name, rule, category, consumer, tag, priority)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO advanced_rules (name, rule, category, consumer, tag, priority, active)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
       `;
 
       db.run(
         sql,
-        [rule.name, rule.rule, rule.category, rule.consumer, rule.tag, rule.priority],
+        [rule.name, rule.rule, rule.category, rule.consumer, rule.tag, rule.priority, rule.active],
         function (err) {
           if (err) {
             console.error('Error adding advanced rule:', err);

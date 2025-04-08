@@ -153,7 +153,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       if (data?.id) {
         res = await window.mercury.api.updateAdvancedRule(data.id, {
           ...formValue,
-          active: formValue.active ? 1 : 0,
+          active: data?.active ? 1 : 0,
           category: JSON.stringify(formValue.category),
           rule: JSON.stringify(formValue.rule),
         });
@@ -161,7 +161,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
       } else {
         res = await window.mercury.api.addAdvancedRule({
           ...formValue,
-          active: formValue.active ? 1 : 0,
+          active: 1,
           category: JSON.stringify(formValue.category),
           rule: JSON.stringify(formValue.rule),
         });
