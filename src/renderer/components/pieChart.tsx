@@ -67,9 +67,16 @@ const DonutChart: React.FC<DonutChartProps> = ({ data, height = 200 }) => {
       .color("item")
       .label("item", {
         offset: -30,
-        // content: (data) => {
-        //   return `${data.item} ${Number(data.percent * 100).toFixed(1)}%`;
-        // },
+        content: (data) => {
+          if (Number(data.percent * 100) < 5) {
+            return "";
+          }
+          // 百分比小于20只显示名字
+          if (Number(data.percent * 100) < 20) {
+            return `${data.item}`;
+          }
+          return `${data.item}` + `\n${Number(data.percent * 100).toFixed(1)}%`;
+        },
         style: {
           textAlign: "center",
           fontSize: 12,
