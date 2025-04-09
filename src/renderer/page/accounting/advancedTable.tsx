@@ -121,7 +121,7 @@ const columns: ColumnsType<I_Transaction> = [
     ),
   },
   {
-    title: '描述',
+    title: '交易描述',
     width: 250,
     dataIndex: 'description',
     key: 'description',
@@ -188,6 +188,11 @@ const columns: ColumnsType<I_Transaction> = [
     key: 'creation_time',
     ellipsis: true,
     render: renderTime,
+    sorter: (a, b) => {
+      const dateA = dayjs(a.creation_time);
+      const dateB = dayjs(b.creation_time);
+      return dateA.valueOf() - dateB.valueOf();
+    },
   },
   {
     title: '最后修改',
@@ -197,6 +202,11 @@ const columns: ColumnsType<I_Transaction> = [
     key: 'modification_time',
     ellipsis: true,
     render: renderTime,
+    sorter: (a, b) => {
+      const dateA = dayjs(a.modification_time);
+      const dateB = dayjs(b.modification_time);
+      return dateA.valueOf() - dateB.valueOf();
+    },
   },
 ];
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];

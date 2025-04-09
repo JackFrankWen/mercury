@@ -171,7 +171,7 @@ export const BatchStepReplace: React.FC<BatchStepReplaceProps> = ({ data, visibl
       },
     },
     {
-      title: '描述',
+      title: '交易描述',
       dataIndex: 'description',
       key: 'description',
       ellipsis: true,

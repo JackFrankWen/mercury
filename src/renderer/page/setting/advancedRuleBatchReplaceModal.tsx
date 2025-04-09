@@ -229,7 +229,7 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
               },
 
               {
-                title: "描述",
+                title: "交易描述",
                 dataIndex: "description",
                 ellipsis: true,
                 width: 200,

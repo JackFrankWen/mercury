@@ -223,9 +223,6 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
     <Form
       layout="vertical"
       form={form}
-      style={{
-        maxWidth: 600,
-      }}
       initialValues={{
         name: data?.name,
         category: data?.category ? JSON.parse(data?.category) : undefined,

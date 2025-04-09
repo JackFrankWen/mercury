@@ -90,7 +90,7 @@ export function openNotification(messageList: MessageItem[], api: any, title: st
   api.open({
     message: title || '替换成功',
     description: `共替换${messageList.length}条交易，点击查看`,
-    showProgress: true,
+    // showProgress: true,
     pauseOnHover: true,
     onClick: () => {
       changeCategoryModal(messageList, title);

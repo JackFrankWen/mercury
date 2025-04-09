@@ -34,23 +34,23 @@ export function BatchReplaceDrawer({ visible, onClose, onSuccess }: BatchReplace
         message.error('请先选择数据来源');
         return false;
       }
-      
+
       // 使用共享的 parseCsvFile 方法
       const result = await parseCsvFile(file);
-      
+
       if (result.success) {
         // 检查文件类型与选择的来源是否匹配
         if ((sourceType === 'jd' && !file.name.includes('jd')) ||
-            (sourceType === 'pdd' && !file.name.includes('pdd')) ||
-            (sourceType === 'dianping' && !file.name.includes('alipay1688'))) {
+          (sourceType === 'pdd' && !file.name.includes('pdd')) ||
+          (sourceType === 'dianping' && !file.name.includes('alipay1688'))) {
           message.error('文件类型与选择的来源不匹配');
           return false;
         }
-        
+
         // 获取过去十年的交易记录
         const endDate = dayjs().format('YYYY-MM-DD');
         const startDate = dayjs().subtract(10, 'year').format('YYYY-MM-DD');
-        
+
         const transactions = await window.mercury.api.getAllTransactions({
           trans_time: [startDate, endDate],
         });
@@ -83,7 +83,7 @@ export function BatchReplaceDrawer({ visible, onClose, onSuccess }: BatchReplace
       key: 'amount',
     },
     {
-      title: '描述',
+      title: '交易描述',
       dataIndex: 'description',
       key: 'description',
     },
@@ -118,8 +118,8 @@ export function BatchReplaceDrawer({ visible, onClose, onSuccess }: BatchReplace
             <Radio.Group onChange={e => setSourceType(e.target.value)} value={sourceType}>
               {sourceTypes.map(type => (
                 <Radio key={type.value} value={type.value}>
-                {type.label}
-              </Radio>
+                  {type.label}
+                </Radio>
               ))}
             </Radio.Group>
           </Form.Item>
@@ -190,7 +190,7 @@ export function BatchReplaceDrawer({ visible, onClose, onSuccess }: BatchReplace
             <InboxOutlined style={{ fontSize: 48, color: '#40a9ff' }} />
           </p>
           <p className="ant-upload-text">点击或拖拽文件到此区域上传</p>
-         
+
           {sourceType && (
             <p className="ant-upload-hint" style={{ color: '#40a9ff' }}>
               当前选择的数据来源：{sourceTypes.find(t => t.value === sourceType)?.label}

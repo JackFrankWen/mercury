@@ -163,7 +163,7 @@ const BasicTable = (props: {
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
       <div style={{ padding: 8 }}>
         <Input
-          placeholder={`搜索${dataIndex === 'payee' ? '交易对方' : '描述'}`}
+          placeholder={`搜索${dataIndex === 'payee' ? '交易对方' : '交易描述'}`}
           value={selectedKeys[0]}
           onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
@@ -260,7 +260,7 @@ const BasicTable = (props: {
       ),
     },
     {
-      title: '描述',
+      title: '交易描述',
       dataIndex: 'description',
       ellipsis: true,
       ...getColumnSearchProps('description'),

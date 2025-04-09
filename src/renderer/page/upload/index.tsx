@@ -102,7 +102,7 @@ function UploadCenter(): JSX.Element {
             },
             {
               title: '替换',
-              description: '替换描述',
+              description: '替换交易描述',
             },
             {
               title: '分类',

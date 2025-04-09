@@ -379,7 +379,7 @@ const RuleTable = (props: {
         <Modal
           title="高级规则"
           open={visiable}
-          width={700}
+          width={750}
           onCancel={() => setVisiable(false)}
           footer={null}
         >

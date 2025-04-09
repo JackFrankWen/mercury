@@ -97,7 +97,7 @@ export const condition_type = {
   // payment_type: '支付方式',
   // tag_type: '标签类型',
   // flow_type: '收支类型',
-  description: "描述",
+  description: "交易描述",
   payee: "交易对象",
   // transaction_time: '交易时间',
   amount: "金额",

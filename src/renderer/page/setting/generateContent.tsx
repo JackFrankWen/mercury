@@ -76,7 +76,7 @@ export default function GenerateContent(): JSX.Element {
       ),
     },
     {
-      title: "描述",
+      title: "交易描述",
       dataIndex: "description",
       ellipsis: true,
       render: (val: string) => (
