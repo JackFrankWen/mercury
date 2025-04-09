@@ -20,7 +20,7 @@ import {
 } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { findCategoryById, getCategoryString } from 'src/renderer/const/categroy';
-import { account_type } from 'src/renderer/const/web';
+import { account_type, getConsumerType, getTagType } from 'src/renderer/const/web';
 import useLoadingButton from 'src/renderer/components/useButton';
 import { formatMoney } from 'src/renderer/components/utils';
 import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
@@ -118,7 +118,6 @@ const BasicTable = (props: {
     props;
   const [api, contextHolder] = notification.useNotification();
 
-  const [form] = Form.useForm();
   const [data, setData] = useState(tableData);
   const [LoadingBtn, setBtnLoading, setLoadingFalse] = useLoadingButton();
   const [modalVisible, setModalVisible] = useState(false);
@@ -143,9 +142,7 @@ const BasicTable = (props: {
     goStep2(needTransferData);
     console.log('check needTransferData');
   }, [needTransferData]);
-  const edit = (record: DataType) => {
-    form.setFieldsValue({ name: '', age: '', address: '', ...record });
-  };
+
   const onDelete = (record: DataType) => {
     const newData = data.filter((obj: DataType) => obj.id !== record.id);
     setData(newData);
@@ -227,7 +224,14 @@ const BasicTable = (props: {
         if (/[\u4e00-\u9fa5]/.test(val)) {
           return <Typography.Text type="warning">这条数据有问题</Typography.Text>;
         }
-        const child = flow_type === 1 ? '支：' : '收：';
+        let child;
+        if (flow_type === 1) {
+          child = '支：';
+        } else if (flow_type === 2) {
+          child = '收：';
+        } else if (flow_type === 3) {
+          child = '不计支出:';
+        }
         const type = flow_type === 1 ? 'danger' : 'success';
         return (
           <Space>
@@ -272,23 +276,7 @@ const BasicTable = (props: {
       dataIndex: 'consumer',
       defaultCheck: false,
       key: 'consumer',
-      render: (val: number) => {
-        const consumer_type = {
-          1: '老公',
-          2: '老婆',
-          3: '家庭',
-          4: '哥哥',
-        };
-        if (val === 1) {
-          return <Tag color="cyan">{consumer_type[val]}</Tag>;
-        } else if (val === 2) {
-          return <Tag color="magenta">{consumer_type[val]}</Tag>;
-        } else if (val === 3) {
-          return <Tag color="geekblue">{consumer_type[val]}</Tag>;
-        } else if (val === 4) {
-          return <Tag color="orange">{consumer_type[val]}</Tag>;
-        }
-      },
+      render: (text: string) => getConsumerType(text),
     },
     getPaymentAccountCol({
       width: 180,
@@ -299,6 +287,12 @@ const BasicTable = (props: {
       dataIndex: 'account_type',
       width: 80,
       render: (val: number) => (val ? account_type[val] : ''),
+    },
+    {
+      title: '标签',
+      dataIndex: 'tag',
+      width: 80,
+      render: (val: number) => getTagType(val),
     },
     {
       title: '操作',
@@ -392,6 +386,45 @@ const BasicTable = (props: {
     );
   };
   console.log(step, 'step====');
+  // 计算支出和收入 不计支出根据flow_type
+  const totalCost = data.reduce((acc: number, obj: any) => {
+    if (obj.flow_type === 1) {
+      return acc + Number(obj.amount);
+    }
+    return acc;
+  }, 0);
+  const totalIncome = data.reduce((acc: number, obj: any) => {
+    if (obj.flow_type === 2) {
+      return acc + Number(obj.amount);
+    }
+    return acc;
+  }, 0);
+  const totalNoCost = data.reduce((acc: number, obj: any) => {
+    if (obj.flow_type === 3) {
+      return acc + Number(obj.amount);
+    }
+    return acc;
+  }, 0);
+  // 根据flow_type 统计支出、收入、不计支出笔数
+  const totalNoCostCount = data.reduce((acc: number, obj: any) => {
+    if (obj.flow_type === 3) {
+      return acc + 1;
+    }
+    return acc;
+  }, 0);
+  const totalIncomeCount = data.reduce((acc: number, obj: any) => {
+    if (obj.flow_type === 2) {
+      return acc + 1;
+    }
+    return acc;
+  }, 0);
+  const totalCostCount = data.reduce((acc: number, obj: any) => {
+    if (obj.flow_type === 1) {
+      return acc + 1;
+    }
+    return acc;
+  }, 0);
+
   return (
     <div>
       {contextHolder}
@@ -418,42 +451,45 @@ const BasicTable = (props: {
         </Col>
       </Row>
 
-      <Form form={form} component={false}>
-        <Table
-          virtual
-          rowKey="id"
-          onRow={record => {
-            return {
-              onDoubleClick: () => edit(record),
-            };
-          }}
-          rowClassName={record => {
-            // 金额如果包含中文，则返回警告
-            if (/[\u4e00-\u9fa5]/.test(record.amount)) {
-              return 'mercury-warning';
-            }
-            if (
-              record.description?.includes('京东-订单编号') ||
-              record.description?.includes('先采后付还款') ||
-              record.description?.includes('商户单号')
-            ) {
-              return 'mercury-warning';
-            }
-            return '';
-          }}
-          dataSource={data}
-          size="small"
-          columns={columns}
-          summary={tableSummary}
-          scroll={{ x: 1200, y: 300 }}
-          pagination={false}
-        />
-      </Form>
+      <Table
+        virtual
+        rowKey="id"
+        onRow={record => {
+          return {
+            onDoubleClick: () => edit(record),
+          };
+        }}
+        rowClassName={record => {
+          // 金额如果包含中文，则返回警告
+          if (/[\u4e00-\u9fa5]/.test(record.amount)) {
+            return 'mercury-warning';
+          }
+          if (
+            record.description?.includes('京东-订单编号') ||
+            record.description?.includes('先采后付还款') ||
+            record.description?.includes('商户单号')
+          ) {
+            return 'mercury-warning';
+          }
+          return '';
+        }}
+        dataSource={data}
+        size="small"
+        columns={columns}
+        summary={tableSummary}
+        scroll={{ x: 1200, y: 300 }}
+        pagination={false}
+      />
       <Row justify="space-between" align="middle" style={{ marginBottom: '10px' }}>
         <Space>
           <span style={{ fontSize: '12px' }}>{tableHeader?.fileName}</span>
           <span style={{ fontSize: '12px' }}>账号:{tableHeader?.name}</span>
           <span style={{ fontSize: '12px' }}>{tableHeader?.date}</span>
+        </Space>
+        <Space>
+          <span style={{ fontSize: '12px' }}>支出：{formatMoney(totalCost)}元, 共{totalCostCount}笔</span>
+          <span style={{ fontSize: '12px' }}>收入：{formatMoney(totalIncome)}元, 共{totalIncomeCount}笔</span>
+          <span style={{ fontSize: '12px' }}>不计支出：{formatMoney(totalNoCost)}元, 共{totalNoCostCount}笔</span>
         </Space>
         <Space>
           <Button onClick={onCancel}>取消</Button>

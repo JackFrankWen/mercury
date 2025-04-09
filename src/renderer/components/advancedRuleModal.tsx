@@ -265,7 +265,7 @@ const RuleForm = (props: { data?: AdvancedRule; onCancel: () => void; refresh: (
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item name="priority" label="规则优先级">
+            <Form.Item name="priority" label="规则优先级" tooltip="优先级越高，越先执行">
               <SelectWrap placeholder="请选择优先级" options={cpt_const.priority_type} />
             </Form.Item>
           </Col>

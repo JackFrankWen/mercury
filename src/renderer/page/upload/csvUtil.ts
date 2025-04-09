@@ -60,8 +60,6 @@ export function formateToTableAlipayMobileHeader(arr: any): tableHeaderI {
   //   ],
   //   22["------------------------支付宝（中国）网络技术有限公司  电子客户回单------------------------"]
 
-  console.log(arr, 'mobile----arr');
-
   return {
     fileName: '支付宝app导入账单',
     // 姓名
@@ -83,102 +81,124 @@ export function formateToTableAlipayMobileHeader(arr: any): tableHeaderI {
 export function formateToTableDataAlipayMobile(
   arr: string[][],
   account_type: number,
-  payment_type: number,
+  payment_type: number
 ): any {
-  let costArr = arr.filter((subArr: string[]) => !/不计收支/.test(subArr[5]));
+  // let costArr = arr.filter((subArr: string[]) => !/不计收支/.test(subArr[5]));
   // 过滤交易关闭
   // costArr = costArr.filter((subArr: string[]) => !/交易关闭/.test(subArr[8]))
-  costArr = costArr.filter(
-    (subArr: string[]) =>
-      /支付成功/.test(subArr[8]) || /交易成功/.test(subArr[8]),
-  );
+  const costArr = arr.filter((subArr: string[]) => {
+    if (subArr[5] === '支出') {
+      if (/交易关闭/.test(subArr[8])) {
+        return false;
+      }
+      if (/转账失败/.test(subArr[8])) {
+        return false;
+      }
+      if (/支付成功/.test(subArr[8])) {
+        return true;
+      }
+      if (/交易成功/.test(subArr[8])) {
+        return true;
+      }
+      return false;
+    } else if (subArr[5] === '收入') {
+      return true;
+    } else if (subArr[5] === '不计收支') {
+      return false;
+    }
+    return false;
+  });
   // 0: (12) ['交易时间', '交易分类', '交易对方', '对方账号', '商品说明', '收/支', '金额', '收/付款方式', '交易状态', '交易订单号', '商家订单号', '备注']
 
-  return costArr.map((subArr) => {
-    // 0: "交易时间"
-    // 1: "交易分类"
-    // 2: "交易对方"
-    // 3: "对方账号"
-    // 4: "商品说明"
-    // 5: "收/支"
-    // 6: "金额"
-    // 7: "收/付款方式"
-    // 8: "交易状态"
-    // 9: "交易订单号"
-    // 10: "商家订单号"
-    // 11: "备注"
-    // flow_type 1: 支出 2: 收入 3.不计指出 将不计支出改
-    let flow_type = 0;
-    if (/不计收支/.test(subArr[5])) {
-      flow_type = 3;
-    } else if (/支出/.test(subArr[5])) {
-      flow_type = 1;
-    } else {
-      flow_type = 2;
-    }
-    return {
-      id: subArr[9].replace(/[^0-9]/g, ''),
-      amount: subArr[6].trim(),
-      description: `${subArr[4]};${subArr[11]}`,
-      account_type: account_type,
-      payment_type: payment_type,
-      flow_type: flow_type,
-      // 根据alipayMatch.ts 获取category
-      category: getMatchCategory(subArr[1]) || JSON.stringify([100000, 100003]),
-      payee: subArr[2],
-      consumer: account_type,
-      tag: 2,
-      creation_time: undefined,
-      trans_time: (subArr[0] || '').trim().replace(/\n/g, ''),
-      modification_time: undefined,
-      categoryLabel: subArr[1],
-      account_name: subArr[7],
-      // 交易状态
-    };
-  });
+  return costArr
+    .map(subArr => {
+      // 0: "交易时间"
+      // 1: "交易分类"
+      // 2: "交易对方"
+      // 3: "对方账号"
+      // 4: "商品说明"
+      // 5: "收/支"
+      // 6: "金额"
+      // 7: "收/付款方式"
+      // 8: "交易状态"
+      // 9: "交易订单号"
+      // 10: "商家订单号"
+      // 11: "备注"
+      // flow_type 1: 支出 2: 收入 3.不计指出 将不计支出改
+      let flow_type = 0;
+      if (/不计收支/.test(subArr[5])) {
+        flow_type = 3;
+      } else if (/支出/.test(subArr[5])) {
+        flow_type = 1;
+      } else {
+        flow_type = 2;
+      }
+      return {
+        id: subArr[9].replace(/[^0-9]/g, ''),
+        amount: subArr[6].trim(),
+        description: `${subArr[4]};${subArr[11]}`,
+        account_type: account_type,
+        payment_type: payment_type,
+        flow_type: flow_type,
+        // 根据alipayMatch.ts 获取category
+        category: getMatchCategory(subArr[1]) || JSON.stringify([100000, 100003]),
+        payee: subArr[2],
+        consumer: account_type,
+        tag: 2,
+        creation_time: undefined,
+        trans_time: (subArr[0] || '').trim().replace(/\n/g, ''),
+        modification_time: undefined,
+        categoryLabel: subArr[1],
+        account_name: subArr[7],
+        // 交易状态
+      };
+    })
+    .filter((item: any) => Number(item.amount) !== 0);
 }
 
 // 微信
 export function formateToTableDataWechat(
   arr: string[][],
   account_type: number,
-  payment_type: number,
+  payment_type: number
 ): any {
   const costArr = arr.filter((subArr: string[]) => !/零钱通/.test(subArr[11]));
-  return costArr.map((subArr) => {
-    // 0: "交易时间"
-    // 1: "交易类型"
-    // 2: "交易对方"
-    // 3: "商品"
-    // 4: "收/支"
-    // 5: "金额(元)"
-    // 6: "支付方式"
-    // 7: "当前状态"
-    // 8: "交易单号"
-    // 9: "商户单号"
-    // 10: "备注"
-    const amount = subArr[5] || '';
-    const description = `${subArr[3]}`;
-    let payeeName = `${subArr[1]};${subArr[2]}`.replace('[^\u0000-\uFFFF]', '');
-    payeeName = payeeName.replace(/商户消费;/g, '');
-    payeeName = payeeName.replace(/扫二维码付款;/g, '');
-    return {
-      id: subArr[8],
-      amount: amount.replace('¥', ''),
-      payee: payeeName,
-      description: description.replace('[^\u0000-\uFFFF]', ''),
-      account_type: account_type,
-      payment_type: payment_type,
-      flow_type: subArr[4] === '支出' ? 1 : 2,
-      category: JSON.stringify([100000, 100003]),
-      consumer: account_type,
-      tag: 2,
-      creation_time: undefined,
-      trans_time: subArr[0],
-      modification_time: undefined,
-      account_name: subArr[6],
-    };
-  });
+  return costArr
+    .map(subArr => {
+      // 0: "交易时间"
+      // 1: "交易类型"
+      // 2: "交易对方"
+      // 3: "商品"
+      // 4: "收/支"
+      // 5: "金额(元)"
+      // 6: "支付方式"
+      // 7: "当前状态"
+      // 8: "交易单号"
+      // 9: "商户单号"
+      // 10: "备注"
+      const amount = subArr[5] || '';
+      const description = `${subArr[3]}`;
+      let payeeName = `${subArr[1]};${subArr[2]}`.replace('[^\u0000-\uFFFF]', '');
+      payeeName = payeeName.replace(/商户消费;/g, '');
+      payeeName = payeeName.replace(/扫二维码付款;/g, '');
+      return {
+        id: subArr[8],
+        amount: amount.replace('¥', ''),
+        payee: payeeName,
+        description: description.replace('[^\u0000-\uFFFF]', ''),
+        account_type: account_type,
+        payment_type: payment_type,
+        flow_type: subArr[4] === '支出' ? 1 : 2,
+        category: JSON.stringify([100000, 100003]),
+        consumer: account_type,
+        tag: 2,
+        creation_time: undefined,
+        trans_time: subArr[0],
+        modification_time: undefined,
+        account_name: subArr[6],
+      };
+    })
+    .filter((item: any) => Number(item.amount) > 0);
 }
 
 // 微信
@@ -227,12 +247,12 @@ export function trimString(str: unknown) {
 export function formateToTableAlipay(
   arr: string[][],
   account_type: number,
-  payment_type: number,
+  payment_type: number
 ): any[] {
   let costArr = arr.filter((subArr: string[]) => /交易成功/.test(subArr[11]));
   costArr = costArr.filter((subArr: string[]) => !/不计收支/.test(subArr[10]));
   costArr = costArr.filter((subArr: string[]) => !/资金转移/.test(subArr[15]));
-  return costArr.map((subArr) => {
+  return costArr.map(subArr => {
     // 0: "交易号"
     // 1: "商家订单号"
     // 2: "交易创建时间"
@@ -251,7 +271,7 @@ export function formateToTableAlipay(
     // 15: "资金状态 "
     const amount = subArr[9] || '';
     const description = `${trimString(subArr[14])};${trimString(
-      subArr[8],
+      subArr[8]
     )};${trimString(subArr[14])}`;
     return {
       id: subArr[0],
@@ -309,10 +329,7 @@ type JdData = {
   trans_time: string;
 };
 
-export function formateToTableJd(
-  arr: string[][],
-  type: 'jd' | 'pdd' | 'alipay1688',
-): JdData[] {
+export function formateToTableJd(arr: string[][], type: 'jd' | 'pdd' | 'alipay1688'): JdData[] {
   // 0: "订单号",
   // 1: "下单时间",
   // 2: "订单总价",
@@ -322,15 +339,13 @@ export function formateToTableJd(
 
   let newArr: string[][] = [];
   if (type === 'jd') {
-    newArr = arr.filter(
-      (subArr) => subArr[3] === '已完成' || subArr[3] === '等待收货',
-    );
+    newArr = arr.filter(subArr => subArr[3] === '已完成' || subArr[3] === '等待收货');
   } else if (type === 'pdd') {
-    newArr = arr.filter((subArr) => subArr[3] === '交易成功');
+    newArr = arr.filter(subArr => subArr[3] === '交易成功');
   } else if (type === 'alipay1688') {
     newArr = arr;
   }
-  return newArr.map((subArr) => {
+  return newArr.map(subArr => {
     return {
       id: subArr[0],
       amount: subArr[2].replace(/[^0-9.]/g, ''),
@@ -341,10 +356,7 @@ export function formateToTableJd(
 }
 
 // 解析Excel文件（xlsx/xls）
-export function parseExcelFile(
-  data: ArrayBuffer,
-  type: 'jd' | 'pdd',
-): JdData[] {
+export function parseExcelFile(data: ArrayBuffer, type: 'jd' | 'pdd'): JdData[] {
   // 需要导入xlsx库
   // eslint-disable-next-line @typescript-eslint/no-var-requires
 
@@ -420,7 +432,7 @@ export function parseExcelFile(
   // 使用和CSV相同的处理逻辑
   let filteredArr: string[][] = [];
 
-  return filteredArr.map((row) => {
+  return filteredArr.map(row => {
     return {
       id: row[0],
       amount: row[5].replace(/[^0-9.]/g, ''),

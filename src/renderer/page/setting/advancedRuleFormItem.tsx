@@ -266,7 +266,7 @@ function AdvancedRuleItem(props: {
         return (
           <TextArea
             placeholder="值"
-            autoSize={{ minRows: 3, maxRows: 5 }}
+            autoSize={{ minRows: 4 }}
             value={record.value}
             onChange={e => {
               console.log(e.target.value, 'value');
