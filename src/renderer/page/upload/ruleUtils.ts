@@ -146,27 +146,31 @@ function applyRule(
         // All conditions within a group must match (AND condition)
         ruleGroup.every(ruleItem => matchRuleItem(transaction, ruleItem))
       );
-
+      const categoryMatch = rule.category && rule.category !== transaction.category 
+      const tagMatch = rule.tag && rule.tag !== transaction.tag 
+      const consumerMatch = rule.consumer && rule.consumer !== transaction.consumer
       if (
         isMatch &&
-        (rule.category !== transaction.category ||
-          rule.tag !== transaction.tag ||
-          rule.consumer !== transaction.consumer)
+        (categoryMatch||
+          tagMatch ||
+          consumerMatch)
       ) {
         const changeContent = [];
-        if (rule.category && rule.category !== transaction.category) {
+        console.log(rule,'====ruleshow');
+        
+        if (categoryMatch) {
           changeContent.push({
             before: getCategoryString(transaction.category),
             after: getCategoryString(rule.category),
           });
         }
-        if (rule.tag && rule.tag !== transaction.tag) {
+        if (tagMatch) {
           changeContent.push({
             before: getTagType(transaction.tag),
             after: getTagType(rule.tag),
           });
         }
-        if (rule.consumer && rule.consumer !== transaction.consumer) {
+        if (consumerMatch) {
           changeContent.push({
             before: getConsumerType(transaction.consumer),
             after: getConsumerType(rule.consumer),
