@@ -189,7 +189,12 @@ export const AdvancedSearchForm = (props: {
         )}
         <Col span={8}>
           <Form.Item name="description">
-            <Input.Search placeholder="请输入描述、交易对象" />
+            <Input.Search 
+              placeholder="请输入描述、交易对象" 
+              onSearch={() => {
+                form.submit();
+              }} 
+            />
           </Form.Item>
         </Col>
 
