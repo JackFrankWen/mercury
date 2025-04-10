@@ -69,18 +69,26 @@ export const AdvancedSearchForm = (props: {
         creation_time: formValue.creation_time ? [dayjs(formValue.creation_time[0]), dayjs(formValue.creation_time[1])] : undefined,
         modify_time: formValue.modify_time ? [dayjs(formValue.modify_time[0]), dayjs(formValue.modify_time[1])] : undefined,
       }}
-      // onValuesChange={(changedValues, allValues) => {
-      //   const new_allValues = { ...allValues };
-      //   const trans_time = allValues.trans_time;
-      //   if (Array.isArray(trans_time) && trans_time.length === 2) {
-      //     new_allValues.trans_time = [
-      //       dayjs(trans_time[0]).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
-      //       dayjs(trans_time[1]).endOf('month').format('YYYY-MM-DD HH:mm:ss'),
-      //     ];
-      //   }
-      //   console.log(new_allValues, 'new_allValues');
-      //   props.setFormValue(new_allValues);
-      // }}
+      onValuesChange={(changedValues, allValues) => {
+        const new_allValues = { ...allValues };
+        console.log(changedValues ,'aaa');
+        if(changedValues?.chose_unclassified === 'unclassified'){
+          new_allValues.category = undefined;
+        }
+        if (changedValues?.category && changedValues?.category.length === 0) {
+          new_allValues.category = undefined;
+        }
+        form.setFieldsValue(new_allValues);
+        // const trans_time = allValues.trans_time;
+        // if (Array.isArray(trans_time) && trans_time.length === 2) {
+        //   new_allValues.trans_time = [
+        //     dayjs(trans_time[0]).startOf('month').format('YYYY-MM-DD HH:mm:ss'),
+        //     dayjs(trans_time[1]).endOf('month').format('YYYY-MM-DD HH:mm:ss'),
+        //   ];
+        // }
+        // console.log(new_allValues, 'new_allValues');
+        // props.setFormValue(new_allValues);
+      }}
       name="advanced_search"
       style={formStyle}
       onFinish={onFinish}
