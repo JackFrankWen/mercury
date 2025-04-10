@@ -55,7 +55,7 @@ const PieChart: React.FC<PieChartProps> = ({ data, height = 500 }) => {
         return items.map(item => {
           return {
             ...item,
-            name: `${formatMoney(item.data.value, '万')}`,
+            name: `¥ ${formatMoney(item.data.value)}`,
             value: `${Number(item.data.percent * 100).toFixed(1)}%`,
           };
         });
@@ -70,7 +70,8 @@ const PieChart: React.FC<PieChartProps> = ({ data, height = 500 }) => {
       .label('type', {
         offset: -10,
         content: data => {
-          if (data.percent < 0.05) return '';
+          if (data.percent < 0.03) return '';
+          if (data.percent < 0.05) return `${data.type}`;
           return `${data.type}\n${(data.percent * 100).toFixed(1)}%`;
         },
       })
