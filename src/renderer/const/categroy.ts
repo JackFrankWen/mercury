@@ -1,3 +1,5 @@
+import Labels from "@antv/g2/lib/component/labels";
+
 const general_cost = 1, // 日常
   variable_cost = 2, // 变动
   fix_cost = 3; // 固定
@@ -408,7 +410,12 @@ export const category_type = [
         icon: 'fa-solid fa-umbrella-beach',
         color: '#FFC107', // 琥珀色
         tag: variable_cost,
-      },
+      },{
+        value: 70004,
+        label: '玩具',
+        icon: 'fa-solid fa-gamepad',
+        color: '#FF9800', // 橙色
+      }
     ],
   },
   {
