@@ -589,24 +589,20 @@ export const category_type = [
         label: '烂账',
         icon: 'fa-solid fa-trash-can',
         color: '#FF5722', // 深橙色
-        tag: general_cost,
-        consumer: family,
       },
       {
         value: 100002,
         label: '意外丢失',
         icon: 'fa-solid fa-triangle-exclamation',
         color: '#FFC107', // 琥珀色
-        tag: general_cost,
-        consumer: family,
+      
       },
       {
         value: 100003,
         label: '未分类',
         icon: 'fa-solid fa-question-circle',
         color: '#2196F3', // 蓝色
-        tag: general_cost,
-        consumer: family,
+     
       },
     ],
   },
