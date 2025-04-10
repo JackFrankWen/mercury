@@ -144,7 +144,6 @@ export const category_type = [
         icon: 'fa-solid fa-toilet-paper',
         color: '#27AE60', // 深绿色
         tag: fix_cost,
-        consumer: family,
       },
       {
         value: 50003,
