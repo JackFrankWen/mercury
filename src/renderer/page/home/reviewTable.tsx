@@ -1,5 +1,5 @@
-import { Card, Col, Row, Space, Flex, Tabs, Modal } from 'antd';
-import React, { useState } from 'react';
+import { Card, Col, Row, Space, Flex, Tabs, Modal, message } from 'antd';
+import React, { useState, useCallback } from 'react';
 import CategoryTable from './categoryTable';
 import { cpt_const } from 'src/renderer/const/web';
 import DonutChart from 'src/renderer/components/donutChart';
@@ -10,11 +10,15 @@ import { category_type } from 'src/renderer/const/categroy';
 import useExtraControls from 'src/renderer/components/useExtraControls';
 import { CategoryReturnType } from 'src/preload/type';
 import { log } from 'node:console';
+import BarChart from 'src/renderer/components/barChart';
+import { ModalContent } from './ModalContent';
 
 // 写一个方法  CategoryReturnType中 child 每一条数据    转化成 PieChart 的 data 用reduce
 // 转化 {value: item.child.value, name: item.child.name, type: item.    value}
 
 function convertCategoryReturnTypeToPieChartData(category: CategoryReturnType) {
+  console.log(category, '====category');
+
   return category.reduce((acc: any, item: any) => {
     item.child.forEach((child: any) => {
       acc.push({
@@ -28,21 +32,168 @@ function convertCategoryReturnTypeToPieChartData(category: CategoryReturnType) {
   }, []);
 }
 
-// Tab1内容组件
+// 交易详情模态框组件
+const TransactionModal = (props: {
+  visible: boolean;
+  category: string;
+  formValue: any;
+  onClose: () => void;
+  refreshTable: () => void;
+}) => {
+  const { visible, category, formValue, onClose, refreshTable } = props;
+  const [modalData, setModalData] = useState<any>([]);
+  const [barData, setBarData] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  // 获取交易详情数据
+  const getTransactionDetails = async (data: any, category: string) => {
+    if (!category) return;
+
+    setLoading(true);
+    try {
+      const { trans_time } = data;
+      const params = {
+        ...data,
+        category,
+        trans_time,
+      };
+
+      const res = await window.mercury.api.getTransactions(params);
+      if (res) {
+        setModalData(res);
+      }
+    } catch (error) {
+      console.error('Error fetching transactions:', error);
+      message.error('获取交易数据失败');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 获取按月份统计数据（用于年度视图）
+  const fetchBarData = async (obj: any) => {
+    if (!obj) return;
+
+    try {
+      const result = await window.mercury.api.getTransactionsByMonth(obj);
+      setBarData(result);
+    } catch (error) {
+      message.error(error);
+    }
+  };
+
+  // 当modal显示且有选择的category时，获取数据
+  useFresh(() => {
+    if (category && visible) {
+      getTransactionDetails(formValue, category);
+    }
+    if (formValue.type === 'year' && visible) {
+      fetchBarData({
+        category: category,
+        trans_time: formValue.trans_time,
+      });
+    }
+  }, [formValue, category, visible], 'transaction');
+
+  // 刷新表格数据
+  const refresh = () => {
+    refreshTable();
+    if (category) {
+      getTransactionDetails(formValue, category);
+    }
+  };
+
+  return (
+    <Modal
+      width={1000}
+      closable={true}
+      footer={null}
+      open={visible}
+      onCancel={onClose}
+      title="交易详情"
+    >
+      {formValue.type === 'year' && <BarChart data={barData} />}
+      {modalData.length > 0 && (
+        <ModalContent
+          loading={loading}
+          onCancel={onClose}
+          modalData={modalData}
+          refresh={refresh}
+        />
+      )}
+    </Modal>
+  );
+};
+
+// 使用共享Modal的Tab1内容组件
 const Tab2Content = ({ category, formValue, refreshTable }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  const showModal = (category: string) => {
+    setSelectedCategory(category);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <>
       <DonutChart data={convertCategoryReturnTypeToPieChartData(category)} />
-      <CategoryTable refreshTable={refreshTable} data={category} formValue={formValue} />
+      <CategoryTable
+        refreshTable={refreshTable}
+        data={category}
+        formValue={formValue}
+        showModal={showModal}
+        useSharedModal={true}
+      />
+      {modalVisible && (
+        <TransactionModal
+          visible={modalVisible}
+          category={selectedCategory}
+          formValue={formValue}
+          onClose={closeModal}
+          refreshTable={refreshTable}
+        />
+      )}
     </>
   );
 };
 
-// Tab2内容组件
+// 使用共享Modal的Tab2内容组件
 const Tab1Content = ({ category, formValue, refreshTable }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('');
+
+  const showModal = (category: string) => {
+    setSelectedCategory(category);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <div style={{ minHeight: '400px' }}>
-      <CategoryCollaspe refreshTable={refreshTable} data={category} formValue={formValue} />
+      <CategoryCollaspe
+        refreshTable={refreshTable}
+        data={category}
+        formValue={formValue}
+        showModal={showModal}
+        useSharedModal={true}
+      />
+      {modalVisible && (
+        <TransactionModal
+          visible={modalVisible}
+          category={selectedCategory}
+          formValue={formValue}
+          onClose={closeModal}
+          refreshTable={refreshTable}
+        />
+      )}
     </div>
   );
 };

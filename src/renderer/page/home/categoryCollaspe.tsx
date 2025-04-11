@@ -31,6 +31,8 @@ interface DataType {
   avg: string;
   value: string;
   percent: string;
+  category?: string;
+  color?: string;
   child: DataType[];
 }
 
@@ -85,8 +87,10 @@ const CategoryCollaspe = (props: {
   data: DataType[];
   formValue: FormData;
   refreshTable: () => void;
+  showModal?: (category: string) => void;
+  useSharedModal?: boolean;
 }) => {
-  const { data, formValue, refreshTable } = props;
+  const { data, formValue, refreshTable, showModal, useSharedModal = false } = props;
   // const [show, toggle] = useModal();
   const [visible, setVisible] = useState<boolean>(false);
   const [cate, setCate] = useState<string>('');
@@ -143,6 +147,15 @@ const CategoryCollaspe = (props: {
 
   const refresh = () => {
     refreshTable();
+  };
+
+  const handleCategoryClick = (categoryValue: string) => {
+    if (useSharedModal && showModal) {
+      showModal(categoryValue);
+    } else {
+      setCate(categoryValue);
+      setVisible(true);
+    }
   };
 
   const items: CollapseProps['items'] = data.map((item, index) => {
@@ -219,8 +232,7 @@ const CategoryCollaspe = (props: {
         return (
           <Item
             onClick={() => {
-              setCate(child.category);
-              setVisible(true);
+              handleCategoryClick(child.category);
             }}
             name={child.name}
             total={child.value}
@@ -236,7 +248,7 @@ const CategoryCollaspe = (props: {
   return (
     <>
       {<Collapse bordered={false} expandIconPosition="end" items={items} />}
-      {visible && (
+      {!useSharedModal && visible && (
         <Modal
           width={1000}
           closable={true}
