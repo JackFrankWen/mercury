@@ -208,6 +208,12 @@ const columns: ColumnsType<I_Transaction> = [
       return dateA.valueOf() - dateB.valueOf();
     },
   },
+  {
+    title: '上传文件',
+    dataIndex: 'upload_file_name',
+    width: 100,
+    render: (val: string) => val,
+  },
 ];
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 

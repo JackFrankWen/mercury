@@ -1,12 +1,12 @@
-import { log } from "node:console";
-import { getDbInstance } from "./connect";
-import { Params_Transaction } from "src/preload/type";
-import { generateWhereClause } from "./common";
+import { log } from 'node:console';
+import { getDbInstance } from './connect';
+import { Params_Transaction } from 'src/preload/type';
+import { generateWhereClause } from './common';
 export interface I_Transaction {
   id: number;
-  amount: number;// 金额
-  category: string;// 分类
-  description: string;// 描述
+  amount: number; // 金额
+  category: string; // 分类
+  description: string; // 描述
   payee: string; // 交易对方
   account_type: string; // 账户类型
   payment_type: string; // 支付方式
@@ -17,11 +17,10 @@ export interface I_Transaction {
   trans_time: Date; // 交易时间
   creation_time: Date; // 创建时间
   modification_time: Date; // 修改时间
+  upload_file_name: string; // 上传文件名
 }
 // 批量替换数据
-export async function batchReplaceTransactions(
-  list: I_Transaction[],
-): Promise<void> {
+export async function batchReplaceTransactions(list: I_Transaction[]): Promise<void> {
   if (!list.length) return;
 
   const db = await getDbInstance();
@@ -29,20 +28,20 @@ export async function batchReplaceTransactions(
   try {
     // 开启事务以提高批量操作性能
     await new Promise<void>((resolve, reject) => {
-      db.run("BEGIN TRANSACTION", (err) => (err ? reject(err) : resolve()));
+      db.run('BEGIN TRANSACTION', err => (err ? reject(err) : resolve()));
     });
 
     const sql = `REPLACE INTO transactions (
       id, amount, category, description, payee, 
       account_type, payment_type, consumer, flow_type, 
-      tag, trans_time, account_name,
+      tag, trans_time, account_name, upload_file_name,
       creation_time, modification_time
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', '+8 hours'))`;
 
     // 使用 Promise.all 并行处理插入操作
     await Promise.all(
       list.map(
-        (transaction) =>
+        transaction =>
           new Promise<void>((resolve, reject) => {
             db.run(
               sql,
@@ -59,31 +58,30 @@ export async function batchReplaceTransactions(
                 transaction.tag,
                 transaction.trans_time,
                 transaction.account_name || '',
+                transaction.upload_file_name || '',
                 transaction.creation_time,
               ],
-              (err) => (err ? reject(err) : resolve()),
+              err => (err ? reject(err) : resolve())
             );
-          }),
-      ),
+          })
+      )
     );
 
     // 提交事务
     await new Promise<void>((resolve, reject) => {
-      db.run("COMMIT", (err) => (err ? reject(err) : resolve()));
+      db.run('COMMIT', err => (err ? reject(err) : resolve()));
     });
   } catch (error) {
     // 发生错误时回滚事务
-    await new Promise<void>((resolve) => {
-      db.run("ROLLBACK", () => resolve());
+    await new Promise<void>(resolve => {
+      db.run('ROLLBACK', () => resolve());
     });
-    console.error("Error in batch replacing transactions:", error);
+    console.error('Error in batch replacing transactions:', error);
     throw error; // 向上传递错误，让调用者知道操作失败
   }
 }
 // 获取所有交易 根据preload.ts 的getTransactions
-export const getAllTransactions = async (
-  params: Params_Transaction,
-): Promise<I_Transaction[]> => {
+export const getAllTransactions = async (params: Params_Transaction): Promise<I_Transaction[]> => {
   try {
     const db = await getDbInstance();
     const { whereClause } = generateWhereClause(params);
@@ -103,7 +101,7 @@ export const getAllTransactions = async (
     const rows = await new Promise<I_Transaction[]>((resolve, reject) => {
       db.all(sql, (err, rows: I_Transaction[]) => {
         if (err) {
-          console.error("Database query error:", err);
+          console.error('Database query error:', err);
           reject(err);
           return;
         }
@@ -112,7 +110,7 @@ export const getAllTransactions = async (
     });
     return rows;
   } catch (error) {
-    console.error("Error getting transactions:", error);
+    console.error('Error getting transactions:', error);
     throw error;
   }
 };
@@ -123,14 +121,14 @@ export async function deleteTransactions(ids: number[]): Promise<void> {
     const db = await getDbInstance();
 
     // Create a string of placeholders for the SQL query
-    const placeholders = ids.map(() => "?").join(",");
+    const placeholders = ids.map(() => '?').join(',');
     const sql = `DELETE FROM transactions WHERE id IN (${placeholders})`;
 
     // Execute the SQL query to delete the transactions
     await new Promise<void>((resolve, reject) => {
-      db.run(sql, ids, (err) => {
+      db.run(sql, ids, err => {
         if (err) {
-          console.error("Error deleting transactions:", err);
+          console.error('Error deleting transactions:', err);
           reject(err);
           return;
         }
@@ -138,7 +136,7 @@ export async function deleteTransactions(ids: number[]): Promise<void> {
       });
     });
   } catch (error) {
-    console.error("Error deleting transactions:", error);
+    console.error('Error deleting transactions:', error);
     throw error;
   }
 }
@@ -146,27 +144,22 @@ type Params_Update = Params_Transaction & {
   modification_time?: string;
 };
 // 批量修改
-export async function updateTransactions(
-  ids: number[],
-  params: Params_Update,
-): Promise<void> {
+export async function updateTransactions(ids: number[], params: Params_Update): Promise<void> {
   try {
     const db = await getDbInstance();
 
     // Create a string of placeholders for the SQL query
-    const placeholders = ids.map(() => "?").join(",");
+    const placeholders = ids.map(() => '?').join(',');
     // Add modification_time to track when the record was last updated
     const sql = `UPDATE transactions SET ${Object.keys(params)
-      .map((key) => `${key} = ?`)
-      .join(
-        ",",
-      )}, modification_time = datetime('now', '+8 hours') WHERE id IN (${placeholders})`;
+      .map(key => `${key} = ?`)
+      .join(',')}, modification_time = datetime('now', '+8 hours') WHERE id IN (${placeholders})`;
 
     // Execute the SQL query to update the transactions
     await new Promise<void>((resolve, reject) => {
-      db.run(sql, [...Object.values(params), ...ids], (err) => {
+      db.run(sql, [...Object.values(params), ...ids], err => {
         if (err) {
-          console.error("Error updating transactions:", err);
+          console.error('Error updating transactions:', err);
           reject(err);
           return;
         }
@@ -174,22 +167,20 @@ export async function updateTransactions(
       });
     });
   } catch (error) {
-    console.error("Error updating transactions:", error);
+    console.error('Error updating transactions:', error);
     throw error;
   }
 }
 // 批量插入
-export async function batchInsertTransactions(
-  list: I_Transaction[],
-): Promise<void> {
+export async function batchInsertTransactions(list: I_Transaction[]): Promise<void> {
   try {
     const db = await getDbInstance();
     const sql = `INSERT INTO transactions (
       amount, category, description, payee, account_type, 
       payment_type, consumer, flow_type, tag, 
-      account_name,
+      account_name, upload_file_name,
       trans_time
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     for (const transaction of list) {
       await new Promise<void>((resolve, reject) => {
@@ -206,18 +197,18 @@ export async function batchInsertTransactions(
             transaction.flow_type,
             transaction.tag,
             transaction.account_name || '',
+            transaction.upload_file_name || '',
             transaction.trans_time,
-
           ],
-          (err) => {
+          err => {
             if (err) reject(err);
             else resolve();
-          },
+          }
         );
       });
     }
   } catch (error) {
-    console.error("Error inserting transactions:", error);
+    console.error('Error inserting transactions:', error);
     throw error;
   }
 }
@@ -307,20 +298,15 @@ export function getPreciseMonthsDiff(startDate: string, endDate: string): number
 
 // 获取category 的 group by
 export async function getCategoryTotal(
-  params: Params_Transaction,
-): Promise<
-  { category: string; total: number; avg: number; percent: number }[]
-> {
+  params: Params_Transaction
+): Promise<{ category: string; total: number; avg: number; percent: number }[]> {
   try {
     const db = await getDbInstance();
     if (!params.trans_time) {
       return [];
     }
 
-    const monthsDiff = getMonthsDiff(
-      params.trans_time[0],
-      params.trans_time[1],
-    );
+    const monthsDiff = getMonthsDiff(params.trans_time[0], params.trans_time[1]);
     const { whereClause } = generateWhereClause(params);
 
     const sql = `
@@ -350,15 +336,15 @@ export async function getCategoryTotal(
     });
     return rows;
   } catch (error) {
-    console.log()
-    console.error("Error getting category total by date:", error);
+    console.log();
+    console.error('Error getting category total by date:', error);
     throw error;
   }
 }
 
 // 新增单条交易记录
 export async function insertTransaction(
-  transaction: Partial<I_Transaction>,
+  transaction: Partial<I_Transaction>
 ): Promise<{ id: number; success: boolean; message: string }> {
   try {
     const db = await getDbInstance();
@@ -409,14 +395,14 @@ export async function insertTransaction(
     return {
       id: result.lastID,
       success: true,
-      message: `交易记录已成功添加，ID: ${result.lastID}`
+      message: `交易记录已成功添加，ID: ${result.lastID}`,
     };
   } catch (error) {
     console.error('Error inserting transaction:', error);
     return {
       id: 0,
       success: false,
-      message: error instanceof Error ? error.message : '添加交易记录时发生未知错误'
+      message: error instanceof Error ? error.message : '添加交易记录时发生未知错误',
     };
   }
 }
@@ -433,7 +419,7 @@ function datetime(modifier: string, timezone: string): string {
 
 // 查询transaction 的所有数据，并且返回 [{date: '2022-02', total: 111}]
 export async function getTransactionsByMonth(
-  params: Params_Transaction,
+  params: Params_Transaction
 ): Promise<{ date: string; total: number }[]> {
   try {
     const db = await getDbInstance();
@@ -470,25 +456,23 @@ export async function getTransactionsByMonth(
       ORDER BY date ASC
     `;
 
-    const rows = await new Promise<{ date: string; total: number }[]>(
-      (resolve, reject) => {
-        db.all(sql, [startDate, endDate], (err, rows) => {
-          if (err) reject(err);
-          else resolve(rows);
-        });
-      },
-    );
+    const rows = await new Promise<{ date: string; total: number }[]>((resolve, reject) => {
+      db.all(sql, [startDate, endDate], (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
 
     return rows;
   } catch (error) {
-    console.error("Error getting transactions by month:", error);
+    console.error('Error getting transactions by month:', error);
     throw error;
   }
 }
 
 // 按消费者分组统计
 export async function getConsumerTotal(
-  params: Params_Transaction,
+  params: Params_Transaction
 ): Promise<{ item: string; total: number }[]> {
   try {
     const db = await getDbInstance();
@@ -505,29 +489,27 @@ export async function getConsumerTotal(
       ORDER BY total DESC
     `;
 
-    const rows = await new Promise<{ item: string; total: number }[]>(
-      (resolve, reject) => {
-        db.all(sql, (err, rows) => {
-          if (err) {
-            console.error("Error getting consumer totals:", err);
-            reject(err);
-            return;
-          }
-          resolve(rows || []);
-        });
-      },
-    );
+    const rows = await new Promise<{ item: string; total: number }[]>((resolve, reject) => {
+      db.all(sql, (err, rows) => {
+        if (err) {
+          console.error('Error getting consumer totals:', err);
+          reject(err);
+          return;
+        }
+        resolve(rows || []);
+      });
+    });
 
     return rows;
   } catch (error) {
-    console.error("Error getting consumer totals:", error);
+    console.error('Error getting consumer totals:', error);
     throw error;
   }
 }
 
 // 按账户类型和支付方式分组统计
 export async function getAccountPaymentTotal(
-  params: Params_Transaction,
+  params: Params_Transaction
 ): Promise<{ account_type: string; payment_type: string; total: number }[]> {
   try {
     const db = await getDbInstance();
@@ -545,29 +527,29 @@ export async function getAccountPaymentTotal(
       ORDER BY total DESC
     `;
     console.log(sql, 'sql=getAccountPaymentTotal===');
-    const rows = await new Promise<
-      { account_type: string; payment_type: string; total: number }[]
-    >((resolve, reject) => {
-      db.all(sql, (err, rows) => {
-        if (err) {
-          console.error("Error getting account and payment totals:", err);
-          reject(err);
-          return;
-        }
-        resolve(rows || []);
-      });
-    });
+    const rows = await new Promise<{ account_type: string; payment_type: string; total: number }[]>(
+      (resolve, reject) => {
+        db.all(sql, (err, rows) => {
+          if (err) {
+            console.error('Error getting account and payment totals:', err);
+            reject(err);
+            return;
+          }
+          resolve(rows || []);
+        });
+      }
+    );
 
     return rows;
   } catch (error) {
-    console.error("Error getting account and payment totals:", error);
+    console.error('Error getting account and payment totals:', error);
     throw error;
   }
 }
 
 // 删除所有交易数据
 export async function deleteAllTransactions(
-  params: Params_Transaction,
+  params: Params_Transaction
 ): Promise<{ code: number; message: string; deletedCount: number }> {
   try {
     const db = await getDbInstance();
@@ -591,14 +573,14 @@ export async function deleteAllTransactions(
     return {
       code: 200,
       message: `成功删除 ${deletedCount} 条交易数据`,
-      deletedCount
+      deletedCount,
     };
   } catch (error) {
     console.error('Error deleting all transactions:', error);
     return {
       code: 500,
       message: error instanceof Error ? error.message : '删除交易数据时发生未知错误',
-      deletedCount: 0
+      deletedCount: 0,
     };
   }
 }
@@ -607,7 +589,7 @@ export async function deleteAllTransactions(
 
 // 根据trans_time获取每天的amount,group by 天
 export async function getDailyTransactionAmounts(
-  params: Params_Transaction,
+  params: Params_Transaction
 ): Promise<{ date: string; total: number }[]> {
   try {
     const db = await getDbInstance();
@@ -628,24 +610,22 @@ export async function getDailyTransactionAmounts(
       ORDER BY date ASC
     `;
 
-    console.log("getDailyTransactionAmounts sql:", sql);
+    console.log('getDailyTransactionAmounts sql:', sql);
 
-    const rows = await new Promise<{ date: string; total: number }[]>(
-      (resolve, reject) => {
-        db.all(sql, (err, rows) => {
-          if (err) {
-            console.error("Error getting daily transaction amounts:", err);
-            reject(err);
-            return;
-          }
-          resolve(rows || []);
-        });
-      },
-    );
+    const rows = await new Promise<{ date: string; total: number }[]>((resolve, reject) => {
+      db.all(sql, (err, rows) => {
+        if (err) {
+          console.error('Error getting daily transaction amounts:', err);
+          reject(err);
+          return;
+        }
+        resolve(rows || []);
+      });
+    });
 
     return rows;
   } catch (error) {
-    console.error("Error getting daily transaction amounts:", error);
+    console.error('Error getting daily transaction amounts:', error);
     throw error;
   }
 }

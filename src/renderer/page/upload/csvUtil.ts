@@ -81,7 +81,8 @@ export function formateToTableAlipayMobileHeader(arr: any): tableHeaderI {
 export function formateToTableDataAlipayMobile(
   arr: string[][],
   account_type: number,
-  payment_type: number
+  payment_type: number,
+  fileName: string
 ): any {
   // let costArr = arr.filter((subArr: string[]) => !/不计收支/.test(subArr[5]));
   // 过滤交易关闭
@@ -151,6 +152,7 @@ export function formateToTableDataAlipayMobile(
         categoryLabel: subArr[1],
         account_name: subArr[7],
         // 交易状态
+        upload_file_name: fileName,
       };
     })
     .filter((item: any) => Number(item.amount) !== 0);
@@ -160,7 +162,8 @@ export function formateToTableDataAlipayMobile(
 export function formateToTableDataWechat(
   arr: string[][],
   account_type: number,
-  payment_type: number
+  payment_type: number,
+  fileName: string
 ): any {
   const costArr = arr.filter((subArr: string[]) => !/零钱通/.test(subArr[11]));
   return costArr
@@ -196,6 +199,7 @@ export function formateToTableDataWechat(
         trans_time: subArr[0],
         modification_time: undefined,
         account_name: subArr[6],
+        upload_file_name: fileName,
       };
     })
     .filter((item: any) => Number(item.amount) > 0);
@@ -247,7 +251,8 @@ export function trimString(str: unknown) {
 export function formateToTableAlipay(
   arr: string[][],
   account_type: number,
-  payment_type: number
+  payment_type: number,
+  fileName: string
 ): any[] {
   let costArr = arr.filter((subArr: string[]) => /交易成功/.test(subArr[11]));
   costArr = costArr.filter((subArr: string[]) => !/不计收支/.test(subArr[10]));
@@ -287,6 +292,7 @@ export function formateToTableAlipay(
       creation_time: undefined,
       trans_time: (subArr[2] || '').trim(),
       modification_time: undefined,
+      upload_file_name: fileName,
     };
   });
 }
