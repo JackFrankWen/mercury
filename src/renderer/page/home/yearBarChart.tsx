@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { EllipsisOutlined, FilterFilled } from '@ant-design/icons';
 import BarChart from 'src/renderer/components/barChart';
-import { Card, Cascader, Flex, message, Modal, Space, theme } from 'antd';
-import { useSelect } from '../../components/useSelect';
-import { cpt_const, payment_type } from 'src/renderer/const/web';
+import { Card, Cascader, Flex, message, Modal, Space, theme, Typography } from 'antd';
 import LunarCalendar from './lunarCalendar';
 import { FormData } from './useReviewForm';
 import { useFresh } from 'src/renderer/components/useFresh';
@@ -11,7 +9,6 @@ import emitter from 'src/renderer/events';
 import { category_type } from 'src/renderer/const/categroy';
 import { DefaultOptionType } from 'antd/es/cascader';
 import { renderIcon } from 'src/renderer/components/FontIcon';
-import useExtraControls from 'src/renderer/components/useExtraControls';
 
 function YearBarChart(props: {
   formValue: FormData;
@@ -26,7 +23,7 @@ function YearBarChart(props: {
   const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>([]);
   const [year, setYear] = useState('');
   const [categoryVal, setCategoryVal] = useState<string[]>([]);
-
+  const [monthlyAverage, setMonthlyAverage] = useState<number>(0);
 
   const { accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt } = extraState;
 
@@ -55,6 +52,14 @@ function YearBarChart(props: {
     [formValue, consumerVal, accountTypeVal, paymentTypeVal, tagVal, categoryVal],
     'transaction'
   );
+
+  useEffect(() => {
+    if (data.length > 0) {
+      const total = data.reduce((sum, item) => sum + item.total, 0);
+      const average = total / data.length;
+      setMonthlyAverage(average);
+    }
+  }, [data]);
 
   const fetchData = async (obj: any) => {
     if (!obj) return;
@@ -123,6 +128,13 @@ function YearBarChart(props: {
         {formValue.type === 'year' ? (
           <>
             <BarChart data={data} hasElementClick={true} setYear={setYear} />
+            {data.length > 0 && (
+              <div style={{ textAlign: 'center', marginTop: '8px', marginBottom: '-8px' }}>
+                <Typography.Text type="secondary">
+                  月均支出：¥{monthlyAverage.toFixed(2)}
+                </Typography.Text>
+              </div>
+            )}
           </>
         ) : (
           <>
