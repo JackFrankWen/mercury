@@ -9,7 +9,7 @@ import emitter from 'src/renderer/events';
 import { category_type } from 'src/renderer/const/categroy';
 import { DefaultOptionType } from 'antd/es/cascader';
 import { renderIcon } from 'src/renderer/components/FontIcon';
-
+import { formatMoney } from 'src/renderer/components/utils';
 function YearBarChart(props: {
   formValue: FormData;
   extraState: any;
@@ -25,7 +25,8 @@ function YearBarChart(props: {
   const [categoryVal, setCategoryVal] = useState<string[]>([]);
   const [monthlyAverage, setMonthlyAverage] = useState<number>(0);
 
-  const { accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt } = extraState;
+  const { accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt } =
+    extraState;
 
   useFresh(
     () => {
@@ -92,28 +93,27 @@ function YearBarChart(props: {
   const refresh = () => {
     emitter.emit('refresh', 'transaction');
   };
-  const extra = (<Space>
-    <Cascader
-      options={category_type}
-      allowClear
-      multiple
-      value={categoryVal}
-      style={{ width: '100px' }}
-      onChange={val => setCategoryVal(val as string[])}
-      placeholder="分类"
-      showSearch={{
-        filter: (inputValue: string, path: DefaultOptionType[]) =>
-          path.some(
-            option =>
-              (option.label as string)
-                .toLowerCase()
-                .indexOf(inputValue.toLowerCase()) > -1
-          ),
-      }}
-    />
-    {extraComponent}
-  </Space>
-  )
+  const extra = (
+    <Space>
+      <Cascader
+        options={category_type}
+        allowClear
+        multiple
+        value={categoryVal}
+        style={{ width: '100px' }}
+        onChange={val => setCategoryVal(val as string[])}
+        placeholder="分类"
+        showSearch={{
+          filter: (inputValue: string, path: DefaultOptionType[]) =>
+            path.some(
+              option =>
+                (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+            ),
+        }}
+      />
+      {extraComponent}
+    </Space>
+  );
   return (
     <div className="mt8">
       <Card title={cardTitle()} bordered={false} hoverable extra={extra}>
@@ -131,7 +131,7 @@ function YearBarChart(props: {
             {data.length > 0 && (
               <div style={{ textAlign: 'center', marginTop: '8px', marginBottom: '-8px' }}>
                 <Typography.Text type="secondary">
-                  月均支出：¥{monthlyAverage.toFixed(2)}
+                  月均支出：¥{formatMoney(monthlyAverage)}
                 </Typography.Text>
               </div>
             )}
@@ -184,6 +184,16 @@ function YearBarChart(props: {
               data={daliyData}
               refresh={refresh}
             />
+            {daliyData.length > 0 && (
+              <div style={{ textAlign: 'center', marginTop: '8px', marginBottom: '-8px' }}>
+                <Typography.Text type="secondary">
+                  日均支出：¥
+                  {formatMoney(
+                    daliyData.reduce((sum, item) => sum + item.total, 0) / daliyData.length
+                  )}
+                </Typography.Text>
+              </div>
+            )}
           </>
         )}
       </Card>
