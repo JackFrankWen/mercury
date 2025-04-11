@@ -3,6 +3,7 @@ export type CategoryReturnType = {
   id: string;
   name: string;
   avg: string;
+  category: string;
   child: {
     avg: string;
     category: string;

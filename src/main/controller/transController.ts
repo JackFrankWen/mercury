@@ -1,5 +1,5 @@
 import { getCategoryObj, getCategoryName } from "../../renderer/const/categroy";
-import { CategoryReturnType } from "../../preload";
+import { CategoryReturnType } from "../../preload/type";
 import { roundToTwoDecimalPlaces } from "../../renderer/components/utils";
 
 export function transferCategory(list: any): CategoryReturnType {
@@ -47,6 +47,7 @@ export function transferCategory(list: any): CategoryReturnType {
       const newParent = {
         value: roundToTwoDecimalPlaces(element.total),
         id: parent_id,
+        category: parent_id,
         avg: roundToTwoDecimalPlaces(element.avg),
         name: getCategoryName(parent_id),
         percent: roundToTwoDecimalPlaces(element.percent),

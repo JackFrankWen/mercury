@@ -3,12 +3,14 @@ import React, { useState } from 'react';
 import CategoryTable from './categoryTable';
 import { cpt_const } from 'src/renderer/const/web';
 import DonutChart from 'src/renderer/components/donutChart';
-import { CategoryReturnType } from 'src/preload/index';
 import CategoryCollaspe from './categoryCollaspe';
 import { useFresh } from 'src/renderer/components/useFresh';
 import emitter from 'src/renderer/events';
 import { category_type } from 'src/renderer/const/categroy';
 import useExtraControls from 'src/renderer/components/useExtraControls';
+import { CategoryReturnType } from 'src/preload/type';
+import { log } from 'node:console';
+
 // 写一个方法  CategoryReturnType中 child 每一条数据    转化成 PieChart 的 data 用reduce
 // 转化 {value: item.child.value, name: item.child.name, type: item.    value}
 
@@ -19,6 +21,7 @@ function convertCategoryReturnTypeToPieChartData(category: CategoryReturnType) {
         value: Number(child.value),
         name: child.name,
         type: item.name,
+        category: child.category,
       });
     });
     return acc;
@@ -72,6 +75,7 @@ function TableSection(props: {
         ...data,
         trans_time,
       });
+      console.log(result, '====result');
 
       setCategory(result);
     } catch (error) {
