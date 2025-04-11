@@ -113,6 +113,7 @@ function BasicContent() {
           try {
             // 调用 API 删除指定时间范围内的交易
             const params = {
+              all_flow_type: true,
               [timeType]:
                 timeType === 'trans_time'
                   ? [startDate, endDate]

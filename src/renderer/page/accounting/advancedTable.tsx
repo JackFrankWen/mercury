@@ -25,7 +25,7 @@ import {
   SwapOutlined,
 } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { account_type, payment_type, tag_type } from '../../const/web';
+import { account_type, getFlowType, payment_type, tag_type } from '../../const/web';
 import type { TableColumnsType, TableProps } from 'antd';
 import { I_Transaction } from 'src/main/sqlite3/transactions';
 import dayjs from 'dayjs';
@@ -213,6 +213,14 @@ const columns: ColumnsType<I_Transaction> = [
     dataIndex: 'upload_file_name',
     width: 100,
     render: (val: string) => val,
+  },
+  {
+    title: '收支',
+    dataIndex: 'flow_type',
+    width: 100,
+    render: (val: string) => {
+      return <Tag color={val === '1' ? 'green' : val === '2' ? 'red' : 'blue'}>{getFlowType(val)}</Tag>;
+    },
   },
 ];
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];

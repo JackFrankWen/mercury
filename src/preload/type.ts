@@ -28,4 +28,5 @@ export interface Params_Transaction {
   is_unclassified?: boolean; // 是否未分类
   flow_type?: string;
   upload_file_name?: string;
+  all_flow_type?: boolean;
 }

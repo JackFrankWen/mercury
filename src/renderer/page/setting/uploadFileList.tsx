@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { List, Button, Popconfirm, message, Typography, Empty } from 'antd';
+import { List, Button, Modal, message, Typography, Empty } from 'antd';
 import { AlipayCircleOutlined, WechatOutlined, DeleteOutlined } from '@ant-design/icons';
 import './uploadFileList.css';
 import { useFresh } from 'src/renderer/components/useFresh';
+import emitter from 'src/renderer/events';
 
 const { Title } = Typography;
 
@@ -33,14 +34,22 @@ export const UploadFileList: React.FC = () => {
 
   useFresh(() => {
     fetchFileList();
-  }, [], 'fileList');
+  }, [fileList], 'fileList');
 
   const handleRemoveFile = async (file: UploadFile) => {
     try {
       const updatedList = fileList.filter(item => item.fileName !== file.fileName);
       await window.mercury.store.setUploadFileList(updatedList);
-      setFileList(updatedList);
-      message.success('文件删除成功');
+      const result = await window.mercury.api.deleteAllTransactions({
+        upload_file_name: file.fileName,
+        all_flow_type: true,
+      });
+      if (result.code === 200) {
+        emitter.emit('refresh', 'transaction');
+        message.success(`成功删除 ${result.message || 0} 条交易记录`);
+      } else {
+        message.error(result.message);
+      }
     } catch (error) {
       console.error('Failed to remove file:', error);
       message.error('删除文件失败');
@@ -70,18 +79,23 @@ export const UploadFileList: React.FC = () => {
     <div className="upload-file-list-container">
       <div className="upload-file-header">
         <Title level={4}>已导入文件列表</Title>
-        <Popconfirm
-          title="确认删除所有文件？"
-          description="此操作不可恢复！"
-          onConfirm={handleRemoveAll}
-          okText="是"
-          cancelText="否"
+        <Button
+          type="primary"
+          danger
+          icon={<DeleteOutlined />}
           disabled={fileList.length === 0}
+          onClick={() => {
+            Modal.confirm({
+              title: '确认删除所有文件？',
+              content: '保留交易数据，可以重新导入文件！',
+              okText: '是',
+              cancelText: '否',
+              onOk: handleRemoveAll
+            });
+          }}
         >
-          <Button type="primary" danger icon={<DeleteOutlined />} disabled={fileList.length === 0}>
-            全部删除
-          </Button>
-        </Popconfirm>
+          全部删除
+        </Button>
       </div>
 
       {fileList.length > 0 ? (
@@ -99,15 +113,21 @@ export const UploadFileList: React.FC = () => {
             <List.Item
               key={`${item.fileName}-${index}`}
               actions={[
-                <Popconfirm
+                <Button
                   key="delete-action"
-                  title="确认删除该文件？"
-                  onConfirm={() => handleRemoveFile(item)}
-                  okText="是"
-                  cancelText="否"
-                >
-                  <Button type="text" danger icon={<DeleteOutlined />} />
-                </Popconfirm>,
+                  type="text"
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={() => {
+                    Modal.confirm({
+                      title: '确认删除该文件，并且删除上传的交易数据？',
+                      content: '删除后无法恢复！',
+                      okText: '是',
+                      cancelText: '否',
+                      onOk: () => handleRemoveFile(item)
+                    });
+                  }}
+                />
               ]}
             >
               <List.Item.Meta
