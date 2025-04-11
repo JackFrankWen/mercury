@@ -347,7 +347,7 @@ export function formateToTableJd(arr: string[][], type: 'jd' | 'pdd' | 'alipay16
   if (type === 'jd') {
     newArr = arr.filter(subArr => subArr[3] === '已完成' || subArr[3] === '等待收货');
   } else if (type === 'pdd') {
-    newArr = arr.filter(subArr => subArr[3] === '交易成功');
+    newArr = arr
   } else if (type === 'alipay1688') {
     newArr = arr;
   }

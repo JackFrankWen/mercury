@@ -212,6 +212,7 @@ const columns: ColumnsType<I_Transaction> = [
     title: '上传文件',
     dataIndex: 'upload_file_name',
     width: 100,
+    ellipsis: true,
     render: (val: string) => val,
   },
   {
