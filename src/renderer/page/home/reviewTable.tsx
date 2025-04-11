@@ -6,18 +6,12 @@ import DonutChart from 'src/renderer/components/donutChart';
 import CategoryCollaspe from './categoryCollaspe';
 import { useFresh } from 'src/renderer/components/useFresh';
 import emitter from 'src/renderer/events';
-import { category_type } from 'src/renderer/const/categroy';
-import useExtraControls from 'src/renderer/components/useExtraControls';
 import { CategoryReturnType } from 'src/preload/type';
-import { log } from 'node:console';
 import BarChart from 'src/renderer/components/barChart';
 import { ModalContent } from './ModalContent';
 
-// 写一个方法  CategoryReturnType中 child 每一条数据    转化成 PieChart 的 data 用reduce
-// 转化 {value: item.child.value, name: item.child.name, type: item.    value}
 
 function convertCategoryReturnTypeToPieChartData(category: CategoryReturnType) {
-  console.log(category, '====category');
 
   return category.reduce((acc: any, item: any) => {
     item.child.forEach((child: any) => {
