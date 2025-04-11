@@ -58,6 +58,10 @@ export const tag_type = {
 export const flow_type = {
   1: "支出",
   2: "收入",
+  3: "不计支出",
+};
+export const getFlowType = (type: number | string): string => {
+  return flow_type[Number(type)] || "未知收支类型";
 };
 
 export const transform = (obj: any) => {

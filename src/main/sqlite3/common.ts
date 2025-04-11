@@ -6,10 +6,12 @@ export function generateWhereClause(params: Params_Transaction): {
   conditions: string[];
 } {
   const conditions: string[] = [];
-  if (params?.flow_type) {
-    conditions.push(`flow_type = '${params.flow_type}'`);
-  } else {
-    conditions.push(`flow_type = '1'`);
+  if (!params?.all_flow_type) {
+    if (params?.flow_type) {
+      conditions.push(`flow_type = '${params.flow_type}'`);
+    } else {
+      conditions.push(`flow_type = '1'`);
+    }
   }
 
   if (params?.is_unclassified && !params?.category) {
@@ -75,8 +77,9 @@ export function generateWhereClause(params: Params_Transaction): {
     conditions.push(`tag = '${params.tag}'`);
   }
 
-
-
+  if (params?.upload_file_name) {
+    conditions.push(`upload_file_name = '${params.upload_file_name}'`);
+  }
 
   if (params?.category) {
     if (typeof params.category === 'string') {

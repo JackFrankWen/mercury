@@ -1,4 +1,4 @@
-import { I_Transaction } from "src/main/sqlite3/transactions";
+import { I_Transaction } from 'src/main/sqlite3/transactions';
 import {
   formateToTableAlipay,
   formateToTableAlipayHeader,
@@ -7,20 +7,20 @@ import {
   formateToTableDataWechat,
   formateToTableAlipayMobileHeader,
   formateToTableDataAlipayMobile,
-} from "./csvUtil";
-import { detectOS } from "src/renderer/components/utils";
+} from './csvUtil';
+import { detectOS } from 'src/renderer/components/utils';
 export enum ClassificationEnum {
-  WECHAT = "wechat", // 手机导入
-  ALIPAY = "alipay", // 电脑导入
-  ALIPAY_MOBILE = "alipayMobile", // 手机导入
-  UNKNOWN = "unknown",
+  WECHAT = 'wechat', // 手机导入
+  ALIPAY = 'alipay', // 电脑导入
+  ALIPAY_MOBILE = 'alipayMobile', // 手机导入
+  UNKNOWN = 'unknown',
 }
 export function getClassification(data: any): ClassificationEnum {
-  if (/微信/.test(data[0][0] || "")) {
+  if (/微信/.test(data[0][0] || '')) {
     return ClassificationEnum.WECHAT;
-  } else if (/支付宝/.test(data[0][0] || "")) {
+  } else if (/支付宝/.test(data[0][0] || '')) {
     return ClassificationEnum.ALIPAY;
-  } else if (/支付宝/.test(data[3][0] || "")) {
+  } else if (/支付宝/.test(data[3][0] || '')) {
     return ClassificationEnum.ALIPAY_MOBILE;
   }
   return ClassificationEnum.UNKNOWN;
@@ -45,7 +45,10 @@ export function transformArrayTo2D(data: string[]): string[][] {
   return result;
 }
 
-export function handleToTable(csvData: any): {
+export function handleToTable(
+  csvData: any,
+  fileName: string
+): {
   tableHeader: tableHeaderI;
   tableData: I_Transaction[];
   success: boolean;
@@ -70,7 +73,12 @@ export function handleToTable(csvData: any): {
         csvHeader = csvData.slice(0, 17);
         csvContent = csvData.slice(17);
         tableHeader = formateToTableWechatHeader(csvHeader);
-        tableData = formateToTableDataWechat(csvContent, tableHeader.account_type, WECHAT);
+        tableData = formateToTableDataWechat(
+          csvContent,
+          tableHeader.account_type,
+          WECHAT,
+          fileName
+        );
 
         return {
           tableHeader: tableHeader,
@@ -81,7 +89,7 @@ export function handleToTable(csvData: any): {
         csvHeader = [...csvData.slice(0, 5), ...csvData.slice(-7)];
         csvContent = csvData.slice(5, csvData.length - 7);
         tableHeader = formateToTableAlipayHeader(csvHeader);
-        tableData = formateToTableAlipay(csvContent, tableHeader.account_type, ALIPAY);
+        tableData = formateToTableAlipay(csvContent, tableHeader.account_type, ALIPAY, fileName);
         return {
           tableHeader: tableHeader,
           tableData: tableData as I_Transaction[],
@@ -98,7 +106,12 @@ export function handleToTable(csvData: any): {
         // 交易时间	交易分类	交易对方	对方账号	商品说明	收/支	金额	收/付款方式	交易状态	交易订单号	商家订单号	备注
         // 0: (12) ['交易时间', '交易分类', '交易对方', '对方账号', '商品说明', '收/支', '金额', '收/付款方式', '交易状态', '交易订单号', '商家订单号', '备注']
         tableHeader = formateToTableAlipayMobileHeader(csvHeader);
-        tableData = formateToTableDataAlipayMobile(csvContent, tableHeader.account_type, ALIPAY);
+        tableData = formateToTableDataAlipayMobile(
+          csvContent,
+          tableHeader.account_type,
+          ALIPAY,
+          fileName
+        );
         // 获取statusLIst 所有status
         // let statusList = tableData.map((item) =】00
         // })

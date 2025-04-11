@@ -27,7 +27,7 @@ contextBridge.exposeInMainWorld('mercury', {
       rule: string;
       consumer: number;
       tag?: string;
-     
+
     }) => ipcRenderer.invoke('match-rules:add', rule),
     // 更新匹配规则
     updateMatchRule: (
@@ -94,6 +94,8 @@ contextBridge.exposeInMainWorld('mercury', {
       ipcRenderer.invoke('transactions:getDailyAmounts', params),
     // 导出csv
     exportToCsv: () => ipcRenderer.invoke('export:csv'),
+    // 导出json
+    exportToJson: () => ipcRenderer.invoke('export:json'),
     // 高级规则 API
     getAllAdvancedRules: (params?: { nameOrRule?: string; active?: number }) =>
       ipcRenderer.invoke('advanced-rules:getAll', params),

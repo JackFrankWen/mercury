@@ -35,45 +35,7 @@ const db = new sqlite3.Database(getDbPath(), err => {
     console.log('Database connected and created if not exists');
   }
 });
-// 创建规则表 自动
-function createRuleAutoTable() {
-  const sql = `
-    CREATE TABLE IF NOT EXISTS "match_rules_auto" (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        payee TEXT,
-        category TEXT,
-        description TEXT, 
-        account_type TEXT,
-        payment_type TEXT,
-        consumer TEXT,
-        tag TEXT,
-        creation_time DATETIME DEFAULT (datetime('now', '+8 hours')),
-        modification_time DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-`;
-  return executeSQL(sql);
-}
-// 创建规则表 手动添加
-function createRuleTable() {
-  /*
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    rule TEXT, // 规则
-    category TEXT,
-    consumer TEXT,
-    */
-  const sql = `
-        CREATE TABLE IF NOT EXISTS match_rules (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            rule TEXT,
-            category TEXT,
-            consumer TEXT,
-            tag TEXT,
-            creation_time DATETIME DEFAULT (datetime('now', '+8 hours')),
-            modification_time DATETIME DEFAULT (datetime('now', '+8 hours'))
-        )
-    `;
-  return executeSQL(sql);
-}
+
 // 创建高级规则表
 function createAdvancedRuleTable() {
   /*
@@ -119,6 +81,7 @@ function createTransactionTable() {
             account_name TEXT,
             tag TEXT,
             trans_time DATETIME,
+            upload_file_name TEXT,
             creation_time DATETIME DEFAULT (datetime('now', '+8 hours')),
             modification_time DATETIME DEFAULT (datetime('now', '+8 hours'))
         )
@@ -155,9 +118,7 @@ async function checkTableExists(tableName) {
 
 module.exports = {
   db,
-  createRuleTable,
   createAdvancedRuleTable,
   createTransactionTable,
-  createRuleAutoTable,
   checkTableExists,
 };

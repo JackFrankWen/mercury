@@ -36,7 +36,7 @@ function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
         complete: function (results: any) {
           const csvData = results.data || [];
           console.log(file, '====aaa');
-          const { tableHeader, tableData, success } = handleToTable(csvData);
+          const { tableHeader, tableData, success } = handleToTable(csvData, file.name);
           if (!success) {
             message.error('上传错误文件');
             setLoading(false);

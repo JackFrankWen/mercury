@@ -134,6 +134,11 @@ const PieChart: React.FC<PieChartProps> = ({ data, height = 500 }) => {
 
     chart.interaction('element-highlight');
     chart.render();
+    // 点击事件
+    chart.on('element:click', (e) => {
+      console.log(e);
+    });
+
 
     // 保存 chart 实例以便清理
     chartRef.current = chart;

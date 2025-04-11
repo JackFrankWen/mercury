@@ -96,8 +96,14 @@ const expandedRowRender = (toggle: any) => (record: DataType) => {
   );
 };
 
-const CategoryTable = (props: { data: DataType[]; formValue: any; refreshTable: () => void }) => {
-  const { data, formValue, refreshTable } = props;
+const CategoryTable = (props: {
+  data: DataType[];
+  formValue: any;
+  refreshTable: () => void;
+  showModal?: (category: string) => void;
+  useSharedModal?: boolean;
+}) => {
+  const { data, formValue, refreshTable, showModal, useSharedModal = false } = props;
   const [show, toggle] = useModal();
   const [cate, setCate] = useState<string>('');
   const [modalData, setModaldata] = useState<any>([]);
@@ -134,8 +140,12 @@ const CategoryTable = (props: { data: DataType[]; formValue: any; refreshTable: 
   }, [formValue, cate, show]);
 
   const onRowClick = (val: string) => {
-    setCate(val);
-    toggle();
+    if (useSharedModal && showModal) {
+      showModal(val);
+    } else {
+      setCate(val);
+      toggle();
+    }
   };
   const tableSummary = (pageData: any) => {
     let totalCost = 0;
@@ -176,7 +186,7 @@ const CategoryTable = (props: { data: DataType[]; formValue: any; refreshTable: 
         dataSource={data}
         pagination={false}
       />
-      {show && (
+      {!useSharedModal && show && (
         <Modal
           width={1000}
           closable={true}

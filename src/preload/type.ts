@@ -3,6 +3,7 @@ export type CategoryReturnType = {
   id: string;
   name: string;
   avg: string;
+  category: string;
   child: {
     avg: string;
     category: string;
@@ -26,4 +27,6 @@ export interface Params_Transaction {
   max_money?: number;
   is_unclassified?: boolean; // 是否未分类
   flow_type?: string;
+  upload_file_name?: string;
+  all_flow_type?: boolean;
 }

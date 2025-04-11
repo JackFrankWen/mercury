@@ -410,7 +410,7 @@ export const category_type = [
         icon: 'fa-solid fa-umbrella-beach',
         color: '#FFC107', // 琥珀色
         tag: variable_cost,
-      },{
+      }, {
         value: 70004,
         label: '玩具',
         icon: 'fa-solid fa-gamepad',
@@ -601,14 +601,14 @@ export const category_type = [
         label: '意外丢失',
         icon: 'fa-solid fa-triangle-exclamation',
         color: '#FFC107', // 琥珀色
-      
+
       },
       {
         value: 100003,
         label: '未分类',
         icon: 'fa-solid fa-question-circle',
         color: '#2196F3', // 蓝色
-     
+
       },
     ],
   },
@@ -655,6 +655,25 @@ export const getCategoryString = (str: string | undefined, type = 1): string => 
 
     return '';
   }
+};
+// 写一个方法根据传入的string 判断category label 判断是父节点还是子节点 父节点返回true 子节点返回false
+export const isParentCategory = (label: string): boolean => {
+  // 检查是否为顶级分类
+  for (const category of category_type) {
+    if (category.label === label) {
+      return true;
+    }
+
+    // 如果在子分类中找到匹配，则返回false
+    for (const child of category.children) {
+      if (child.label === label) {
+        return false;
+      }
+    }
+  }
+
+  // 未找到匹配项，默认返回false
+  return false;
 };
 
 // Helper function to find category and icon by id

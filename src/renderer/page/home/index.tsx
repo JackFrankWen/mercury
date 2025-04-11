@@ -15,7 +15,6 @@ import { category_type } from '../../const/categroy';
 
 function Index(): JSX.Element {
   const [formValue, cpt] = useReviewForm();
-  const [searchParams] = useSearchParams();
   const [visible, setVisible] = useState(false);
 
   // 在父组件中调用 useExtraControls 并将结果传递给子组件
