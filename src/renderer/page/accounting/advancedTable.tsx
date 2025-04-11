@@ -219,7 +219,8 @@ const columns: ColumnsType<I_Transaction> = [
     dataIndex: 'flow_type',
     width: 100,
     render: (val: string) => {
-      return <Tag color={val === '1' ? 'green' : val === '2' ? 'red' : 'blue'}>{getFlowType(val)}</Tag>;
+      return <span style={{ color: val === '1' ? 'green' : val === '2' ? 'red' : 'blue' }}>
+        {getFlowType(val)}</span>;
     },
   },
 ];

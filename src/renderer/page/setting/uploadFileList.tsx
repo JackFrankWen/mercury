@@ -34,7 +34,7 @@ export const UploadFileList: React.FC = () => {
 
   useFresh(() => {
     fetchFileList();
-  }, [fileList], 'fileList');
+  }, [], 'fileList');
 
   const handleRemoveFile = async (file: UploadFile) => {
     try {
@@ -46,6 +46,7 @@ export const UploadFileList: React.FC = () => {
       });
       if (result.code === 200) {
         emitter.emit('refresh', 'transaction');
+        emitter.emit('refresh', 'fileList');
         message.success(`成功删除 ${result.message || 0} 条交易记录`);
       } else {
         message.error(result.message);

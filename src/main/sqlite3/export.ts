@@ -5,7 +5,7 @@ import dayjs from "dayjs";
 
 export async function exportAllTablesToCSV(): Promise<void> {
   const db = await getDbInstance();
-  const tables = ["transactions", "match_rules", "advanced_rules"];
+  const tables = ["transactions", "advanced_rules"];
   const exportDir = path.join(process.cwd(), "exports", dayjs().format("YYYYMMDD-HHmm"));
 
   // 创建导出目录
@@ -63,7 +63,7 @@ async function exportTableToCSV(db: any, tableName: string, exportDir: string): 
 
 export async function exportAllTablesToJSON(): Promise<void> {
   const db = await getDbInstance();
-  const tables = ['transactions', 'match_rules', 'advanced_rules'];
+  const tables = ['transactions', 'advanced_rules'];
   const exportDir = path.join(process.cwd(), 'exports', dayjs().format('YYYYMMDD-HHmm'));
 
   // 创建导出目录
