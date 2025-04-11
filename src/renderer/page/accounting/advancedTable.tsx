@@ -110,7 +110,7 @@ const columns: ColumnsType<I_Transaction> = [
   },
   {
     title: '交易对方',
-    width: 100,
+    width: 140,
     dataIndex: 'payee',
     ellipsis: true,
     key: 'payee',

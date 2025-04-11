@@ -26,7 +26,7 @@ function Accounting(): JSX.Element {
       ...formValue,
       is_unclassified: formValue.chose_unclassified === 'unclassified',
     });
-  }, [], 'transaction');
+  }, [formValue], 'transaction');
   const getTransactions = (params: Params_Transaction) => {
     // 如果 trans_time [object, object] 则转换为 [string, string]
 
@@ -54,10 +54,10 @@ function Accounting(): JSX.Element {
         <AdvancedTable
           data={transactions}
           fresh={() => {
-            getTransactions({
-              ...formValue,
-              is_unclassified: formValue.chose_unclassified === 'unclassified',
-            });
+            // getTransactions({
+            //   ...formValue,
+            //   is_unclassified: formValue.chose_unclassified === 'unclassified',
+            // });
             emitter.emit('refresh', 'transaction');
           }}
         />

@@ -1,3 +1,5 @@
+import Labels from "@antv/g2/lib/component/labels";
+
 const general_cost = 1, // 日常
   variable_cost = 2, // 变动
   fix_cost = 3; // 固定
@@ -144,7 +146,6 @@ export const category_type = [
         icon: 'fa-solid fa-toilet-paper',
         color: '#27AE60', // 深绿色
         tag: fix_cost,
-        consumer: family,
       },
       {
         value: 50003,
@@ -409,7 +410,12 @@ export const category_type = [
         icon: 'fa-solid fa-umbrella-beach',
         color: '#FFC107', // 琥珀色
         tag: variable_cost,
-      },
+      },{
+        value: 70004,
+        label: '玩具',
+        icon: 'fa-solid fa-gamepad',
+        color: '#FF9800', // 橙色
+      }
     ],
   },
   {
@@ -589,24 +595,20 @@ export const category_type = [
         label: '烂账',
         icon: 'fa-solid fa-trash-can',
         color: '#FF5722', // 深橙色
-        tag: general_cost,
-        consumer: family,
       },
       {
         value: 100002,
         label: '意外丢失',
         icon: 'fa-solid fa-triangle-exclamation',
         color: '#FFC107', // 琥珀色
-        tag: general_cost,
-        consumer: family,
+      
       },
       {
         value: 100003,
         label: '未分类',
         icon: 'fa-solid fa-question-circle',
         color: '#2196F3', // 蓝色
-        tag: general_cost,
-        consumer: family,
+     
       },
     ],
   },

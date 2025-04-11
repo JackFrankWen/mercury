@@ -33,7 +33,9 @@ export function SelectionFooter({
           <Popconfirm title="确定删除吗？" onConfirm={onDelete}>
             <Button danger>批量删除</Button>
           </Popconfirm>
-          <Button type="primary" onClick={() => onUpdate(removeUndefined(formValues))}>
+          <Button type="primary"
+            disabled={Object.keys(formValues).length === 0}
+            onClick={() => onUpdate(removeUndefined(formValues))}>
             批量修改
           </Button>
         </Space.Compact>
