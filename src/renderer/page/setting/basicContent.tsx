@@ -156,14 +156,14 @@ function BasicContent() {
           <Radio value="test">测试环境</Radio>
         </Radio.Group>
       </Form.Item>
-      <Form.Item label="当前版本" tooltip="This is a required field">
-        <Button onClick={onDeleteAllTransactions}>删除所有交易</Button>
+      <Form.Item label="删除操作" tooltip="删除所有交易数据">
+        {/* <Button onClick={onDeleteAllTransactions}>删除所有交易</Button> */}
         <Button onClick={onDeleteAllTransactionsMatchRule} style={{ marginLeft: 8 }}>
           删除时间范围内的交易
         </Button>
         {/* <Button onClick={onBatchReplaceTransactions} style={{ marginLeft: 8 }}>批量替换交易</Button> */}
       </Form.Item>
-      <Form.Item label="导出" tooltip="This is a required field">
+      <Form.Item label="导出" tooltip="导出所有数据">
         <Space>
           <Button onClick={onExportCsv}>导出csv</Button>
           <Button onClick={onExportJson}>导出json</Button>
