@@ -38,8 +38,18 @@ function BasicContent() {
       message.error('导出失败');
     }
   };
-  const onExportJson = () => {
-    console.log('导出json');
+  const onExportJson = async () => {
+    try {
+      const result = await window.mercury.api.exportToJson();
+      if (result.code === 200) {
+        message.success('导出成功');
+      } else {
+        message.error(result.message);
+      }
+    } catch (error) {
+      console.error('Export JSON error:', error);
+      message.error('导出失败');
+    }
   };
   const onDeleteAllTransactions = async () => {
     Modal.confirm({

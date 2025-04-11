@@ -86,6 +86,8 @@ declare global {
         ) => Promise<{ date: string; total: number }[]>;
         // 导出csv
         exportToCsv: () => Promise<{ code: number; message: string }>;
+        // 导出json
+        exportToJson: () => Promise<{ code: number; message: string }>;
         // 高级规则 API 类型
         getAllAdvancedRules: (rule?: {
           nameOrRule?: string;

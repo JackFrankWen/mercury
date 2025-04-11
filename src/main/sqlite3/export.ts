@@ -60,3 +60,39 @@ async function exportTableToCSV(db: any, tableName: string, exportDir: string): 
     });
   });
 }
+
+export async function exportAllTablesToJSON(): Promise<void> {
+  const db = await getDbInstance();
+  const tables = ['transactions', 'match_rules', 'advanced_rules'];
+  const exportDir = path.join(process.cwd(), 'exports', dayjs().format('YYYYMMDD-HHmm'));
+
+  // 创建导出目录
+  if (!fs.existsSync(exportDir)) {
+    fs.mkdirSync(exportDir, { recursive: true });
+  }
+
+  for (const table of tables) {
+    await exportTableToJSON(db, table, exportDir);
+  }
+}
+
+async function exportTableToJSON(db: any, tableName: string, exportDir: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    db.all(`SELECT * FROM ${tableName}`, (err: Error, rows: any[]) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      if (!rows.length) {
+        resolve();
+        return;
+      }
+
+      // 写入文件
+      const filePath = path.join(exportDir, `${tableName}.json`);
+      fs.writeFileSync(filePath, JSON.stringify(rows, null, 2), 'utf-8');
+      resolve();
+    });
+  });
+}
