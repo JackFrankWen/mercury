@@ -371,6 +371,7 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
           visible={batchReplaceVisible}
           onClose={() => setBatchReplaceVisible(false)}
           onSuccess={() => {
+            console.log('onSuccess');
             setBatchReplaceVisible(false);
             fresh();
           }}

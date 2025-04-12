@@ -63,7 +63,6 @@ export async function getAllAdvancedRules(params?: {
     const where = whereConditions.length > 0 ? `WHERE ${whereConditions.join(' AND ')}` : '';
     const sql = `SELECT * FROM advanced_rules ${where} ORDER BY  category ASC , priority DESC`;
 
-    console.log(sql, queryParams, 'sql av====');
 
     return new Promise<AdvancedRule[]>((resolve, reject) => {
       db.all(sql, queryParams, (err, rows: AdvancedRule[]) => {
@@ -75,7 +74,6 @@ export async function getAllAdvancedRules(params?: {
 
         // 添加简单的结果处理
         const results = rows || [];
-        console.log(`Found ${results.length} advanced rules matching criteria`);
         resolve(results);
       });
     });
