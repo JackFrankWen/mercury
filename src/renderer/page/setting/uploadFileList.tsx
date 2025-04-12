@@ -23,7 +23,11 @@ export const UploadFileList: React.FC = () => {
     try {
       const files = await window.mercury.store.getUploadFileList();
       console.log(files, 'files');
-      setFileList(files || []);
+      // Sort files by createTime in descending order
+      const sortedFiles = (files || []).sort((a, b) => 
+        new Date(b.createTime).getTime() - new Date(a.createTime).getTime()
+      );
+      setFileList(sortedFiles);
     } catch (error) {
       console.error('Failed to fetch upload file list:', error);
       message.error('获取导入文件列表失败');
