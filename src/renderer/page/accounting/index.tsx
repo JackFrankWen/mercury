@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card } from 'antd';
 import { AdvancedSearchForm } from './advancedSearchForm';
 import { AdvancedTable } from './advancedTable';
-import { Params_Transaction } from 'src/preload/index';
+import { Params_Transaction } from 'src/preload/type';
 import './index.css';
 import dayjs from 'dayjs';
 import emitter from 'src/renderer/events';
@@ -15,6 +15,7 @@ function Accounting(): JSX.Element {
   const [transactions, setTransactions] = useState([]);
   const [formValue, setFormValue] = useState<I_FormValue>({
     chose_unclassified: 'unclassified',
+    flow_type: '1',
     // 默认查询当年
     trans_time: [
       dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss'),
