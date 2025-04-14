@@ -116,7 +116,16 @@ export const AdvancedSearchForm = (props: {
       </Row>
       <Row gutter={24}>
         {expand && (
-          <>
+          <><Col span={8}>
+            <Form.Item name="flow_type" label="收支类型">
+              <Radio.Group block optionType="button" buttonStyle="solid">
+                <Radio value="all">全部</Radio>
+                <Radio value="2">收入</Radio>
+                <Radio value="1">支出</Radio>
+                {/* <Radio value="3">不计支出</Radio> */}
+              </Radio.Group>
+            </Form.Item>
+          </Col>
             <Col span={8}>
               <Form.Item name={`creation_time`} label="创建时间">
                 <RangePickerWrap bordered placeholder="placeholder" />
@@ -167,16 +176,7 @@ export const AdvancedSearchForm = (props: {
                 <Select allowClear placeholder="标签" options={cpt_const.tag_type} />
               </Form.Item>
             </Col>
-            <Col span={8}>
-              <Form.Item name="flow_type" label="收支类型">
-                <Radio.Group block optionType="button" buttonStyle="solid">
-                  <Radio value="all">全部</Radio>
-                  <Radio value="2">收入</Radio>
-                  <Radio value="1">支出</Radio>
-                  {/* <Radio value="3">不计支出</Radio> */}
-                </Radio.Group>
-              </Form.Item>
-            </Col>
+
             <Col span={24}>
               <Form.Item name="category" label="交易分类">
                 <Cascader
