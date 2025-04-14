@@ -42,6 +42,8 @@ export const AdvancedSearchForm = (props: {
     const params = {
       ...values,
       is_unclassified: values.chose_unclassified === 'unclassified',
+      flow_type: values.flow_type === 'all' ? undefined : values.flow_type,
+      all_flow_type: values.flow_type === 'all',
       trans_time: values.trans_time?.map((date: any) =>
         dayjs(date).format('YYYY-MM-DD HH:mm:ss')
       ),
@@ -71,8 +73,7 @@ export const AdvancedSearchForm = (props: {
       }}
       onValuesChange={(changedValues, allValues) => {
         const new_allValues = { ...allValues };
-        console.log(changedValues ,'aaa');
-        if(changedValues?.chose_unclassified === 'unclassified'){
+        if (changedValues?.chose_unclassified === 'unclassified') {
           new_allValues.category = undefined;
         }
         if (changedValues?.category && changedValues?.category.length === 0) {
@@ -102,6 +103,18 @@ export const AdvancedSearchForm = (props: {
             </Radio.Group>
           </Form.Item>
         </Col>
+        <Col span={8}>
+          <Form.Item name={`trans_time`} label="交易时间">
+            <RangePickerWrap bordered type="date" placeholder="placeholder" />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item name="payment_type" label="付款方式">
+            <Select allowClear placeholder="付款方式" options={cpt_const.payment_type} />
+          </Form.Item>
+        </Col>
+      </Row>
+      <Row gutter={24}>
         {expand && (
           <>
             <Col span={8}>
@@ -116,32 +129,23 @@ export const AdvancedSearchForm = (props: {
             </Col>
           </>
         )}
-        <Col span={8}>
-          <Form.Item name={`trans_time`} label="交易时间">
-            <RangePickerWrap bordered type="date" placeholder="placeholder" />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item name="payment_type" label="付款方式">
-            <Select allowClear placeholder="付款方式" options={cpt_const.payment_type} />
-          </Form.Item>
-        </Col>
 
         {expand && (
           <Col span={8}>
-            <Form.Item label="金额">
+            <Form.Item label="金额区间">
               <Space.Compact>
                 <Form.Item
                   className="no-margin"
                   name={`min_money`}
-                  style={{ display: 'inline-block' }}
+                  style={{ display: 'inline-block', width: '50%' }}
                 >
                   <InputNumber placeholder="最小金额" />
                 </Form.Item>
+
                 <Form.Item
                   className="no-margin"
                   name={`max_money`}
-                  style={{ display: 'inline-block' }}
+                  style={{ display: 'inline-block', width: '50%' }}
                 >
                   <InputNumber placeholder="最大金额" />
                 </Form.Item>
@@ -150,11 +154,7 @@ export const AdvancedSearchForm = (props: {
           </Col>
         )}
 
-        <Col span={8}>
-          <Form.Item name="account_type" label="账户">
-            <Select allowClear placeholder="账户" options={cpt_const.account_type} />
-          </Form.Item>
-        </Col>
+
         {expand && (
           <>
             <Col span={8}>
@@ -168,6 +168,16 @@ export const AdvancedSearchForm = (props: {
               </Form.Item>
             </Col>
             <Col span={8}>
+              <Form.Item name="flow_type" label="收支类型">
+                <Radio.Group block optionType="button" buttonStyle="solid">
+                  <Radio value="all">全部</Radio>
+                  <Radio value="2">收入</Radio>
+                  <Radio value="1">支出</Radio>
+                  {/* <Radio value="3">不计支出</Radio> */}
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            <Col span={24}>
               <Form.Item name="category" label="交易分类">
                 <Cascader
                   options={category_type}
@@ -185,15 +195,24 @@ export const AdvancedSearchForm = (props: {
                 />
               </Form.Item>
             </Col>
+
           </>
         )}
+
+      </Row>
+      <Row gutter={24}>
+        <Col span={8}>
+          <Form.Item name="account_type" label="账户">
+            <Select allowClear placeholder="账户" options={cpt_const.account_type} />
+          </Form.Item>
+        </Col>
         <Col span={8}>
           <Form.Item name="description">
-            <Input.Search 
-              placeholder="请输入描述、交易对象" 
+            <Input.Search
+              placeholder="请输入描述、交易对象"
               onSearch={() => {
                 form.submit();
-              }} 
+              }}
             />
           </Form.Item>
         </Col>
