@@ -69,6 +69,9 @@ const RangePickerWrap = (props: {
     console.log(val,'val=ooooooo===');
     if (val && val.length === 2) {
       const newVal = val.map((item: any, index: number) => {
+        if (type === 'date') {
+          return item;
+        } 
         if (index === 0) {
           return item.startOf("month");
         } else {

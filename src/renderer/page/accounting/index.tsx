@@ -17,10 +17,10 @@ function Accounting(): JSX.Element {
     chose_unclassified: 'unclassified',
     flow_type: '1',
     // 默认查询当年
-    // trans_time: [
-    //   dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss'),
-    //   dayjs().endOf('year').format('YYYY-MM-DD HH:mm:ss'),
-    // ],
+    trans_time: [
+      dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss'),
+      dayjs().endOf('year').format('YYYY-MM-DD HH:mm:ss'),
+    ],
   });
   useFresh(() => {
     getTransactions({

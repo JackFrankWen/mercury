@@ -295,9 +295,15 @@ const BasicTable = (props: {
       render: (val: number) => getTagType(val),
     },
     {
+      title: '上传文件名字',
+      dataIndex: 'upload_file_name',
+      ellipsis: true,
+      width: 120,
+    },
+    {
       title: '操作',
       dataIndex: 'operation',
-      width: 40,
+      width: 50,
       render: (_: any, record: DataType) => {
         return (
           <Space>
