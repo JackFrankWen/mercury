@@ -117,11 +117,11 @@ export const AdvancedSearchForm = (props: {
       <Row gutter={24}>
         {expand && (
           <><Col span={8}>
-            <Form.Item name="flow_type" label="收支类型">
+            <Form.Item name="flow_type" label="收支">
               <Radio.Group block optionType="button" buttonStyle="solid">
                 <Radio value="all">全部</Radio>
-                <Radio value="2">收入</Radio>
-                <Radio value="1">支出</Radio>
+                <Radio value="2">收</Radio>
+                <Radio value="1">支</Radio>
                 {/* <Radio value="3">不计支出</Radio> */}
               </Radio.Group>
             </Form.Item>
