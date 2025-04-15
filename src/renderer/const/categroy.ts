@@ -2,7 +2,9 @@ import Labels from "@antv/g2/lib/component/labels";
 
 const general_cost = 1, // 日常
   variable_cost = 2, // 变动
-  fix_cost = 3; // 固定
+  fix_cost = 3, // 固定
+  jonanna = 4; // 兼职
+
 const husband = 1,
   wife = 2,
   family = 3,
@@ -505,6 +507,14 @@ export const category_type = [
         icon: 'fa-solid fa-money-bill-wave',
         color: '#FF5722', // 深橙色
         tag: variable_cost,
+        consumer: wife,
+      },
+      {
+        value: 91002,
+        label: '兼职',
+        icon: 'fa-solid fa-heart',
+        color: '#FF5722', // 深橙色
+        tag: jonanna,
         consumer: wife,
       },
     ],
