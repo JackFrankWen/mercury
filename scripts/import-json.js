@@ -1,50 +1,55 @@
 /* eslint-disable */
-const fs = require("fs");
-const csv = require("csv-parser");
-const path = require("path");
-const dayjs = require("dayjs");
-const utc = require("dayjs/plugin/utc");
-const timezone = require("dayjs/plugin/timezone");
-const { db, createTransactionTable, checkTableExists } = require("./utils/import-table");
+const fs = require('fs');
+const csv = require('csv-parser');
+const path = require('path');
+const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
+const timezone = require('dayjs/plugin/timezone');
+const { db, createTransactionTable, checkTableExists } = require('./utils/import-table');
 /* eslint-enable */
 
 // 配置 dayjs
 dayjs.extend(utc);
 dayjs.extend(timezone);
 // 设置默认时区为亚洲/上海
-dayjs.tz.setDefault("Asia/Shanghai");
+dayjs.tz.setDefault('Asia/Shanghai');
 
 // Import JSON data
 function importJSON(filepath) {
   return new Promise((resolve, reject) => {
     try {
-      const jsonData = JSON.parse(fs.readFileSync(filepath, "utf8"));
+      const jsonData = JSON.parse(fs.readFileSync(filepath, 'utf8'));
       let successCount = 0;
       let errorCount = 0;
 
       console.log(`Read ${jsonData.length} records`);
 
-      db.exec("BEGIN TRANSACTION");
+      db.exec('BEGIN TRANSACTION');
 
       const stmt = db.prepare(`
                 INSERT INTO "transactions" (
                     amount,
                     category,
+                    payee,
                     description,
                     account_type,
                     payment_type, 
                     consumer,
                     flow_type,
+                    account_name,
                     tag,
-                    trans_time
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, datetime(?))
+                    upload_file_name,
+                    trans_time,
+                    creation_time,
+                    modification_time
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', '+8 hours'), datetime('now', '+8 hours'))
             `);
 
-      jsonData.forEach((row) => {
+      jsonData.forEach(row => {
         try {
           // 使用 dayjs 处理时间戳并解决时区问题
           let timestamp;
-          
+
           if (row.trans_time && row.trans_time.$date && row.trans_time.$date.$numberLong) {
             // MongoDB 时间戳处理 (毫秒)
             const milliseconds = parseInt(row.trans_time.$date.$numberLong);
@@ -60,9 +65,9 @@ function importJSON(filepath) {
 
           // Improved amount handling
           let amount = 0;
-          if (typeof row.amount === "number") {
+          if (typeof row.amount === 'number') {
             amount = row.amount;
-          } else if (typeof row.amount === "string") {
+          } else if (typeof row.amount === 'string') {
             amount = parseFloat(row.amount) || 0;
           } else if (row.amount && row.amount.$numberDecimal) {
             amount = parseFloat(row.amount.$numberDecimal) || 0;
@@ -70,32 +75,37 @@ function importJSON(filepath) {
 
           stmt.run([
             amount,
-            row.category || "[100000,100003]",
-            row.description || "",
-            row.account_type || "",
-            row.payment_type || "",
+            row.category || '[100000,100003]',
+            row.payee || '',
+            row.description || '',
+            row.account_type || '',
+            row.payment_type || '',
             row.consumer || null,
-            row.flow_type || "",
-            row.tag || "",
+            row.flow_type || '',
+            row.account_name || '',
+            row.tag || '',
+            row.upload_file_name || '',
             timestamp,
           ]);
           successCount++;
         } catch (err) {
-          console.error("Error inserting row:", err, row);
+          console.error('Error inserting row:', err, row);
           errorCount++;
         }
       });
 
       // 提交事务
-      db.exec("COMMIT");
+      db.exec('COMMIT');
 
-      stmt.finalize();
+      if (typeof stmt.finalize === 'function') {
+        stmt.finalize();
+      }
       console.log(`Import completed. Success: ${successCount}, Errors: ${errorCount}`);
       resolve({ successCount, errorCount });
     } catch (err) {
       // 如果发生错误，回滚事务
-      db.exec("ROLLBACK");
-      console.error("Import failed:", err);
+      db.exec('ROLLBACK');
+      console.error('Import failed:', err);
       reject(err);
     }
   });
@@ -104,24 +114,25 @@ function importJSON(filepath) {
 // Execute
 async function main() {
   try {
-    const dataDir = path.join(__dirname, "../data/202501/transaction.json");
+    // const dataDir = path.join(__dirname, "../data/202501/transaction.json");
+    const dataDir = path.join(__dirname, '../data/template.json');
     if (!fs.existsSync(dataDir)) {
       throw new Error(`文件不存在: ${dataDir}`);
     }
 
-    const tableExists = await checkTableExists("transactions");
+    const tableExists = await checkTableExists('transactions');
     if (!tableExists) {
       await createTransactionTable();
     }
 
     await importJSON(dataDir);
 
-    console.log("Import process completed successfully");
+    console.log('Import process completed successfully');
   } catch (err) {
-    console.error("Error during import process:", err);
+    console.error('Error during import process:', err);
     process.exit(1);
   } finally {
-    console.log("close db");
+    console.log('close db');
     db.close();
   }
 }
