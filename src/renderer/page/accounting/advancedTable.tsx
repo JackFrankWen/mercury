@@ -110,7 +110,7 @@ const columns: ColumnsType<I_Transaction> = [
   },
   {
     title: '交易对方',
-    width: 140,
+    width: 160,
     dataIndex: 'payee',
     ellipsis: true,
     key: 'payee',
@@ -290,7 +290,7 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
         rowKey={'id'}
         columns={columns}
         rowSelection={{ ...rowSelection }}
-        scroll={{ x: 1300, y: 'calc(100vh - 400px)' }}
+        scroll={{ x: 1500, y: 'calc(100vh - 400px)' }}
         onRow={record => {
           return {
             onClick: () => {

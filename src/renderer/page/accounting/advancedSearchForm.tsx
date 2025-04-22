@@ -80,6 +80,12 @@ export const AdvancedSearchForm = (props: {
           new_allValues.category = undefined;
         }
         form.setFieldsValue(new_allValues);
+        // 如果 chose_unclassified改变 则提交
+
+        if (changedValues?.chose_unclassified) {
+          onFinish(new_allValues);
+        }
+
         // const trans_time = allValues.trans_time;
         // if (Array.isArray(trans_time) && trans_time.length === 2) {
         //   new_allValues.trans_time = [
