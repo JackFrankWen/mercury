@@ -98,8 +98,6 @@ out/
 # webstorm
 .idea/
 
-# 分词后的数据
-data/
 
 # exports
 exports/
