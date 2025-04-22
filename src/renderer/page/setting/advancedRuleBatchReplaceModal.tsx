@@ -41,6 +41,8 @@ interface DataPreviewItem {
   amount: number;
   category: string;
   trans_time: string;
+  consumer?: string;
+  tag?: string;
 }
 
 const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
@@ -109,6 +111,9 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
         consumer: rule.consumer,
         tag: rule.tag,
       };
+      if (!rule.category) {
+        delete updateParams.category;
+      }
       if (!rule.consumer) {
         delete updateParams.consumer;
       }
@@ -120,11 +125,23 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
       await window.mercury.api.updateTransactions(ids, updateParams);
 
       // 构建结果数据
-      const resultItems: ResultItem[] = previewData.map((item, index) => ({
+      const resultItems: MessageItem[] = previewData.map((item, index) => ({
         index: index,
         message: `${item.description} (${dayjs(item.trans_time).format("YYYY-MM-DD")})`,
-        before: getCategoryString(item.category),
-        after: getCategoryString(rule.category),
+        changeContent: [
+          ...(rule.category ? [{
+            before: getCategoryString(item.category),
+            after: getCategoryString(rule.category),
+          }] : []),
+          ...(rule.consumer ? [{
+            before: getConsumerType(item.consumer),
+            after: getConsumerType(rule.consumer),
+          }] : []),
+          ...(rule.tag ? [{
+            before: getTagType(item.tag),
+            after: getTagType(rule.tag),
+          }] : []),
+        ],
         extra: rule,
       }));
 
@@ -325,7 +342,7 @@ const BatchReplaceModal: React.FC<BatchReplaceModalProps> = ({
   return (
     <>
       {contextHolder}
-      <Modal title="批量替换" open={visible} width={1000} onCancel={onClose} footer={null}>
+      <Modal title="单规则批量替换" open={visible} width={1000} onCancel={onClose} footer={null}>
         <Spin spinning={loading}>
           <Steps current={current} style={{ marginBottom: 20 }}>
             {steps.map((item) => (

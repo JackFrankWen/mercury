@@ -36,7 +36,7 @@ export async function batchReplaceTransactions(list: I_Transaction[]): Promise<v
       account_type, payment_type, consumer, flow_type, 
       tag, trans_time, account_name, upload_file_name,
       creation_time, modification_time
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now', '+8 hours'))`;
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime(?, '+8 hours'), ?, ?, datetime(?, '+8 hours'), datetime('now', '+8 hours'))`;
 
     // 使用 Promise.all 并行处理插入操作
     await Promise.all(
@@ -59,7 +59,7 @@ export async function batchReplaceTransactions(list: I_Transaction[]): Promise<v
                 transaction.trans_time,
                 transaction.account_name || '',
                 transaction.upload_file_name || '',
-                transaction.creation_time,
+                transaction.creation_time
               ],
               err => (err ? reject(err) : resolve())
             );
@@ -68,7 +68,7 @@ export async function batchReplaceTransactions(list: I_Transaction[]): Promise<v
     );
 
     // 提交事务
-    await new Promise<void>((resolve, reject) => {
+    return await new Promise<void>((resolve, reject) => {
       db.run('COMMIT', err => (err ? reject(err) : resolve()));
     });
   } catch (error) {
@@ -526,7 +526,6 @@ export async function getAccountPaymentTotal(
       GROUP BY account_type, payment_type
       ORDER BY total DESC
     `;
-    console.log(sql, 'sql=getAccountPaymentTotal===');
     const rows = await new Promise<{ account_type: string; payment_type: string; total: number }[]>(
       (resolve, reject) => {
         db.all(sql, (err, rows) => {
