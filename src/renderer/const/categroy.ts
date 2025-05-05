@@ -117,8 +117,6 @@ export const category_type = [
         icon: 'fa-solid fa-mug-hot',
         color: '#F1C40F', // 亮黄色
         tag: variable_cost,
-        consumer: family,
-        budget: 500, // 5
       },
       {
         value: 10008,
@@ -563,6 +561,7 @@ export const category_type = [
         icon: 'fa-solid fa-bus',
         color: '#4CAF50', // 绿色
         tag: variable_cost,
+        consumer: family,
       },
       {
         value: 110002,
@@ -570,6 +569,7 @@ export const category_type = [
         icon: 'fa-solid fa-hotel',
         color: '#2196F3', // 蓝色
         tag: variable_cost,
+        consumer: family,
       },
       {
         value: 110003,
@@ -577,6 +577,7 @@ export const category_type = [
         icon: 'fa-solid fa-utensils',
         color: '#FF5722', // 深橙色
         tag: variable_cost,
+        consumer: family,
       },
       {
         value: 110004,
@@ -584,6 +585,7 @@ export const category_type = [
         icon: 'fa-solid fa-ticket',
         color: '#FFC107', // 琥珀色
         tag: variable_cost,
+        consumer: family,
       },
       {
         value: 110005,
@@ -591,6 +593,7 @@ export const category_type = [
         icon: 'fa-solid fa-suitcase',
         color: '#009688', // 青绿色
         tag: variable_cost,
+        consumer: family,
       },
     ],
   },
