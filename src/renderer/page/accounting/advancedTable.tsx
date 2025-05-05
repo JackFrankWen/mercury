@@ -99,6 +99,11 @@ const columns: ColumnsType<I_Transaction> = [
   },
   getCategoryCol({
     with: 120,
+    sorter: (a, b) => {
+      const dateA = a.category;
+      const dateB = b.category;
+      return dateA.localeCompare(dateB);
+    },
   }),
   {
     title: '金额',
