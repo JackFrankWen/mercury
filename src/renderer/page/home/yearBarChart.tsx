@@ -56,8 +56,9 @@ function YearBarChart(props: {
 
   useEffect(() => {
     if (data.length > 0) {
+      const totolMonth = data.filter(item => item.total > 0);
       const total = data.reduce((sum, item) => sum + item.total, 0);
-      const average = total / data.length;
+      const average = total / totolMonth.length;
       setMonthlyAverage(average);
     }
   }, [data]);
