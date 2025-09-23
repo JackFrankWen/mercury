@@ -112,7 +112,7 @@ function MainLayout({ environment }: { environment: 'production' | 'test' }): JS
   const activeKey = pathToKey[currentPath] || "home";
 
   const items: MenuItem[] = [
-    { key: "home", icon: <ReadOutlined />, label: "首页" },
+    { key: "home", icon: <HomeOutlined />, label: "首页" },
     { key: "accounting", icon: <FormOutlined />, label: "记账" },
     { key: "upload", icon: <CloudUploadOutlined />, label: "导入" },
     { key: "setting", icon: <SettingOutlined />, label: "设置" },
