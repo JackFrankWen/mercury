@@ -100,8 +100,8 @@ function BasicContent() {
 
       if (timeType === 'trans_time') {
         // 转换日期格式
-        startDate = values.trans_time[0].startOf('year').format('YYYY-MM-DD HH:mm:ss');
-        endDate = values.trans_time[1].endOf('year').format('YYYY-MM-DD HH:mm:ss');
+        startDate = values.trans_time[0].format('YYYY-MM-DD HH:mm:ss');
+        endDate = values.trans_time[1].format('YYYY-MM-DD HH:mm:ss');
       } else {
         creationTime = values.creation_time.format('YYYY-MM-DD HH:mm:ss');
       }
@@ -194,7 +194,7 @@ function BasicContent() {
           <Form.Item
             label="时间类型"
             name="timeType"
-            initialValue="trans_time"
+            initialValue="creation_time"
             rules={[{ required: true, message: '请选择时间类型' }]}
           >
             <Select
