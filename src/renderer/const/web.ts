@@ -7,6 +7,7 @@ export const account_type: { [key: number]: string } = {
   1: "老公账户",
   2: "老婆账户",
   3: "爷爷账户",
+  4: "公司账户",
 };
 export const getAccountType = (type: number | string): string => {
   return account_type[Number(type)] || "未知账户";

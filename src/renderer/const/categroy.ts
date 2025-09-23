@@ -1,4 +1,3 @@
-import Labels from "@antv/g2/lib/component/labels";
 
 const general_cost = 1, // 日常
   variable_cost = 2, // 变动
@@ -10,9 +9,14 @@ const husband = 1,
   family = 3,
   son = 4,
   grandPa = 5;
+
+const account_company = 4;
 // 1: '生存开销',
 // 2: '发展开销',
 // 3: '享受开销',
+const flow_type_cost = 1,
+  flow_type_income = 2,
+  flow_type_other = 3;
 
 export function getCategoryTypeByLabel(label: string): number[] | undefined {
   if (!label) return undefined;
@@ -606,9 +610,12 @@ export const category_type = [
     children: [
       {
         value: 120001,
-        label: '课时费收入',
+        label: '课程收入',
         icon: 'fa-solid fa-sack-dollar',
         color: '#67C7A5', // 薄荷绿色调
+        consumer: wife,
+        flow_type: flow_type_income,
+        account_type: account_company,
       },
     ],
   },
@@ -623,36 +630,54 @@ export const category_type = [
       label: '教师薪酬',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
+      consumer: wife,
+      flow_type: flow_type_cost,
+      account_type: account_company,
     },
     {
       value: 130002,
       label: '课程研发',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
+      consumer: wife,
+      flow_type: flow_type_cost,
+      account_type: account_company,
     },
     {
       value: 130003,
       label: '教材/教具成本',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
+      consumer: wife,
+      flow_type: flow_type_cost,
+      account_type: account_company,
     },
     {
       value: 130004,
       label: '教室/场地租赁费',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
+      consumer: wife,
+      flow_type: flow_type_cost,
+      account_type: account_company,
     },
     {
       value: 130005,
       label: '市场推广费',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
+      consumer: wife,
+      flow_type: flow_type_cost,
+      account_type: account_company,
     },
     {
       value: 130006,
       label: '销售人员薪酬',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
+      consumer: wife,
+      flow_type: flow_type_cost,
+      account_type: account_company,
     },
     ],
   },

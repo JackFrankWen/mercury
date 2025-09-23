@@ -8,6 +8,7 @@ import { formatMoney } from '../../components/utils';
 import YearBarChart from './yearBarChart';
 import ConsumerChart from './consumerChart';
 import AccountInfo from './accountInfo';
+import CompanySummarize from './companySummarize';
 import './index.css';
 import { useSearchParams } from 'react-router-dom';
 import useExtraControls from '../../components/useExtraControls';
@@ -27,6 +28,7 @@ function Index(): JSX.Element {
     <Row gutter={12} className="home-page">
       <Col span={16} className="home-page-left mb16">
         <Summarize formValue={formValue} />
+        <CompanySummarize formValue={formValue} />
 
         {/* 传递 extraState 和 visible 状态给子组件 */}
         <YearBarChart

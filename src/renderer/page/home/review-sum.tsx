@@ -110,7 +110,7 @@ export default function Summarize(props: { formValue: any }) {
   //   const balance = staticData.income - staticData.total
   return (
     <>
-      <Row className="home-section" gutter={12}>
+      <Row className="home-section mb8" gutter={12}>
         <Col span={8}>
           <Card hoverable size="small">
             <Statistic
@@ -135,7 +135,7 @@ export default function Summarize(props: { formValue: any }) {
         <Col span={8}>
           <Card hoverable size="small">
             <Statistic
-              title="老公钱包"
+              title="总收入"
               prefix="¥"
               value={formatMoneyObj({
                 amount: staticData.husband.total,
@@ -160,7 +160,7 @@ export default function Summarize(props: { formValue: any }) {
         <Col span={8}>
           <Card hoverable size="small">
             <Statistic
-              title="老婆钱包"
+              title="总结余"
               prefix="¥"
               value={formatMoneyObj({
                 amount: staticData.wife.total,
@@ -183,6 +183,7 @@ export default function Summarize(props: { formValue: any }) {
           </Card>
         </Col>
       </Row>
+
     </>
   );
 }
