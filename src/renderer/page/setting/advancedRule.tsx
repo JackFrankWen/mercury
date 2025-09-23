@@ -24,7 +24,6 @@ import { AdvancedRule } from 'src/main/sqlite3/advance-rules';
 import { getCategoryCol } from 'src/renderer/components/commonColums';
 import {
   EditOutlined,
-  EyeOutlined,
   DeleteOutlined,
   SwapOutlined,
   PoweroffOutlined,
