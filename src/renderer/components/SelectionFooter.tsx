@@ -24,6 +24,7 @@ export function SelectionFooter({
   const removeUndefined = (obj: any) => {
     return Object.fromEntries(Object.entries(obj).filter(([_, value]) => value !== undefined));
   };
+  console.log(formValues, '======aaa');
   return (
     <Row className={`table-footer ${className}`}>
       <Row justify="space-between" style={{ width: "100%" }}>

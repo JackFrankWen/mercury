@@ -16,6 +16,7 @@ import {
   getTransactionsByMonth,
   getConsumerTotal,
   getAccountPaymentTotal,
+  getAccountTotal,
   deleteAllTransactions,
   getDailyTransactionAmounts,
   batchReplaceTransactions,
@@ -207,6 +208,16 @@ export function handleProcessApi() {
       return result;
     } catch (error) {
       console.error('Error getting account payment total:', error);
+      throw error;
+    }
+  });
+
+  ipcMain.handle('transactions:getAccountTotal', async (event, params) => {
+    try {
+      const result = await getAccountTotal(params);
+      return result;
+    } catch (error) {
+      console.error('Error getting account total:', error);
       throw error;
     }
   });

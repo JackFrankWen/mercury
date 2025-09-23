@@ -17,7 +17,40 @@ const BatchUpdateArea = (props: { formValues: any; setFormValues: (values: any) 
     <Form
       form={form}
       initialValues={props.formValues}
-      onValuesChange={(changedValues, allValues) => {
+      onValuesChange={(changedValues, allValues,) => {
+        console.log(allValues, 'allValues');
+        console.log(changedValues, 'props.changedValues');
+        if ('category' in changedValues) {
+          if (changedValues.category && changedValues.category.length === 0) {
+            allValues.account_type = undefined;
+            allValues.flow_type = undefined;
+            allValues.tag = undefined;
+            allValues.consumer = undefined;
+            form.setFieldsValue({
+              account_type: undefined,
+              flow_type: undefined,
+              tag: undefined,
+              consumer: undefined,
+            });
+          } else {
+            const found = category_type.find((val) => val.value === changedValues.category[0]);
+            if (found) {
+              const obj = found?.children.find((val: any) => val.value === changedValues.category[1]);
+              console.log(obj, 'obj');
+              allValues.account_type = toNumberOrUndefiend(obj?.account_type);
+              allValues.flow_type = toNumberOrUndefiend(obj?.flow_type);
+              allValues.tag = toNumberOrUndefiend(obj?.tag);
+              allValues.consumer = toNumberOrUndefiend(obj?.consumer);
+              form.setFieldsValue({
+                account_type: toNumberOrUndefiend(obj?.account_type),
+                flow_type: toNumberOrUndefiend(obj?.flow_type),
+                tag: toNumberOrUndefiend(obj?.tag),
+                consumer: toNumberOrUndefiend(obj?.consumer),
+              });
+            }
+          }
+        }
+
         props.setFormValues(allValues);
       }}
       className="batch-update-area"
@@ -44,20 +77,40 @@ const BatchUpdateArea = (props: { formValues: any; setFormValues: (values: any) 
                 ),
             }}
             onChange={(category) => {
-              if (category && category[0]) {
-                const found = category_type.find((val) => val.value === category[0]);
-                if (found) {
-                  // @ts-ignore
-                  const obj: any = found?.children.find((val: any) => val.value === category[1]);
+              // if (category && category[0]) {
+              //   const found = category_type.find((val) => val.value === category[0]);
+              //   if (found) {
+              //     // @ts-ignore
+              //     const obj: any = found?.children.find((val: any) => val.value === category[1]);
 
-                  form.setFieldsValue({
-                    account_type: undefined,
-                    // payment_type: undefined,
-                    tag: toNumberOrUndefiend(obj?.tag),
-                    consumer: toNumberOrUndefiend(obj?.consumer),
-                  });
-                }
-              }
+
+              //     form.setFieldsValue({
+              //       account_type: toNumberOrUndefiend(obj?.account_type),
+              //       flow_type: toNumberOrUndefiend(obj?.flow_type),
+              //       tag: toNumberOrUndefiend(obj?.tag),
+              //       consumer: toNumberOrUndefiend(obj?.consumer),
+              //     });
+              //     props.setFormValues({
+              //       account_type: toNumberOrUndefiend(obj?.account_type),
+              //       flow_type: toNumberOrUndefiend(obj?.flow_type),
+              //       tag: toNumberOrUndefiend(obj?.tag),
+              //       consumer: toNumberOrUndefiend(obj?.consumer),
+              //     });
+              //   }
+              // } else {
+              //   form.setFieldsValue({
+              //     account_type: undefined,
+              //     flow_type: undefined,
+              //     tag: undefined,
+              //     consumer: undefined,
+              //   });
+              //   props.setFormValues({
+              //     account_type: undefined,
+              //     flow_type: undefined,
+              //     tag: undefined,
+              //     consumer: undefined,
+              //   });
+              // }
             }}
             allowClear
             placeholder="分类"

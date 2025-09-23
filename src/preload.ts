@@ -89,6 +89,9 @@ contextBridge.exposeInMainWorld('mercury', {
     // 按账户类型和支付方式分组统计
     getAccountPaymentTotal: (params: Params_Transaction) =>
       ipcRenderer.invoke('transactions:getAccountPaymentTotal', params),
+    // 获取账户统计
+    getAccountTotal: (params: Params_Transaction) =>
+      ipcRenderer.invoke('transactions:getAccountTotal', params),
     // 获取每日交易金额统计
     getDailyTransactionAmounts: (params: Params_Transaction) =>
       ipcRenderer.invoke('transactions:getDailyAmounts', params),

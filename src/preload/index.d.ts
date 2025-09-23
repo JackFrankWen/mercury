@@ -80,6 +80,10 @@ declare global {
         getAccountPaymentTotal: (
           params: Params_Transaction
         ) => Promise<{ account_type: string; payment_type: string; total: number }[]>;
+        // 获取账户统计
+        getAccountTotal: (
+          params: Params_Transaction
+        ) => Promise<{ account_type: string; total: number }[]>;
         // 获取每日交易金额统计
         getDailyTransactionAmounts: (
           params: Params_Transaction

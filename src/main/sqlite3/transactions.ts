@@ -546,6 +546,43 @@ export async function getAccountPaymentTotal(
   }
 }
 
+// 按账户类型分组统计
+export async function getAccountTotal(
+  params: Params_Transaction
+): Promise<{ account_type: string; total: number }[]> {
+  try {
+    const db = await getDbInstance();
+
+    const { whereClause } = generateWhereClause(params);
+
+    const sql = `
+      SELECT 
+        account_type,
+        SUM(amount) as total
+      FROM transactions 
+      ${whereClause}
+      GROUP BY account_type
+      ORDER BY total DESC
+    `;
+
+    const rows = await new Promise<{ account_type: string; total: number }[]>((resolve, reject) => {
+      db.all(sql, (err, rows) => {
+        if (err) {
+          console.error('Error getting account totals:', err);
+          reject(err);
+          return;
+        }
+        resolve(rows || []);
+      });
+    });
+
+    return rows;
+  } catch (error) {
+    console.error('Error getting account totals:', error);
+    throw error;
+  }
+}
+
 // 删除所有交易数据
 export async function deleteAllTransactions(
   params: Params_Transaction
