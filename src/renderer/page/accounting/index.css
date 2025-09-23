@@ -14,3 +14,13 @@
   padding: 10px 20px;
   transition: all 0.2s ease 0s;
 }
+
+/* Cascader下拉框样式调整 */
+.large-cascader-dropdown {
+  min-width: 400px !important;
+}
+
+.large-cascader-dropdown .ant-cascader-menu {
+  min-width: 200px !important;
+  min-height: 300px !important;
+}

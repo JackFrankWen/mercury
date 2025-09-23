@@ -90,6 +90,7 @@ function AddTransactionDrawer({ visible, onClose, onSuccess }: AddTransactionDra
             options={category_type}
             allowClear
             placeholder="请选择分类"
+            popupClassName="large-cascader-dropdown"
             onChange={(category) => {
               if (category && category[0]) {
                 const found = category_type.find((val) => val.value === category[0]);

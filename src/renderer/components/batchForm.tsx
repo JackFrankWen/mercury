@@ -28,6 +28,7 @@ const BatchUpdateArea = (props: { formValues: any; setFormValues: (values: any) 
           <Cascader
             style={{ minWidth: "100px" }}
             options={category_type}
+            popupClassName="large-cascader-dropdown"
             displayRender={(label: string[]) => {
               if (label.length === 0) {
                 return "";
