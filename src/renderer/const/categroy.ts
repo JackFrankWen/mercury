@@ -597,6 +597,65 @@ export const category_type = [
       },
     ],
   },
+  // 公司收入
+  {
+    value: 120000,
+    label: '公司收入',
+    icon: 'fa-solid fa-sack-dollar',
+    color: '#67C7A5', // 薄荷绿色调
+    children: [
+      {
+        value: 120001,
+        label: '课时费收入',
+        icon: 'fa-solid fa-sack-dollar',
+        color: '#67C7A5', // 薄荷绿色调
+      },
+    ],
+  },
+  // 公司支出
+  {
+    value: 130000,
+    label: '公司支出',
+    icon: 'fa-solid fa-sack-dollar',
+    color: '#67C7A5', // 薄荷绿色调
+    children: [{
+      value: 130001,
+      label: '教师薪酬',
+      icon: 'fa-solid fa-sack-dollar',
+      color: '#67C7A5', // 薄荷绿色调
+    },
+    {
+      value: 130002,
+      label: '课程研发',
+      icon: 'fa-solid fa-sack-dollar',
+      color: '#67C7A5', // 薄荷绿色调
+    },
+    {
+      value: 130003,
+      label: '教材/教具成本',
+      icon: 'fa-solid fa-sack-dollar',
+      color: '#67C7A5', // 薄荷绿色调
+    },
+    {
+      value: 130004,
+      label: '教室/场地租赁费',
+      icon: 'fa-solid fa-sack-dollar',
+      color: '#67C7A5', // 薄荷绿色调
+    },
+    {
+      value: 130005,
+      label: '市场推广费',
+      icon: 'fa-solid fa-sack-dollar',
+      color: '#67C7A5', // 薄荷绿色调
+    },
+    {
+      value: 130006,
+      label: '销售人员薪酬',
+      icon: 'fa-solid fa-sack-dollar',
+      color: '#67C7A5', // 薄荷绿色调
+    },
+    ],
+  },
   {
     value: 100000,
     label: '未归类',
