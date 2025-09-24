@@ -126,7 +126,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
             <Card size="small">
                 <Row className="home-section" justify="space-between" gutter={12}>
                     <StatisticReser
-                        title="公司账户（总收入）"
+                        title="公司账户（收入至今）"
                         prefix="¥"
                         value={formatMoneyObj({
                             amount: staticData.incomeTotal,
@@ -135,7 +135,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                         valueStyle={{ color: '#52c41a' }}
                     />
                     <StatisticReser
-                        title="公司账户（总支出）"
+                        title="公司账户（支出至今）"
                         prefix="¥"
                         value={formatMoneyObj({
                             amount: staticData.costTotal,
@@ -144,7 +144,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                         valueStyle={{ color: '#ff4d4f' }}
                     />
                     <StatisticReser
-                        title="公司账户（当期收入）"
+                        title="公司账户（收入）"
                         prefix="¥"
                         value={formatMoneyObj({
                             amount: staticData.income,
@@ -153,7 +153,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                         valueStyle={{ color: '#73d13d' }}
                     />
                     <StatisticReser
-                        title="公司账户（当期支出）"
+                        title="公司账户（支出）"
                         prefix="¥"
                         value={formatMoneyObj({
                             amount: staticData.cost,
@@ -162,7 +162,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                         valueStyle={{ color: '#ff7875' }}
                     />
                     <StatisticReser
-                        title="公司账户（当期结余）"
+                        title="公司账户（结余）"
                         prefix="¥"
                         value={formatMoneyObj({
                             amount: staticData.balance,
