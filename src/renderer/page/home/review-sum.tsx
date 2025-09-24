@@ -1,189 +1,129 @@
-import { Card, Col, Divider, Progress, Row, Statistic, Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { AccountType, PaymentType } from 'src/renderer/const/web';
-import { formatMoney, formatMoneyObj } from 'src/renderer/components/utils';
+import { Card, Col, Row, Statistic } from 'antd';
+import React, { useState } from 'react';
+import { formatMoneyObj } from 'src/renderer/components/utils';
 import { useFresh } from 'src/renderer/components/useFresh';
 
-export default function Summarize(props: { formValue: any }) {
+const FLOW_TYPE_COST = 1; // 支出
+const FLOW_TYPE_INCOME = 2; // 收入
+
+interface StaticData {
+  income: number; // 总收入
+  cost: number; // 总支出
+  balance: number; // 结余
+}
+
+interface SummarizeProps {
+  formValue: any;
+}
+
+export default function Summarize(props: SummarizeProps) {
   const { formValue } = props;
-  const gridStyle: React.CSSProperties = {
-    width: '25%',
-    textAlign: 'center',
-  };
-  const [staticData, setStaticData] = useState<any>({
-    husband: {
-      wechat: 0,
-      alipay: 0,
-      total: 0,
-    },
-    wife: {
-      wechat: 0,
-      alipay: 0,
-      total: 0,
-    },
-    total: 0,
+  const [staticData, setStaticData] = useState<StaticData>({
     income: 0,
+    cost: 0,
+    balance: 0,
   });
 
-  const getSumrize = async obj => {
+  const getSummarize = async (obj: any) => {
     try {
-      const res = await window.mercury.api.getAccountPaymentTotal(obj);
+      // 并行获取收入和支出数据
+      const [costRes, incomeRes] = await Promise.all([
+        // 支出
+        window.mercury.api.getAccountTotal({
+          ...obj,
+          flow_type: FLOW_TYPE_COST,
+        }),
+        // 收入
+        window.mercury.api.getAccountTotal({
+          ...obj,
+          flow_type: FLOW_TYPE_INCOME,
+        }),
+      ]);
 
-      // if (res) {
-      //   setStaticData(res)
-      // }
-      // 老公微信取整数
-      const husbandWechat = res.reduce((acc, item) => {
-        if (
-          Number(item.account_type) === AccountType.HUSBAND &&
-          Number(item.payment_type) === PaymentType.WECHAT
-        ) {
-          acc += Math.floor(Number(item.total));
+      // 通用计算函数
+      const calculateTotal = (data: any[]): number => {
+        if (!Array.isArray(data)) {
+          console.warn('数据格式不正确，期望数组格式');
+          return 0;
         }
-        return acc;
-      }, 0);
-      const wifeWechat = res.reduce((acc, item) => {
-        if (
-          Number(item.account_type) === AccountType.WIFE &&
-          Number(item.payment_type) === PaymentType.WECHAT
-        ) {
-          acc += Math.floor(Number(item.total));
-        }
-        return acc;
-      }, 0);
-      const husbandAlipay = res.reduce((acc, item) => {
-        if (
-          Number(item.account_type) === AccountType.HUSBAND &&
-          Number(item.payment_type) === PaymentType.ALIPAY
-        ) {
-          acc += Math.floor(Number(item.total));
-        }
-        return acc;
-      }, 0);
-      const wifeAlipay = res.reduce((acc, item) => {
-        if (
-          Number(item.account_type) === AccountType.WIFE &&
-          Number(item.payment_type) === PaymentType.ALIPAY
-        ) {
-          acc += Math.floor(Number(item.total));
-        }
-        return acc;
-      }, 0);
-      const husbandTotal = res.reduce((acc, item) => {
-        if (Number(item.account_type) === AccountType.HUSBAND) {
-          acc += Math.floor(Number(item.total));
-        }
-        return acc;
-      }, 0);
-      const wifeTotal = res.reduce((acc, item) => {
-        if (Number(item.account_type) === AccountType.WIFE) {
-          acc += Math.floor(Number(item.total));
-        }
-        return acc;
-      }, 0);
+
+        return data.reduce((acc: number, item: any) => {
+          if (!item || typeof item.total === 'undefined') {
+            return acc;
+          }
+          const total = Number(item.total) || 0;
+          acc += Math.floor(total);
+          return acc;
+        }, 0);
+      };
+
+      // 计算各项数据
+      const totalIncome = calculateTotal(incomeRes);
+      const totalCost = calculateTotal(costRes);
+      const balance = totalIncome - totalCost;
+
       setStaticData({
-        husband: {
-          wechat: husbandWechat,
-          alipay: husbandAlipay,
-          total: husbandTotal,
-        },
-        wife: {
-          wechat: wifeWechat,
-          alipay: wifeAlipay,
-          total: wifeTotal,
-        },
-        total: husbandTotal + wifeTotal,
+        income: totalIncome,
+        cost: totalCost,
+        balance: balance,
       });
     } catch (error) {
-      console.log(error);
+      console.error('获取汇总数据失败:', error);
     }
   };
 
   useFresh(
     () => {
-      getSumrize(formValue);
+      getSummarize(formValue);
     },
     [formValue],
     'transaction'
   );
 
-  //   const balance = staticData.income - staticData.total
   return (
     <>
-      <Row className="home-section mb8" gutter={12}>
-        <Col span={8}>
-          <Card hoverable size="small">
-            <Statistic
-              title="总支出"
-              prefix="¥"
-              value={formatMoneyObj({
-                amount: staticData.total,
-                decimalPlaces: 0,
-              })}
-            />
-
-            {/* <Row>
-              <Col span={24}>
-                <Typography.Text type='secondary'> 预算： 33</Typography.Text>
-              </Col>
-              <Col span={24}>
-                <Typography.Text type='secondary'>结余： 33</Typography.Text>
-              </Col>
-            </Row> */}
-          </Card>
-        </Col>
+      <Row className="home-section mb8" justify="space-between" gutter={12}>
         <Col span={8}>
           <Card hoverable size="small">
             <Statistic
               title="总收入"
               prefix="¥"
               value={formatMoneyObj({
-                amount: staticData.husband.total,
+                amount: staticData.income,
                 decimalPlaces: 0,
               })}
             />
-
-            {/* <Row>
-              <Col span={24}>
-                <Typography.Text type='secondary' style={{fontSize: 12}}>
-                  支付宝: {formatMoney(staticData.husband.alipay)}
-                </Typography.Text>
-              </Col>
-              <Col span={24}>
-                  <Typography.Text type='secondary' style={{fontSize: 12}}>
-                  微信: {formatMoney(staticData.husband.wechat)}
-                </Typography.Text>
-              </Col>
-            </Row> */}
           </Card>
         </Col>
         <Col span={8}>
           <Card hoverable size="small">
             <Statistic
-              title="总结余"
+              title="总支出"
               prefix="¥"
               value={formatMoneyObj({
-                amount: staticData.wife.total,
+                amount: staticData.cost,
+                decimalPlaces: 0,
+              })}
+            />
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card hoverable size="small">
+            <Statistic
+              title="结余"
+              prefix="¥"
+              value={formatMoneyObj({
+                amount: staticData.balance,
                 decimalPlaces: 0,
               })}
             />
 
-            {/* <Row>
-              <Col span={24}>
-                <Typography.Text type='secondary' style={{fontSize: 12}}>
-                  支付宝: {formatMoney(staticData.wife.alipay)}
-                </Typography.Text>
-              </Col>
-              <Col span={24}>
-                <Typography.Text type='secondary' style={{fontSize: 12}}>
-                  微信: {formatMoney(staticData.wife.wechat)}
-                </Typography.Text>
-              </Col>
-            </Row> */}
-          </Card>
-        </Col>
-      </Row>
 
+          </Card>
+
+        </Col>
+
+      </Row>
     </>
   );
 }
