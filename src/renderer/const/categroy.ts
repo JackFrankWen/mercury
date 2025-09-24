@@ -679,6 +679,15 @@ export const category_type = [
       flow_type: flow_type_cost,
       account_type: account_company,
     },
+    {
+      value: 130007,
+      label: '开办费用',
+      icon: 'fa-solid fa-sack-dollar',
+      color: '#67C7A5', // 薄荷绿色调
+      consumer: wife,
+      flow_type: flow_type_cost,
+      account_type: account_company,
+    }
     ],
   },
   {
