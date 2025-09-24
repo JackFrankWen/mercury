@@ -1,10 +1,18 @@
 type AlipayMatchType = {
   matchName: string;
   matchCategory: number[];
-  matchConsumer?: "husband" | "wife" | "family" | "son" | "grandPa" | undefined;
+  matchConsumer?: Consumer | undefined;
 
   matchTag?: "general_cost" | "variable_cost" | "fix_cost";
 };
+
+enum Consumer {
+  husband = 1,
+  wife = 2,
+  family = 3,
+  son = 4,
+  grandPa = 5,
+}
 // ["母婴亲子","餐饮美食","亲友代付","日用百货","爱车养车","家居家装","酒店旅游","转账红包","教育培训","服饰装扮","数码电器","美容美发","宠物","充值缴费","交通出行","生活服务","公共服务","文化休闲","住房物业","收入","商业服务","保险","医疗健康","其他","运动户外"]
 
 export const alipayMatch: AlipayMatchType[] = [
@@ -39,7 +47,7 @@ export const alipayMatch: AlipayMatchType[] = [
   {
     matchName: "家居家装",
     matchCategory: [50000, 50008],
-    // matchConsumer: 'family',
+    matchConsumer: Consumer.family,
     // matchTag: 'variable_cost',
   },
   {
@@ -161,4 +169,10 @@ export const alipayMatch: AlipayMatchType[] = [
 export const getMatchCategory = (category: string) => {
   const matchCategory = alipayMatch.find((item) => item.matchName === category)?.matchCategory;
   return matchCategory ? JSON.stringify(matchCategory) : "";
+};
+
+// match Cousme
+export const getMatchConsumer = (category: string) => {
+  const matched = alipayMatch.find((item) => item.matchName === category)?.matchConsumer;
+  return matched  ||  "";
 };
