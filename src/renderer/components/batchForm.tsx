@@ -9,6 +9,7 @@ import type { DefaultOptionType } from "antd/es/cascader";
 const BatchUpdateArea = (props: { formValues: any; setFormValues: (values: any) => void }) => {
   const [form] = Form.useForm();
   const onFinish = (values: any) => {
+
     if (values.amount || values.description) {
       form.resetFields();
     }

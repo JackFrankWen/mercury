@@ -3,62 +3,113 @@ import React, { useState } from 'react';
 import { formatMoneyObj } from 'src/renderer/components/utils';
 import { useFresh } from 'src/renderer/components/useFresh';
 import StatisticReser from 'src/renderer/components/StatisticReser';
-import { flow_type } from 'src/renderer/const/web';
 
 const COMPANY_ACCOUNT_TYPE = 4; // 公司账户
 const FLOW_TYPE_COST = 1; // 支出
 const FLOW_TYPE_INCOME = 2; // 收入
 
-export default function CompanySummarize(props: { formValue: any }) {
+interface StaticData {
+    income: number; // 公司当期收入
+    cost: number; // 公司当期支出
+    balance: number; // 当期结余
+    incomeTotal: number; // 公司总收入
+    costTotal: number; // 公司总支出
+    balanceTotal: number; // 总结余
+}
+
+interface CompanySummarizeProps {
+    formValue: any;
+}
+
+export default function CompanySummarize(props: CompanySummarizeProps) {
     const { formValue } = props;
-    const [staticData, setStaticData] = useState<any>({
-        income: 0, // 公司收入
-        cost: 0, // 公司支出
-        balance: 0, // 结余
+    const [staticData, setStaticData] = useState<StaticData>({
+        income: 0,
+        cost: 0,
+        balance: 0,
+        incomeTotal: 0,
+        costTotal: 0,
+        balanceTotal: 0,
     });
 
     const getSummarize = async (obj: any) => {
         try {
-            // 获取完整的交易数据，包含flow_type信息
-            const params = {
+            // 基础查询参数
+            const baseParams = {
                 ...obj,
                 account_type: COMPANY_ACCOUNT_TYPE, // 只查询公司账户
-                flow_type: FLOW_TYPE_COST,
             };
-            const res = await window.mercury.api.getAccountTotal(params);
-            const resIncome = await window.mercury.api.getAccountTotal({ ...params, flow_type: FLOW_TYPE_INCOME });
-            console.log(resIncome, 'resIncome');
-            console.log(res, 'res');
 
-            // 计算公司收入 (account_type = 4 && flow_type = 2)
-            const companyIncome = resIncome.reduce((acc: number, item: any) => {
-                if (
-                    Number(item.account_type) === COMPANY_ACCOUNT_TYPE
-                ) {
-                    acc += Math.floor(Number(item.total));
-                }
-                return acc;
-            }, 0);
+            // 并行获取当期和总计数据
+            const [currentCostRes, currentIncomeRes, totalCostRes, totalIncomeRes] = await Promise.all([
+                // 当期支出
+                window.mercury.api.getAccountTotal({
+                    ...baseParams,
+                    flow_type: FLOW_TYPE_COST,
+                }),
+                // 当期收入
+                window.mercury.api.getAccountTotal({
+                    ...baseParams,
+                    flow_type: FLOW_TYPE_INCOME,
+                }),
+                // 总支出 (从2020年开始到2099年)
+                window.mercury.api.getAccountTotal({
+                    ...baseParams,
+                    flow_type: FLOW_TYPE_COST,
+                    trans_time: ['2020-01-01', '2099-01-01'],
+                }),
+                // 总收入 (从2020年开始到2099年)
+                window.mercury.api.getAccountTotal({
+                    ...baseParams,
+                    flow_type: FLOW_TYPE_INCOME,
+                    trans_time: ['2020-01-01', '2099-01-01'],
+                }),
+            ]);
 
-            // 计算公司支出 (account_type = 4 && flow_type = 1)
-            const companyCost = res.reduce((acc: number, item: any) => {
-                if (
-                    Number(item.account_type) === COMPANY_ACCOUNT_TYPE
-                ) {
-                    acc += Math.floor(Number(item.total));
+            // 通用计算函数
+            const calculateTotal = (data: any[], accountType: number): number => {
+                if (!Array.isArray(data)) {
+                    console.warn('数据格式不正确，期望数组格式');
+                    return 0;
                 }
-                return acc;
-            }, 0);
-            console.log(companyIncome, 'companyIncome');
-            console.log(companyCost, 'companyCost');
+
+                return data.reduce((acc: number, item: any) => {
+                    if (
+                        !item ||
+                        typeof item.account_type === 'undefined' ||
+                        typeof item.total === 'undefined'
+                    ) {
+                        return acc;
+                    }
+
+                    if (Number(item.account_type) === accountType) {
+                        const total = Number(item.total) || 0;
+                        acc += Math.floor(total);
+                    }
+                    return acc;
+                }, 0);
+            };
+
+            // 计算各项数据
+            const currentIncome = calculateTotal(currentIncomeRes, COMPANY_ACCOUNT_TYPE);
+            const currentCost = calculateTotal(currentCostRes, COMPANY_ACCOUNT_TYPE);
+            const totalIncome = calculateTotal(totalIncomeRes, COMPANY_ACCOUNT_TYPE);
+            const totalCost = calculateTotal(totalCostRes, COMPANY_ACCOUNT_TYPE);
+
+            console.log('当期数据:', { currentIncome, currentCost });
+            console.log('总计数据:', { totalIncome, totalCost });
 
             setStaticData({
-                income: companyIncome,
-                cost: companyCost,
-                balance: companyIncome - companyCost,
+                income: currentIncome,
+                cost: currentCost,
+                balance: currentIncome - currentCost,
+                incomeTotal: totalIncome,
+                costTotal: totalCost,
+                balanceTotal: totalIncome - totalCost,
             });
         } catch (error) {
-            console.log(error);
+            console.error('获取公司汇总数据失败:', error);
+            // 保持原有数据不变，避免界面闪烁
         }
     };
 
@@ -75,33 +126,51 @@ export default function CompanySummarize(props: { formValue: any }) {
             <Card size="small">
                 <Row className="home-section" justify="space-between" gutter={12}>
                     <StatisticReser
-                        title="公司账户（收）"
+                        title="公司账户（总收入）"
+                        prefix="¥"
+                        value={formatMoneyObj({
+                            amount: staticData.incomeTotal,
+                            decimalPlaces: 0,
+                        })}
+                        valueStyle={{ color: '#52c41a' }}
+                    />
+                    <StatisticReser
+                        title="公司账户（总支出）"
+                        prefix="¥"
+                        value={formatMoneyObj({
+                            amount: staticData.costTotal,
+                            decimalPlaces: 0,
+                        })}
+                        valueStyle={{ color: '#ff4d4f' }}
+                    />
+                    <StatisticReser
+                        title="公司账户（当期收入）"
                         prefix="¥"
                         value={formatMoneyObj({
                             amount: staticData.income,
                             decimalPlaces: 0,
                         })}
-                        valueStyle={{ color: '#0f0' }}
+                        valueStyle={{ color: '#73d13d' }}
                     />
-
                     <StatisticReser
-                        title="公司账户（支）"
+                        title="公司账户（当期支出）"
                         prefix="¥"
                         value={formatMoneyObj({
                             amount: staticData.cost,
                             decimalPlaces: 0,
                         })}
-                        valueStyle={{ color: '#f00' }}
+                        valueStyle={{ color: '#ff7875' }}
                     />
                     <StatisticReser
-                        title="公司账户（结余）"
+                        title="公司账户（当期结余）"
                         prefix="¥"
                         value={formatMoneyObj({
                             amount: staticData.balance,
                             decimalPlaces: 0,
                         })}
-                        // 根据结余正负设置颜色
-                        valueStyle={{ color: staticData.balance >= 0 ? '#0f0' : '#f00' }}
+                        valueStyle={{
+                            color: staticData.balance >= 0 ? '#faad14' : '#ff4d4f',
+                        }}
                     />
                 </Row>
             </Card>
