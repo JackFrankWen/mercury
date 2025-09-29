@@ -34,7 +34,6 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
       const res = await window.mercury.api.getTransactions({
         ...formValue,
         trans_time: [`${dateTime} 00:00:00`, `${dateTime} 23:59:59`],
-        flow_type: '1',
       });
       setModalData(res);
       setDateTime(dateTime);
@@ -54,7 +53,6 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
         const res = await window.mercury.api.getTransactions({
           ...formValue,
           trans_time: [`${dateTime} 00:00:00`, `${dateTime} 23:59:59`],
-          flow_type: '1',
         });
         setModalData(res);
       } catch (error) {

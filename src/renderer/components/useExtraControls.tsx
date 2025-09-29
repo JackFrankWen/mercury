@@ -3,6 +3,7 @@ import { Cascader, Space, theme } from 'antd';
 import { EllipsisOutlined, FilterFilled } from '@ant-design/icons';
 import { DefaultOptionType } from 'antd/es/cascader';
 import { useSelect } from './useSelect';
+import { useRadio } from './useRadio';
 import { cpt_const } from '../const/web';
 
 export function useExtraControls(props: {
@@ -24,6 +25,10 @@ export function useExtraControls(props: {
     const [paymentTypeVal, PaymentTypeCpt] = useSelect({
         options: cpt_const.payment_type,
         placeholder: '支付方式',
+    });
+    const [flowTypeVal, FlowTypeCpt] = useRadio({
+        defaultValue: 1,
+        options: cpt_const.flow_type,
     });
 
     const [tagVal, TagCpt] = useSelect({
@@ -75,6 +80,8 @@ export function useExtraControls(props: {
             paymentTypeVal,
             tagVal,
             PaymentTypeCpt,
+            FlowTypeCpt,
+            flowTypeVal,
             TagCpt,
         },
     ] as const;

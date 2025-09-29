@@ -25,7 +25,7 @@ function YearBarChart(props: {
   const [categoryVal, setCategoryVal] = useState<string[]>([]);
   const [monthlyAverage, setMonthlyAverage] = useState<number>(0);
 
-  const { accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt } =
+  const { accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt, FlowTypeCpt, flowTypeVal } =
     extraState;
 
   useFresh(
@@ -38,6 +38,7 @@ function YearBarChart(props: {
           payment_type: paymentTypeVal,
           category: categoryVal,
           tag: tagVal,
+          flow_type: flowTypeVal,
         });
       } else {
         fetchDailyAmount({
@@ -47,10 +48,11 @@ function YearBarChart(props: {
           payment_type: paymentTypeVal,
           tag: tagVal,
           category: categoryVal,
+          flow_type: flowTypeVal,
         });
       }
     },
-    [formValue, consumerVal, accountTypeVal, paymentTypeVal, tagVal, categoryVal],
+    [formValue, consumerVal, accountTypeVal, paymentTypeVal, tagVal, categoryVal, flowTypeVal],
     'transaction'
   );
 
@@ -84,10 +86,11 @@ function YearBarChart(props: {
   };
 
   const cardTitle = () => {
+    const flowType = flowTypeVal === 1 ? '支出' : '收入';
     if (formValue.type === 'year') {
-      return '年消费';
+      return `年${flowType}`;
     } else if (formValue.type === 'month') {
-      return '月度消费';
+      return `月度${flowType}`;
     }
   };
 
@@ -118,21 +121,25 @@ function YearBarChart(props: {
   return (
     <div className="mt8">
       <Card title={cardTitle()} bordered={false} hoverable extra={extra}>
-        {visible && (
+        {/* {visible && (
           <Modal title="高级搜索" open={visible} onCancel={() => setVisible(false)} footer={null}>
             <Flex vertical gap={16}>
               {PaymentTypeCpt}
               {TagCpt}
+              {FlowTypeCpt}
             </Flex>
           </Modal>
-        )}
+        )} */}
         {formValue.type === 'year' ? (
           <>
             <BarChart data={data} hasElementClick={true} setYear={setYear} />
             {data.length > 0 && (
               <div style={{ textAlign: 'center', marginTop: '8px', marginBottom: '-8px' }}>
                 <Typography.Text type="secondary">
-                  月均支出：¥{formatMoney(monthlyAverage)}
+                  {
+                    flowTypeVal === 1 ? '月均支出' : '月均收入'
+                  }
+                  ¥{formatMoney(monthlyAverage)}
                 </Typography.Text>
               </div>
             )}
@@ -181,6 +188,7 @@ function YearBarChart(props: {
                 payment_type: paymentTypeVal,
                 category: categoryVal,
                 tag: tagVal,
+                flow_type: flowTypeVal,
               }}
               data={daliyData}
               refresh={refresh}

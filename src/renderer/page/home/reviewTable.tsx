@@ -203,7 +203,7 @@ function TableSection(props: {
   const { formValue, extraState, extraComponent, visible, setVisible } = props;
 
   // 从 extraState 中解构出需要的状态
-  const { categoryVal, accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt } = extraState;
+  const { categoryVal, accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt, FlowTypeCpt, flowTypeVal, } = extraState;
 
   const [category, setCategory] = useState<CategoryReturnType>([]);
   const [activeTabKey, setActiveTabKey] = useState('tab1');
@@ -237,9 +237,10 @@ function TableSection(props: {
         payment_type: paymentTypeVal,
         category: categoryVal,
         tag: tagVal,
+        flow_type: flowTypeVal,
       });
     },
-    [formValue, consumerVal, accountTypeVal, paymentTypeVal, categoryVal, tagVal],
+    [formValue, consumerVal, accountTypeVal, paymentTypeVal, categoryVal, tagVal, flowTypeVal],
     'transaction'
   );
 
@@ -271,6 +272,7 @@ function TableSection(props: {
           payment_type: paymentTypeVal,
           category: categoryVal,
           tag: tagVal,
+          flow_type: flowTypeVal,
         }}
         refreshTable={refreshTable}
       />
@@ -285,6 +287,7 @@ function TableSection(props: {
           payment_type: paymentTypeVal,
           category: categoryVal,
           tag: tagVal,
+          flow_type: flowTypeVal,
         }}
         refreshTable={refreshTable}
       />
@@ -293,14 +296,7 @@ function TableSection(props: {
 
   return (
     <>
-      {visible && (
-        <Modal title="高级搜索" open={visible} onCancel={() => setVisible(false)} footer={null}>
-          <Flex vertical gap={16}>
-            {PaymentTypeCpt}
-            {TagCpt}
-          </Flex>
-        </Modal>
-      )}
+
       <Card
         hoverable
         bordered={false}

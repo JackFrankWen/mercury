@@ -144,6 +144,14 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                         valueStyle={{ color: '#ff4d4f' }}
                     />
                     <StatisticReser
+                        title="结余"
+                        prefix="¥"
+                        value={formatMoneyObj({
+                            amount: staticData.balanceTotal,
+                            decimalPlaces: 0,
+                        })}
+                    />
+                    <StatisticReser
                         title="公司账户（收入）"
                         prefix="¥"
                         value={formatMoneyObj({
@@ -168,9 +176,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                             amount: staticData.balance,
                             decimalPlaces: 0,
                         })}
-                        valueStyle={{
-                            color: staticData.balance >= 0 ? '#faad14' : '#ff4d4f',
-                        }}
+
                     />
                 </Row>
             </Card>

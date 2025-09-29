@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Row, Col } from 'antd';
+import { Button, Card, Row, Col, Modal, Flex } from 'antd';
 import useReviewForm from './useReviewForm';
 import TableSection from './reviewTable';
 import Summarize from './review-sum';
@@ -23,6 +23,7 @@ function Index(): JSX.Element {
     category_type,
     onFilterClick: () => setVisible(true),
   });
+  const { FlowTypeCpt, PaymentTypeCpt, TagCpt } = extraState;
 
   return (
     <Row gutter={12} className="home-page">
@@ -31,6 +32,15 @@ function Index(): JSX.Element {
         <CompanySummarize formValue={formValue} />
 
         {/* 传递 extraState 和 visible 状态给子组件 */}
+        {visible && (
+          <Modal title="高级搜索" open={visible} onCancel={() => setVisible(false)} footer={null}>
+            <Flex vertical gap={16}>
+              {FlowTypeCpt}
+              {PaymentTypeCpt}
+              {TagCpt}
+            </Flex>
+          </Modal>
+        )}
         <YearBarChart
           formValue={formValue}
           extraState={extraState}

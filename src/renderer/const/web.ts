@@ -3,6 +3,7 @@ export enum AccountType {
   WIFE = 2,
   GRANDPARENTS = 3,
 }
+
 export const account_type: { [key: number]: string } = {
   1: "老公账户",
   2: "老婆账户",
@@ -59,7 +60,6 @@ export const tag_type = {
 export const flow_type = {
   1: "支出",
   2: "收入",
-  3: "不计支出",
 };
 export const getFlowType = (type: number | string): string => {
   return flow_type[Number(type)] || "未知收支类型";
@@ -126,4 +126,5 @@ export const cpt_const = {
   formula_type: transform(formula_type),
   condition_type: transform(condition_type),
   priority_type: transform(priority_type),
+  flow_type: transform(flow_type),
 };
