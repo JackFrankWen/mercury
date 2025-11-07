@@ -106,6 +106,10 @@ declare global {
         deleteAdvancedRule: (id: number) => Promise<{ code: number }>;
         // 删除所有交易数据
         deleteAllTransactions: (params: Params_Transaction) => Promise<{ code: number; message: string }>;
+        // 爬取京东订单
+        crawlJDOrders: () => Promise<{ data: any[] }>;
+        // 爬取拼多多订单
+        crawlPDDOrders: () => Promise<{ data: any[] }>;
       };
     };
   }

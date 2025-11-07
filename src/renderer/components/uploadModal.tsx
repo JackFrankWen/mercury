@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Alert, message, Modal, Upload, UploadProps, Spin } from 'antd';
+import { Alert, message, Modal, Upload, UploadProps, Spin, Button } from 'antd';
 import Papa from 'papaparse';
 import { formateToTableJd, parseExcelFile } from '../page/upload/csvUtil';
 import { CloudUploadOutlined } from '@ant-design/icons';
@@ -69,13 +69,25 @@ export async function parseCsvFile(file: File, options: ParseOptions = {}): Prom
           resolve({ success: false, error: '文件解析错误' });
         }
       },
-      error: function(error: any) {
+      error: function (error: any) {
         console.error('CSV parsing error:', error);
         resolve({ success: false, error: '文件解析错误' });
       }
     });
   });
 }
+
+function formateDataToUpload(data: any[]) {
+  return data.map(obj => {
+    return {
+      id: obj.orderId,
+      amount: obj.totalPrice,
+      description: obj.name,
+      trans_time: obj.orderTime,
+    };
+  });
+}
+
 
 const UploadModal = (props: {
   onOk: () => void;
@@ -102,7 +114,7 @@ const UploadModal = (props: {
   } = props;
   const [modalLoading, setModalLoading] = useState(false);
   const [fileList, setFileList] = useState([]);
-  
+
   const uploadProps: UploadProps = {
     name: 'file',
     fileList: fileList,
@@ -110,7 +122,7 @@ const UploadModal = (props: {
     beforeUpload: async (file) => {
       console.log(file, '===aaa');
       setModalLoading(true);
-      
+
       // 使用新的抽象方法解析文件
       const result = await parseCsvFile(file, {
         validateSourceType: true,
@@ -120,7 +132,7 @@ const UploadModal = (props: {
           has1688: needTransferData.has1688
         }
       });
-      
+
       if (result.success && result.data && result.sourceType) {
         onUploadSuccess(result.sourceType, result.data);
         setFileList([file]);
@@ -130,12 +142,12 @@ const UploadModal = (props: {
         setLoading(false);
         message.error(result.error || '文件解析错误');
       }
-      
+
       // Prevent upload
       return false;
     },
   };
-  
+
   const handleOk = () => {
     onOk();
   };
@@ -152,18 +164,31 @@ const UploadModal = (props: {
     pddData.length > 0
       ? pddData.map((item: any) => `第${item.dataIndex + 1}条`).join('、')
       : '';
-  const alipay1688Description =
-    alipay1688.length > 0
-      ? alipay1688.map((item: any) => `第${item.dataIndex + 1}条`).join('、')
-      : '';
+
   return (
     <Modal
       open={visible}
       title="替换订单描述"
       width={500}
       onCancel={onCancel}
-      onOk={handleOk}
-      okText="跳过替换"
+      footer={[
+        <Button key="cancel" onClick={onCancel}>
+          取消
+        </Button>,
+        <Button key="submit" onClick={handleOk}>
+          跳过替换
+        </Button>,
+        <Button key="skip" type="primary" onClick={() => {
+          window.mercury.api.crawlJDOrders().then((res: any) => {
+            console.log(res, 'res==');
+            onUploadSuccess('jd', formateDataToUpload(res.data))
+          });
+
+        }}>
+          导入{hasJingdong ? '京东' : '拼多多'}文件
+        </Button>
+        ,
+      ]}
     >
       <Spin spinning={modalLoading}>
         <div className="mb8">
@@ -177,19 +202,6 @@ const UploadModal = (props: {
               type="warning"
               showIcon
               description={`未显示交易详情：${jingdongDescription}`}
-            />
-          )}
-          {has1688 && (
-            <Alert
-              style={{
-                maxHeight: 200,
-                marginTop: 10,
-                overflow: 'auto',
-              }}
-              message="请上传1688 csv文件！"
-              type="warning"
-              showIcon
-              description={`未显示交易详情：${alipay1688Description}`}
             />
           )}
           {hasPdd && (

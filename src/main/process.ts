@@ -36,6 +36,7 @@ import {
   deleteAdvancedRule,
   batchInsertAdvancedRule,
 } from './sqlite3/advance-rules';
+import { crawlJDOrders } from 'src/crawler/jd';
 
 export function handleProcessApi() {
   // Match rules API handlers
@@ -350,4 +351,15 @@ export function handleProcessApi() {
       return { success: true };
     }
   );
+  ipcMain.handle('crawl-jd-orders', async () => {
+    try {
+      const orders = await crawlJDOrders();
+      console.log(orders, 'orders==');
+      return { data: orders };
+    } catch (error) {
+      console.error('Error crawling JD orders:', error);
+      return { code: 500, error: error.message };
+    }
+  });
 }
+

@@ -82,7 +82,7 @@ export function changeCategoryModal(messageList: MessageItem[], title: string) {
   });
 }
 
-export function openNotification(messageList: MessageItem[], api: any, title: string) {
+export function openNotification(messageList: MessageItem[], api: any, title?: string) {
   if (messageList.length === 0) {
     return;
   }

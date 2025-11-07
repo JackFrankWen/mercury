@@ -272,7 +272,7 @@ const BasicTable = (props: {
     },
     {
       title: '消费者',
-      width: 80,
+      width: 100,
       dataIndex: 'consumer',
       defaultCheck: false,
       key: 'consumer',
@@ -483,7 +483,7 @@ const BasicTable = (props: {
         size="small"
         columns={columns}
         summary={tableSummary}
-        scroll={{ x: 1200, y: 300 }}
+        scroll={{ x: 1400, y: 300 }}
         pagination={false}
       />
       <Row justify="space-between" align="middle" style={{ marginBottom: '10px' }}>
@@ -520,6 +520,7 @@ const BasicTable = (props: {
           needTransferData={needTransferData}
           onUploadSuccess={(type: string, transferData: []) => {
             let messageList = [];
+            console.log(type, transferData, 'transferData====');
             const newData = data.map((obj: any, index: number) => {
               // Skip if no description or wrong description format
               if (type === 'jd' && !obj.description?.includes('订单编号')) {
@@ -528,9 +529,7 @@ const BasicTable = (props: {
               if (type === 'pdd' && !obj.description?.includes('商户单号')) {
                 return obj;
               }
-              if (type === 'alipay1688' && !obj.description?.includes('先采后付还款')) {
-                return obj;
-              }
+
 
               // Find matching transfer data
               const matchingItem = transferData.find((item: any) => {
