@@ -65,7 +65,7 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
     [],
     'transaction'
   );
-  const cellRender = (date, info, fullData) => {
+  const cellRender = (date, info, fullData, flow_type) => {
     const d = Lunar.fromDate(date.toDate());
     const lunar = d.getDayInChinese();
     const solarTerm = d.getJieQi();
@@ -109,10 +109,11 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
               type={total ? 'danger' : 'secondary'}
               ellipsis
               style={{
+                color: flow_type === 1 ? '#f5222d' : '#52c41a',
                 fontSize: 12,
               }}
             >
-              {total ? `-${formatMoneyObj({ amount: total, decimalPlaces: 0 })}` : '0'}
+              {total ? `${flow_type === 1 ? '-' : '+'}${formatMoneyObj({ amount: total, decimalPlaces: 0 })}` : '0'}
             </Typography.Text>
           </Flex>
         ),
@@ -125,7 +126,7 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
     <>
       <Calendar
         className={props.className}
-        fullCellRender={(a, b) => cellRender(a, b, data)}
+        fullCellRender={(a, b) => cellRender(a, b, data, formValue.flow_type)}
         onPanelChange={undefined}
         onSelect={undefined}
         fullscreen={false}
