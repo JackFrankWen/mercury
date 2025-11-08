@@ -195,8 +195,11 @@ function YearBarChart(props: {
             />
             {daliyData.length > 0 && (
               <div style={{ textAlign: 'center', marginTop: '8px', marginBottom: '-8px' }}>
+                <Typography.Text type="secondary" style={{ marginRight: '8px' }}>
+                  本月{flowTypeVal === 1 ? '支出' : '收入'}：¥{formatMoney(daliyData.reduce((sum, item) => sum + item.total, 0))}
+                </Typography.Text>
                 <Typography.Text type="secondary">
-                  日均支出：¥
+                  日均{flowTypeVal === 1 ? '支出' : '收入'}：¥
                   {formatMoney(
                     daliyData.reduce((sum, item) => sum + item.total, 0) / daliyData.length
                   )}

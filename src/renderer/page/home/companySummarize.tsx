@@ -121,6 +121,16 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
         'transaction'
     );
 
+    const getYearTitle = (extra: any) => {
+        const year = formValue.date.split('-')[0];
+        const month = formValue.date.split('-')[1];
+        if (month) {
+            return `${year}年${month}月${extra}`;
+        } else {
+            return `${year}年${extra}`;
+        }
+    }
+
     return (
         <>
             <Card size="small">
@@ -152,7 +162,8 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                         })}
                     />
                     <StatisticReser
-                        title="公司账户（收入）"
+                        // 显示2020年 收入 或者 2020年8月收入   
+                        title={getYearTitle('收入')}
                         prefix="¥"
                         value={formatMoneyObj({
                             amount: staticData.income,
@@ -161,7 +172,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                         valueStyle={{ color: '#73d13d' }}
                     />
                     <StatisticReser
-                        title="公司账户（支出）"
+                        title={getYearTitle('支出')}
                         prefix="¥"
                         value={formatMoneyObj({
                             amount: staticData.cost,
@@ -170,7 +181,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                         valueStyle={{ color: '#ff7875' }}
                     />
                     <StatisticReser
-                        title="公司账户（结余）"
+                        title={getYearTitle('结余')}
                         prefix="¥"
                         value={formatMoneyObj({
                             amount: staticData.balance,
