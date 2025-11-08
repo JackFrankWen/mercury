@@ -8,6 +8,7 @@ import { payment_type, account_type, tag_type } from '../../const/web';
 import { formatMoney } from '../../components/utils';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import { getCategoryCol } from 'src/renderer/components/commonColums';
+import { renderBoldPrice } from 'src/renderer/page/accounting/advancedTable';
 
 interface ModalContentProps {
   modalData: I_Transaction[];
@@ -206,12 +207,7 @@ export function ModalContent({
         dataIndex: 'amount',
         width: 90,
         sorter: (a: I_Transaction, b: I_Transaction) => Number(a.amount) - Number(b.amount),
-        render: (txt: string) => {
-          if (Number(txt) > 100) {
-            return <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>;
-          }
-          return `¥${formatMoney(txt)}`;
-        },
+        render: (txt: string, record: I_Transaction) => renderBoldPrice(txt, record),
       },
       {
         title: '交易对象',
