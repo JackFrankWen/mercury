@@ -66,15 +66,17 @@ const CONSUMER_TYPE_MAP = {
 } as const;
 
 // 优化渲染价格的函数
-const renderBoldPrice = (txt: string, record: I_Transaction) => {
+export const renderBoldPrice = (txt: string, record: I_Transaction) => {
   if (record?.children) {
     return <span style={{ fontWeight: 'bold' }}>{formatMoney(txt)}</span>;
   }
   const amount = Number(txt);
+  const type = Number(record?.flow_type) === 1 ? '-' : '+';
   return amount > 100 ? (
-    <Typography.Text type="danger">{formatMoney(txt)}</Typography.Text>
+    <Typography.Text 
+    style={{ color: type === '-' ? '#f5222d' : '#52c41a' }} strong italic>{type}{formatMoney(txt)}</Typography.Text>
   ) : (
-    formatMoney(txt)
+    <span style={{ color: type === '-' ? '#f5222d' : '#52c41a' }}>{type}{formatMoney(txt)}</span>
   );
 };
 const renderTime = (txt: Date) => {
