@@ -117,6 +117,8 @@ contextBridge.exposeInMainWorld('mercury', {
       ipcRenderer.invoke('transactions:deleteAll', params),
     // 爬取京东订单
     crawlJDOrders: () => ipcRenderer.invoke('crawl-jd-orders'),
+    // 爬取瓶多多订单 
+    crawlPDDOrders: () => ipcRenderer.invoke('crawl-pdd-orders'),
   },
 
   // we can also expose variables, not just functions

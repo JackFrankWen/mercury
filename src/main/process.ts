@@ -37,6 +37,7 @@ import {
   batchInsertAdvancedRule,
 } from './sqlite3/advance-rules';
 import { crawlJDOrders } from 'src/crawler/jd';
+import { crawlPDDOrders } from 'src/crawler/pdd';
 
 export function handleProcessApi() {
   // Match rules API handlers
@@ -358,6 +359,15 @@ export function handleProcessApi() {
       return { data: orders };
     } catch (error) {
       console.error('Error crawling JD orders:', error);
+      return { code: 500, error: error.message };
+    }
+  });
+  ipcMain.handle('crawl-pdd-orders', async () => {
+    try {
+      const orders = await crawlPDDOrders();
+      return { data: orders };
+    } catch (error) {
+      console.error('Error crawling PDD orders:', error);
       return { code: 500, error: error.message };
     }
   });

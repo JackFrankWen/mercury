@@ -179,10 +179,26 @@ const UploadModal = (props: {
           跳过替换
         </Button>,
         <Button key="skip" type="primary" onClick={() => {
-          window.mercury.api.crawlJDOrders().then((res: any) => {
-            console.log(res, 'res==');
-            onUploadSuccess('jd', formateDataToUpload(res.data))
-          });
+          if (hasJingdong) {
+            window.mercury.api.crawlJDOrders().then((res: any) => {
+              console.log(res, 'res==');
+              if (res.code) {
+                message.error('操作失败')
+                return
+              }
+              onUploadSuccess('jd', formateDataToUpload(res.data))
+            });
+          } else {
+            window.mercury.api.crawlPDDOrders().then((res: any) => {
+              console.log(res, 'res==');
+              if (res.code) {
+                message.error('操作失败')
+                return
+              }
+              onUploadSuccess('pdd', formateDataToUpload(res.data))
+            });
+          }
+
 
         }}>
           导入{hasJingdong ? '京东' : '拼多多'}文件
