@@ -534,7 +534,7 @@ const BasicTable = (props: {
               // Find matching transfer data
               const matchingItem = transferData.find((item: any) => {
                 // 时间误差在3分钟
-                const isSameTime = dayjs(obj.trans_time).diff(dayjs(item.trans_time), 'minute') < 3;
+                const isSameTime = dayjs(obj.trans_time).diff(dayjs(item.trans_time), 'minute') < 10;
                 const isSameAmount =
                   Math.round(Number(obj.amount)) === Math.round(Number(item.amount));
 

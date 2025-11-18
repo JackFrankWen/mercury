@@ -29,7 +29,6 @@ export function useExtraControls(props: {
     const [paymentTypeVal, PaymentTypeCpt] = useSelect({
         options: cpt_const.payment_type,
         placeholder: '支付方式',
-        mode: 'multiple'
     });
     const [flowTypeVal, FlowTypeCpt] = useRadio({
         defaultValue: 1,

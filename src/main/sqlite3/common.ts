@@ -84,14 +84,7 @@ export function generateWhereClause(params: Params_Transaction): {
 
   if (params?.payment_type) {
 
-    if (Array.isArray(params.payment_type)) {
-      // 处理数组类型，使用 IN 查询
-      const paymentTypes = params.payment_type.map(type => `'${type}'`).join(',');
-      conditions.push(`payment_type IN (${paymentTypes})`);
-    } else if (typeof params.payment_type === 'string' && params.payment_type) {
-      // 处理单个值
-      conditions.push(`payment_type = '${params.payment_type}'`);
-    }
+    conditions.push(`payment_type = '${params.payment_type}'`);
   }
 
   if (params?.tag) {
