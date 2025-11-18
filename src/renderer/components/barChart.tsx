@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Chart } from '@antv/g2';
 import { formatMoney } from './utils';
 import emitter from '../events';
+import { EXPENSE_COLOR, INCOME_COLOR } from '../const/colors';
 interface LineChartProps {
   data: {
     date: string;
@@ -9,10 +10,11 @@ interface LineChartProps {
   }[];
   height?: number;
   hasElementClick?: boolean;
+  flowTypeVal: number;
   setYear?: (year: string) => void;
 }
 
-const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementClick = false, setYear }) => {
+const LineChart: React.FC<LineChartProps> = ({ flowTypeVal, data, height = 150, hasElementClick = false, setYear }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -82,6 +84,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
     chart
       .interval()
       .position('date*total')
+      .color(flowTypeVal === 1 ? EXPENSE_COLOR : INCOME_COLOR) // 支出为红色，收入为绿色
       .style({ radius: [20, 20, 0, 0] })
       .label('total', {
         offset: 5,
@@ -121,7 +124,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, height = 150, hasElementCli
       chart.destroy();
     };
 
-  }, [data]); // 空依赖数组，仅在组件挂载时执行
+  }, [data, flowTypeVal]); // 当数据或流类型变化时重新渲染
 
   return <div ref={containerRef}></div>;
 };

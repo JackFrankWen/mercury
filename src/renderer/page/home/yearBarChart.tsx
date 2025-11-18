@@ -10,6 +10,7 @@ import { category_type } from 'src/renderer/const/categroy';
 import { DefaultOptionType } from 'antd/es/cascader';
 import { renderIcon } from 'src/renderer/components/FontIcon';
 import { formatMoney } from 'src/renderer/components/utils';
+import { EXPENSE_COLOR, INCOME_COLOR } from 'src/renderer/const/colors';
 function YearBarChart(props: {
   formValue: FormData;
   extraState: any;
@@ -132,7 +133,7 @@ function YearBarChart(props: {
         )} */}
         {formValue.type === 'year' ? (
           <>
-            <BarChart data={data} hasElementClick={true} setYear={setYear} />
+            <BarChart flowTypeVal={flowTypeVal} data={data} hasElementClick={true} setYear={setYear} />
             {data.length > 0 && (
               <div style={{ textAlign: 'center', marginTop: '8px', marginBottom: '-8px' }}>
                 <Typography.Text type="secondary">

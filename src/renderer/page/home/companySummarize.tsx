@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { formatMoneyObj } from 'src/renderer/components/utils';
 import { useFresh } from 'src/renderer/components/useFresh';
 import StatisticReser from 'src/renderer/components/StatisticReser';
+import { EXPENSE_COLOR, INCOME_COLOR } from 'src/renderer/const/colors';
 
 const COMPANY_ACCOUNT_TYPE = 4; // 公司账户
 const FLOW_TYPE_COST = 1; // 支出
@@ -142,7 +143,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                             amount: staticData.incomeTotal,
                             decimalPlaces: 0,
                         })}
-                        valueStyle={{ color: '#52c41a' }}
+                        valueStyle={{ color: INCOME_COLOR }}
                     />
                     <StatisticReser
                         title="公司账户（支出至今）"
@@ -151,7 +152,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                             amount: staticData.costTotal,
                             decimalPlaces: 0,
                         })}
-                        valueStyle={{ color: '#ff4d4f' }}
+                        valueStyle={{ color: EXPENSE_COLOR }}
                     />
                     <StatisticReser
                         title="结余"
@@ -169,7 +170,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                             amount: staticData.income,
                             decimalPlaces: 0,
                         })}
-                        valueStyle={{ color: '#73d13d' }}
+                        valueStyle={{ color: INCOME_COLOR }}
                     />
                     <StatisticReser
                         title={getYearTitle('支出')}
@@ -178,7 +179,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
                             amount: staticData.cost,
                             decimalPlaces: 0,
                         })}
-                        valueStyle={{ color: '#ff7875' }}
+                        valueStyle={{ color: EXPENSE_COLOR }}
                     />
                     <StatisticReser
                         title={getYearTitle('结余')}

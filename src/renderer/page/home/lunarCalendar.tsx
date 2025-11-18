@@ -9,6 +9,7 @@ import { formatMoneyObj } from '../../components/utils';
 import { ModalContent } from './ModalContent';
 import { I_Transaction } from 'src/main/sqlite3/transactions';
 import { useFresh } from 'src/renderer/components/useFresh';
+import { EXPENSE_COLOR, INCOME_COLOR } from 'src/renderer/const/colors';
 
 interface LunarCalendarProps {
   className?: string;
@@ -109,7 +110,7 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
               type={total ? 'danger' : 'secondary'}
               ellipsis
               style={{
-                color: flow_type === 1 ? '#f5222d' : '#52c41a',
+                color: flow_type === 1 ? EXPENSE_COLOR : INCOME_COLOR,
                 fontSize: 12,
               }}
             >
