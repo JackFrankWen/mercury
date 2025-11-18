@@ -6,8 +6,9 @@ export function useSelect(props: {
   options: SelectProps["options"];
   placeholder?: string;
   style?: React.CSSProperties;
+  mode?: SelectProps['mode']
 }) {
-  const { options, placeholder = "成员", style } = props;
+  const { options, placeholder = "成员", style, mode } = props;
   const [value, setValue] = useState();
   const cpt = (
     <Select
@@ -17,6 +18,7 @@ export function useSelect(props: {
       placeholder={placeholder}
       options={options}
       style={style}
+      mode={mode}
     />
   );
   return [value, cpt];

@@ -15,16 +15,21 @@ export function useExtraControls(props: {
     const [accountTypeVal, AccountTypeCpt] = useSelect({
         options: cpt_const.account_type,
         placeholder: '账户类型',
+        style: { minWidth: 100 },
+        mode: 'multiple',
     });
 
     const [consumerVal, ConsumerCpt] = useSelect({
         options: cpt_const.consumer_type,
         placeholder: '消费者',
+        style: { minWidth: 100 },
+        mode: 'multiple'
     });
 
     const [paymentTypeVal, PaymentTypeCpt] = useSelect({
         options: cpt_const.payment_type,
         placeholder: '支付方式',
+        mode: 'multiple'
     });
     const [flowTypeVal, FlowTypeCpt] = useRadio({
         defaultValue: 1,

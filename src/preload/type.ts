@@ -15,8 +15,8 @@ export type CategoryReturnType = {
 
 export interface Params_Transaction {
   description?: string;
-  account_type?: string | number;
-  payment_type?: string | number;
+  account_type?: string | number | (string | number)[];
+  payment_type?: string | number | (string | number)[];
   consumer?: string | number;
   tag?: string;
   trans_time?: [string, string];

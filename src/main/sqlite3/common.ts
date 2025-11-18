@@ -1,4 +1,4 @@
-import { Params_Transaction } from "src/preload/type";
+import { Params_Transaction } from "../../preload/type";
 
 // Helper function to generate WHERE clause from Params_Transaction
 export function generateWhereClause(params: Params_Transaction): {
@@ -26,9 +26,7 @@ export function generateWhereClause(params: Params_Transaction): {
     );
   }
 
-  if (params?.consumer) {
-    conditions.push(`consumer LIKE '%${params.consumer}%'`);
-  }
+
 
   if (params?.min_money || params?.max_money) {
     const { min_money, max_money } = params;
@@ -64,13 +62,36 @@ export function generateWhereClause(params: Params_Transaction): {
       );
     }
   }
+  if (params?.consumer) {
+    if (Array.isArray(params.consumer) && params.consumer.length > 0) {
+      const consumers = params.consumer.map(consumer => `'${consumer}'`).join(',');
+      conditions.push(`consumer IN (${consumers})`);
+    } else if (typeof params.consumer === 'string' && params.consumer) {
+      conditions.push(`consumer = '${params.consumer}'`);
+    }
+  }
 
   if (params?.account_type) {
-    conditions.push(`account_type = '${params.account_type}'`);
+    console.log('account_type===', params.account_type)
+    if (Array.isArray(params.account_type) && params.account_type.length > 0) {
+      // 处理数组类型，使用 IN 查询
+      const accountTypes = params.account_type.map(type => `'${type}'`).join(',');
+      conditions.push(`account_type IN (${accountTypes})`);
+    } else if (typeof params.account_type === 'string' && params.account_type) {
+      conditions.push(`account_type = '${params.account_type}'`);
+    }
   }
 
   if (params?.payment_type) {
-    conditions.push(`payment_type = '${params.payment_type}'`);
+
+    if (Array.isArray(params.payment_type)) {
+      // 处理数组类型，使用 IN 查询
+      const paymentTypes = params.payment_type.map(type => `'${type}'`).join(',');
+      conditions.push(`payment_type IN (${paymentTypes})`);
+    } else if (typeof params.payment_type === 'string' && params.payment_type) {
+      // 处理单个值
+      conditions.push(`payment_type = '${params.payment_type}'`);
+    }
   }
 
   if (params?.tag) {
