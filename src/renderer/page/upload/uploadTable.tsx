@@ -534,11 +534,12 @@ const BasicTable = (props: {
               // Find matching transfer data
               const matchingItem = transferData.find((item: any) => {
                 // 时间误差在3分钟
-                const isSameTime = dayjs(obj.trans_time).diff(dayjs(item.trans_time), 'minute') < 10;
+                const isSameTime = dayjs(obj.trans_time).diff(dayjs(item.trans_time), 'minute') < 5;
                 const isSameAmount =
                   Math.round(Number(obj.amount)) === Math.round(Number(item.amount));
+                const timeMatched = dayjs(obj.trans_time).format('YYYY-MM-DD HH:mm:ss') === dayjs(item.trans_time).format('YYYY-MM-DD HH:mm:ss');
 
-                return isSameTime && isSameAmount;
+                return (isSameTime && isSameAmount) || timeMatched;
               });
 
               if (matchingItem) {

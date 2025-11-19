@@ -59,28 +59,13 @@ async function extractOrderData(page) {
         const listElement = document.querySelector('.react-base-list');
         const orders = [];
 
-        // 循环获取列表中的数据
-        for (const item of listElement.children) {
-            try {
-                // 通过层级关系定位价格元素: 第4个div下的第2个div下的第2个p的内容
-                const priceElement = item.children[2].children[1].querySelectorAll('p')[1];
-                const statusElement = item.querySelector('p[data-test="订单状态"]');
-                const nameElement = item.querySelector('span[data-test="商品名称"]');
-
-                if (!statusElement || !nameElement) {
-                    console.log('某些元素未找到，跳过此订单');
-                    continue;
-                }
-
-                orders.push({
-                    totalPrice: priceElement.textContent.trim().replace('¥', '') || '',
-                    status: statusElement.textContent.trim(),
-                    name: nameElement.textContent.trim()
-                });
-            } catch (error) {
-                console.log('处理订单时出错:', error);
-                continue;
-            }
+        for (var i = 0; i < listElement.childNodes.length; i++) {
+            var element = listElement.childNodes[i].childNodes[2].querySelectorAll('p')[1].childNodes[1].textContent;
+            orders.push({
+                totalPrice: element,
+                status: listElement.childNodes[i].querySelector('p[data-test="订单状态"]').textContent.trim(),
+                name: listElement.childNodes[i].querySelector('span[data-test="商品名称"]').textContent.trim()
+            });
         }
         return orders;
     });
