@@ -3,8 +3,8 @@ import { cpt_const } from "src/renderer/const/web";
 import { category_type } from "src/renderer/const/categroy";
 import SelectWrap from "./selectWrap";
 import { toNumberOrUndefiend } from "./utils";
-import { Cascader, Form, InputNumber, Input, Space } from "antd";
-import type { DefaultOptionType } from "antd/es/cascader";
+import { Form, InputNumber, Input, Space } from "antd";
+import CategoryCascader from "./CategoryCascader";
 
 const BatchUpdateArea = (props: { formValues: any; setFormValues: (values: any) => void }) => {
   const [form] = Form.useForm();
@@ -36,17 +36,19 @@ const BatchUpdateArea = (props: { formValues: any; setFormValues: (values: any) 
           } else {
             const found = category_type.find((val) => val.value === changedValues.category[0]);
             if (found) {
-              const obj = found?.children.find((val: any) => val.value === changedValues.category[1]);
+              const obj = found?.children.find((val) => val.value === changedValues.category[1]);
               console.log(obj, 'obj');
-              allValues.account_type = toNumberOrUndefiend(obj?.account_type);
-              allValues.flow_type = toNumberOrUndefiend(obj?.flow_type);
-              allValues.tag = toNumberOrUndefiend(obj?.tag);
-              allValues.consumer = toNumberOrUndefiend(obj?.consumer);
+              // 使用类型断言处理可能不存在的属性
+              const childObj = obj as any;
+              allValues.account_type = toNumberOrUndefiend(childObj?.account_type);
+              allValues.flow_type = toNumberOrUndefiend(childObj?.flow_type);
+              allValues.tag = toNumberOrUndefiend(childObj?.tag);
+              allValues.consumer = toNumberOrUndefiend(childObj?.consumer);
               form.setFieldsValue({
-                account_type: toNumberOrUndefiend(obj?.account_type),
-                flow_type: toNumberOrUndefiend(obj?.flow_type),
-                tag: toNumberOrUndefiend(obj?.tag),
-                consumer: toNumberOrUndefiend(obj?.consumer),
+                account_type: toNumberOrUndefiend(childObj?.account_type),
+                flow_type: toNumberOrUndefiend(childObj?.flow_type),
+                tag: toNumberOrUndefiend(childObj?.tag),
+                consumer: toNumberOrUndefiend(childObj?.consumer),
               });
             }
           }
@@ -59,62 +61,14 @@ const BatchUpdateArea = (props: { formValues: any; setFormValues: (values: any) 
     >
       <Space.Compact block>
         <Form.Item name="category" className="no-margin">
-          <Cascader
+          <CategoryCascader
             style={{ minWidth: "100px" }}
             options={category_type}
             popupClassName="large-cascader-dropdown"
-            displayRender={(label: string[]) => {
-              if (label.length === 0) {
-                return "";
-              }
-
-              return label[label.length - 1];
-            }}
-            showSearch={{
-              filter: (inputValue: string, path: DefaultOptionType[]) =>
-                path.some(
-                  (option) =>
-                    (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1
-                ),
-            }}
-            onChange={(category) => {
-              // if (category && category[0]) {
-              //   const found = category_type.find((val) => val.value === category[0]);
-              //   if (found) {
-              //     // @ts-ignore
-              //     const obj: any = found?.children.find((val: any) => val.value === category[1]);
-
-
-              //     form.setFieldsValue({
-              //       account_type: toNumberOrUndefiend(obj?.account_type),
-              //       flow_type: toNumberOrUndefiend(obj?.flow_type),
-              //       tag: toNumberOrUndefiend(obj?.tag),
-              //       consumer: toNumberOrUndefiend(obj?.consumer),
-              //     });
-              //     props.setFormValues({
-              //       account_type: toNumberOrUndefiend(obj?.account_type),
-              //       flow_type: toNumberOrUndefiend(obj?.flow_type),
-              //       tag: toNumberOrUndefiend(obj?.tag),
-              //       consumer: toNumberOrUndefiend(obj?.consumer),
-              //     });
-              //   }
-              // } else {
-              //   form.setFieldsValue({
-              //     account_type: undefined,
-              //     flow_type: undefined,
-              //     tag: undefined,
-              //     consumer: undefined,
-              //   });
-              //   props.setFormValues({
-              //     account_type: undefined,
-              //     flow_type: undefined,
-              //     tag: undefined,
-              //     consumer: undefined,
-              //   });
-              // }
-            }}
+            showSearch
             allowClear
             placeholder="分类"
+            compact
           />
         </Form.Item>
         <Form.Item name="tag" className="no-margin">
