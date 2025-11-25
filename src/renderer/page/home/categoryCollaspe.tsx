@@ -1,22 +1,16 @@
 import {
   Col,
   Collapse,
-  Flex,
   message,
   Modal,
   Progress,
   Row,
-  Table,
-  Tag,
-  Tooltip,
   Typography,
 } from 'antd';
 import type { CollapseProps, TableColumnsType, TableRowSelection } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
-import useModal from '../../components/useModal';
 import { ModalContent } from './ModalContent';
 import { AccountBookFilled } from '@ant-design/icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { category_type, findCategoryById } from '../../const/categroy';
 import { formatMoneyObj } from '../../components/utils';
 import { renderIcon } from '../../components/FontIcon';
@@ -85,7 +79,7 @@ const Item = (props: {
 
 const CategoryCollaspe = (props: {
   data: DataType[];
-  formValue: FormData;
+  formValue: any;
   refreshTable: () => void;
   showModal?: (category: string) => void;
   useSharedModal?: boolean;
@@ -95,6 +89,7 @@ const CategoryCollaspe = (props: {
   const [visible, setVisible] = useState<boolean>(false);
   const [cate, setCate] = useState<string>('');
   const [modalData, setModaldata] = useState<any>([]);
+  const [flowType, setFlowType] = useState<number>(0);
   const [barData, setBarData] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -114,6 +109,7 @@ const CategoryCollaspe = (props: {
       console.log(res, 'res=ooooooo===');
       if (res) {
         setModaldata(res);
+        setFlowType(params.flow_type);
       }
     } catch (error) {
       console.error('Error fetching transactions:', error);
@@ -124,6 +120,7 @@ const CategoryCollaspe = (props: {
   };
   const fetchData = async (obj: any) => {
     if (!obj) return;
+    console.log(obj, 'obj=ooooooo===');
 
     try {
       const result = await window.mercury.api.getTransactionsByMonth(obj);
@@ -139,6 +136,7 @@ const CategoryCollaspe = (props: {
     }
     if (formValue.type === 'year' && visible) {
       fetchData({
+        ...formValue,
         category: cate,
         trans_time: formValue.trans_time,
       });
@@ -245,6 +243,7 @@ const CategoryCollaspe = (props: {
     };
   });
 
+  console.log(flowType, 'formValue.flowType=ooooooo===');
   return (
     <>
       {<Collapse bordered={false} expandIconPosition="end" items={items} />}
@@ -257,7 +256,12 @@ const CategoryCollaspe = (props: {
           onCancel={() => setVisible(false)}
           title="交易详情"
         >
-          {formValue.type === 'year' && <BarChart data={barData} />}
+          {formValue.type === 'year' &&
+            (<BarChart
+              data={barData}
+              hasElementClick={false}
+              flowTypeVal={flowType} />
+            )}
           {modalData.length > 0 && (
             <ModalContent
               onCancel={() => setVisible(false)}

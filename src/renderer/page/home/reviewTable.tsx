@@ -83,6 +83,7 @@ const TransactionModal = (props: {
     }
     if (formValue.type === 'year' && visible) {
       fetchBarData({
+        ...formValue,
         category: category,
         trans_time: formValue.trans_time,
       });
@@ -106,7 +107,7 @@ const TransactionModal = (props: {
       onCancel={onClose}
       title="交易详情"
     >
-      {formValue.type === 'year' && <BarChart data={barData} />}
+      {formValue.type === 'year' && <BarChart data={barData} flowTypeVal={formValue.flow_type} />}
       {modalData.length > 0 && (
         <ModalContent
           loading={loading}

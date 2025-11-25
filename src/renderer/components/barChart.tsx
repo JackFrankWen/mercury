@@ -14,7 +14,8 @@ interface LineChartProps {
   setYear?: (year: string) => void;
 }
 
-const LineChart: React.FC<LineChartProps> = ({ flowTypeVal, data, height = 150, hasElementClick = false, setYear }) => {
+export default function BarChart(props: LineChartProps) {
+  const { flowTypeVal, data, height = 150, hasElementClick = false, setYear } = props;
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -128,5 +129,3 @@ const LineChart: React.FC<LineChartProps> = ({ flowTypeVal, data, height = 150, 
 
   return <div ref={containerRef}></div>;
 };
-
-export default LineChart;
