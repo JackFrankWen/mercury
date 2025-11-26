@@ -73,8 +73,8 @@ export const renderBoldPrice = (txt: string, record: I_Transaction) => {
   const amount = Number(txt);
   const type = Number(record?.flow_type) === 1 ? '-' : '+';
   return amount > 100 ? (
-    <Typography.Text 
-    style={{ color: type === '-' ? '#f5222d' : '#52c41a' }} strong italic>{type}{formatMoney(txt)}</Typography.Text>
+    <Typography.Text
+      style={{ color: type === '-' ? '#f5222d' : '#52c41a' }} strong italic>{type}{formatMoney(txt)}</Typography.Text>
   ) : (
     <span style={{ color: type === '-' ? '#f5222d' : '#52c41a' }}>{type}{formatMoney(txt)}</span>
   );
@@ -230,7 +230,13 @@ const columns: ColumnsType<I_Transaction> = [
       return <span style={{ color: val === '1' ? 'green' : val === '2' ? 'red' : 'blue' }}>
         {getFlowType(val)}</span>;
     },
-  },
+  }, {
+    title: 'id',
+    dataIndex: 'id',
+    key: 'id',
+    width: 100,
+    render: (id: number) => id,
+  }
 ];
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 

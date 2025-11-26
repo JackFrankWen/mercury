@@ -205,7 +205,7 @@ export function ModalContent({
       {
         title: '金额',
         dataIndex: 'amount',
-        width: 90,
+        width: 95,
         sorter: (a: I_Transaction, b: I_Transaction) => Number(a.amount) - Number(b.amount),
         render: (txt: string, record: I_Transaction) => renderBoldPrice(txt, record),
       },
@@ -277,10 +277,10 @@ export function ModalContent({
         },
       },
       {
-        title: '账号',
+        title: '账户类型',
         dataIndex: 'account_type',
         width: 100,
-        render: (val: string) => <Tag color="green">{account_type[Number(val)]}</Tag>,
+        render: (val: string) => { return account_type[Number(val)] },
       },
       {
         title: '标签',
