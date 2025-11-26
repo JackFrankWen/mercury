@@ -80,17 +80,33 @@
 }
 
 .category-cascader-dropdown {
-  max-height: 400px;
+  max-height: 450px;
   overflow: auto;
   padding: 8px;
 }
 
 /* 网格布局样式 */
+.category-cascader-tabs-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.category-cascader-tabs {
+  margin-bottom: 8px;
+}
+
+.category-cascader-tabs .ant-tabs-nav {
+  margin-bottom: 8px;
+}
+
 .category-cascader-grid-content {
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 8px 0;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .category-cascader-category-section {

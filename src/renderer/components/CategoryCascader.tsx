@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Popover, Input, Empty, Spin } from 'antd';
+import { Popover, Input, Empty, Spin, Tabs } from 'antd';
 import { SearchOutlined, CloseCircleFilled } from '@ant-design/icons';
 import { renderIcon } from './FontIcon';
 import './CategoryCascader.css';
+
+// 导入常量
+const flow_type_cost = 1;
+const flow_type_income = 2;
+const flow_type_other = 3;
 
 export interface CategoryOption {
     value: number;
@@ -11,6 +16,7 @@ export interface CategoryOption {
     color?: string;
     children?: CategoryOption[];
     disabled?: boolean;
+    flow_type?: number;
 }
 
 interface CategoryCascaderProps {
@@ -43,6 +49,7 @@ const CategoryCascader: React.FC<CategoryCascaderProps> = ({
     const [searchValue, setSearchValue] = useState('');
     const [searchResults, setSearchResults] = useState<SearchResultOption[]>([]);
     const [isSearching, setIsSearching] = useState(false);
+    const [activeTab, setActiveTab] = useState<string>('cost'); // 'cost', 'income', 'all'
 
     useEffect(() => {
         setSelectedValue(value);
@@ -107,10 +114,10 @@ const CategoryCascader: React.FC<CategoryCascaderProps> = ({
             const results: SearchResultOption[] = [];
 
             options.forEach(parent => {
-                // 搜索父级
-                if (parent.label.toLowerCase().includes(searchValue.toLowerCase())) {
-                    results.push(parent);
-                }
+                // // 搜索父级
+                // if (parent.label.toLowerCase().includes(searchValue.toLowerCase())) {
+                //     results.push(parent);
+                // }
 
                 // 搜索子级
                 if (parent.children) {
@@ -212,42 +219,166 @@ const CategoryCascader: React.FC<CategoryCascaderProps> = ({
                     )}
                 </div>
             ) : (
-                // 网格布局展示所有分类
-                <div className="category-cascader-grid-content">
-                    {options.map(category => (
-                        <div key={category.value} className="category-cascader-category-section">
-                            <div
-                                className="category-cascader-category-title"
-                                onClick={() => {
-                                    if (category.disabled) return;
-                                    if (!category.children || category.children.length === 0) {
-                                        handleSelect(category.value);
-                                    }
-                                }}
-                            >
-                                {category.label}
-                            </div>
-                            <div className="category-cascader-subcategory-grid">
-                                {category.children?.map(subCategory => (
-                                    <div
-                                        key={subCategory.value}
-                                        className={`category-cascader-grid-item ${subCategory.disabled ? 'disabled' : ''}`}
-                                        onClick={() => {
-                                            if (subCategory.disabled) return;
-                                            handleSelect(category.value, subCategory.value);
-                                        }}
-                                    >
-                                        <div className="category-cascader-grid-icon">
-                                            {subCategory.icon && renderIcon(subCategory.icon, subCategory.color)}
-                                        </div>
-                                        <div className="category-cascader-grid-label">
-                                            {subCategory.label}
-                                        </div>
+                // 带标签页的网格布局
+                <div className="category-cascader-tabs-container">
+                    <Tabs
+                        activeKey={activeTab}
+                        onChange={setActiveTab}
+                        className="category-cascader-tabs"
+                        items={[
+                            {
+                                key: 'cost',
+                                label: '支出',
+                                children: (
+                                    <div className="category-cascader-grid-content">
+                                        {options
+                                            .filter(category => {
+                                                // 检查类别是否有子项，且子项中是否有支出类型
+                                                if (!category.children || category.children.length === 0) return false;
+                                                // 检查子项中是否有支出类型或未指定类型的项
+                                                return category.flow_type === flow_type_cost;
+                                            })
+                                            .map(category => {
+                                                const costChildren = category.children;
+
+                                                return (
+                                                    <div key={category.value} className="category-cascader-category-section">
+                                                        <div
+                                                            className="category-cascader-category-title"
+                                                            onClick={() => {
+                                                                if (category.disabled) return;
+                                                                if (!category.children || category.children.length === 0) {
+                                                                    handleSelect(category.value);
+                                                                }
+                                                            }}
+                                                        >
+                                                            {category.label}
+                                                        </div>
+                                                        <div className="category-cascader-subcategory-grid">
+                                                            {costChildren.map(subCategory => (
+                                                                <div
+                                                                    key={subCategory.value}
+                                                                    className={`category-cascader-grid-item ${subCategory.disabled ? 'disabled' : ''}`}
+                                                                    onClick={() => {
+                                                                        if (subCategory.disabled) return;
+                                                                        handleSelect(category.value, subCategory.value);
+                                                                    }}
+                                                                >
+                                                                    <div className="category-cascader-grid-icon">
+                                                                        {subCategory.icon && renderIcon(subCategory.icon, subCategory.color)}
+                                                                    </div>
+                                                                    <div className="category-cascader-grid-label">
+                                                                        {subCategory.label}
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
+                                )
+                            },
+                            {
+                                key: 'income',
+                                label: '收入',
+                                children: (
+                                    <div className="category-cascader-grid-content">
+                                        {options
+                                            .filter(category => {
+                                                // 检查类别是否有子项，且子项中是否有收入类型
+                                                if (!category.children || category.children.length === 0) return false;
+                                                // 检查子项中是否有收入类型
+                                                return category.flow_type === flow_type_income;
+                                            })
+                                            .map(category => {
+                                                // 过滤出收入类型的子项
+                                                const incomeChildren = category.children
+
+                                                if (!incomeChildren || incomeChildren.length === 0) return null;
+
+                                                return (
+                                                    <div key={category.value} className="category-cascader-category-section">
+                                                        <div
+                                                            className="category-cascader-category-title"
+                                                            onClick={() => {
+                                                                if (category.disabled) return;
+                                                                if (!category.children || category.children.length === 0) {
+                                                                    handleSelect(category.value);
+                                                                }
+                                                            }}
+                                                        >
+                                                            {category.label}
+                                                        </div>
+                                                        <div className="category-cascader-subcategory-grid">
+                                                            {incomeChildren.map(subCategory => (
+                                                                <div
+                                                                    key={subCategory.value}
+                                                                    className={`category-cascader-grid-item ${subCategory.disabled ? 'disabled' : ''}`}
+                                                                    onClick={() => {
+                                                                        if (subCategory.disabled) return;
+                                                                        handleSelect(category.value, subCategory.value);
+                                                                    }}
+                                                                >
+                                                                    <div className="category-cascader-grid-icon">
+                                                                        {subCategory.icon && renderIcon(subCategory.icon, subCategory.color)}
+                                                                    </div>
+                                                                    <div className="category-cascader-grid-label">
+                                                                        {subCategory.label}
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                    </div>
+                                )
+                            },
+                            {
+                                key: 'all',
+                                label: '全部',
+                                children: (
+                                    <div className="category-cascader-grid-content">
+                                        {options.map(category => (
+                                            <div key={category.value} className="category-cascader-category-section">
+                                                <div
+                                                    className="category-cascader-category-title"
+                                                    onClick={() => {
+                                                        if (category.disabled) return;
+                                                        if (!category.children || category.children.length === 0) {
+                                                            handleSelect(category.value);
+                                                        }
+                                                    }}
+                                                >
+                                                    {category.label}
+                                                </div>
+                                                <div className="category-cascader-subcategory-grid">
+                                                    {category.children?.map(subCategory => (
+                                                        <div
+                                                            key={subCategory.value}
+                                                            className={`category-cascader-grid-item ${subCategory.disabled ? 'disabled' : ''}`}
+                                                            onClick={() => {
+                                                                if (subCategory.disabled) return;
+                                                                handleSelect(category.value, subCategory.value);
+                                                            }}
+                                                        >
+                                                            <div className="category-cascader-grid-icon">
+                                                                {subCategory.icon && renderIcon(subCategory.icon, subCategory.color)}
+                                                            </div>
+                                                            <div className="category-cascader-grid-label">
+                                                                {subCategory.label}
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )
+                            }
+                        ]}
+                    />
                 </div>
             )}
         </div>

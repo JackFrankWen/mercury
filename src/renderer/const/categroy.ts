@@ -61,6 +61,7 @@ export const category_type = [
     label: '餐饮',
     icon: 'fa-solid fa-utensils',
     color: '#E74C3C', // 深红色
+    flow_type: flow_type_cost,
     children: [
       {
         value: 10001,
@@ -136,6 +137,7 @@ export const category_type = [
     label: '购物消费',
     icon: 'fa-solid fa-shopping-bag',
     color: '#3498DB', // 蓝色
+    flow_type: flow_type_cost,
     children: [
       {
         value: 50001,
@@ -212,6 +214,7 @@ export const category_type = [
     label: '家庭杂费',
     icon: 'fa-solid fa-house',
     color: '#5D8BF4', // 蓝色调
+    flow_type: flow_type_cost,
     children: [
       {
         value: 20001,
@@ -305,6 +308,7 @@ export const category_type = [
     label: '行车交通',
     icon: 'fa-solid fa-car',
     color: '#FFB347', // 橙色调
+    flow_type: flow_type_cost,
     children: [
       {
         value: 30001,
@@ -361,6 +365,7 @@ export const category_type = [
     label: '人情费用',
     icon: 'fa-solid fa-gift',
     color: '#E57A77', // 粉红色调
+    flow_type: flow_type_cost,
     children: [
       {
         value: 60001,
@@ -390,6 +395,7 @@ export const category_type = [
     value: 70000,
     label: '休闲娱乐',
     icon: 'fa-solid fa-gamepad',
+    flow_type: flow_type_cost,
     color: '#9D65C9', // 紫色调
     children: [
       {
@@ -426,6 +432,7 @@ export const category_type = [
     value: 80000,
     label: '保险医疗',
     icon: 'fa-solid fa-hospital',
+    flow_type: flow_type_cost,
     color: '#6A8EAA', // 蓝灰色调
     children: [
       {
@@ -457,6 +464,7 @@ export const category_type = [
     value: 90000,
     label: '教育文化',
     icon: 'fa-solid fa-book',
+    flow_type: flow_type_cost,
     color: '#5DBB63', // 绿色调
     children: [
       {
@@ -501,6 +509,7 @@ export const category_type = [
     value: 91000,
     label: '主动收入',
     icon: 'fa-solid fa-sack-dollar',
+    flow_type: flow_type_income,
     color: '#67C7A5', // 薄荷绿色调
     children: [
       {
@@ -525,6 +534,7 @@ export const category_type = [
     value: 92000,
     label: '被动收入',
     icon: 'fa-solid fa-chart-line',
+    flow_type: flow_type_income,
     color: '#F9D56E', // 黄色调
     children: [
       {
@@ -557,6 +567,7 @@ export const category_type = [
     value: 110000,
     label: '出差旅游',
     icon: 'fa-solid fa-plane',
+    flow_type: flow_type_cost,
     color: '#D291BC', // 淡紫色调
     children: [
       {
@@ -605,6 +616,7 @@ export const category_type = [
   {
     value: 120000,
     label: '公司收入',
+    flow_type: flow_type_income,
     icon: 'fa-solid fa-sack-dollar',
     color: '#67C7A5', // 薄荷绿色调
     children: [
@@ -625,6 +637,7 @@ export const category_type = [
     label: '公司支出',
     icon: 'fa-solid fa-sack-dollar',
     color: '#67C7A5', // 薄荷绿色调
+    flow_type: flow_type_cost,
     children: [{
       value: 130001,
       label: '教师薪酬',
@@ -694,6 +707,7 @@ export const category_type = [
     value: 100000,
     label: '未归类',
     icon: 'fa-solid fa-question',
+    flow_type: flow_type_cost,
     color: '#95A5A6', // 灰色
     children: [
       {

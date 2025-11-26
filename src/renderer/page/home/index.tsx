@@ -3,14 +3,11 @@ import { Button, Card, Row, Col, Modal, Flex } from 'antd';
 import useReviewForm from './useReviewForm';
 import TableSection from './reviewTable';
 import Summarize from './review-sum';
-import PieChart from '../../components/pieChart';
-import { formatMoney } from '../../components/utils';
 import YearBarChart from './yearBarChart';
 import ConsumerChart from './consumerChart';
 import AccountInfo from './accountInfo';
 import CompanySummarize from './companySummarize';
 import './index.css';
-import { useSearchParams } from 'react-router-dom';
 import useExtraControls from '../../components/useExtraControls';
 import { category_type } from '../../const/categroy';
 
