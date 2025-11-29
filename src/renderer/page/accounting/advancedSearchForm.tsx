@@ -174,7 +174,7 @@ export const AdvancedSearchForm = (props: {
           <>
             <Col span={8}>
               <Form.Item name="consumer" label="消费成员">
-                <Select allowClear placeholder="消费成员" options={cpt_const.consumer_type} />
+                <Select allowClear mode="multiple" placeholder="消费成员" options={cpt_const.consumer_type} />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -209,7 +209,9 @@ export const AdvancedSearchForm = (props: {
       <Row gutter={24}>
         <Col span={8}>
           <Form.Item name="account_type" label="账户">
-            <Select allowClear placeholder="账户" options={cpt_const.account_type} />
+            <Select allowClear  
+            mode="multiple"
+            placeholder="账户" options={cpt_const.account_type} />
           </Form.Item>
         </Col>
         <Col span={8}>
