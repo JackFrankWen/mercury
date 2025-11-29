@@ -857,10 +857,10 @@
   resolved "https://registry.npmmirror.com/@emotion/unitless/-/unitless-0.7.5.tgz"
   integrity sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==
 
-"@esbuild/darwin-x64@0.21.5":
+"@esbuild/win32-x64@0.21.5":
   version "0.21.5"
-  resolved "https://mirrors.cloud.tencent.com/npm/@esbuild/darwin-x64/-/darwin-x64-0.21.5.tgz"
-  integrity sha512-se/JjF8NlmKVG4kNIuyWMV/22ZaerB+qaSi5MdrXtd6R08kvs2qCN4C09miupktDitvh8jRFflwGFBQcxZRjbw==
+  resolved "https://mirrors.cloud.tencent.com/npm/@esbuild/win32-x64/-/win32-x64-0.21.5.tgz"
+  integrity sha512-tQd/1efJuzPC6rCFwEvLtci/xNFcTZknmXs98FYDfGE4wP9ClFV98nyKrzJKVPMhdDnjzLhdUyMX4PsQAPjwIw==
 
 "@eslint-community/eslint-utils@^4.2.0":
   version "4.4.0"
@@ -1171,10 +1171,10 @@
   resolved "https://registry.npmmirror.com/@remix-run/router/-/router-1.19.2.tgz"
   integrity sha512-baiMx18+IMuD1yyvOGaHM9QrVUPGGG0jC+z+IPHnRJWUAUvaKuWKyE8gjDj2rzv3sz9zOGoRSPgeBVHRhZnBlA==
 
-"@rollup/rollup-darwin-x64@4.22.4":
+"@rollup/rollup-win32-x64-msvc@4.22.4":
   version "4.22.4"
-  resolved "https://mirrors.cloud.tencent.com/npm/@rollup/rollup-darwin-x64/-/rollup-darwin-x64-4.22.4.tgz"
-  integrity sha512-aJJyYKQwbHuhTUrjWjxEvGnNNBCnmpHDvrb8JFDbeSH3m2XdHcxDd3jthAzvmoI8w/kSjd2y0udT+4okADsZIw==
+  resolved "https://mirrors.cloud.tencent.com/npm/@rollup/rollup-win32-x64-msvc/-/rollup-win32-x64-msvc-4.22.4.tgz"
+  integrity sha512-j8pPKp53/lq9lMXN57S8cFz0MynJk8OWNuUnXct/9KCpKU7DgU3bYMJhwWmcqC0UU29p8Lr0/7KEVcaM6bf47Q==
 
 "@rtsao/scc@^1.1.0":
   version "1.1.0"
@@ -2207,15 +2207,6 @@ cli-truncate@^3.1.0:
     slice-ansi "^5.0.0"
     string-width "^5.0.0"
 
-cliui@^7.0.2:
-  version "7.0.4"
-  resolved "https://mirrors.cloud.tencent.com/npm/cliui/-/cliui-7.0.4.tgz"
-  integrity sha512-OcRE68cOsVMXp1Yvonl/fzkQOyjLSu/8bhPDfQt0e0/Eb283TKP20Fs2MqoPsr9SwA595rRCA+QMzYc9nBP+JQ==
-  dependencies:
-    string-width "^4.2.0"
-    strip-ansi "^6.0.0"
-    wrap-ansi "^7.0.0"
-
 cliui@^8.0.1:
   version "8.0.1"
   resolved "https://mirrors.cloud.tencent.com/npm/cliui/-/cliui-8.0.1.tgz"
@@ -2797,50 +2788,6 @@ ee-first@1.1.1:
   version "1.1.1"
   resolved "https://mirrors.cloud.tencent.com/npm/ee-first/-/ee-first-1.1.1.tgz"
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
-
-electron-installer-common@^0.10.2:
-  version "0.10.3"
-  resolved "https://mirrors.cloud.tencent.com/npm/electron-installer-common/-/electron-installer-common-0.10.3.tgz"
-  integrity sha512-mYbP+6i+nHMIm0WZHXgGdmmXMe+KXncl6jZYQNcCF9C1WsNA9C5SZ2VP4TLQMSIoFO+X4ugkMEA5uld1bmyEvA==
-  dependencies:
-    "@malept/cross-spawn-promise" "^1.0.0"
-    asar "^3.0.0"
-    debug "^4.1.1"
-    fs-extra "^9.0.0"
-    glob "^7.1.4"
-    lodash "^4.17.15"
-    parse-author "^2.0.0"
-    semver "^7.1.1"
-    tmp-promise "^3.0.2"
-  optionalDependencies:
-    "@types/fs-extra" "^9.0.1"
-
-electron-installer-debian@^3.2.0:
-  version "3.2.0"
-  resolved "https://mirrors.cloud.tencent.com/npm/electron-installer-debian/-/electron-installer-debian-3.2.0.tgz"
-  integrity sha512-58ZrlJ1HQY80VucsEIG9tQ//HrTlG6sfofA3nRGr6TmkX661uJyu4cMPPh6kXW+aHdq/7+q25KyQhDrXvRL7jw==
-  dependencies:
-    "@malept/cross-spawn-promise" "^1.0.0"
-    debug "^4.1.1"
-    electron-installer-common "^0.10.2"
-    fs-extra "^9.0.0"
-    get-folder-size "^2.0.1"
-    lodash "^4.17.4"
-    word-wrap "^1.2.3"
-    yargs "^16.0.2"
-
-electron-installer-redhat@^3.2.0:
-  version "3.4.0"
-  resolved "https://mirrors.cloud.tencent.com/npm/electron-installer-redhat/-/electron-installer-redhat-3.4.0.tgz"
-  integrity sha512-gEISr3U32Sgtj+fjxUAlSDo3wyGGq6OBx7rF5UdpIgbnpUvMN4W5uYb0ThpnAZ42VEJh/3aODQXHbFS4f5J3Iw==
-  dependencies:
-    "@malept/cross-spawn-promise" "^1.0.0"
-    debug "^4.1.1"
-    electron-installer-common "^0.10.2"
-    fs-extra "^9.0.0"
-    lodash "^4.17.15"
-    word-wrap "^1.2.3"
-    yargs "^16.0.2"
 
 electron-squirrel-startup@^1.0.1:
   version "1.0.1"
@@ -3691,11 +3638,6 @@ fs.realpath@^1.0.0:
   resolved "https://mirrors.cloud.tencent.com/npm/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
-fsevents@~2.3.2, fsevents@~2.3.3:
-  version "2.3.3"
-  resolved "https://mirrors.cloud.tencent.com/npm/fsevents/-/fsevents-2.3.3.tgz"
-  integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
-
 function-bind@^1.1.2:
   version "1.1.2"
   resolved "https://mirrors.cloud.tencent.com/npm/function-bind/-/function-bind-1.1.2.tgz"
@@ -3727,11 +3669,6 @@ galactus@^1.0.0:
     flora-colossus "^2.0.0"
     fs-extra "^10.1.0"
 
-gar@^1.0.4:
-  version "1.0.4"
-  resolved "https://mirrors.cloud.tencent.com/npm/gar/-/gar-1.0.4.tgz"
-  integrity sha512-w4n9cPWyP7aHxKxYHFQMegj7WIAsL/YX/C4Bs5Rr8s1H9M1rNtRWRsw+ovYMkXDQ5S4ZbYHsHAPmevPjPgw44w==
-
 gauge@^4.0.3:
   version "4.0.4"
   resolved "https://mirrors.cloud.tencent.com/npm/gauge/-/gauge-4.0.4.tgz"
@@ -3755,14 +3692,6 @@ get-caller-file@^2.0.5:
   version "2.0.5"
   resolved "https://mirrors.cloud.tencent.com/npm/get-caller-file/-/get-caller-file-2.0.5.tgz"
   integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
-
-get-folder-size@^2.0.1:
-  version "2.0.1"
-  resolved "https://mirrors.cloud.tencent.com/npm/get-folder-size/-/get-folder-size-2.0.1.tgz"
-  integrity sha512-+CEb+GDCM7tkOS2wdMKTn9vU7DgnKUTuDlehkNJKNSovdCOVxs14OfKCk4cvSaR3za4gj+OBdl9opPN9xrJ0zA==
-  dependencies:
-    gar "^1.0.4"
-    tiny-each-async "2.0.3"
 
 get-installed-path@^2.0.3:
   version "2.1.1"
@@ -4723,7 +4652,7 @@ lodash.merge@^4.6.2:
   resolved "https://mirrors.cloud.tencent.com/npm/lodash.merge/-/lodash.merge-4.6.2.tgz"
   integrity sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==
 
-lodash@^4.17.15, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4:
+lodash@^4.17.15, lodash@^4.17.20, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://mirrors.cloud.tencent.com/npm/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -7142,11 +7071,6 @@ throttle-debounce@^5.0.0, throttle-debounce@^5.0.2:
   resolved "https://registry.npmmirror.com/throttle-debounce/-/throttle-debounce-5.0.2.tgz"
   integrity sha512-B71/4oyj61iNH0KeCamLuE2rmKuTO5byTOSVwECM5FA7TiAiAW+UqTKZ9ERueC4qvgSttUhdmq1mXC3kJqGX7A==
 
-tiny-each-async@2.0.3:
-  version "2.0.3"
-  resolved "https://mirrors.cloud.tencent.com/npm/tiny-each-async/-/tiny-each-async-2.0.3.tgz"
-  integrity sha512-5ROII7nElnAirvFn8g7H7MtpfV1daMcyfTGQwsn/x2VtyV+VPiO5CjReCJtWLvoKTDEDmZocf3cNPraiMnBXLA==
-
 tmp-promise@^3.0.2:
   version "3.0.3"
   resolved "https://mirrors.cloud.tencent.com/npm/tmp-promise/-/tmp-promise-3.0.3.tgz"
@@ -7591,7 +7515,7 @@ wolfy87-eventemitter@^5.1.0:
   resolved "https://registry.npmmirror.com/wolfy87-eventemitter/-/wolfy87-eventemitter-5.2.9.tgz"
   integrity sha512-P+6vtWyuDw+MB01X7UeF8TaHBvbCovf4HPEMF/SV7BdDc1SMTiBy13SRD71lQh4ExFTG1d/WNzDGDCyOKSMblw==
 
-word-wrap@^1.2.3, word-wrap@^1.2.5:
+word-wrap@^1.2.5:
   version "1.2.5"
   resolved "https://mirrors.cloud.tencent.com/npm/word-wrap/-/word-wrap-1.2.5.tgz"
   integrity sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==
@@ -7664,28 +7588,10 @@ yallist@^4.0.0:
   resolved "https://mirrors.cloud.tencent.com/npm/yallist/-/yallist-4.0.0.tgz"
   integrity sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
 
-yargs-parser@^20.2.2:
-  version "20.2.9"
-  resolved "https://mirrors.cloud.tencent.com/npm/yargs-parser/-/yargs-parser-20.2.9.tgz"
-  integrity sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==
-
 yargs-parser@^21.1.1:
   version "21.1.1"
   resolved "https://mirrors.cloud.tencent.com/npm/yargs-parser/-/yargs-parser-21.1.1.tgz"
   integrity sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw==
-
-yargs@^16.0.2:
-  version "16.2.0"
-  resolved "https://mirrors.cloud.tencent.com/npm/yargs/-/yargs-16.2.0.tgz"
-  integrity sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==
-  dependencies:
-    cliui "^7.0.2"
-    escalade "^3.1.1"
-    get-caller-file "^2.0.5"
-    require-directory "^2.1.1"
-    string-width "^4.2.0"
-    y18n "^5.0.5"
-    yargs-parser "^20.2.2"
 
 yargs@^17.0.1, yargs@^17.7.2:
   version "17.7.2"

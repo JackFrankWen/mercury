@@ -72,7 +72,6 @@ export function generateWhereClause(params: Params_Transaction): {
   }
 
   if (params?.account_type) {
-    console.log('account_type===', params.account_type)
     if (Array.isArray(params.account_type) && params.account_type.length > 0) {
       // 处理数组类型，使用 IN 查询
       const accountTypes = params.account_type.map(type => `'${type}'`).join(',');
