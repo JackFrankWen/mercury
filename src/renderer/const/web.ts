@@ -39,6 +39,7 @@ export const consumer_type: { [key: number]: string } = {
   5: "爷爷奶奶",
   6: "溪溪",
   7: "姥爷",
+  8: "公司",
 };
 export enum ConsumerType {
   HUSBAND = 1,

@@ -8,7 +8,8 @@ const husband = 1,
   wife = 2,
   family = 3,
   son = 4,
-  grandPa = 5;
+  grandPa = 5,
+  company = 8;
 
 const account_company = 4;
 // 1: '生存开销',
@@ -118,7 +119,7 @@ export const category_type = [
       },
       {
         value: 10007,
-        label: '奶茶',
+        label: '奶茶咖啡',
         icon: 'fa-solid fa-mug-hot',
         color: '#F1C40F', // 亮黄色
         tag: variable_cost,
@@ -625,7 +626,7 @@ export const category_type = [
         label: '课程收入',
         icon: 'fa-solid fa-sack-dollar',
         color: '#67C7A5', // 薄荷绿色调
-        consumer: wife,
+        consumer: company,
         flow_type: flow_type_income,
         account_type: account_company,
       },
@@ -643,7 +644,7 @@ export const category_type = [
       label: '教师薪酬',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
-      consumer: wife,
+      consumer: company,
       flow_type: flow_type_cost,
       account_type: account_company,
     },
@@ -652,7 +653,7 @@ export const category_type = [
       label: '课程研发',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
-      consumer: wife,
+      consumer: company,
       flow_type: flow_type_cost,
       account_type: account_company,
     },
@@ -661,7 +662,7 @@ export const category_type = [
       label: '教材/教具成本',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
-      consumer: wife,
+      consumer: company,
       flow_type: flow_type_cost,
       account_type: account_company,
     },
@@ -670,7 +671,7 @@ export const category_type = [
       label: '教室/场地租赁费',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
-      consumer: wife,
+      consumer: company,
       flow_type: flow_type_cost,
       account_type: account_company,
     },
@@ -679,7 +680,7 @@ export const category_type = [
       label: '市场推广费',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
-      consumer: wife,
+      consumer: company,
       flow_type: flow_type_cost,
       account_type: account_company,
     },
@@ -688,7 +689,7 @@ export const category_type = [
       label: '销售人员薪酬',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
-      consumer: wife,
+      consumer: company,
       flow_type: flow_type_cost,
       account_type: account_company,
     },
@@ -697,7 +698,7 @@ export const category_type = [
       label: '开办费用',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
-      consumer: wife,
+      consumer: company,
       flow_type: flow_type_cost,
       account_type: account_company,
     }
