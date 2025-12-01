@@ -61,8 +61,9 @@ const CONSUMER_TYPE_MAP = {
   3: { label: '家庭', color: 'geekblue' },
   4: { label: '牧牧', color: 'purple' },
   5: { label: '爷爷奶奶', color: 'lime' },
-  6: { label: '二宝', color: 'orange' },
+  6: { label: '溪溪', color: 'orange' },
   7: { label: '姥爷', color: 'gold' },
+  8: { label: '公司', color: 'green' },
 } as const;
 
 // 优化渲染价格的函数
@@ -322,8 +323,8 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
         }}
         dataSource={data}
         pagination={{
-          defaultPageSize: 50,
-          pageSizeOptions: [50, 100, 200],
+          defaultPageSize: 100,
+          pageSizeOptions: [100, 200, 300],
           showSizeChanger: true,
           showTotal: (total, range) => `共${total}条`,
         }}

@@ -27,6 +27,7 @@ const CONSUMER_TYPES: Record<number, { label: string; color: string }> = {
   5: { label: '爷爷奶奶', color: 'lime' },
   6: { label: '溪溪', color: 'orange' },
   7: { label: '姥爷', color: 'gold' },
+  8: { label: '公司', color: 'green' },
 };
 
 // Create a reusable filter dropdown component
