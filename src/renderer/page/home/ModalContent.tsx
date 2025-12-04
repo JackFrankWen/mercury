@@ -104,7 +104,6 @@ export function ModalContent({
   onCancel,
   loading = false,
 }: ModalContentProps) {
-  console.log(modalData, 'modalData=ooooooo===');
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [tableData, setTableData] = useState<I_Transaction[]>(modalData);
   const [selectedAmount, setSelectedAmount] = useState(0);
@@ -337,8 +336,8 @@ export function ModalContent({
       </div>
       <Table
         pagination={{
-          defaultPageSize: 50,
-          pageSizeOptions: [50, 300],
+          defaultPageSize: 100,
+          pageSizeOptions: [100, 200, 300],
           showSizeChanger: true,
         }}
         rowSelection={rowSelection}
