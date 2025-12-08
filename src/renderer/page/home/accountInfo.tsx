@@ -159,7 +159,7 @@ function AccountInfo(props: { formValue: any }) {
   });
 
   return (
-    <Card title={'账户信息'} size="small" className="mt8" bordered={false} hoverable>
+    <Card title={'账户支出'} size="small" className="mt8" bordered={false} hoverable>
       <Collapse bordered={false} size="small" items={items} defaultActiveKey={[0, 1]} />
     </Card>
   );
