@@ -120,7 +120,6 @@ const CategoryCollaspe = (props: {
   };
   const fetchData = async (obj: any) => {
     if (!obj) return;
-    console.log(obj, 'obj=ooooooo===');
 
     try {
       const result = await window.mercury.api.getTransactionsByMonth(obj);
@@ -243,7 +242,6 @@ const CategoryCollaspe = (props: {
     };
   });
 
-  console.log(flowType, 'formValue.flowType=ooooooo===');
   return (
     <>
       {<Collapse bordered={false} expandIconPosition="end" items={items} />}
