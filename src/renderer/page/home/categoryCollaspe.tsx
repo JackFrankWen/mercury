@@ -167,6 +167,7 @@ const CategoryCollaspe = (props: {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              width: 22,
             }}
           >
             {categoryInfo?.icon ? (
