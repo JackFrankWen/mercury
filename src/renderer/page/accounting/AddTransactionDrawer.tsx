@@ -3,7 +3,6 @@ import { Drawer, Form, Input, Button, Space, Select, DatePicker, message, Cascad
 import { account_type, flow_type, payment_type, tag_type } from "../../const/web";
 import { category_type } from "src/renderer/const/categroy";
 import { toNumberOrUndefiend } from "src/renderer/components/utils";
-import { c } from "vite/dist/node/types.d-aGj9QkWt";
 import dayjs from "dayjs";
 
 // 定义消费者类型映射

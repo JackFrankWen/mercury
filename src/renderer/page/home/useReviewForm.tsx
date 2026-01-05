@@ -13,20 +13,15 @@ export interface FormData {
 }
 
 const useReviewForm = (): [FormData, React.ReactNode] => {
+
   const now = dayjs();
-  const lastYear = now.format('YYYY');
-
-
-
+  // 如果 now 是一月 则取去年一月 否则取今年一月
+  const lastYear = now.month() === 0 ? now.subtract(1, 'year').format('YYYY') : now.format('YYYY');
   const [formData, setFormData] = useState<FormData>({
     date: lastYear,
-    trans_time: [
-      lastYear + '-01-01 00:00:00',
-      lastYear + '-12-31 23:59:59'
-    ],
+    trans_time: [`${lastYear}-01-01 00:00:00`, `${lastYear}-12-31 23:59:59`],
     type: 'year',
   });
-
   useEffect(() => {
     emitter.on('updateDate', (val: FormData) => {
       setFormData(val);
@@ -36,7 +31,7 @@ const useReviewForm = (): [FormData, React.ReactNode] => {
     };
   }, []);
 
-  
+
   const cpt = (
     <IconDate
       value={formData}

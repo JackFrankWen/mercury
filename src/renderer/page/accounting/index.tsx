@@ -1,51 +1,36 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card } from 'antd';
 import { AdvancedSearchForm } from './advancedSearchForm';
 import { AdvancedTable } from './advancedTable';
 import { Params_Transaction } from 'src/preload/type';
+import { useTransactions } from './useTransactions';
 import './index.css';
 import dayjs from 'dayjs';
-// import emitter from 'src/renderer/events';
+
 export interface I_FormValue extends Params_Transaction {
   chose_unclassified: string;
   trans_time?: [string, string]
 }
+
 function Accounting(): JSX.Element {
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [formValue, setFormValue] = useState<I_FormValue>({
+  const now = dayjs();
+  const lastYear = now.month() === 0 ? now.subtract(1, 'year') : now;
+  const {
+    transactions,
+    loading,
+    formValue,
+    setFormValue,
+    refreshTransactions,
+    getTransactions,
+  } = useTransactions({
     chose_unclassified: 'unclassified',
     flow_type: '1',
-    // 默认查询当年
     trans_time: [
-      dayjs().startOf('year').format('YYYY-MM-DD HH:mm:ss'),
-      dayjs().endOf('year').format('YYYY-MM-DD HH:mm:ss'),
+      lastYear.startOf('year').format('YYYY-MM-DD HH:mm:ss'),
+      lastYear.endOf('year').format('YYYY-MM-DD HH:mm:ss'),
     ],
   });
-  useEffect(() => {
-    getTransactions({
-      ...formValue,
-      is_unclassified: formValue.chose_unclassified === 'unclassified',
-    });
-  }, [formValue]);
-  const getTransactions = (params: Params_Transaction) => {
-    // 如果 trans_time [object, object] 则转换为 [string, string]
-    setLoading(true);
 
-    const params_new = {
-      ...params,
-      is_unclassified: params.chose_unclassified === 'unclassified',
-    };
-    window.mercury.api.getTransactions(params_new)
-      .then((res) => {
-        if (res) {
-          setTransactions(res);
-        }
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
   return (
     <div className="p-accounting">
       <Card className="plr8">
@@ -59,15 +44,11 @@ function Accounting(): JSX.Element {
         <AdvancedTable
           data={transactions}
           loading={loading}
-          fresh={() => {
-            getTransactions({
-              ...formValue,
-              is_unclassified: formValue.chose_unclassified === 'unclassified',
-            });
-          }}
+          fresh={refreshTransactions}
         />
       </Card>
     </div>
   );
 }
+
 export default Accounting;
