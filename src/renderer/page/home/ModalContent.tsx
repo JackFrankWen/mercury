@@ -5,10 +5,9 @@ import dayjs from 'dayjs';
 import { SelectionFooter } from 'src/renderer/components/SelectionFooter';
 import { I_Transaction } from 'src/main/sqlite3/transactions';
 import { payment_type, account_type, tag_type } from '../../const/web';
-import { formatMoney } from '../../components/utils';
 import { FilterDropdownProps } from 'antd/es/table/interface';
 import { getCategoryCol } from 'src/renderer/components/commonColums';
-import { renderBoldPrice } from 'src/renderer/page/accounting/advancedTable';
+import { renderBoldPrice } from 'src/renderer/page/accounting/config/tableColumns';
 
 interface ModalContentProps {
   modalData: I_Transaction[];

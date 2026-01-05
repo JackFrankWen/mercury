@@ -16,12 +16,12 @@ export function renderBoldPrice(txt: string, record: I_Transaction) {
   if (record?.children) {
     return <span style={{ fontWeight: 'bold' }}>{formatMoney(txt)}</span>;
   }
-  
+
   const amount = Number(txt);
   const type = Number(record?.flow_type) === 1 ? '-' : '+';
   const color = type === '-' ? '#f5222d' : '#52c41a';
   const formattedAmount = `${type}${formatMoney(txt)}`;
-  
+
   return amount > 100 ? (
     <Typography.Text style={{ color }} strong italic>
       {formattedAmount}
@@ -62,7 +62,7 @@ function renderConsumer(val: number) {
  */
 function renderPaymentType(val: number) {
   let icon;
-  
+
   if (payment_type[val] === '支付宝') {
     icon = <AlipayCircleOutlined style={{ color: '#00A0E9' }} />;
   } else if (payment_type[val] === '微信') {
@@ -70,7 +70,7 @@ function renderPaymentType(val: number) {
   } else {
     icon = <BankFilled style={{ color: '#00A0E9' }} />;
   }
-  
+
   return (
     <span>
       {icon} {payment_type[val]}
@@ -86,7 +86,7 @@ function renderFlowType(val: string) {
     '1': 'green',
     '2': 'red',
   };
-  
+
   return (
     <span style={{ color: colorMap[val] || 'blue' }}>
       {getFlowType(val)}
