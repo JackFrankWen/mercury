@@ -83,9 +83,6 @@ export const renderBoldPrice = (txt: string, record: I_Transaction) => {
 const renderTime = (txt: Date) => {
   return <div className="ellipsis">{dayjs(txt).format('YYYY-MM-DD HH:mm:ss')}</div>;
 };
-const renderTimeSqlite = (txt: Date) => {
-  return <div className="ellipsis">{dayjs(txt).add(8, 'hours').format('YYYY-MM-DD HH:mm:ss')}</div>;
-};
 
 const columns: ColumnsType<I_Transaction> = [
   {
@@ -241,8 +238,8 @@ const columns: ColumnsType<I_Transaction> = [
 ];
 type TableRowSelection<T extends object = object> = TableProps<T>['rowSelection'];
 
-export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void }): JSX.Element {
-  const { data, fresh } = props;
+export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void; loading?: boolean }): JSX.Element {
+  const { data, fresh, loading = false } = props;
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [addDrawerVisible, setAddDrawerVisible] = useState(false);
   const [selectedAmount, setSelectedAmount] = useState(0);
@@ -303,6 +300,7 @@ export function AdvancedTable(props: { data: I_Transaction[]; fresh: () => void 
         className={'mt8'}
         rowKey={'id'}
         columns={columns}
+        loading={loading}
         rowSelection={{ ...rowSelection }}
         scroll={{ x: 1500, y: 'calc(100vh - 400px)' }}
         onRow={record => {

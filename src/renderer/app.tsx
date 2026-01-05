@@ -89,9 +89,9 @@ function App(props: any): JSX.Element {
           },
         }}
       >
-        <AliveScope>
-          <MainLayout environment={environment} />
-        </AliveScope>
+        {/* <AliveScope> */}
+        <MainLayout environment={environment} />
+        {/* </AliveScope> */}
       </ConfigProvider>
     </BrowserRouter>
   );
