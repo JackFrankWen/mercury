@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getAccountType, getPaymentType } from 'src/renderer/const/web';
 import { consumer_type } from 'src/renderer/const/web';
 import { FormData } from './useFormData';
@@ -56,6 +56,9 @@ export function useRightSectionData(formValue: FormData) {
       fetchConsumerData(formValue),
     ]);
   };
+  useEffect(() => {
+    refreshRightSectionData();
+  }, [formValue]);
 
 
   return {

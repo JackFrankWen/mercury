@@ -13,6 +13,8 @@ import './index.css';
 function Index(): JSX.Element {
   const [formValue, setFormValue] = useFormData();
   const { accountData, consumerData, refreshRightSectionData } = useRightSectionData(formValue);
+  console.log(accountData, '====accountData');
+  console.log(consumerData, '====consumerData');
 
   return (
     <Row gutter={12} className="home-page">
