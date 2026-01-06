@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { EllipsisOutlined, FilterFilled } from '@ant-design/icons';
 import BarChart from 'src/renderer/components/barChart';
-import { Card, Cascader, Flex, message, Modal, Space, theme, Typography } from 'antd';
+import { Card, Flex, message, Modal, Space, theme, Typography } from 'antd';
 import LunarCalendar from './lunarCalendar';
 import { FormData } from './useReviewForm';
 import emitter from 'src/renderer/events';
-import { category_type } from 'src/renderer/const/categroy';
-import { DefaultOptionType } from 'antd/es/cascader';
-import { renderIcon } from 'src/renderer/components/FontIcon';
-import { formatMoney } from 'src/renderer/components/utils';
-import { EXPENSE_COLOR, INCOME_COLOR } from 'src/renderer/const/colors';
 import { YearBarChartData } from './types';
+import ChartCardTitle from 'src/renderer/components/ChartCardTitle';
+import ChartSummary from 'src/renderer/components/ChartSummary';
+import BackToYearButton from 'src/renderer/components/BackToYearButton';
+import CategoryFilter from 'src/renderer/components/CategoryFilter';
 
 function YearBarChart(props: {
   formValue: FormData;
@@ -21,10 +20,9 @@ function YearBarChart(props: {
   data: YearBarChartData;
   onRefresh?: () => void;
 }) {
-  const { formValue, extraState, extraComponent, visible, setVisible, data: propsData, onRefresh } = props;
+  const { formValue, extraState, extraComponent, data: propsData, onRefresh } = props;
   const [year, setYear] = useState('');
   const [categoryVal, setCategoryVal] = useState<string[]>([]);
-  const [monthlyAverage, setMonthlyAverage] = useState<number>(0);
 
   const { accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt, FlowTypeCpt, flowTypeVal } =
     extraState;
@@ -32,23 +30,7 @@ function YearBarChart(props: {
   const data = propsData.monthlyData;
   const daliyData = propsData.dailyData;
 
-  useEffect(() => {
-    if (data.length > 0) {
-      const totolMonth = data.filter(item => item.total > 0);
-      const total = data.reduce((sum, item) => sum + item.total, 0);
-      const average = total / totolMonth.length;
-      setMonthlyAverage(average);
-    }
-  }, [data]);
 
-  const cardTitle = () => {
-    const flowType = flowTypeVal === 1 ? '支出' : '收入';
-    if (formValue.type === 'year') {
-      return `年${flowType}`;
-    } else if (formValue.type === 'month') {
-      return `月度${flowType}`;
-    }
-  };
 
   const refresh = () => {
     if (onRefresh) {
@@ -59,71 +41,37 @@ function YearBarChart(props: {
   };
   const extra = (
     <Space>
-      <Cascader
-        options={category_type}
-        allowClear
-        multiple
-        value={categoryVal}
-        style={{ width: '140px' }}
-        onChange={val => setCategoryVal(val as string[])}
-        placeholder="分类"
-        showSearch={{
-          filter: (inputValue: string, path: DefaultOptionType[]) =>
-            path.some(
-              option =>
-                (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1
-            ),
-        }}
-      />
+      <CategoryFilter value={categoryVal} onChange={setCategoryVal} />
       {extraComponent}
     </Space>
   );
   return (
     <div className="mt8">
-      <Card title={cardTitle()} bordered={false} hoverable extra={extra}>
-        {/* {visible && (
-          <Modal title="高级搜索" open={visible} onCancel={() => setVisible(false)} footer={null}>
-            <Flex vertical gap={16}>
-              {PaymentTypeCpt}
-              {TagCpt}
-              {FlowTypeCpt}
-            </Flex>
-          </Modal>
-        )} */}
+      <Card
+        title={<ChartCardTitle flowTypeVal={flowTypeVal} type={formValue.type} />}
+        bordered={false}
+        hoverable
+        extra={extra}
+      >
+
         {formValue.type === 'year' ? (
           <>
             <BarChart flowTypeVal={flowTypeVal} data={data} hasElementClick={true} setYear={setYear} />
-            {data.length > 0 && (
-              <div className="chart-summary">
-                <Typography.Text type="secondary">
-                  {
-                    flowTypeVal === 1 ? '月均支出' : '月均收入'
-                  }
-                  ¥{formatMoney(monthlyAverage)}
-                </Typography.Text>
-              </div>
-            )}
+            <ChartSummary data={data} flowTypeVal={flowTypeVal} type="monthly" />
           </>
         ) : (
           <>
-            {year && (
-              <Flex justify="center">
-                <span
-                  className="back-to-year-btn"
-                  onClick={() => {
-                    setYear('');
-                    emitter.emit('updateDate', {
-                      date: year,
-                      trans_time: [`${year}-01-01 00:00:00`, `${year}-12-31 23:59:59`],
-                      type: 'year',
-                    });
-                  }}
-                >
-                  {renderIcon('fas fa-arrow-rotate-left', '#888888')}
-                  返回年度
-                </span>
-              </Flex>
-            )}
+            <BackToYearButton
+              year={year}
+              onClick={() => {
+                setYear('');
+                emitter.emit('updateDate', {
+                  date: year,
+                  trans_time: [`${year}-01-01 00:00:00`, `${year}-12-31 23:59:59`],
+                  type: 'year',
+                });
+              }}
+            />
 
             <LunarCalendar
               formValue={{
@@ -131,26 +79,13 @@ function YearBarChart(props: {
                 consumer: consumerVal,
                 account_type: accountTypeVal,
                 payment_type: paymentTypeVal,
-                category: categoryVal,
-                tag: tagVal,
+                category: categoryVal.join(','),
                 flow_type: flowTypeVal,
               }}
               data={daliyData}
               refresh={refresh}
             />
-            {daliyData.length > 0 && (
-              <div className="chart-summary">
-                <Typography.Text type="secondary" style={{ marginRight: '8px' }}>
-                  本月{flowTypeVal === 1 ? '支出' : '收入'}：¥{formatMoney(daliyData.reduce((sum, item) => sum + item.total, 0))}
-                </Typography.Text>
-                <Typography.Text type="secondary">
-                  日均{flowTypeVal === 1 ? '支出' : '收入'}：¥
-                  {formatMoney(
-                    daliyData.reduce((sum, item) => sum + item.total, 0) / daliyData.length
-                  )}
-                </Typography.Text>
-              </div>
-            )}
+            <ChartSummary data={daliyData} flowTypeVal={flowTypeVal} type="daily" />
           </>
         )}
       </Card>
