@@ -1,17 +1,9 @@
-import React, { useMemo, useState } from 'react';
-import { Cascader, Space, theme } from 'antd';
-import { EllipsisOutlined, FilterFilled } from '@ant-design/icons';
-import { DefaultOptionType } from 'antd/es/cascader';
+import { useMemo } from 'react';
 import { useSelect } from './useSelect';
 import { useRadio } from './useRadio';
 import { cpt_const } from '../const/web';
 
-export function useExtraControls(props: {
-    onFilterClick: () => void;
-}) {
-    const { onFilterClick } = props;
-    const { token } = theme.useToken();
-
+export function useExtraControls() {
     const [accountTypeVal, AccountTypeCpt] = useSelect({
         options: cpt_const.account_type,
         placeholder: '账户类型',
@@ -30,6 +22,7 @@ export function useExtraControls(props: {
         options: cpt_const.payment_type,
         placeholder: '支付方式',
     });
+    
     const [flowTypeVal, FlowTypeCpt] = useRadio({
         defaultValue: 1,
         options: cpt_const.flow_type,
@@ -47,48 +40,19 @@ export function useExtraControls(props: {
         return true;
     }, [paymentTypeVal, tagVal]);
 
-    const extraComponent = (
-        <Space>
-
-            {AccountTypeCpt}
-            {ConsumerCpt}
-            {hasSearchInModal ? (
-                <FilterFilled
-                    style={{
-                        color: token.colorPrimary,
-                        fontSize: 16,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s',
-                    }}
-                    onClick={onFilterClick}
-                />
-            ) : (
-                <EllipsisOutlined
-                    style={{
-                        color: '#999',
-                        fontSize: 16,
-                        cursor: 'pointer',
-                        transition: 'all 0.3s',
-                    }}
-                    onClick={onFilterClick}
-                />
-            )}
-        </Space>
-    );
-
-    return [
-        extraComponent,
-        {
-            accountTypeVal,
-            consumerVal,
-            paymentTypeVal,
-            tagVal,
-            PaymentTypeCpt,
-            FlowTypeCpt,
-            flowTypeVal,
-            TagCpt,
-        },
-    ] as const;
+    return {
+        accountTypeVal,
+        AccountTypeCpt,
+        consumerVal,
+        ConsumerCpt,
+        paymentTypeVal,
+        PaymentTypeCpt,
+        tagVal,
+        TagCpt,
+        flowTypeVal,
+        FlowTypeCpt,
+        hasSearchInModal,
+    };
 }
 
 export default useExtraControls;

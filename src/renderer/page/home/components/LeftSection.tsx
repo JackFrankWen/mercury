@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Col } from 'antd';
 import TableSection from '../reviewTable';
 import Summarize from '../review-sum';
@@ -6,13 +6,11 @@ import YearBarChart from '../yearBarChart';
 import CompanySummarize from '../companySummarize';
 import AdvancedSearchModal from './AdvancedSearchModal';
 import { FormData } from '../hooks/useFormData';
+import { useExtraControls } from '../../../components/useExtraControls';
+import ExtraControls from '../../../components/ExtraControls';
 
 interface LeftSectionProps {
   formValue: FormData;
-  extraState: any;
-  extraComponent: React.ReactNode;
-  visible: boolean;
-  setVisible: (visible: boolean) => void;
 }
 
 /**
@@ -21,11 +19,19 @@ interface LeftSectionProps {
  */
 function LeftSection({
   formValue,
-  extraState,
-  extraComponent,
-  visible,
-  setVisible,
 }: LeftSectionProps): JSX.Element {
+  const [visible, setVisible] = useState(false);
+  const extraState = useExtraControls();
+
+  const extraComponent = (
+    <ExtraControls
+      accountTypeCpt={extraState.AccountTypeCpt}
+      consumerCpt={extraState.ConsumerCpt}
+      hasSearchInModal={extraState.hasSearchInModal}
+      onFilterClick={() => setVisible(true)}
+    />
+  );
+
   const { FlowTypeCpt, PaymentTypeCpt, TagCpt } = extraState;
 
   return (

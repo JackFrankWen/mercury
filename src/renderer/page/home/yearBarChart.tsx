@@ -19,7 +19,6 @@ function YearBarChart(props: {
   setVisible: (visible: boolean) => void;
 }) {
   const { formValue, extraState, extraComponent, visible, setVisible } = props;
-  const { token } = theme.useToken();
   const [data, setData] = useState<{ date: string; total: number }[]>([]);
   const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>([]);
   const [year, setYear] = useState('');

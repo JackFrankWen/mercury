@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Row } from 'antd';
 import { useFormData } from './hooks/useFormData';
-import useExtraControls from '../../components/useExtraControls';
 import LeftSection from './components/LeftSection';
 import RightSection from './components/RightSection';
 import './index.css';
@@ -12,21 +11,10 @@ import './index.css';
  */
 function Index(): JSX.Element {
   const [formValue, setFormValue] = useFormData();
-  const [visible, setVisible] = useState(false);
-
-  const [extraComponent, extraState] = useExtraControls({
-    onFilterClick: () => setVisible(true),
-  });
 
   return (
     <Row gutter={12} className="home-page">
-      <LeftSection
-        formValue={formValue}
-        extraState={extraState}
-        extraComponent={extraComponent}
-        visible={visible}
-        setVisible={setVisible}
-      />
+      <LeftSection formValue={formValue} />
       <RightSection
         formValue={formValue}
         onFormChange={setFormValue}
@@ -36,3 +24,4 @@ function Index(): JSX.Element {
 }
 
 export default Index;
+
