@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Card, Col, Collapse, CollapseProps, Flex, Progress, Row, Typography } from 'antd';
 import {
   AccountBookFilled,
@@ -8,12 +8,16 @@ import {
 } from '@ant-design/icons';
 import { getAccountType, getPaymentType } from 'src/renderer/const/web';
 import { formatMoney } from 'src/renderer/components/utils';
-import { useFresh } from 'src/renderer/components/useFresh';
-interface AccountInfoProps {
-  accountType: string;
+
+interface AccountPaymentData {
+  account_type: string;
   total: number;
-  wechat: number;
-  alipay: number;
+  payment_type: string;
+}
+
+interface AccountInfoProps {
+  data: AccountPaymentData[];
+  onRefresh?: () => void;
 }
 const rainbowColors = [
   '#ff5a5a', // 红色
@@ -25,30 +29,7 @@ const rainbowColors = [
   '#9d7fe8', // 紫色
   '#e77fc0', // 粉色
 ];
-const useAccountInfo = (formValue: any) => {
-  const [data, setData] = useState<{ account_type: string; total: number; payment_type: string }[]>(
-    []
-  );
-  const getSumrize = async (obj: any) => {
-    try {
-      const res = await window.mercury.api.getAccountPaymentTotal(obj);
-      setData(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  useFresh(
-    () => {
-      getSumrize(formValue);
-    },
-    [formValue],
-    'transaction'
-  );
-  return {
-    data,
-    getSumrize,
-  };
-};
+
 const Item = (props: { name: string; total: string; percent: number; color: string }) => {
   const { name, total, percent, color } = props;
   let icon, progressColor;
@@ -105,9 +86,8 @@ const Item = (props: { name: string; total: string; percent: number; color: stri
   );
 };
 
-function AccountInfo(props: { formValue: any }) {
-  const { formValue } = props;
-  const { data } = useAccountInfo(formValue);
+function AccountInfo(props: AccountInfoProps) {
+  const { data } = props;
   const newData = data.reduce((acc: any, item: any) => {
     //{account_type: string, total: number, children:[{payment_type: string, total: number}]}
     if (!acc[item.account_type]) {

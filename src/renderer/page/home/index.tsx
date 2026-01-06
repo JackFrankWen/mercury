@@ -1,6 +1,7 @@
 import React from 'react';
 import { Row } from 'antd';
 import { useFormData } from './hooks/useFormData';
+import { useRightSectionData } from './hooks/useRightSectionData';
 import LeftSection from './components/LeftSection';
 import RightSection from './components/RightSection';
 import './index.css';
@@ -11,6 +12,7 @@ import './index.css';
  */
 function Index(): JSX.Element {
   const [formValue, setFormValue] = useFormData();
+  const { accountData, consumerData, refreshRightSectionData } = useRightSectionData(formValue);
 
   return (
     <Row gutter={12} className="home-page">
@@ -18,6 +20,9 @@ function Index(): JSX.Element {
       <RightSection
         formValue={formValue}
         onFormChange={setFormValue}
+        accountData={accountData}
+        consumerData={consumerData}
+        onRefresh={refreshRightSectionData}
       />
     </Row>
   );

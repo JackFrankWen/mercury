@@ -1,32 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PieChart from 'src/renderer/components/pieChart';
 import { Card } from 'antd';
-import { consumer_type } from 'src/renderer/const/web';
-import { useFresh } from 'src/renderer/components/useFresh';
-function ConsumerChart(props: { formValue: any }) {
-  const { formValue } = props;
-  const [data, setData] = useState<{ item: string; total: number }[]>([]);
 
-  useFresh(() => {
-    fetchData(formValue);
-  }, [formValue],'transaction');
+interface ConsumerData {
+  item: string;
+  total: number;
+}
 
-  const fetchData = async (obj) => {
-    try {
-      if (!obj) return;
+interface ConsumerChartProps {
+  data: ConsumerData[];
+  onRefresh?: () => void;
+}
 
-      const result = await window.mercury.api.getConsumerTotal(obj);
-
-      setData(
-        result.map((item) => ({
-          item: consumer_type[Number(item.item)],
-          total: item.total,
-        })),
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
+function ConsumerChart(props: ConsumerChartProps) {
+  const { data } = props;
 
   return (
     <div className="mt8 mb16">
