@@ -623,7 +623,16 @@ export const category_type = [
     children: [
       {
         value: 120001,
-        label: '课程收入',
+        label: '外教营',
+        icon: 'fa-solid fa-sack-dollar',
+        color: '#67C7A5', // 薄荷绿色调
+        consumer: company,
+        flow_type: flow_type_income,
+        account_type: account_company,
+      },
+      {
+        value: 120002,
+        label: '中教营',
         icon: 'fa-solid fa-sack-dollar',
         color: '#67C7A5', // 薄荷绿色调
         consumer: company,
@@ -696,6 +705,15 @@ export const category_type = [
     {
       value: 130007,
       label: '开办费用',
+      icon: 'fa-solid fa-sack-dollar',
+      color: '#67C7A5', // 薄荷绿色调
+      consumer: company,
+      flow_type: flow_type_cost,
+      account_type: account_company,
+    },
+    {
+      value: 130008,
+      label: '退款',
       icon: 'fa-solid fa-sack-dollar',
       color: '#67C7A5', // 薄荷绿色调
       consumer: company,
