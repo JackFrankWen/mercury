@@ -54,9 +54,9 @@ const Item = (props: {
       <Row justify="start" align="middle">
         <Col>
           {icon ? (
-            <span style={{ fontSize: 16 }}>{renderIcon(icon, color)}</span>
+            <span className="category-icon">{renderIcon(icon, color)}</span>
           ) : (
-            <AccountBookFilled style={{ fontSize: 16, color: color }} />
+            <AccountBookFilled className="category-icon" style={{ color: color }} />
           )}
         </Col>
         <Col>
@@ -171,11 +171,11 @@ const CategoryCollaspe = (props: {
             }}
           >
             {categoryInfo?.icon ? (
-              <span style={{ fontSize: 22 }}>
+              <span className="category-large-icon">
                 {renderIcon(categoryInfo.icon, categoryInfo.color)}
               </span>
             ) : (
-              <AccountBookFilled style={{ fontSize: 22, color: categoryInfo.color }} />
+              <AccountBookFilled className="category-large-icon" style={{ color: categoryInfo.color }} />
             )}
           </Col>
           <Col flex="auto" style={{ marginLeft: 8 }}>

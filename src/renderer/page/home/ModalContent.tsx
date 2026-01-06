@@ -49,28 +49,28 @@ const FilterDropdown: React.FC<{
   handleSearch,
   handleReset,
 }) => (
-    <div style={{ padding: 8 }} onKeyDown={e => e.stopPropagation()}>
+    <div className="modal-filter-dropdown" onKeyDown={e => e.stopPropagation()}>
       <Input
         ref={searchInput}
         placeholder="Search"
         value={selectedKeys[0]}
         onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
         onPressEnter={() => handleSearch(selectedKeys as string[], confirm)}
-        style={{ marginBottom: 8, display: 'block' }}
+        className="modal-filter-input"
       />
       <Space>
         <Button
           type="primary"
           onClick={() => handleSearch(selectedKeys as string[], confirm)}
           size="small"
-          style={{ width: 90 }}
+          className="modal-filter-button"
         >
           Search
         </Button>
         <Button
           onClick={() => clearFilters && handleReset(clearFilters)}
           size="small"
-          style={{ width: 90 }}
+          className="modal-filter-button"
         >
           Reset
         </Button>
@@ -322,7 +322,7 @@ export function ModalContent({
 
   return (
     <Spin spinning={loading}>
-      <div style={{ padding: '8px 0' }}>
+      <div className="modal-content-selection">
         {selectedRowKeys.length > 0 && (
           <SelectionFooter
             selectedAmount={selectedAmount}

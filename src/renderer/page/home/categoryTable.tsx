@@ -40,7 +40,7 @@ const columns: ColumnsType<DataType> = [
     render: (val, obj) => (
       <Typography.Text>
         {formatMoney(val)}
-        <Typography.Text type="secondary" style={{ marginLeft: '2px' }}>
+        <Typography.Text type="secondary" className="category-table-secondary-text">
           (月均: {formatMoney(obj.avg, '千', true)})
         </Typography.Text>
       </Typography.Text>
@@ -59,7 +59,7 @@ const expandedRowRender = (toggle: any) => (record: DataType) => {
       render: (val, obj) => (
         <Typography.Text>
           {formatMoney(val)}
-          <Typography.Text type="secondary" style={{ marginLeft: '2px' }}>
+          <Typography.Text type="secondary" className="category-table-secondary-text">
             (月均: {formatMoney(obj.avg, '千', true)})
           </Typography.Text>
         </Typography.Text>

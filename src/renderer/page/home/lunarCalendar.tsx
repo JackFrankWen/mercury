@@ -89,29 +89,26 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
         },
         children: (
           <Flex
-            style={{
-              marginRight: 4,
-            }}
             justify="start"
             align="center"
             vertical
             onClick={() => {
               openModal(date.format('YYYY-MM-DD'));
             }}
-            className="lunar-calendar-cell"
+            className="lunar-calendar-cell lunar-calendar-content"
           >
             {info.type === 'date' && <Typography.Text strong>{date.get('date')}</Typography.Text>}
             {info.type === 'date' && (
-              <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+              <Typography.Text type="secondary" className="lunar-calendar-date">
                 {displayHoliday || solarTerm || lunar}
               </Typography.Text>
             )}
             <Typography.Text
               type={total ? 'danger' : 'secondary'}
               ellipsis
+              className="lunar-calendar-amount"
               style={{
                 color: flow_type === 1 ? EXPENSE_COLOR : INCOME_COLOR,
-                fontSize: 12,
               }}
             >
               {total ? `${flow_type === 1 ? '-' : '+'}${formatMoneyObj({ amount: total, decimalPlaces: 0 })}` : '0'}

@@ -18,7 +18,7 @@ function CategoryChartTab({ category, formValue, refreshTable }: CategoryChartTa
   const { modalVisible, selectedCategory, showModal, closeModal } = useCategoryModal();
 
   return (
-    <div style={{ minHeight: '400px' }}>
+    <div className="category-chart-tab">
       <CategoryCollaspe
         refreshTable={refreshTable}
         data={category}

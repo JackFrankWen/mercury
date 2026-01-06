@@ -83,34 +83,24 @@ function DateSelector({ value, onChange }: DateSelectorProps): JSX.Element {
 
   return (
     <Row align="middle">
-      <Col span={4} style={{ textAlign: 'left' }}>
+      <Col span={4} className="date-selector-nav-left">
         <LeftCircleFilled
-          style={{
-            fontSize: 20,
-            color: token.colorPrimary,
-            cursor: 'pointer',
-          }}
+          className="date-selector-nav-icon"
+          style={{ color: token.colorPrimary }}
           onClick={() => updateDate('left')}
         />
       </Col>
       <Col
-        className="date-picker-col"
+        className="date-picker-col date-selector-center"
         flex="auto"
-        style={{
-          padding: '4px 0',
-          textAlign: 'center',
-        }}
         onClick={() => setModalVisible(true)}
       >
         <Typography.Text>{getDisplayText()}</Typography.Text>
       </Col>
-      <Col span={4} style={{ textAlign: 'right' }}>
+      <Col span={4} className="date-selector-nav-right">
         <RightCircleFilled
-          style={{
-            fontSize: 20,
-            cursor: 'pointer',
-            color: token.colorPrimary,
-          }}
+          className="date-selector-nav-icon"
+          style={{ color: token.colorPrimary }}
           onClick={() => updateDate('right')}
         />
       </Col>
@@ -133,7 +123,7 @@ function DateSelector({ value, onChange }: DateSelectorProps): JSX.Element {
             value={dayjs(value.date)}
             onChange={val => handleDateChange(val, viewType)}
             picker={viewType}
-            style={{ marginTop: 16, width: '100%' }}
+            className="date-selector-datepicker"
           />
         </Modal>
       )}

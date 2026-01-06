@@ -22,3 +22,138 @@
   background-color: #f0f0f0;
   border-top: 2px solid #eccf10;
 }
+
+/* YearBarChart 样式 */
+.chart-summary {
+  text-align: center;
+  margin-top: 8px;
+  margin-bottom: -8px;
+}
+
+.back-to-year-btn {
+  cursor: pointer;
+  padding: 4px 10px;
+  margin-top: -14px;
+  border-radius: 8px;
+  background: #f5f5f5;
+  color: #888888;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.back-to-year-btn:hover {
+  background: #ececec;
+}
+
+/* LunarCalendar 样式 */
+.lunar-calendar-content {
+  margin-right: 4px;
+}
+
+.lunar-calendar-date {
+  font-size: 12px;
+}
+
+.lunar-calendar-amount {
+  font-size: 12px;
+}
+
+/* AccountInfo 样式 */
+.account-info-item-row {
+  margin-bottom: 2px;
+}
+
+.account-info-item-icon-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.account-info-icon {
+  font-size: 32px;
+}
+
+.account-info-progress-row {
+  margin-bottom: -8px;
+}
+
+.account-info-name-text {
+  font-size: 12px;
+  margin-bottom: -5px;
+}
+
+.account-info-percent-text {
+  font-size: 12px;
+  padding-left: 10px;
+}
+
+.account-info-collapse-label {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ModalContent 样式 */
+.modal-filter-dropdown {
+  padding: 8px;
+}
+
+.modal-filter-input {
+  margin-bottom: 8px;
+  display: block;
+}
+
+.modal-filter-button {
+  width: 90px;
+}
+
+.modal-content-selection {
+  padding: 8px 0;
+}
+
+/* CategoryChartTab 样式 */
+.category-chart-tab {
+  min-height: 400px;
+}
+
+/* DateSelector 样式 */
+.date-selector-nav-left {
+  text-align: left;
+}
+
+.date-selector-nav-right {
+  text-align: right;
+}
+
+.date-selector-nav-icon {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.date-selector-center {
+  padding: 4px 0;
+  text-align: center;
+}
+
+.date-selector-datepicker {
+  margin-top: 16px;
+  width: 100%;
+}
+
+/* CategoryTable 样式 */
+.category-table-secondary-text {
+  margin-left: 2px;
+}
+
+/* CategoryCollaspe 样式 */
+.category-icon {
+  font-size: 16px;
+}
+
+.category-large-icon {
+  font-size: 22px;
+}

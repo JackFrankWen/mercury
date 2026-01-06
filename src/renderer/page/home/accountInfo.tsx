@@ -29,37 +29,27 @@ const Item = (props: { name: string; total: string; percent: number; color: stri
   const { name, total, percent, color } = props;
   let icon, progressColor;
   if (name === '支付宝') {
-    icon = <AlipayCircleOutlined style={{ fontSize: 32, color: '#00A0E9' }} />;
+    icon = <AlipayCircleOutlined className="account-info-icon" style={{ color: '#00A0E9' }} />;
     progressColor = '#00A0E9';
   } else if (name === '微信') {
-    icon = <WechatOutlined style={{ fontSize: 32, color: '#07C160' }} />;
+    icon = <WechatOutlined className="account-info-icon" style={{ color: '#07C160' }} />;
     progressColor = '#07C160';
   } else if (['银行'].includes(name)) {
-    icon = <BankFilled style={{ fontSize: 32, color: color }} />;
+    icon = <BankFilled className="account-info-icon" style={{ color: color }} />;
     progressColor = color;
   } else {
-    icon = <AccountBookFilled style={{ fontSize: 32, color: color }} />;
+    icon = <AccountBookFilled className="account-info-icon" style={{ color: color }} />;
     progressColor = color;
   }
   return (
-    <Row justify="space-between" align="bottom" style={{ marginBottom: 2 }}>
-      <Col
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginRight: 8,
-        }}
-      >
+    <Row justify="space-between" align="bottom" className="account-info-item-row">
+      <Col className="account-info-item-icon-col">
         {icon}
       </Col>
       <Col flex="auto">
-        <Row justify="space-between" align="middle" style={{ marginBottom: -8 }}>
+        <Row justify="space-between" align="middle" className="account-info-progress-row">
           <Typography.Text
-            style={{
-              fontSize: 12,
-              marginBottom: -5,
-            }}
+            className="account-info-name-text"
             type="secondary"
           >
             {name}
@@ -71,7 +61,7 @@ const Item = (props: { name: string; total: string; percent: number; color: stri
             <Progress size="small" showInfo={false} percent={percent} strokeColor={progressColor} />
           </Col>
           <Col>
-            <Typography.Text style={{ fontSize: 12, paddingLeft: 10 }} type="secondary">
+            <Typography.Text className="account-info-percent-text" type="secondary">
               {percent}%
             </Typography.Text>
           </Col>
@@ -110,10 +100,10 @@ function AccountInfo(props: AccountInfoProps) {
       key: index,
       label: (
         <Flex justify="space-between" align="center">
-          <Typography.Text style={{ fontSize: 12, fontWeight: 500 }}>
+          <Typography.Text className="account-info-collapse-label">
             {item.account_type}
           </Typography.Text>
-          <Typography.Text style={{ fontSize: 12, fontWeight: 500 }}>
+          <Typography.Text className="account-info-collapse-label">
             {formatMoney(item.total, '万', true)}
           </Typography.Text>
         </Flex>

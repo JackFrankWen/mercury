@@ -94,7 +94,7 @@ function YearBarChart(props: {
           <>
             <BarChart flowTypeVal={flowTypeVal} data={data} hasElementClick={true} setYear={setYear} />
             {data.length > 0 && (
-              <div style={{ textAlign: 'center', marginTop: '8px', marginBottom: '-8px' }}>
+              <div className="chart-summary">
                 <Typography.Text type="secondary">
                   {
                     flowTypeVal === 1 ? '月均支出' : '月均收入'
@@ -109,20 +109,7 @@ function YearBarChart(props: {
             {year && (
               <Flex justify="center">
                 <span
-                  style={{
-                    cursor: 'pointer',
-                    padding: '4px 10px',
-                    marginTop: -14,
-                    borderRadius: 8,
-                    background: '#f5f5f5',
-                    color: '#888888',
-                    fontSize: '13px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    transition: 'all 0.2s',
-                    boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
-                  }}
+                  className="back-to-year-btn"
                   onClick={() => {
                     setYear('');
                     emitter.emit('updateDate', {
@@ -131,8 +118,6 @@ function YearBarChart(props: {
                       type: 'year',
                     });
                   }}
-                  onMouseOver={e => (e.currentTarget.style.background = '#ececec')}
-                  onMouseOut={e => (e.currentTarget.style.background = '#f5f5f5')}
                 >
                   {renderIcon('fas fa-arrow-rotate-left', '#888888')}
                   返回年度
@@ -154,7 +139,7 @@ function YearBarChart(props: {
               refresh={refresh}
             />
             {daliyData.length > 0 && (
-              <div style={{ textAlign: 'center', marginTop: '8px', marginBottom: '-8px' }}>
+              <div className="chart-summary">
                 <Typography.Text type="secondary" style={{ marginRight: '8px' }}>
                   本月{flowTypeVal === 1 ? '支出' : '收入'}：¥{formatMoney(daliyData.reduce((sum, item) => sum + item.total, 0))}
                 </Typography.Text>
