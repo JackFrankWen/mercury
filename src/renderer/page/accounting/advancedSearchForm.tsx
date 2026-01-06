@@ -110,22 +110,25 @@ export const AdvancedSearchForm = (props: {
           </Form.Item>
         </Col>
         <Col span={8}>
-          <Form.Item name={`trans_time`} label="交易时间">
-            <RangePickerWrap bordered type="date" placeholder="placeholder" />
-          </Form.Item>
-        </Col>
-
-        <Col span={8}>
           <Form.Item name="flow_type" label="收支">
             <Radio.Group block optionType="button" buttonStyle="solid">
               {/* <Radio value="all">全部</Radio> */}
-              <Radio value="2">收</Radio>
-              <Radio value="1">支</Radio>
+              <Radio value="2">收入</Radio>
+              <Radio value="1">支出</Radio>
               {/* <Radio value="3">不计支出</Radio> */}
             </Radio.Group>
           </Form.Item>
-
         </Col>
+        <Col span={8}>
+          <Form.Item name="account_type" label="账户">
+            <Select allowClear
+              mode="multiple"
+              placeholder="账户" options={cpt_const.account_type} />
+          </Form.Item>
+        </Col>
+
+
+
       </Row>
       <Row gutter={24}>
         {expand && (
@@ -211,12 +214,11 @@ export const AdvancedSearchForm = (props: {
       </Row>
       <Row gutter={24} style={{ marginBottom: '-16px' }}>
         <Col span={8}>
-          <Form.Item name="account_type" label="账户">
-            <Select allowClear
-              mode="multiple"
-              placeholder="账户" options={cpt_const.account_type} />
+          <Form.Item name={`trans_time`} label="交易日期">
+            <RangePickerWrap bordered type="date" placeholder="placeholder" />
           </Form.Item>
         </Col>
+
         <Col span={8}>
           <Form.Item name="description">
             <Input.Search

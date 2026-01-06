@@ -66,12 +66,11 @@ const RangePickerWrap = (props: {
   const [date, setDate] = useState<any>(value);
   const [open, setOpen] = useState<boolean>(false);
   const setClickDate = (val: any) => {
-    console.log(val,'val=ooooooo===');
     if (val && val.length === 2) {
       const newVal = val.map((item: any, index: number) => {
         if (type === 'date') {
           return item;
-        } 
+        }
         if (index === 0) {
           return item.startOf("month");
         } else {
@@ -118,6 +117,7 @@ const RangePickerWrap = (props: {
   // no icon
   return (
     <RangePicker
+      style={{ width: '100%' }}
       value={date}
       open={open}
       picker={type}
