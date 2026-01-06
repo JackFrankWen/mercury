@@ -104,7 +104,7 @@ function YearBarChart(props: {
         allowClear
         multiple
         value={categoryVal}
-        style={{ width: '100px' }}
+        style={{ width: '140px' }}
         onChange={val => setCategoryVal(val as string[])}
         placeholder="分类"
         showSearch={{
