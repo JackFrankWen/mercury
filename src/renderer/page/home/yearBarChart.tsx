@@ -4,23 +4,28 @@ import BarChart from 'src/renderer/components/barChart';
 import { Card, Cascader, Flex, message, Modal, Space, theme, Typography } from 'antd';
 import LunarCalendar from './lunarCalendar';
 import { FormData } from './useReviewForm';
-import { useFresh } from 'src/renderer/components/useFresh';
 import emitter from 'src/renderer/events';
 import { category_type } from 'src/renderer/const/categroy';
 import { DefaultOptionType } from 'antd/es/cascader';
 import { renderIcon } from 'src/renderer/components/FontIcon';
 import { formatMoney } from 'src/renderer/components/utils';
 import { EXPENSE_COLOR, INCOME_COLOR } from 'src/renderer/const/colors';
+
+interface YearBarChartData {
+  monthlyData: { date: string; total: number }[];
+  dailyData: { date: string; total: number }[];
+}
+
 function YearBarChart(props: {
   formValue: FormData;
   extraState: any;
   extraComponent: React.ReactNode;
   visible: boolean;
   setVisible: (visible: boolean) => void;
+  data: YearBarChartData;
+  onRefresh?: () => void;
 }) {
-  const { formValue, extraState, extraComponent, visible, setVisible } = props;
-  const [data, setData] = useState<{ date: string; total: number }[]>([]);
-  const [daliyData, setDaliyData] = useState<{ date: string; total: number }[]>([]);
+  const { formValue, extraState, extraComponent, visible, setVisible, data: propsData, onRefresh } = props;
   const [year, setYear] = useState('');
   const [categoryVal, setCategoryVal] = useState<string[]>([]);
   const [monthlyAverage, setMonthlyAverage] = useState<number>(0);
@@ -28,33 +33,8 @@ function YearBarChart(props: {
   const { accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt, FlowTypeCpt, flowTypeVal } =
     extraState;
 
-  useFresh(
-    () => {
-      if (formValue.type === 'year') {
-        fetchData({
-          ...formValue,
-          consumer: consumerVal,
-          account_type: accountTypeVal,
-          payment_type: paymentTypeVal,
-          category: categoryVal,
-          tag: tagVal,
-          flow_type: flowTypeVal,
-        });
-      } else {
-        fetchDailyAmount({
-          ...formValue,
-          consumer: consumerVal,
-          account_type: accountTypeVal,
-          payment_type: paymentTypeVal,
-          tag: tagVal,
-          category: categoryVal,
-          flow_type: flowTypeVal,
-        });
-      }
-    },
-    [formValue, consumerVal, accountTypeVal, paymentTypeVal, tagVal, categoryVal, flowTypeVal],
-    'transaction'
-  );
+  const data = propsData.monthlyData;
+  const daliyData = propsData.dailyData;
 
   useEffect(() => {
     if (data.length > 0) {
@@ -64,26 +44,6 @@ function YearBarChart(props: {
       setMonthlyAverage(average);
     }
   }, [data]);
-
-  const fetchData = async (obj: any) => {
-    if (!obj) return;
-
-    try {
-      const result = await window.mercury.api.getTransactionsByMonth(obj);
-      setData(result);
-    } catch (error) {
-      message.error(error);
-    }
-  };
-
-  const fetchDailyAmount = async (obj: any) => {
-    try {
-      const result = await window.mercury.api.getDailyTransactionAmounts(obj);
-      setDaliyData(result);
-    } catch (error) {
-      message.error(error);
-    }
-  };
 
   const cardTitle = () => {
     const flowType = flowTypeVal === 1 ? '支出' : '收入';
@@ -95,7 +55,11 @@ function YearBarChart(props: {
   };
 
   const refresh = () => {
-    emitter.emit('refresh', 'transaction');
+    if (onRefresh) {
+      onRefresh();
+    } else {
+      emitter.emit('refresh', 'transaction');
+    }
   };
   const extra = (
     <Space>

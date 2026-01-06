@@ -6,11 +6,37 @@ import YearBarChart from '../yearBarChart';
 import CompanySummarize from '../companySummarize';
 import AdvancedSearchModal from './AdvancedSearchModal';
 import { FormData } from '../hooks/useFormData';
-import { useExtraControls } from '../../../components/useExtraControls';
 import ExtraControls from '../../../components/ExtraControls';
+import { CategoryReturnType } from 'src/preload/type';
+
+interface SummarizeData {
+  income: number;
+  cost: number;
+  balance: number;
+}
+
+interface CompanySummarizeData {
+  income: number;
+  cost: number;
+  balance: number;
+  incomeTotal: number;
+  costTotal: number;
+  balanceTotal: number;
+}
+
+interface YearBarChartData {
+  monthlyData: { date: string; total: number }[];
+  dailyData: { date: string; total: number }[];
+}
 
 interface LeftSectionProps {
   formValue: FormData;
+  extraState: any;
+  summarizeData: SummarizeData;
+  companySummarizeData: CompanySummarizeData;
+  yearBarChartData: YearBarChartData;
+  categoryData: CategoryReturnType;
+  onRefresh: () => void;
 }
 
 /**
@@ -19,9 +45,14 @@ interface LeftSectionProps {
  */
 function LeftSection({
   formValue,
+  extraState,
+  summarizeData,
+  companySummarizeData,
+  yearBarChartData,
+  categoryData,
+  onRefresh,
 }: LeftSectionProps): JSX.Element {
   const [visible, setVisible] = useState(false);
-  const extraState = useExtraControls();
 
   const extraComponent = (
     <ExtraControls
@@ -36,8 +67,16 @@ function LeftSection({
 
   return (
     <Col span={16} className="home-page-left mb16">
-      <Summarize formValue={formValue} />
-      <CompanySummarize formValue={formValue} />
+      <Summarize
+        formValue={formValue}
+        data={summarizeData}
+        onRefresh={onRefresh}
+      />
+      <CompanySummarize
+        formValue={formValue}
+        data={companySummarizeData}
+        onRefresh={onRefresh}
+      />
 
       {visible && (
         <AdvancedSearchModal
@@ -55,6 +94,8 @@ function LeftSection({
         extraComponent={extraComponent}
         visible={visible}
         setVisible={setVisible}
+        data={yearBarChartData}
+        onRefresh={onRefresh}
       />
 
       <div className="mt8 mb16">
@@ -64,6 +105,8 @@ function LeftSection({
           extraComponent={extraComponent}
           visible={visible}
           setVisible={setVisible}
+          categoryData={categoryData}
+          onRefresh={onRefresh}
         />
       </div>
     </Col>

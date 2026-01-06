@@ -4,11 +4,11 @@ import CategoryTable from './categoryTable';
 import { cpt_const } from 'src/renderer/const/web';
 import DonutChart from 'src/renderer/components/donutChart';
 import CategoryCollaspe from './categoryCollaspe';
-import { useFresh } from 'src/renderer/components/useFresh';
 import emitter from 'src/renderer/events';
 import { CategoryReturnType } from 'src/preload/type';
 import BarChart from 'src/renderer/components/barChart';
 import { ModalContent } from './ModalContent';
+import { useFresh } from 'src/renderer/components/useFresh';
 
 
 function convertCategoryReturnTypeToPieChartData(category: CategoryReturnType) {
@@ -200,53 +200,26 @@ function TableSection(props: {
   extraComponent: React.ReactNode;
   visible: boolean;
   setVisible: (visible: boolean) => void;
+  categoryData: CategoryReturnType;
+  onRefresh?: () => void;
 }) {
-  const { formValue, extraState, extraComponent, visible, setVisible } = props;
+  const { formValue, extraState, extraComponent, visible, setVisible, categoryData, onRefresh } = props;
 
   // 从 extraState 中解构出需要的状态
   const { categoryVal, accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt, FlowTypeCpt, flowTypeVal, } = extraState;
 
-  const [category, setCategory] = useState<CategoryReturnType>([]);
   const [activeTabKey, setActiveTabKey] = useState('tab1');
 
   const handleTabChange = key => {
     setActiveTabKey(key);
   };
 
-  const getCategory = async (data: any) => {
-    const { trans_time } = formValue;
-
-    try {
-      const result = await window.mercury.api.getCategoryTotalByDate({
-        ...data,
-        trans_time,
-      });
-      console.log(result, '====result');
-
-      setCategory(result);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useFresh(
-    () => {
-      getCategory({
-        ...formValue,
-        consumer: consumerVal,
-        account_type: accountTypeVal,
-        payment_type: paymentTypeVal,
-        category: categoryVal,
-        tag: tagVal,
-        flow_type: flowTypeVal,
-      });
-    },
-    [formValue, consumerVal, accountTypeVal, paymentTypeVal, categoryVal, tagVal, flowTypeVal],
-    'transaction'
-  );
-
   const refreshTable = () => {
-    emitter.emit('refresh', 'transaction');
+    if (onRefresh) {
+      onRefresh();
+    } else {
+      emitter.emit('refresh', 'transaction');
+    }
   };
 
   // 定义标签页配置
@@ -265,7 +238,7 @@ function TableSection(props: {
   const contentList = {
     tab1: (
       <Tab1Content
-        category={category}
+        category={categoryData}
         formValue={{
           ...formValue,
           consumer: consumerVal,
@@ -280,7 +253,7 @@ function TableSection(props: {
     ),
     tab2: (
       <Tab2Content
-        category={category}
+        category={categoryData}
         formValue={{
           ...formValue,
           consumer: consumerVal,
