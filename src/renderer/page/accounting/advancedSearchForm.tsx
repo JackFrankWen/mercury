@@ -114,24 +114,27 @@ export const AdvancedSearchForm = (props: {
             <RangePickerWrap bordered type="date" placeholder="placeholder" />
           </Form.Item>
         </Col>
+
         <Col span={8}>
-          <Form.Item name="payment_type" label="付款方式">
-            <Select allowClear placeholder="付款方式" options={cpt_const.payment_type} />
+          <Form.Item name="flow_type" label="收支">
+            <Radio.Group block optionType="button" buttonStyle="solid">
+              {/* <Radio value="all">全部</Radio> */}
+              <Radio value="2">收</Radio>
+              <Radio value="1">支</Radio>
+              {/* <Radio value="3">不计支出</Radio> */}
+            </Radio.Group>
           </Form.Item>
+
         </Col>
       </Row>
       <Row gutter={24}>
         {expand && (
-          <><Col span={8}>
-            <Form.Item name="flow_type" label="收支">
-              <Radio.Group block optionType="button" buttonStyle="solid">
-                <Radio value="all">全部</Radio>
-                <Radio value="2">收</Radio>
-                <Radio value="1">支</Radio>
-                {/* <Radio value="3">不计支出</Radio> */}
-              </Radio.Group>
-            </Form.Item>
-          </Col>
+          <>
+            <Col span={8}>
+              <Form.Item name="payment_type" label="付款方式">
+                <Select allowClear placeholder="付款方式" options={cpt_const.payment_type} />
+              </Form.Item>
+            </Col>
             <Col span={8}>
               <Form.Item name={`creation_time`} label="创建时间">
                 <RangePickerWrap bordered placeholder="placeholder" />
@@ -206,12 +209,12 @@ export const AdvancedSearchForm = (props: {
         )}
 
       </Row>
-      <Row gutter={24}>
+      <Row gutter={24} style={{ marginBottom: '-16px' }}>
         <Col span={8}>
           <Form.Item name="account_type" label="账户">
-            <Select allowClear  
-            mode="multiple"
-            placeholder="账户" options={cpt_const.account_type} />
+            <Select allowClear
+              mode="multiple"
+              placeholder="账户" options={cpt_const.account_type} />
           </Form.Item>
         </Col>
         <Col span={8}>
