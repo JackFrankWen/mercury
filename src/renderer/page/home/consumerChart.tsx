@@ -1,11 +1,7 @@
 import React from 'react';
 import PieChart from 'src/renderer/components/pieChart';
 import { Card } from 'antd';
-
-interface ConsumerData {
-  item: string;
-  total: number;
-}
+import { ConsumerData } from './types';
 
 interface ConsumerChartProps {
   data: ConsumerData[];

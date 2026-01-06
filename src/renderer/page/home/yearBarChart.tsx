@@ -10,11 +10,7 @@ import { DefaultOptionType } from 'antd/es/cascader';
 import { renderIcon } from 'src/renderer/components/FontIcon';
 import { formatMoney } from 'src/renderer/components/utils';
 import { EXPENSE_COLOR, INCOME_COLOR } from 'src/renderer/const/colors';
-
-interface YearBarChartData {
-  monthlyData: { date: string; total: number }[];
-  dailyData: { date: string; total: number }[];
-}
+import { YearBarChartData } from './types';
 
 function YearBarChart(props: {
   formValue: FormData;

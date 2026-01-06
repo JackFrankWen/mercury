@@ -4,17 +4,7 @@ import AccountInfo from '../accountInfo';
 import ConsumerChart from '../consumerChart';
 import DateSelector from './DateSelector';
 import { FormData } from '../hooks/useFormData';
-
-interface AccountPaymentData {
-  account_type: string;
-  total: number;
-  payment_type: string;
-}
-
-interface ConsumerData {
-  item: string;
-  total: number;
-}
+import { AccountPaymentData, ConsumerData } from '../types';
 
 interface RightSectionProps {
   formValue: FormData;

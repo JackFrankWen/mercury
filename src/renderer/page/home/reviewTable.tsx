@@ -1,197 +1,9 @@
-import { Card, Col, Row, Space, Flex, Tabs, Modal, message } from 'antd';
-import React, { useState, useCallback } from 'react';
-import CategoryTable from './categoryTable';
-import { cpt_const } from 'src/renderer/const/web';
-import DonutChart from 'src/renderer/components/donutChart';
-import CategoryCollaspe from './categoryCollaspe';
+import { Card } from 'antd';
+import React, { useState } from 'react';
 import emitter from 'src/renderer/events';
 import { CategoryReturnType } from 'src/preload/type';
-import BarChart from 'src/renderer/components/barChart';
-import { ModalContent } from './ModalContent';
-import { useFresh } from 'src/renderer/components/useFresh';
-
-
-function convertCategoryReturnTypeToPieChartData(category: CategoryReturnType) {
-
-  return category.reduce((acc: any, item: any) => {
-    item.child.forEach((child: any) => {
-      acc.push({
-        value: Number(child.value),
-        name: child.name,
-        type: item.name,
-        category: child.category,
-      });
-    });
-    return acc;
-  }, []);
-}
-
-// 交易详情模态框组件
-const TransactionModal = (props: {
-  visible: boolean;
-  category: string;
-  formValue: any;
-  onClose: () => void;
-  refreshTable: () => void;
-}) => {
-  const { visible, category, formValue, onClose, refreshTable } = props;
-  const [modalData, setModalData] = useState<any>([]);
-  const [barData, setBarData] = useState<any>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  // 获取交易详情数据
-  const getTransactionDetails = async (data: any, category: string) => {
-    if (!category) return;
-
-    setLoading(true);
-    try {
-      const { trans_time } = data;
-      const params = {
-        ...data,
-        category,
-        trans_time,
-      };
-
-      const res = await window.mercury.api.getTransactions(params);
-      if (res) {
-        setModalData(res);
-      }
-    } catch (error) {
-      console.error('Error fetching transactions:', error);
-      message.error('获取交易数据失败');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 获取按月份统计数据（用于年度视图）
-  const fetchBarData = async (obj: any) => {
-    if (!obj) return;
-
-    try {
-      const result = await window.mercury.api.getTransactionsByMonth(obj);
-      setBarData(result);
-    } catch (error) {
-      message.error(error);
-    }
-  };
-
-  // 当modal显示且有选择的category时，获取数据
-  useFresh(() => {
-    if (category && visible) {
-      getTransactionDetails(formValue, category);
-    }
-    if (formValue.type === 'year' && visible) {
-      fetchBarData({
-        ...formValue,
-        category: category,
-        trans_time: formValue.trans_time,
-      });
-    }
-  }, [formValue, category, visible], 'transaction');
-
-  // 刷新表格数据
-  const refresh = () => {
-    refreshTable();
-    if (category) {
-      getTransactionDetails(formValue, category);
-    }
-  };
-
-  return (
-    <Modal
-      width={1000}
-      closable={true}
-      footer={null}
-      open={visible}
-      onCancel={onClose}
-      title="交易详情"
-    >
-      {formValue.type === 'year' && <BarChart data={barData} flowTypeVal={formValue.flow_type} />}
-      {modalData.length > 0 && (
-        <ModalContent
-          loading={loading}
-          onCancel={onClose}
-          modalData={modalData}
-          refresh={refresh}
-        />
-      )}
-    </Modal>
-  );
-};
-
-// 使用共享Modal的Tab1内容组件
-const Tab2Content = ({ category, formValue, refreshTable }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('');
-
-  const showModal = (category: string) => {
-    setSelectedCategory(category);
-    setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  return (
-    <>
-      <DonutChart data={convertCategoryReturnTypeToPieChartData(category)} />
-      <CategoryTable
-        refreshTable={refreshTable}
-        data={category}
-        formValue={formValue}
-        showModal={showModal}
-        useSharedModal={true}
-      />
-      {modalVisible && (
-        <TransactionModal
-          visible={modalVisible}
-          category={selectedCategory}
-          formValue={formValue}
-          onClose={closeModal}
-          refreshTable={refreshTable}
-        />
-      )}
-    </>
-  );
-};
-
-// 使用共享Modal的Tab2内容组件
-const Tab1Content = ({ category, formValue, refreshTable }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('');
-
-  const showModal = (category: string) => {
-    setSelectedCategory(category);
-    setModalVisible(true);
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-  };
-
-  return (
-    <div style={{ minHeight: '400px' }}>
-      <CategoryCollaspe
-        refreshTable={refreshTable}
-        data={category}
-        formValue={formValue}
-        showModal={showModal}
-        useSharedModal={true}
-      />
-      {modalVisible && (
-        <TransactionModal
-          visible={modalVisible}
-          category={selectedCategory}
-          formValue={formValue}
-          onClose={closeModal}
-          refreshTable={refreshTable}
-        />
-      )}
-    </div>
-  );
-};
+import CategoryChartTab from './components/CategoryChartTab';
+import CategoryDataTab from './components/CategoryDataTab';
 
 // 添加新的 props 类型定义
 function TableSection(props: {
@@ -208,10 +20,10 @@ function TableSection(props: {
   // 从 extraState 中解构出需要的状态
   const { categoryVal, accountTypeVal, consumerVal, paymentTypeVal, tagVal, PaymentTypeCpt, TagCpt, FlowTypeCpt, flowTypeVal, } = extraState;
 
-  const [activeTabKey, setActiveTabKey] = useState('tab1');
+  const [activeTabKey, setActiveTabKey] = useState<'tab1' | 'tab2'>('tab1');
 
-  const handleTabChange = key => {
-    setActiveTabKey(key);
+  const handleTabChange = (key: string) => {
+    setActiveTabKey(key as 'tab1' | 'tab2');
   };
 
   const refreshTable = () => {
@@ -234,54 +46,34 @@ function TableSection(props: {
     },
   ];
 
+  // 构建完整的 formValue 对象
+  const fullFormValue = {
+    ...formValue,
+    consumer: consumerVal,
+    account_type: accountTypeVal,
+    payment_type: paymentTypeVal,
+    category: categoryVal,
+    tag: tagVal,
+    flow_type: flowTypeVal,
+  };
+
   // 定义标签页内容
-  const contentList = {
-    tab1: (
-      <Tab1Content
-        category={categoryData}
-        formValue={{
-          ...formValue,
-          consumer: consumerVal,
-          account_type: accountTypeVal,
-          payment_type: paymentTypeVal,
-          category: categoryVal,
-          tag: tagVal,
-          flow_type: flowTypeVal,
-        }}
-        refreshTable={refreshTable}
-      />
-    ),
-    tab2: (
-      <Tab2Content
-        category={categoryData}
-        formValue={{
-          ...formValue,
-          consumer: consumerVal,
-          account_type: accountTypeVal,
-          payment_type: paymentTypeVal,
-          category: categoryVal,
-          tag: tagVal,
-          flow_type: flowTypeVal,
-        }}
-        refreshTable={refreshTable}
-      />
-    ),
+  const contentList: Record<'tab1' | 'tab2', React.ReactElement> = {
+    tab1: <CategoryChartTab category={categoryData} formValue={fullFormValue} refreshTable={refreshTable} />,
+    tab2: <CategoryDataTab category={categoryData} formValue={fullFormValue} refreshTable={refreshTable} />,
   };
 
   return (
-    <>
-
-      <Card
-        hoverable
-        bordered={false}
-        tabBarExtraContent={extraComponent}
-        tabList={tabList}
-        activeTabKey={activeTabKey}
-        onTabChange={handleTabChange}
-      >
-        {contentList[activeTabKey]}
-      </Card>
-    </>
+    <Card
+      hoverable
+      bordered={false}
+      tabBarExtraContent={extraComponent}
+      tabList={tabList}
+      activeTabKey={activeTabKey}
+      onTabChange={handleTabChange}
+    >
+      {contentList[activeTabKey]}
+    </Card>
   );
 }
 

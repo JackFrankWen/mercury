@@ -2,30 +2,11 @@ import { useState, useEffect } from 'react';
 import { message } from 'antd';
 import { FormData } from './useFormData';
 import { CategoryReturnType } from 'src/preload/type';
+import { SummarizeData, CompanySummarizeData, YearBarChartData } from '../types';
 
 const FLOW_TYPE_COST = 1; // 支出
 const FLOW_TYPE_INCOME = 2; // 收入
 const COMPANY_ACCOUNT_TYPE = 4; // 公司账户
-
-interface SummarizeData {
-  income: number;
-  cost: number;
-  balance: number;
-}
-
-interface CompanySummarizeData {
-  income: number;
-  cost: number;
-  balance: number;
-  incomeTotal: number;
-  costTotal: number;
-  balanceTotal: number;
-}
-
-interface YearBarChartData {
-  monthlyData: { date: string; total: number }[];
-  dailyData: { date: string; total: number }[];
-}
 
 /**
  * 管理左侧区域数据的 Hook

@@ -1,16 +1,11 @@
 import { Card, Col, Row, Statistic } from 'antd';
 import React from 'react';
 import { formatMoneyObj } from 'src/renderer/components/utils';
-
-interface StaticData {
-  income: number; // 总收入
-  cost: number; // 总支出
-  balance: number; // 结余
-}
+import { SummarizeData } from './types';
 
 interface SummarizeProps {
   formValue: any;
-  data: StaticData;
+  data: SummarizeData;
   onRefresh?: () => void;
 }
 

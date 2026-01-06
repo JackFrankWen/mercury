@@ -3,19 +3,11 @@ import React from 'react';
 import { formatMoneyObj } from 'src/renderer/components/utils';
 import StatisticReser from 'src/renderer/components/StatisticReser';
 import { EXPENSE_COLOR, INCOME_COLOR } from 'src/renderer/const/colors';
-
-interface StaticData {
-    income: number; // 公司当期收入
-    cost: number; // 公司当期支出
-    balance: number; // 当期结余
-    incomeTotal: number; // 公司总收入
-    costTotal: number; // 公司总支出
-    balanceTotal: number; // 总结余
-}
+import { CompanySummarizeData } from './types';
 
 interface CompanySummarizeProps {
     formValue: any;
-    data: StaticData;
+    data: CompanySummarizeData;
     onRefresh?: () => void;
 }
 
@@ -34,7 +26,7 @@ export default function CompanySummarize(props: CompanySummarizeProps) {
 
     return (
         <>
-            <Card size="small">
+            <Card size="small" hoverable>
                 <Row className="home-section" justify="space-between" gutter={12}>
                     <StatisticReser
                         title="公司账户（收入至今）"

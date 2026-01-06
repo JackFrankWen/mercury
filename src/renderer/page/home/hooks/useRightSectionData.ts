@@ -1,18 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getAccountType, getPaymentType } from 'src/renderer/const/web';
 import { consumer_type } from 'src/renderer/const/web';
 import { FormData } from './useFormData';
-
-interface AccountPaymentData {
-  account_type: string;
-  total: number;
-  payment_type: string;
-}
-
-interface ConsumerData {
-  item: string;
-  total: number;
-}
+import { AccountPaymentData, ConsumerData } from '../types';
 
 /**
  * 管理右侧区域数据的 Hook

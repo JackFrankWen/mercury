@@ -8,26 +8,7 @@ import AdvancedSearchModal from './AdvancedSearchModal';
 import { FormData } from '../hooks/useFormData';
 import ExtraControls from '../../../components/ExtraControls';
 import { CategoryReturnType } from 'src/preload/type';
-
-interface SummarizeData {
-  income: number;
-  cost: number;
-  balance: number;
-}
-
-interface CompanySummarizeData {
-  income: number;
-  cost: number;
-  balance: number;
-  incomeTotal: number;
-  costTotal: number;
-  balanceTotal: number;
-}
-
-interface YearBarChartData {
-  monthlyData: { date: string; total: number }[];
-  dailyData: { date: string; total: number }[];
-}
+import { SummarizeData, CompanySummarizeData, YearBarChartData } from '../types';
 
 interface LeftSectionProps {
   formValue: FormData;

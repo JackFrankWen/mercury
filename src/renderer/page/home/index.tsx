@@ -25,8 +25,6 @@ function Index(): JSX.Element {
     refreshLeftSectionData
   } = useLeftSectionData(formValue, extraState);
 
-  console.log(accountData, '====accountData');
-  console.log(consumerData, '====consumerData');
 
   const onRefresh = () => {
     refreshLeftSectionData();

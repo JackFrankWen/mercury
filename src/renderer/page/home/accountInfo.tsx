@@ -8,12 +8,7 @@ import {
 } from '@ant-design/icons';
 import { getAccountType, getPaymentType } from 'src/renderer/const/web';
 import { formatMoney } from 'src/renderer/components/utils';
-
-interface AccountPaymentData {
-  account_type: string;
-  total: number;
-  payment_type: string;
-}
+import { AccountPaymentData } from './types';
 
 interface AccountInfoProps {
   data: AccountPaymentData[];
