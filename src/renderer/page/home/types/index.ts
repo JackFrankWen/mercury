@@ -2,6 +2,13 @@
  * 首页相关的类型定义
  */
 
+// 表单数据类型定义
+export interface FormData {
+  date: string;
+  trans_time: string[];
+  type: 'year' | 'month';
+}
+
 // 汇总数据
 export type SummarizeData = {
   income: number;
