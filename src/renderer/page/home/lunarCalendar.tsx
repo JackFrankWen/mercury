@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, Flex, Modal, Typography, message } from 'antd';
 import type { CalendarProps } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
@@ -31,6 +31,10 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
   const [dateTime, setDateTime] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const openModal = async (dateTime: string) => {
+    setDateTime(dateTime);
+    setVisible(true);
+  };
+  const getModalData = async (dateTime: string) => {
     try {
       setLoading(true);
       const res = await window.mercury.api.getTransactions({
@@ -38,35 +42,16 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
         trans_time: [`${dateTime} 00:00:00`, `${dateTime} 23:59:59`],
       });
       setModalData(res);
-      setDateTime(dateTime);
-      setVisible(true);
       setLoading(false);
     } catch (error) {
       message.error(error);
-      setLoading(false);
     } finally {
       setLoading(false);
     }
   };
-  useFresh(
-    async () => {
-      try {
-        setLoading(true);
-        const res = await window.mercury.api.getTransactions({
-          ...formValue,
-          trans_time: [`${dateTime} 00:00:00`, `${dateTime} 23:59:59`],
-        });
-        setModalData(res);
-      } catch (error) {
-        setLoading(false);
-        message.error(error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [],
-    'transaction'
-  );
+  useEffect(() => {
+    getModalData(dateTime);
+  }, [dateTime]);
   const cellRender = (date, info, fullData, flow_type) => {
     const d = Lunar.fromDate(date.toDate());
     const lunar = d.getDayInChinese();
@@ -146,7 +131,10 @@ const LunarCalendar: React.FC<LunarCalendarProps> = props => {
             loading={loading}
             modalData={modalData}
             withCategory
-            refresh={refresh}
+            refresh={() => {
+              getModalData(dateTime);
+              refresh();
+            }}
           />
         </Modal>
       )}
