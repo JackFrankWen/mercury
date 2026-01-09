@@ -2,15 +2,17 @@ import React from 'react';
 import { Col, Card } from 'antd';
 import AccountInfo from '../accountInfo';
 import ConsumerChart from '../consumerChart';
+import CompanySummarize from '../companySummarize';
 import DateSelector from './DateSelector';
 import { FormData } from '../hooks/useFormData';
-import { AccountPaymentData, ConsumerData } from '../types';
+import { AccountPaymentData, ConsumerData, CompanySummarizeData } from '../types';
 
 interface RightSectionProps {
   formValue: FormData;
   onFormChange: (val: FormData) => void;
   accountData: AccountPaymentData[];
   consumerData: ConsumerData[];
+  companySummarizeData: CompanySummarizeData;
   onRefresh: () => void;
 }
 
@@ -23,13 +25,19 @@ function RightSection({
   onFormChange,
   accountData,
   consumerData,
+  companySummarizeData,
   onRefresh
 }: RightSectionProps): JSX.Element {
   return (
     <Col span={8} className="home-page-right mb16">
-      <Card size="small" bordered={false} hoverable>
+      <Card size="small" bordered={false} hoverable className='mb8'>
         <DateSelector value={formValue} onChange={onFormChange} />
       </Card>
+      <CompanySummarize
+        formValue={formValue}
+        data={companySummarizeData}
+        onRefresh={onRefresh}
+      />
       <AccountInfo data={accountData} onRefresh={onRefresh} />
       <ConsumerChart data={consumerData} onRefresh={onRefresh} />
     </Col>

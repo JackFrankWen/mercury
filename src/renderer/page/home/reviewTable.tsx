@@ -6,10 +6,11 @@ import { CategoryReturnType } from 'src/preload/type';
 import CategoryChartTab from './components/CategoryChartTab';
 import CategoryDataTab from './components/CategoryDataTab';
 import { cpt_const } from 'src/renderer/const/web';
+import { ExtraControlsState } from './hooks/useLeftSectionData';
 
 interface TableSectionProps {
   formValue: any;
-  extraState: any;
+  extraState: ExtraControlsState;
   visible: boolean;
   setVisible: (visible: boolean) => void;
   categoryData: CategoryReturnType;

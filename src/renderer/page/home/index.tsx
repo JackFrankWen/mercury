@@ -37,12 +37,10 @@ function Index(): JSX.Element {
         formValue={formValue}
         extraState={extraState}
         summarizeData={summarizeData}
-        companySummarizeData={companySummarizeData}
         yearBarChartData={yearBarChartData}
         categoryData={categoryData}
         categoryVal={categoryVal}
         setCategoryVal={setCategoryVal}
-
         onRefresh={onRefresh}
       />
       <RightSection
@@ -50,6 +48,7 @@ function Index(): JSX.Element {
         onFormChange={setFormValue}
         accountData={accountData}
         consumerData={consumerData}
+        companySummarizeData={companySummarizeData}
         onRefresh={onRefresh}
       />
     </Row>
