@@ -259,7 +259,7 @@ export const category_type = [
       },
       {
         value: 20006,
-        label: '理发费',
+        label: '美容美发',
         icon: 'fa-solid fa-scissors',
         color: '#00BCD4', // 青色
       },

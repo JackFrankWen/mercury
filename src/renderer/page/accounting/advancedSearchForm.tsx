@@ -82,7 +82,7 @@ export const AdvancedSearchForm = (props: {
         form.setFieldsValue(new_allValues);
         // 如果 chose_unclassified改变 则提交
 
-        if (changedValues?.chose_unclassified) {
+        if (changedValues?.chose_unclassified || changedValues?.flow_type) {
           onFinish(new_allValues);
         }
 
