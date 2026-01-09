@@ -43,7 +43,7 @@ src/renderer/page/home/
 ```
 index.tsx (主入口)
   ├─> useFormData()              # 表单数据
-  ├─> useExtraControls()         # 筛选控件状态
+  ├─> 筛选控件状态 (直接在组件中管理) # 账户类型、消费者、支付方式、标签等筛选状态
   ├─> useLeftSectionData()       # 左侧数据管理
   │     ├─> summarizeData
   │     ├─> companySummarizeData

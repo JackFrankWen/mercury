@@ -27,6 +27,7 @@ export function useLeftSectionData(formValue: FormData, extraState: any) {
     costTotal: 0,
     balanceTotal: 0,
   });
+  const [categoryVal, setCategoryVal] = useState<string[]>([]);
 
   const [yearBarChartData, setYearBarChartData] = useState<YearBarChartData>({
     monthlyData: [],
@@ -198,6 +199,7 @@ export function useLeftSectionData(formValue: FormData, extraState: any) {
       payment_type: paymentTypeVal,
       tag: tagVal,
       flow_type: flowTypeVal,
+      category: categoryVal,
     };
 
     await Promise.all([
@@ -211,7 +213,8 @@ export function useLeftSectionData(formValue: FormData, extraState: any) {
   // 监听依赖变化
   useEffect(() => {
     refreshLeftSectionData();
-  }, [formValue, consumerVal, accountTypeVal, paymentTypeVal, tagVal, flowTypeVal]);
+  }, [formValue, consumerVal, accountTypeVal, paymentTypeVal, tagVal, flowTypeVal, categoryVal]);
+
 
   return {
     summarizeData,
@@ -219,6 +222,8 @@ export function useLeftSectionData(formValue: FormData, extraState: any) {
     yearBarChartData,
     categoryData,
     refreshLeftSectionData,
+    categoryVal,
+    setCategoryVal
   };
 }
 

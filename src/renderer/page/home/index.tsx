@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { Row } from 'antd';
 import { useFormData } from './hooks/useFormData';
 import { useRightSectionData } from './hooks/useRightSectionData';
 import { useLeftSectionData } from './hooks/useLeftSectionData';
-import { useExtraControls } from '../../components/useExtraControls';
 import LeftSection from './components/LeftSection';
 import RightSection from './components/RightSection';
 import './index.css';
@@ -14,7 +13,34 @@ import './index.css';
  */
 function Index(): JSX.Element {
   const [formValue, setFormValue] = useFormData();
-  const extraState = useExtraControls();
+
+  // 额外控制状态
+  const [accountTypeVal, setAccountTypeVal] = useState<number[]>();
+  const [consumerVal, setConsumerVal] = useState<number[]>();
+  const [paymentTypeVal, setPaymentTypeVal] = useState<number>();
+  const [flowTypeVal, setFlowTypeVal] = useState<number>(1);
+  const [tagVal, setTagVal] = useState<number>();
+
+  const hasSearchInModal = useMemo(() => {
+    if (!paymentTypeVal && !tagVal) {
+      return false;
+    }
+    return true;
+  }, [paymentTypeVal, tagVal]);
+
+  const extraState = {
+    accountTypeVal,
+    setAccountTypeVal,
+    consumerVal,
+    setConsumerVal,
+    paymentTypeVal,
+    setPaymentTypeVal,
+    flowTypeVal,
+    setFlowTypeVal,
+    tagVal,
+    setTagVal,
+    hasSearchInModal,
+  };
 
   const { accountData, consumerData, refreshRightSectionData } = useRightSectionData(formValue);
   const {
@@ -22,6 +48,8 @@ function Index(): JSX.Element {
     companySummarizeData,
     yearBarChartData,
     categoryData,
+    categoryVal,
+    setCategoryVal,
     refreshLeftSectionData
   } = useLeftSectionData(formValue, extraState);
 
@@ -39,6 +67,9 @@ function Index(): JSX.Element {
         companySummarizeData={companySummarizeData}
         yearBarChartData={yearBarChartData}
         categoryData={categoryData}
+        categoryVal={categoryVal}
+        setCategoryVal={setCategoryVal}
+
         onRefresh={onRefresh}
       />
       <RightSection

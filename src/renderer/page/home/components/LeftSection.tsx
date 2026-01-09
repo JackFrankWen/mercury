@@ -6,17 +6,32 @@ import YearBarChart from '../yearBarChart';
 import CompanySummarize from '../companySummarize';
 import AdvancedSearchModal from './AdvancedSearchModal';
 import { FormData } from '../hooks/useFormData';
-import ExtraControls from '../../../components/ExtraControls';
 import { CategoryReturnType } from 'src/preload/type';
 import { SummarizeData, CompanySummarizeData, YearBarChartData } from '../types';
 
+interface ExtraControlsState {
+  accountTypeVal: number[] | undefined;
+  setAccountTypeVal: (val: number[] | undefined) => void;
+  consumerVal: number[] | undefined;
+  setConsumerVal: (val: number[] | undefined) => void;
+  paymentTypeVal: number | undefined;
+  setPaymentTypeVal: (val: number | undefined) => void;
+  flowTypeVal: number;
+  setFlowTypeVal: (val: number) => void;
+  tagVal: number | undefined;
+  setTagVal: (val: number | undefined) => void;
+  hasSearchInModal: boolean;
+}
+
 interface LeftSectionProps {
   formValue: FormData;
-  extraState: any;
+  extraState: ExtraControlsState;
   summarizeData: SummarizeData;
   companySummarizeData: CompanySummarizeData;
   yearBarChartData: YearBarChartData;
   categoryData: CategoryReturnType;
+  categoryVal: string[];
+  setCategoryVal: (val: string[]) => void;
   onRefresh: () => void;
 }
 
@@ -31,20 +46,11 @@ function LeftSection({
   companySummarizeData,
   yearBarChartData,
   categoryData,
+  categoryVal,
+  setCategoryVal,
   onRefresh,
 }: LeftSectionProps): JSX.Element {
   const [visible, setVisible] = useState(false);
-
-  const extraComponent = (
-    <ExtraControls
-      accountTypeCpt={extraState.AccountTypeCpt}
-      consumerCpt={extraState.ConsumerCpt}
-      hasSearchInModal={extraState.hasSearchInModal}
-      onFilterClick={() => setVisible(true)}
-    />
-  );
-
-  const { FlowTypeCpt, PaymentTypeCpt, TagCpt } = extraState;
 
   return (
     <Col span={16} className="home-page-left mb16">
@@ -63,17 +69,21 @@ function LeftSection({
         <AdvancedSearchModal
           visible={visible}
           onClose={() => setVisible(false)}
-          flowTypeCpt={FlowTypeCpt}
-          paymentTypeCpt={PaymentTypeCpt}
-          tagCpt={TagCpt}
+          flowTypeVal={extraState.flowTypeVal}
+          setFlowTypeVal={extraState.setFlowTypeVal}
+          paymentTypeVal={extraState.paymentTypeVal}
+          setPaymentTypeVal={extraState.setPaymentTypeVal}
+          tagVal={extraState.tagVal}
+          setTagVal={extraState.setTagVal}
         />
       )}
 
       <YearBarChart
         formValue={formValue}
         extraState={extraState}
-        extraComponent={extraComponent}
         visible={visible}
+        categoryVal={categoryVal}
+        setCategoryVal={setCategoryVal}
         setVisible={setVisible}
         data={yearBarChartData}
         onRefresh={onRefresh}
@@ -83,7 +93,6 @@ function LeftSection({
         <TableSection
           formValue={formValue}
           extraState={extraState}
-          extraComponent={extraComponent}
           visible={visible}
           setVisible={setVisible}
           categoryData={categoryData}
