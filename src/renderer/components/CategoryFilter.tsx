@@ -14,6 +14,7 @@ function CategoryFilter({ value, onChange }: CategoryFilterProps) {
             options={category_type}
             allowClear
             multiple
+            variant="filled"
             value={value}
             style={{ width: '140px' }}
             onChange={val => onChange(val as string[])}

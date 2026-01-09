@@ -22,14 +22,14 @@ function CategoryDataTab({ category, formValue, refreshTable }: CategoryDataTabP
   return (
     <>
       <DonutChart data={convertCategoryReturnTypeToPieChartData(category)} />
-      <CategoryTable
+      {/* <CategoryTable
         refreshTable={refreshTable}
         data={category}
         formValue={formValue}
         showModal={showModal}
         useSharedModal={true}
-      />
-      {modalVisible && (
+      /> */}
+      {/* {modalVisible && (
         <TransactionModal
           visible={modalVisible}
           category={selectedCategory}
@@ -37,7 +37,7 @@ function CategoryDataTab({ category, formValue, refreshTable }: CategoryDataTabP
           onClose={closeModal}
           refreshTable={refreshTable}
         />
-      )}
+      )} */}
     </>
   );
 }

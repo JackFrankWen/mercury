@@ -1,4 +1,4 @@
-import { Card, Space, Select, theme } from 'antd';
+import { Card, Space, Select, theme, Col, Row } from 'antd';
 import React, { useState } from 'react';
 import { EllipsisOutlined, FilterFilled } from '@ant-design/icons';
 import emitter from 'src/renderer/events';
@@ -77,6 +77,8 @@ function TableSection(props: TableSectionProps) {
         value={accountTypeVal}
         onChange={setAccountTypeVal}
         placeholder="账户类型"
+        variant="filled"
+        size="small"
         options={cpt_const.account_type}
         style={{ minWidth: 100 }}
         mode="multiple"
@@ -86,6 +88,8 @@ function TableSection(props: TableSectionProps) {
         value={consumerVal}
         onChange={setConsumerVal}
         placeholder="消费者"
+        variant="filled"
+        size="small"
         options={cpt_const.consumer_type}
         style={{ minWidth: 100 }}
         mode="multiple"
@@ -121,16 +125,33 @@ function TableSection(props: TableSectionProps) {
   };
 
   return (
-    <Card
-      hoverable
-      bordered={false}
-      tabBarExtraContent={extraControls}
-      tabList={tabList}
-      activeTabKey={activeTabKey}
-      onTabChange={handleTabChange}
-    >
-      {contentList[activeTabKey]}
-    </Card>
+    <Row gutter={12}>
+
+      <Col span={12}>
+        <Card
+          title="图表"
+          hoverable
+          size="small"
+          bordered={false}
+          className='review-table'
+          extra={extraControls}
+        >
+          <CategoryChartTab category={categoryData} formValue={fullFormValue} refreshTable={refreshTable} />
+        </Card>
+      </Col>
+      <Col span={12}>
+        <Card
+          title="数据"
+          hoverable
+          size="small"
+          bordered={false}
+          className='review-table'
+          extra={extraControls}
+        >
+          <CategoryDataTab category={categoryData} formValue={fullFormValue} refreshTable={refreshTable} />
+        </Card>
+      </Col>
+    </Row>
   );
 }
 

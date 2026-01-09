@@ -119,6 +119,13 @@
 .category-chart-tab {
   min-height: 400px;
 }
+.category-chart-tab > .ant-collapse-borderless > .ant-collapse-item {
+  border-bottom: none;
+  padding: 0;
+}
+.category-chart-tab > .ant-collapse-borderless > .ant-collapse-item > .ant-collapse-header {
+  padding: 6px;
+}
 
 /* DateSelector 样式 */
 .date-selector-nav-left {
@@ -156,4 +163,8 @@
 
 .category-large-icon {
   font-size: 22px;
+}
+
+.review-table {
+  margin-top: 8px;
 }

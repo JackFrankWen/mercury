@@ -59,6 +59,7 @@ function YearBarChart(props: YearBarChartProps) {
         value={accountTypeVal}
         onChange={setAccountTypeVal}
         placeholder="账户类型"
+        variant="filled"
         options={cpt_const.account_type}
         style={{ minWidth: 100 }}
         mode="multiple"
@@ -68,6 +69,7 @@ function YearBarChart(props: YearBarChartProps) {
         value={consumerVal}
         onChange={setConsumerVal}
         placeholder="消费者"
+        variant="filled"
         options={cpt_const.consumer_type}
         style={{ minWidth: 100 }}
         mode="multiple"
