@@ -10,16 +10,11 @@ import { ModalContent } from './ModalContent';
 import { I_Transaction } from 'src/main/sqlite3/transactions';
 import { useFresh } from 'src/renderer/components/useFresh';
 import { EXPENSE_COLOR, INCOME_COLOR } from 'src/renderer/const/colors';
+import { ExtraControlsState } from './hooks/useLeftSectionData';
 
 interface LunarCalendarProps {
   className?: string;
-  formValue: FormData & {
-    consumer: number;
-    account_type: number;
-    payment_type: number;
-    category: string[];
-    flow_type: number;
-  };
+  formValue: FormData & ExtraControlsState;
   data: { date: string; total: number }[];
   refresh: () => void;
 }

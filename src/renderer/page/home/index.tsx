@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { Row } from 'antd';
 import { useFormData } from './hooks/useFormData';
 import { useRightSectionData } from './hooks/useRightSectionData';
@@ -14,34 +14,6 @@ import './index.css';
 function Index(): JSX.Element {
   const [formValue, setFormValue] = useFormData();
 
-  // 额外控制状态
-  const [accountTypeVal, setAccountTypeVal] = useState<number[]>();
-  const [consumerVal, setConsumerVal] = useState<number[]>();
-  const [paymentTypeVal, setPaymentTypeVal] = useState<number>();
-  const [flowTypeVal, setFlowTypeVal] = useState<number>(1);
-  const [tagVal, setTagVal] = useState<number>();
-
-  const hasSearchInModal = useMemo(() => {
-    if (!paymentTypeVal && !tagVal) {
-      return false;
-    }
-    return true;
-  }, [paymentTypeVal, tagVal]);
-
-  const extraState = {
-    accountTypeVal,
-    setAccountTypeVal,
-    consumerVal,
-    setConsumerVal,
-    paymentTypeVal,
-    setPaymentTypeVal,
-    flowTypeVal,
-    setFlowTypeVal,
-    tagVal,
-    setTagVal,
-    hasSearchInModal,
-  };
-
   const { accountData, consumerData, refreshRightSectionData } = useRightSectionData(formValue);
   const {
     summarizeData,
@@ -50,8 +22,9 @@ function Index(): JSX.Element {
     categoryData,
     categoryVal,
     setCategoryVal,
-    refreshLeftSectionData
-  } = useLeftSectionData(formValue, extraState);
+    refreshLeftSectionData,
+    extraState,
+  } = useLeftSectionData(formValue);
 
 
   const onRefresh = () => {

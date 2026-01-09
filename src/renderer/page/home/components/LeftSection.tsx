@@ -8,20 +8,7 @@ import AdvancedSearchModal from './AdvancedSearchModal';
 import { FormData } from '../hooks/useFormData';
 import { CategoryReturnType } from 'src/preload/type';
 import { SummarizeData, CompanySummarizeData, YearBarChartData } from '../types';
-
-interface ExtraControlsState {
-  accountTypeVal: number[] | undefined;
-  setAccountTypeVal: (val: number[] | undefined) => void;
-  consumerVal: number[] | undefined;
-  setConsumerVal: (val: number[] | undefined) => void;
-  paymentTypeVal: number | undefined;
-  setPaymentTypeVal: (val: number | undefined) => void;
-  flowTypeVal: number;
-  setFlowTypeVal: (val: number) => void;
-  tagVal: number | undefined;
-  setTagVal: (val: number | undefined) => void;
-  hasSearchInModal: boolean;
-}
+import { ExtraControlsState } from '../hooks/useLeftSectionData';
 
 interface LeftSectionProps {
   formValue: FormData;

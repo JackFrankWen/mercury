@@ -11,10 +11,11 @@ import ChartSummary from 'src/renderer/components/ChartSummary';
 import BackToYearButton from 'src/renderer/components/BackToYearButton';
 import CategoryFilter from 'src/renderer/components/CategoryFilter';
 import { cpt_const } from 'src/renderer/const/web';
+import { ExtraControlsState } from './hooks/useLeftSectionData';
 
 interface YearBarChartProps {
   formValue: FormData;
-  extraState: any;
+  extraState: ExtraControlsState;
   visible: boolean;
   setVisible: (visible: boolean) => void;
   data: YearBarChartData;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { message } from 'antd';
 import { FormData } from './useFormData';
 import { CategoryReturnType } from 'src/preload/type';
@@ -8,11 +8,26 @@ const FLOW_TYPE_COST = 1; // 支出
 const FLOW_TYPE_INCOME = 2; // 收入
 const COMPANY_ACCOUNT_TYPE = 4; // 公司账户
 
+// 额外控制状态的接口定义
+export interface ExtraControlsState {
+  accountTypeVal: number[] | undefined;
+  setAccountTypeVal: (val: number[] | undefined) => void;
+  consumerVal: number[] | undefined;
+  setConsumerVal: (val: number[] | undefined) => void;
+  paymentTypeVal: number | undefined;
+  setPaymentTypeVal: (val: number | undefined) => void;
+  flowTypeVal: number;
+  setFlowTypeVal: (val: number) => void;
+  tagVal: number | undefined;
+  setTagVal: (val: number | undefined) => void;
+  hasSearchInModal: boolean;
+}
+
 /**
  * 管理左侧区域数据的 Hook
- * 包含汇总、公司汇总、图表和分类数据的请求和状态管理
+ * 包含汇总、公司汇总、图表、分类数据和额外控制状态的请求和状态管理
  */
-export function useLeftSectionData(formValue: FormData, extraState: any) {
+export function useLeftSectionData(formValue: FormData) {
   const [summarizeData, setSummarizeData] = useState<SummarizeData>({
     income: 0,
     cost: 0,
@@ -36,7 +51,33 @@ export function useLeftSectionData(formValue: FormData, extraState: any) {
 
   const [categoryData, setCategoryData] = useState<CategoryReturnType>([]);
 
-  const { accountTypeVal, consumerVal, paymentTypeVal, tagVal, flowTypeVal } = extraState;
+  // 额外控制状态
+  const [accountTypeVal, setAccountTypeVal] = useState<number[]>();
+  const [consumerVal, setConsumerVal] = useState<number[]>();
+  const [paymentTypeVal, setPaymentTypeVal] = useState<number>();
+  const [flowTypeVal, setFlowTypeVal] = useState<number>(1);
+  const [tagVal, setTagVal] = useState<number>();
+
+  const hasSearchInModal = useMemo(() => {
+    if (!paymentTypeVal && !tagVal) {
+      return false;
+    }
+    return true;
+  }, [paymentTypeVal, tagVal]);
+
+  const extraState: ExtraControlsState = {
+    accountTypeVal,
+    setAccountTypeVal,
+    consumerVal,
+    setConsumerVal,
+    paymentTypeVal,
+    setPaymentTypeVal,
+    flowTypeVal,
+    setFlowTypeVal,
+    tagVal,
+    setTagVal,
+    hasSearchInModal,
+  };
 
   // 获取汇总数据（总收入、总支出、结余）
   const fetchSummarizeData = async (obj: any) => {
@@ -223,7 +264,8 @@ export function useLeftSectionData(formValue: FormData, extraState: any) {
     categoryData,
     refreshLeftSectionData,
     categoryVal,
-    setCategoryVal
+    setCategoryVal,
+    extraState,
   };
 }
 
