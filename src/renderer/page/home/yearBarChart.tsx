@@ -137,7 +137,13 @@ function YearBarChart(props: YearBarChartProps) {
               data={daliyData}
               refresh={refresh}
             />
-            <ChartSummary data={daliyData} flowTypeVal={flowTypeVal} type="daily" />
+            {
+              formValue.type === 'month' ? (
+                <></>
+              ) : (
+                <ChartSummary data={daliyData} flowTypeVal={flowTypeVal} type="daily" />
+              )
+            }
           </>
         )}
       </Card>

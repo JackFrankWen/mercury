@@ -124,7 +124,7 @@
   padding: 0;
 }
 .category-chart-tab > .ant-collapse-borderless > .ant-collapse-item > .ant-collapse-header {
-  padding: 6px;
+  padding: 6px 6px 0;
 }
 
 /* DateSelector 样式 */
