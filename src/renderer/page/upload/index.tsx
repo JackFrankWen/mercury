@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Spin, message, Steps, Card } from 'antd';
-import UploadTable, { tableHeaderI } from './uploadTable';
+import UploadTable from './uploadTable';
+import type { TableHeader } from './uploadTable.types';
 import UploadFile from './uploadFile';
 import Done from './done';
 import emitter from 'src/renderer/events';
@@ -19,7 +20,7 @@ function UploadCenter(): JSX.Element {
   const [uploadVisable, setUploadVisiable] = useState(true);
   const [tableVisable, setTableVisable] = useState(false);
   const [tableData, setTableData] = useState<Params_Transaction[]>([]);
-  const [tableHeader, setTableHeader] = useState<tableHeaderI | null>(null);
+  const [tableHeader, setTableHeader] = useState<TableHeader | null>(null);
   const [loading, setLoading] = useState(false);
   const [doneVisable, setDoneVisable] = useState(false);
   const [fileName, setFileName] = useState('');
@@ -42,7 +43,7 @@ function UploadCenter(): JSX.Element {
 
   const handleUploadSuccess = (obj: {
     tableData: Params_Transaction[];
-    tableHeader: tableHeaderI;
+    tableHeader: TableHeader;
     fileName: string;
   }) => {
     setUploadVisiable(false);
@@ -60,7 +61,7 @@ function UploadCenter(): JSX.Element {
     setStep(1);
   };
 
-  const handleSubmitSuccess = async (arr: I_Transaction[]) => {
+  const handleSubmitSuccess = async (arr: Params_Transaction[]) => {
     try {
       await uploadToDatabase(arr);
       setGoYear(dayjs(arr[0]?.trans_time).format('YYYY'));
@@ -117,7 +118,7 @@ function UploadCenter(): JSX.Element {
           <UploadTable
             setLoading={setLoading}
             tableData={tableData}
-            tableHeader={tableHeader}
+            tableHeader={tableHeader as TableHeader}
             onCancel={handleTableCancel}
             onSubmitSuccess={handleSubmitSuccess}
             step={step}

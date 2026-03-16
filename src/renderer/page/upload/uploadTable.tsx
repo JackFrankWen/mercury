@@ -1,140 +1,49 @@
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Input,
-  InputNumber,
-  message,
-  Modal,
-  notification,
-  Popconfirm,
-  Row,
-  Space,
-  Steps,
-  Alert,
-  Table,
-  Tag,
-  Tooltip,
-  Typography,
-} from 'antd';
+import { Button, Col, Input, message, notification, Row, Space, Table, Tooltip, Typography } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
-import { findCategoryById, getCategoryString } from 'src/renderer/const/categroy';
-import { account_type, getConsumerType, getTagType } from 'src/renderer/const/web';
-import useLoadingButton from 'src/renderer/components/useButton';
-import { formatMoney } from 'src/renderer/components/utils';
-import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import useLoadingButton from '../../components/useButton';
+import { formatMoney } from '../../components/utils';
+import { SearchOutlined } from '@ant-design/icons';
 import UploadModal from '../../components/uploadModal';
 import dayjs from 'dayjs';
-import { openNotification } from 'src/renderer/components/notification';
+import { openNotification } from '../../components/notification';
 import { ruleByAdvanced } from './ruleUtils';
-import { renderIcon } from 'src/renderer/components/FontIcon';
-import { getCategoryCol, getPaymentAccountCol } from 'src/renderer/components/commonColums';
-
-function checkNeedTransferData(data: any) {
-  // 返回data中所有payee包含京东和拼多多，并且description包含京东-订单编号和商户单号的数据 ,返回index
-  const jingdongData = data
-    .map((obj: any, dataIndex: number) =>
-      obj.payee?.includes('京东') && obj.description?.includes('京东-订单编号')
-        ? { ...obj, dataIndex }
-        : null
-    )
-    .filter(Boolean);
-  const pddData = data
-    .map((obj: any, dataIndex: number) =>
-      obj.payee?.includes('拼多多') && obj.description?.includes('商户单号')
-        ? { ...obj, dataIndex }
-        : null
-    )
-    .filter(Boolean);
-  const alipay1688 = data
-    .map((obj: any, dataIndex: number) =>
-      obj.payee?.includes('1688先采后付') && obj.description?.includes('先采后付还款')
-        ? { ...obj, dataIndex }
-        : null
-    )
-    .filter(Boolean);
-  const hasJingdong = jingdongData.length > 0;
-  const hasPdd = pddData.length > 0;
-  const has1688 = alipay1688.length > 0;
-  return {
-    hasJingdong,
-    hasPdd,
-    // 1688 先采后付还款 数据 暂时没有
-    has1688: false,
-
-    jingdongData,
-    pddData,
-    // 1688 先采后付还款 数据 暂时没有
-    alipay1688: [],
-  };
-}
-
-export interface DataType {
-  id: string;
-  amount: string;
-  category: string | null;
-  description: string | null;
-  account_type: number;
-  payment_type: number;
-  consumer: string;
-  flow_type: string;
-  creation_time: Date;
-  trans_time: Date;
-  modification_time: Date;
-  tag: string | null;
-}
-
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: 'number' | 'text';
-  record: DataType;
-  index: number;
-  children: React.ReactNode;
-}
-
-export interface tableHeaderI {
-  name: string;
-  date: string;
-  account_type: number;
-  fileName: string;
-  titleCostLabel: string;
-  titleCost: string;
-  titleIncome: string;
-  titleIncomeLabel: string;
-}
-const BasicTable = (props: {
-  tableData: any;
-  tableHeader: tableHeaderI;
+import { calculateCounts, calculateTotals, checkNeedTransferData } from './uploadTable.helpers';
+import type { TableHeader, GetColumnSearchProps } from './uploadTable.types';
+import { createUploadTableColumns } from './uploadTable.columns';
+interface BasicTableProps {
+  // 这里保持宽松类型以兼容上传解析后的原始数据结构
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  tableData: any[];
+  tableHeader: TableHeader;
   onCancel: () => void;
-  onSubmitSuccess: (arr: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onSubmitSuccess: (arr: any[]) => void;
   step: number;
   setStep: (step: number) => void;
   setLoading: (loading: boolean) => void;
-}) => {
-  const { tableData, tableHeader, onCancel, onSubmitSuccess, step, setStep, setLoading, loading } =
-    props;
+}
+
+const BasicTable = (props: BasicTableProps) => {
+  const { tableData, tableHeader, onCancel, onSubmitSuccess, step, setStep, setLoading } = props;
   const [api, contextHolder] = notification.useNotification();
 
-  const [data, setData] = useState(tableData);
+  const [data, setData] = useState<any[]>(tableData);
   const [LoadingBtn, setBtnLoading, setLoadingFalse] = useLoadingButton();
   const [modalVisible, setModalVisible] = useState(false);
-  const [searchText, setSearchText] = useState({ payee: '', description: '' });
-  const [searchedColumn, setSearchedColumn] = useState('');
+  const [searchText, setSearchText] = useState<{ payee: string; description: string }>({
+    payee: '',
+    description: '',
+  });
 
   // 写一个方法缓存needTransferData，根据data
   const needTransferData = useMemo(() => {
-    const { hasJingdong, hasPdd, jingdongData, pddData, has1688, alipay1688 } =
+    const { hasJingdong, hasPdd, jingdongData, pddData } =
       checkNeedTransferData(data);
     return {
       hasJingdong,
       hasPdd,
       jingdongData,
       pddData,
-      has1688,
-      alipay1688,
     };
   }, [data]);
 
@@ -143,23 +52,26 @@ const BasicTable = (props: {
     console.log('check needTransferData');
   }, [needTransferData]);
 
-  const onDelete = (record: DataType) => {
-    const newData = data.filter((obj: DataType) => obj.id !== record.id);
+  const onDelete = (record: any) => {
+    const newData = data.filter((obj: any) => obj.id !== record.id);
     setData(newData);
   };
 
-  const handleSearch = (selectedKeys: string[], confirm: () => void, dataIndex: string) => {
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: () => void,
+    dataIndex: keyof typeof searchText
+  ) => {
     confirm();
     setSearchText({ ...searchText, [dataIndex]: selectedKeys[0] });
-    setSearchedColumn(dataIndex);
   };
 
-  const handleReset = (clearFilters: () => void, dataIndex: string) => {
+  const handleReset = (clearFilters: () => void, dataIndex: keyof typeof searchText) => {
     clearFilters();
     setSearchText({ ...searchText, [dataIndex]: '' });
   };
 
-  const getColumnSearchProps = (dataIndex: string) => ({
+  const getColumnSearchProps: GetColumnSearchProps = (dataIndex: keyof typeof searchText) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
       <div style={{ padding: 8 }}>
         <Input
@@ -191,136 +103,16 @@ const BasicTable = (props: {
     ),
 
     onFilter: (value: string, record: any) => {
-      return record[dataIndex]
-        ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-        : false;
+      const field = record[dataIndex];
+      return field ? field.toString().toLowerCase().includes(value.toLowerCase()) : false;
     },
     filteredValue: searchText[dataIndex] ? [searchText[dataIndex]] : null,
   });
 
-  const columns = [
-    {
-      title: '序号',
-      dataIndex: 'index',
-      width: 50,
-      fixed: 'left',
-      render: (val: number, ctn: any, index: number) => index + 1,
-    },
-    {
-      title: '交易时间',
-      dataIndex: 'trans_time',
-      width: 180,
-      defaultCheck: true,
-      fixed: 'left',
-    },
-    {
-      title: '金额',
-      dataIndex: 'amount',
-
-      render: (val: string, { flow_type }: { flow_type: number }) => {
-        if (!val) return '';
-        if (!flow_type) return 'flow_type 为空';
-        // 金额如果包含中文，则返回警告
-        if (/[\u4e00-\u9fa5]/.test(val)) {
-          return <Typography.Text type="warning">这条数据有问题</Typography.Text>;
-        }
-        let child;
-        if (flow_type === 1) {
-          child = '支：';
-        } else if (flow_type === 2) {
-          child = '收：';
-        } else if (flow_type === 3) {
-          child = '不计支出:';
-        }
-        const type = flow_type === 1 ? 'danger' : 'success';
-        return (
-          <Space>
-            <Typography.Text type={type}>
-              {child} ¥{val}
-            </Typography.Text>
-          </Space>
-        );
-      },
-      width: 140,
-    },
-    getCategoryCol({
-      width: 120,
-      defaultCheck: false,
-    }),
-    {
-      title: '交易对方',
-      dataIndex: 'payee',
-      ellipsis: true,
-      width: 120,
-      ...getColumnSearchProps('payee'),
-      render: (val: string) => (
-        <Tooltip title={val}>
-          <span>{val}</span>
-        </Tooltip>
-      ),
-    },
-    {
-      title: '交易描述',
-      dataIndex: 'description',
-      ellipsis: true,
-      ...getColumnSearchProps('description'),
-      render: (val: string) => (
-        <Tooltip title={val}>
-          <span>{val}</span>
-        </Tooltip>
-      ),
-    },
-    {
-      title: '消费者',
-      width: 100,
-      dataIndex: 'consumer',
-      defaultCheck: false,
-      key: 'consumer',
-      render: (text: string) => getConsumerType(text),
-    },
-    getPaymentAccountCol({
-      width: 180,
-    }),
-
-    {
-      title: '账户',
-      dataIndex: 'account_type',
-      width: 80,
-      render: (val: number) => (val ? account_type[val] : ''),
-    },
-    {
-      title: '标签',
-      dataIndex: 'tag',
-      width: 80,
-      render: (val: number) => getTagType(val),
-    },
-    {
-      title: '上传文件名字',
-      dataIndex: 'upload_file_name',
-      ellipsis: true,
-      width: 120,
-    },
-    {
-      title: '操作',
-      dataIndex: 'operation',
-      width: 50,
-      render: (_: any, record: DataType) => {
-        return (
-          <Space>
-            <Popconfirm
-              title="Are you sure to delete this task?"
-              onConfirm={() => onDelete(record)}
-              onCancel={() => { }}
-              okText="Yes"
-              cancelText="No"
-            >
-              <DeleteOutlined style={{ color: 'red' }} />
-            </Popconfirm>
-          </Space>
-        );
-      },
-    },
-  ];
+  const columns = createUploadTableColumns({
+    getColumnSearchProps,
+    onDelete,
+  });
 
   const goStep2 = ({ hasJingdong, hasPdd }: { hasJingdong: boolean; hasPdd: boolean }) => {
     if (!hasJingdong && !hasPdd && step === 2) {
@@ -379,11 +171,11 @@ const BasicTable = (props: {
     return (
       <>
         <Table.Summary.Row>
-          <Table.Summary.Cell index={0}>支出</Table.Summary.Cell>
+          <Table.Summary.Cell index={0}>累加支出:</Table.Summary.Cell>
           <Table.Summary.Cell index={1}>
             <a>{formatMoney(totalCost)}</a>
           </Table.Summary.Cell>
-          <Table.Summary.Cell index={2}>收入</Table.Summary.Cell>
+          <Table.Summary.Cell index={2}>累加收入:</Table.Summary.Cell>
           <Table.Summary.Cell index={3}>
             <a>{formatMoney(totalIncome)}</a>
           </Table.Summary.Cell>
@@ -392,44 +184,8 @@ const BasicTable = (props: {
     );
   };
   console.log(step, 'step====');
-  // 计算支出和收入 不计支出根据flow_type
-  const totalCost = data.reduce((acc: number, obj: any) => {
-    if (obj.flow_type === 1) {
-      return acc + Number(obj.amount);
-    }
-    return acc;
-  }, 0);
-  const totalIncome = data.reduce((acc: number, obj: any) => {
-    if (obj.flow_type === 2) {
-      return acc + Number(obj.amount);
-    }
-    return acc;
-  }, 0);
-  const totalNoCost = data.reduce((acc: number, obj: any) => {
-    if (obj.flow_type === 3) {
-      return acc + Number(obj.amount);
-    }
-    return acc;
-  }, 0);
-  // 根据flow_type 统计支出、收入、不计支出笔数
-  const totalNoCostCount = data.reduce((acc: number, obj: any) => {
-    if (obj.flow_type === 3) {
-      return acc + 1;
-    }
-    return acc;
-  }, 0);
-  const totalIncomeCount = data.reduce((acc: number, obj: any) => {
-    if (obj.flow_type === 2) {
-      return acc + 1;
-    }
-    return acc;
-  }, 0);
-  const totalCostCount = data.reduce((acc: number, obj: any) => {
-    if (obj.flow_type === 1) {
-      return acc + 1;
-    }
-    return acc;
-  }, 0);
+  const { totalCost, totalIncome, totalNoCost } = calculateTotals(data);
+  const { totalNoCostCount, totalIncomeCount, totalCostCount } = calculateCounts(data);
 
   return (
     <div>
@@ -460,11 +216,6 @@ const BasicTable = (props: {
       <Table
         virtual
         rowKey="id"
-        onRow={record => {
-          return {
-            onDoubleClick: () => edit(record),
-          };
-        }}
         rowClassName={record => {
           // 金额如果包含中文，则返回警告
           if (/[\u4e00-\u9fa5]/.test(record.amount)) {
@@ -482,7 +233,7 @@ const BasicTable = (props: {
         dataSource={data}
         size="small"
         columns={columns}
-        summary={tableSummary}
+        // summary={tableSummary}
         scroll={{ x: 1400, y: 300 }}
         pagination={false}
       />
@@ -518,8 +269,12 @@ const BasicTable = (props: {
             goStep3();
           }}
           needTransferData={needTransferData}
-          onUploadSuccess={(type: string, transferData: []) => {
-            let messageList = [];
+          onUploadSuccess={(type: string, transferData: any[]) => {
+            const messageList: {
+              index: number;
+              message: string;
+              changeContent: { before: string | null; after: string | null }[];
+            }[] = [];
             console.log(type, transferData, 'transferData====');
             const newData = data.map((obj: any, index: number) => {
               // Skip if no description or wrong description format
