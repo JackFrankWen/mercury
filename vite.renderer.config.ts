@@ -14,6 +14,10 @@ export default defineConfig((env) => {
     root,
     mode,
     base: "./",
+    server: {
+      host: "127.0.0.1",
+      port: 5273,
+    },
     build: {
       outDir: `.vite/renderer/${name}`,
     },
