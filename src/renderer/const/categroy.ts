@@ -566,7 +566,7 @@ export const category_type = [
   },
   {
     value: 110000,
-    label: '出差旅游',
+    label: '旅游出差',
     icon: 'fa-solid fa-plane',
     flow_type: flow_type_cost,
     color: '#D291BC', // 淡紫色调

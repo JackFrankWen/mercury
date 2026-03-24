@@ -254,3 +254,52 @@
   min-width: 480px;
   max-width: 600px;
 }
+
+/* 快速定位索引栏 */
+.category-cascader-grid-wrapper {
+  display: flex;
+  position: relative;
+}
+
+.category-cascader-grid-wrapper .category-cascader-grid-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.category-cascader-index-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 32px;
+  max-height: 300px;
+  overflow-y: auto;
+  border-left: 1px solid #f0f0f0;
+  padding: 4px 2px;
+  gap: 1px;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+
+.category-cascader-index-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.category-cascader-index-item {
+  font-size: 10px;
+  line-height: 1.4;
+  color: #999;
+  cursor: pointer;
+  padding: 2px 3px;
+  border-radius: 2px;
+  text-align: center;
+  white-space: nowrap;
+  user-select: none;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.category-cascader-index-item:hover {
+  color: #1677ff;
+  background-color: #e6f4ff;
+}
