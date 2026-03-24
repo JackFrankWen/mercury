@@ -51,13 +51,6 @@ export async function parseCsvFile(file: File, options: ParseOptions = {}): Prom
               return;
             }
             data = formateToTableJd(csvContent, 'pdd');
-          } else if (name.includes('alipay1688')) {
-            sourceType = 'alipay1688';
-            if (options.validateSourceType && options.needTransferData && !options.needTransferData.has1688) {
-              resolve({ success: false, error: '上传错误文件类型' });
-              return;
-            }
-            data = formateToTableJd(csvContent, 'alipay1688');
           } else {
             resolve({ success: false, error: '不支持的文件类型' });
             return;
@@ -100,8 +93,6 @@ const UploadModal = (props: {
     hasPdd: boolean;
     jingdongData: any[];
     pddData: any[];
-    has1688: boolean;
-    alipay1688: any[];
   };
 }) => {
   const {
@@ -129,7 +120,6 @@ const UploadModal = (props: {
         needTransferData: {
           hasJingdong: needTransferData.hasJingdong,
           hasPdd: needTransferData.hasPdd,
-          has1688: needTransferData.has1688
         }
       });
 
@@ -151,7 +141,7 @@ const UploadModal = (props: {
   const handleOk = () => {
     onOk();
   };
-  const { hasJingdong, hasPdd, jingdongData, pddData, has1688, alipay1688 } =
+  const { hasJingdong, hasPdd, jingdongData, pddData } =
     needTransferData;
 
   const jingdongDescription =
