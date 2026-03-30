@@ -1,4 +1,4 @@
 @echo off
-cd /d "D:\code\mercury"
+cd /d "E:\code\mercury"
 npm start
 cmd /k
