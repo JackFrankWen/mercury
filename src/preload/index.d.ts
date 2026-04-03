@@ -14,14 +14,19 @@ declare global {
         getUploadFileList: () => Promise<{ fileName: string; fileType: string; createTime: string }[]>;
         setUploadFileList: (uploadFileList: { fileName: string; fileType: string; createTime: string }[]) => Promise<void>;
       };
+      window: {
+        minimize: () => Promise<void> | void;
+        maximize: () => Promise<void> | void;
+        close: () => Promise<void> | void;
+      };
       api: {
         // 批量插入自动规则
         batchInsertAutoRule: (list: MatchRule[]) => Promise<any>;
-        // 获取所有自动规则
+        // 获取所有自动规�?
         getAllMatchAutoRule: () => Promise<MatchRule[]>;
         // 删除自动规则
         deleteMatchAutoRule: (id: number) => Promise<any>;
-        // 获取所有匹配规则
+        // 获取所有匹配规�?
         getALlMatchRule: () => Promise<MatchRule[]>;
         // 添加匹配规则
         addMatchRule: (rule: {
@@ -44,7 +49,7 @@ declare global {
         ) => Promise<any>;
         // 删除匹配规则
         deleteMatchRule: (id: number) => Promise<any>;
-        // 获取所有交易
+        // 获取所有交�?
         getTransactions: (params: Params_Transaction) => Promise<any>;
         // 删除交易
         deleteTransactions: (ids: number[]) => Promise<any>;
@@ -72,7 +77,7 @@ declare global {
         getTransactionsByMonth: (
           params: Params_Transaction
         ) => Promise<{ date: string; total: number }[]>;
-        // 按消费者分组统计
+        // 按消费者分组统�?
         getConsumerTotal: (
           params: Params_Transaction
         ) => Promise<{ item: string; total: number }[]>;
@@ -104,13 +109,14 @@ declare global {
         updateAdvancedRule: (id: number, rule: AdvancedRule) => Promise<{ code: number }>;
         // 删除高级规则
         deleteAdvancedRule: (id: number) => Promise<{ code: number }>;
-        // 删除所有交易数据
+        // 删除所有交易数�?
         deleteAllTransactions: (params: Params_Transaction) => Promise<{ code: number; message: string }>;
         // 爬取京东订单
         crawlJDOrders: () => Promise<{ data: any[] }>;
-        // 爬取拼多多订单
+        // 爬取拼多多订�?
         crawlPDDOrders: () => Promise<{ data: any[] }>;
       };
     };
   }
 }
+

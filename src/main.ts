@@ -1,24 +1,34 @@
-import { app, BrowserWindow, session, Menu } from "electron";
+import { app, BrowserWindow, Menu, nativeTheme, ipcMain } from "electron";
 import path from "path";
 import start from "electron-squirrel-startup";
 import { handleProcessApi } from "./main/process";
+import store from "./main/store";
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (start) {
   app.quit();
 }
 
+nativeTheme.themeSource = store.get("themeMode");
+
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 840,
     height: 640,
+    frame: false,
+    titleBarStyle: 'hidden',
+    // titleBarOverlay: {
+    //   color: '#f0f0f0',
+    //   symbolColor: '#000000',
+    //   height: 32,
+    // },
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
   });
 
-  // 移除菜单栏 window
+  // 移除菜单�?window
   mainWindow.removeMenu();
   Menu.setApplicationMenu(null);
 
@@ -46,11 +56,35 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
-// 禁用硬件加速 @TODO 需要优化
-app.disableHardwareAcceleration();
+// 禁用硬件加�?@TODO 需要优�?app.disableHardwareAcceleration();
 
 app.whenReady().then(() => {
   handleProcessApi();
+
+  ipcMain.on("minimize-window", (event) => {
+    const currentWindow = BrowserWindow.fromWebContents(event.sender);
+    currentWindow?.minimize();
+  });
+
+  ipcMain.on("maximize-window", (event) => {
+    const currentWindow = BrowserWindow.fromWebContents(event.sender);
+
+    if (!currentWindow) {
+      return;
+    }
+
+    if (currentWindow.isMaximized()) {
+      currentWindow.unmaximize();
+      return;
+    }
+
+    currentWindow.maximize();
+  });
+
+  ipcMain.on("close-window", (event) => {
+    const currentWindow = BrowserWindow.fromWebContents(event.sender);
+    currentWindow?.close();
+  });
 });
 
 app.on("activate", () => {
@@ -63,3 +97,4 @@ app.on("activate", () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+

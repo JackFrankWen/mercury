@@ -20,6 +20,8 @@ import {
   ReloadOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
+import TitleBar from './components/TitleBar';
+import './components/TitleBar.css';
 import "dayjs/locale/zh-cn";
 // import dayjs from "dayjs";
 
@@ -62,38 +64,41 @@ function App(props: any): JSX.Element {
   }, []);
 
   return (
-    <BrowserRouter>
-      <ConfigProvider
-        locale={zhCN}
-        theme={{
-          token: {
-            colorPrimary: "#eccf10",
-            colorInfo: "#eccf10",
-          },
-          components: {
-            Calendar: {},
-            Menu: {
-              iconSize: 16,
-              activeBarBorderWidth: 0,
-              itemBorderRadius: 10,
-              itemMarginInline: 2,
-              itemMarginBlock: 12,
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <TitleBar />
+      <BrowserRouter>
+        <ConfigProvider
+          locale={zhCN}
+          theme={{
+            token: {
+              colorPrimary: "#eccf10",
+              colorInfo: "#eccf10",
             },
-            Collapse: {
-              contentPadding: "0 0",
+            components: {
+              Calendar: {},
+              Menu: {
+                iconSize: 16,
+                activeBarBorderWidth: 0,
+                itemBorderRadius: 10,
+                itemMarginInline: 2,
+                itemMarginBlock: 12,
+              },
+              Collapse: {
+                contentPadding: "0 0",
+              },
+              Layout: {},
+              Card: {
+                // paddingLG: 12,
+              },
             },
-            Layout: {},
-            Card: {
-              // paddingLG: 12,
-            },
-          },
-        }}
-      >
-        {/* <AliveScope> */}
-        <MainLayout environment={environment} />
-        {/* </AliveScope> */}
-      </ConfigProvider>
-    </BrowserRouter>
+          }}
+        >
+          {/* <AliveScope> */}
+          <MainLayout environment={environment} />
+          {/* </AliveScope> */}
+        </ConfigProvider>
+      </BrowserRouter>
+    </div>
   );
 }
 
