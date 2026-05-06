@@ -179,7 +179,7 @@ export function formateToTableDataWechat(
       // 8: "交易单号"
       // 9: "商户单号"
       // 10: "备注"
-      const amount = subArr[5] || '';
+      const amount = `${subArr[5]}` || '';
       const description = `${subArr[3]}`;
       let payeeName = `${subArr[1]};${subArr[2]}`.replace('[^\u0000-\uFFFF]', '');
       payeeName = payeeName.replace(/商户消费;/g, '');
