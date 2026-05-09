@@ -18,6 +18,111 @@ function getFileExtension(fileName: string): string {
   return fileName.toLowerCase().split('.').pop() || '';
 }
 
+function padDateNumber(value: number): string {
+  return String(value).padStart(2, '0');
+}
+
+function formatExcelDateSerial(value: number): string | undefined {
+  const date = XLSX.SSF.parse_date_code(value);
+  if (!date) {
+    return undefined;
+  }
+
+  let seconds = Math.round(date.S);
+  let minutes = date.M;
+  let hours = date.H;
+
+  if (seconds === 60) {
+    seconds = 0;
+    minutes += 1;
+  }
+  if (minutes === 60) {
+    minutes = 0;
+    hours += 1;
+  }
+
+  return `${date.y}-${padDateNumber(date.m)}-${padDateNumber(date.d)} ${padDateNumber(
+    hours
+  )}:${padDateNumber(minutes)}:${padDateNumber(seconds)}`;
+}
+
+function formatDateValue(value: Date): string {
+  return `${value.getFullYear()}-${padDateNumber(value.getMonth() + 1)}-${padDateNumber(
+    value.getDate()
+  )} ${padDateNumber(value.getHours())}:${padDateNumber(value.getMinutes())}:${padDateNumber(
+    value.getSeconds()
+  )}`;
+}
+
+function isDateColumnHeader(value: unknown): boolean {
+  return typeof value === 'string' && /(时间|日期|date|time)/i.test(value);
+}
+
+function isExcelDateSerial(value: unknown): value is number {
+  return typeof value === 'number' && value > 1 && value < 2958466;
+}
+
+function getXlsxCellValue(
+  cell: XLSX.CellObject | undefined,
+  columnIndex: number,
+  dateColumnIndexes: Set<number>
+): string {
+  if (!cell) {
+    return '';
+  }
+
+  if (cell.v instanceof Date) {
+    return formatDateValue(cell.v);
+  }
+
+  const isFormattedDate =
+    isExcelDateSerial(cell.v) && typeof cell.z === 'string' && XLSX.SSF.is_date(cell.z);
+  const isDateColumnValue = isExcelDateSerial(cell.v) && dateColumnIndexes.has(columnIndex);
+  if (isFormattedDate || isDateColumnValue) {
+    return formatExcelDateSerial(cell.v) || String(cell.w || cell.v || '');
+  }
+
+  return String(cell.w ?? cell.v ?? '');
+}
+
+function trimEmptyCells(row: string[]): string[] {
+  const result = [...row];
+  while (result.length > 0 && result[result.length - 1] === '') {
+    result.pop();
+  }
+  return result;
+}
+
+function sheetToStringArray(worksheet: XLSX.WorkSheet): string[][] {
+  const rangeText = worksheet['!ref'];
+  if (!rangeText) {
+    return [];
+  }
+
+  const range = XLSX.utils.decode_range(rangeText);
+  const dateColumnIndexes = new Set<number>();
+  const rows: string[][] = [];
+
+  for (let rowIndex = range.s.r; rowIndex <= range.e.r; rowIndex += 1) {
+    const row: string[] = [];
+
+    for (let columnIndex = range.s.c; columnIndex <= range.e.c; columnIndex += 1) {
+      const cellAddress = XLSX.utils.encode_cell({ r: rowIndex, c: columnIndex });
+      const cell = worksheet[cellAddress];
+      const value = getXlsxCellValue(cell, columnIndex, dateColumnIndexes);
+      row.push(value);
+
+      if (isDateColumnHeader(value)) {
+        dateColumnIndexes.add(columnIndex);
+      }
+    }
+
+    rows.push(trimEmptyCells(row));
+  }
+
+  return rows;
+}
+
 // 解析xlsx文件
 function parseXlsxFile(file: File): Promise<any[]> {
   return new Promise((resolve, reject) => {
@@ -25,14 +130,15 @@ function parseXlsxFile(file: File): Promise<any[]> {
     reader.onload = (e) => {
       try {
         const data = new Uint8Array(e.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
+        const workbook = XLSX.read(data, { type: 'array', cellNF: true });
         
         // 获取第一个工作表
         const firstSheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[firstSheetName];
         
         // 转换为数组格式，保持与CSV解析一致的格式
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        const jsonData = sheetToStringArray(worksheet);
+        console.log(jsonData, 'jsonData====');
         resolve(jsonData);
       } catch (error) {
         reject(error);
@@ -100,6 +206,7 @@ function UploadSection({ onUploadSuccess, setLoading }: UploadSectionProps) {
         }
 
         console.log(file, '====aaa');
+        console.log(parsedData, '====parsedData');
         const { tableHeader, tableData, success } = handleToTable(parsedData, file.name);
         if (!success) {
           message.error('上传错误文件');
